@@ -1,25 +1,36 @@
 import { Card } from "@/components/ui/card";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
-import { getChartData } from "@/data/mockData";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { getMonthlyChartData } from "@/data/mockData";
+import { Users, Package, TrendingUp } from "lucide-react";
 
 export const DashboardCharts = () => {
-  const chartData = getChartData();
+  const monthlyData = getMonthlyChartData();
+  const currentMonthData = monthlyData.october; // Start with October
 
   return (
-    <div className="grid grid-cols-1 gap-6">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      {/* Meetings Chart */}
       <Card className="p-6 shadow-soft">
-        <h3 className="text-lg font-semibold text-foreground mb-6">Weekly Activity Overview</h3>
-        <ResponsiveContainer width="100%" height={350}>
-          <BarChart data={chartData}>
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-10 h-10 rounded-lg bg-chart-1/10 flex items-center justify-center">
+            <Users className="w-5 h-5 text-chart-1" />
+          </div>
+          <div>
+            <h3 className="text-lg font-semibold text-foreground">Customer Meetings</h3>
+            <p className="text-sm text-muted-foreground">October 2025</p>
+          </div>
+        </div>
+        <ResponsiveContainer width="100%" height={280}>
+          <BarChart data={currentMonthData}>
             <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
             <XAxis 
               dataKey="week" 
               stroke="hsl(var(--muted-foreground))"
-              tick={{ fill: 'hsl(var(--muted-foreground))' }}
+              tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
             />
             <YAxis 
               stroke="hsl(var(--muted-foreground))"
-              tick={{ fill: 'hsl(var(--muted-foreground))' }}
+              tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
             />
             <Tooltip 
               contentStyle={{ 
@@ -28,10 +39,77 @@ export const DashboardCharts = () => {
                 borderRadius: 'var(--radius)'
               }}
             />
-            <Legend />
-            <Bar dataKey="meetings" fill="hsl(var(--chart-1))" name="Meetings" radius={[8, 8, 0, 0]} />
-            <Bar dataKey="orders" fill="hsl(var(--chart-2))" name="Orders (Units)" radius={[8, 8, 0, 0]} />
-            <Bar dataKey="forecast" fill="hsl(var(--chart-3))" name="Forecast (Units)" radius={[8, 8, 0, 0]} />
+            <Bar dataKey="meetings" fill="hsl(var(--chart-1))" radius={[8, 8, 0, 0]} />
+          </BarChart>
+        </ResponsiveContainer>
+      </Card>
+
+      {/* Orders Chart */}
+      <Card className="p-6 shadow-soft">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-10 h-10 rounded-lg bg-chart-2/10 flex items-center justify-center">
+            <Package className="w-5 h-5 text-chart-2" />
+          </div>
+          <div>
+            <h3 className="text-lg font-semibold text-foreground">Orders Taken</h3>
+            <p className="text-sm text-muted-foreground">October 2025</p>
+          </div>
+        </div>
+        <ResponsiveContainer width="100%" height={280}>
+          <BarChart data={currentMonthData}>
+            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+            <XAxis 
+              dataKey="week" 
+              stroke="hsl(var(--muted-foreground))"
+              tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
+            />
+            <YAxis 
+              stroke="hsl(var(--muted-foreground))"
+              tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
+            />
+            <Tooltip 
+              contentStyle={{ 
+                backgroundColor: 'hsl(var(--card))', 
+                border: '1px solid hsl(var(--border))',
+                borderRadius: 'var(--radius)'
+              }}
+            />
+            <Bar dataKey="orders" fill="hsl(var(--chart-2))" radius={[8, 8, 0, 0]} />
+          </BarChart>
+        </ResponsiveContainer>
+      </Card>
+
+      {/* Forecast Chart */}
+      <Card className="p-6 shadow-soft">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-10 h-10 rounded-lg bg-chart-3/10 flex items-center justify-center">
+            <TrendingUp className="w-5 h-5 text-chart-3" />
+          </div>
+          <div>
+            <h3 className="text-lg font-semibold text-foreground">Delivery Forecast</h3>
+            <p className="text-sm text-muted-foreground">October 2025</p>
+          </div>
+        </div>
+        <ResponsiveContainer width="100%" height={280}>
+          <BarChart data={currentMonthData}>
+            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+            <XAxis 
+              dataKey="week" 
+              stroke="hsl(var(--muted-foreground))"
+              tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
+            />
+            <YAxis 
+              stroke="hsl(var(--muted-foreground))"
+              tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
+            />
+            <Tooltip 
+              contentStyle={{ 
+                backgroundColor: 'hsl(var(--card))', 
+                border: '1px solid hsl(var(--border))',
+                borderRadius: 'var(--radius)'
+              }}
+            />
+            <Bar dataKey="forecast" fill="hsl(var(--chart-3))" radius={[8, 8, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </Card>

@@ -254,12 +254,30 @@ export const mockReports: WeeklyReport[] = [
   }
 ];
 
-// Chart data derived from reports
-export const getChartData = () => {
-  return mockReports.map(report => ({
-    week: report.weekEnding,
-    meetings: report.visitations.length,
-    orders: report.orders.reduce((sum, order) => sum + order.unitsOrdered, 0),
-    forecast: report.deliveryForecast.committedUnits + report.deliveryForecast.potentialUpside
-  })).reverse();
+// Chart data derived from reports - organized by month
+export const getMonthlyChartData = () => {
+  // October 2025 data (4 weeks worth)
+  const octoberData = [
+    { week: "Week 1", meetings: 2, orders: 3, forecast: 8 },
+    { week: "Week 2", meetings: 3, orders: 4, forecast: 10 },
+    { week: "Week 3", meetings: 2, orders: 3, forecast: 8 },
+    { week: "Week 4", meetings: 3, orders: 7, forecast: 12 },
+  ];
+
+  // Placeholder data for future months (November - March)
+  const novemberData = [
+    { week: "Week 1", meetings: 0, orders: 0, forecast: 0 },
+    { week: "Week 2", meetings: 0, orders: 0, forecast: 0 },
+    { week: "Week 3", meetings: 0, orders: 0, forecast: 0 },
+    { week: "Week 4", meetings: 0, orders: 0, forecast: 0 },
+  ];
+
+  return {
+    october: octoberData,
+    november: novemberData,
+    december: novemberData,
+    january: novemberData,
+    february: novemberData,
+    march: novemberData,
+  };
 };
