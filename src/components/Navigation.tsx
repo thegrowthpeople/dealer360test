@@ -49,7 +49,7 @@ export const Navigation = () => {
           </div>
           <div className="text-sm text-muted-foreground">
             <span className="hidden sm:inline">Welcome, </span>
-            <span className="font-medium text-foreground">John Smith</span>
+            <span className="font-medium text-foreground">Gary Parker</span>
           </div>
         </div>
       </div>
