@@ -7,10 +7,16 @@ import { useState } from "react";
 const Index = () => {
   const [selectedBDM, setSelectedBDM] = useState<string>("all");
   const [selectedDealership, setSelectedDealership] = useState<string>("all");
+  const [selectedLocation, setSelectedLocation] = useState<string>("all");
   const [selectedMonth, setSelectedMonth] = useState<string>("october");
 
   const bdmNames = ["Darren", "Jimmy", "Jason", "Steve", "Giulio", "Mark"];
   const dealerships = ["VTC", "TriStar", "RGM"];
+  const locations = [
+    "Adelaide", "Albury", "Ballarat", "Brisbane", "Cairns", "Canberra", 
+    "Dandenong", "Darwin", "Geelong", "Gold Coast", "Huntingwood", "Laverton", 
+    "Mildura", "Mount Gambier", "Perth", "Shepparton", "Somerton", "Townsville", "Wagga"
+  ];
   const months = [
     { value: "october", label: "October 2025" },
     { value: "november", label: "November 2025" },
@@ -57,6 +63,22 @@ const Index = () => {
                 {dealerships.map((dealership) => (
                   <SelectItem key={dealership} value={dealership}>
                     {dealership}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="w-full sm:w-64">
+            <Select value={selectedLocation} onValueChange={setSelectedLocation}>
+              <SelectTrigger id="location-filter">
+                <SelectValue placeholder="Select Location" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Locations</SelectItem>
+                {locations.map((location) => (
+                  <SelectItem key={location} value={location}>
+                    {location}
                   </SelectItem>
                 ))}
               </SelectContent>
