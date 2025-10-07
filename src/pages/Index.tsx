@@ -44,7 +44,7 @@ const Index = () => {
                 <SelectValue placeholder="Select Dealership" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Dealerships</SelectItem>
+                <SelectItem value="all">All Dealer Groups</SelectItem>
                 {dealerships.map((dealership) => (
                   <SelectItem key={dealership} value={dealership}>
                     {dealership}
