@@ -7,9 +7,18 @@ import { useState } from "react";
 const Index = () => {
   const [selectedBDM, setSelectedBDM] = useState<string>("all");
   const [selectedDealership, setSelectedDealership] = useState<string>("all");
+  const [selectedMonth, setSelectedMonth] = useState<string>("october");
 
   const bdmNames = ["Darren", "Jimmy", "Jason", "Steve", "Giulio", "Mark"];
   const dealerships = ["VTC", "TriStar", "RGM"];
+  const months = [
+    { value: "october", label: "October 2025" },
+    { value: "november", label: "November 2025" },
+    { value: "december", label: "December 2025" },
+    { value: "january", label: "January 2026" },
+    { value: "february", label: "February 2026" },
+    { value: "march", label: "March 2026" },
+  ];
 
   return (
     <div className="min-h-screen bg-background">
@@ -48,6 +57,21 @@ const Index = () => {
                 {dealerships.map((dealership) => (
                   <SelectItem key={dealership} value={dealership}>
                     {dealership}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="w-full sm:w-64">
+            <Select value={selectedMonth} onValueChange={setSelectedMonth}>
+              <SelectTrigger id="month-filter">
+                <SelectValue placeholder="Select Month" />
+              </SelectTrigger>
+              <SelectContent>
+                {months.map((month) => (
+                  <SelectItem key={month.value} value={month.value}>
+                    {month.label}
                   </SelectItem>
                 ))}
               </SelectContent>
