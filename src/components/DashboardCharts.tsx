@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { BarChart, Bar, XAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { getMonthlyChartData } from "@/data/mockData";
 import { Users, Package, TrendingUp } from "lucide-react";
 
@@ -7,17 +7,26 @@ export const DashboardCharts = () => {
   const monthlyData = getMonthlyChartData();
   const currentMonthData = monthlyData.october; // Start with October
 
+  // Calculate totals for the month
+  const totalMeetings = currentMonthData.reduce((sum, week) => sum + week.meetings, 0);
+  const totalOrders = currentMonthData.reduce((sum, week) => sum + week.orders, 0);
+  const totalForecast = currentMonthData.reduce((sum, week) => sum + week.forecast, 0);
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       {/* Meetings Chart */}
       <Card className="p-6 shadow-soft">
-        <div className="flex items-center gap-3 mb-6">
+        <div className="flex items-center gap-3 mb-2">
           <div className="w-10 h-10 rounded-lg bg-chart-1/10 flex items-center justify-center">
             <Users className="w-5 h-5 text-chart-1" />
           </div>
-          <div>
+          <div className="flex-1">
             <h3 className="text-lg font-semibold text-foreground">Customer Meetings</h3>
             <p className="text-sm text-muted-foreground">October 2025</p>
+          </div>
+          <div className="text-right">
+            <p className="text-3xl font-bold text-chart-1">{totalMeetings}</p>
+            <p className="text-xs text-muted-foreground">Total</p>
           </div>
         </div>
         <ResponsiveContainer width="100%" height={280}>
@@ -25,10 +34,6 @@ export const DashboardCharts = () => {
             <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
             <XAxis 
               dataKey="week" 
-              stroke="hsl(var(--muted-foreground))"
-              tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
-            />
-            <YAxis 
               stroke="hsl(var(--muted-foreground))"
               tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
             />
@@ -46,13 +51,17 @@ export const DashboardCharts = () => {
 
       {/* Orders Chart */}
       <Card className="p-6 shadow-soft">
-        <div className="flex items-center gap-3 mb-6">
+        <div className="flex items-center gap-3 mb-2">
           <div className="w-10 h-10 rounded-lg bg-chart-2/10 flex items-center justify-center">
             <Package className="w-5 h-5 text-chart-2" />
           </div>
-          <div>
+          <div className="flex-1">
             <h3 className="text-lg font-semibold text-foreground">Orders Taken</h3>
             <p className="text-sm text-muted-foreground">October 2025</p>
+          </div>
+          <div className="text-right">
+            <p className="text-3xl font-bold text-chart-2">{totalOrders}</p>
+            <p className="text-xs text-muted-foreground">Total</p>
           </div>
         </div>
         <ResponsiveContainer width="100%" height={280}>
@@ -60,10 +69,6 @@ export const DashboardCharts = () => {
             <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
             <XAxis 
               dataKey="week" 
-              stroke="hsl(var(--muted-foreground))"
-              tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
-            />
-            <YAxis 
               stroke="hsl(var(--muted-foreground))"
               tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
             />
@@ -81,13 +86,17 @@ export const DashboardCharts = () => {
 
       {/* Forecast Chart */}
       <Card className="p-6 shadow-soft">
-        <div className="flex items-center gap-3 mb-6">
+        <div className="flex items-center gap-3 mb-2">
           <div className="w-10 h-10 rounded-lg bg-chart-3/10 flex items-center justify-center">
             <TrendingUp className="w-5 h-5 text-chart-3" />
           </div>
-          <div>
+          <div className="flex-1">
             <h3 className="text-lg font-semibold text-foreground">Delivery Forecast</h3>
             <p className="text-sm text-muted-foreground">October 2025</p>
+          </div>
+          <div className="text-right">
+            <p className="text-3xl font-bold text-chart-3">{totalForecast}</p>
+            <p className="text-xs text-muted-foreground">Total</p>
           </div>
         </div>
         <ResponsiveContainer width="100%" height={280}>
@@ -95,10 +104,6 @@ export const DashboardCharts = () => {
             <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
             <XAxis 
               dataKey="week" 
-              stroke="hsl(var(--muted-foreground))"
-              tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
-            />
-            <YAxis 
               stroke="hsl(var(--muted-foreground))"
               tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
             />
