@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card";
-import { BarChart, Bar, XAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { BarChart, Bar, XAxis, CartesianGrid, Tooltip, ResponsiveContainer, LabelList } from "recharts";
 import { getMonthlyChartData } from "@/data/mockData";
 import { Users, Package, TrendingUp } from "lucide-react";
 
@@ -44,7 +44,13 @@ export const DashboardCharts = () => {
                 borderRadius: 'var(--radius)'
               }}
             />
-            <Bar dataKey="meetings" fill="hsl(var(--chart-1))" radius={[8, 8, 0, 0]} />
+            <Bar dataKey="meetings" fill="hsl(var(--chart-1))" radius={[8, 8, 0, 0]}>
+              <LabelList 
+                dataKey="meetings" 
+                position="top" 
+                style={{ fill: 'hsl(var(--foreground))', fontSize: '14px', fontWeight: 600 }}
+              />
+            </Bar>
           </BarChart>
         </ResponsiveContainer>
       </Card>
@@ -79,7 +85,13 @@ export const DashboardCharts = () => {
                 borderRadius: 'var(--radius)'
               }}
             />
-            <Bar dataKey="orders" fill="hsl(var(--chart-2))" radius={[8, 8, 0, 0]} />
+            <Bar dataKey="orders" fill="hsl(var(--chart-2))" radius={[8, 8, 0, 0]}>
+              <LabelList 
+                dataKey="orders" 
+                position="top" 
+                style={{ fill: 'hsl(var(--foreground))', fontSize: '14px', fontWeight: 600 }}
+              />
+            </Bar>
           </BarChart>
         </ResponsiveContainer>
       </Card>
@@ -114,7 +126,13 @@ export const DashboardCharts = () => {
                 borderRadius: 'var(--radius)'
               }}
             />
-            <Bar dataKey="forecast" fill="hsl(var(--chart-3))" radius={[8, 8, 0, 0]} />
+            <Bar dataKey="forecast" fill="hsl(var(--chart-3))" radius={[8, 8, 0, 0]}>
+              <LabelList 
+                dataKey="forecast" 
+                position="top" 
+                style={{ fill: 'hsl(var(--foreground))', fontSize: '14px', fontWeight: 600 }}
+              />
+            </Bar>
           </BarChart>
         </ResponsiveContainer>
       </Card>
