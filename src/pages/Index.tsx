@@ -2,7 +2,6 @@ import { Navigation } from "@/components/Navigation";
 import { DashboardStats } from "@/components/DashboardStats";
 import { DashboardCharts } from "@/components/DashboardCharts";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
 import { useState } from "react";
 
 const Index = () => {
@@ -22,11 +21,8 @@ const Index = () => {
         </div>
 
         {/* Filters */}
-        <div className="mb-8 flex flex-wrap gap-6">
+        <div className="mb-8 flex flex-wrap gap-4">
           <div className="w-full sm:w-64">
-            <Label htmlFor="bdm-filter" className="text-sm font-medium mb-2 block">
-              Filter by BDM
-            </Label>
             <Select value={selectedBDM} onValueChange={setSelectedBDM}>
               <SelectTrigger id="bdm-filter">
                 <SelectValue placeholder="Select BDM" />
@@ -43,9 +39,6 @@ const Index = () => {
           </div>
 
           <div className="w-full sm:w-64">
-            <Label htmlFor="dealership-filter" className="text-sm font-medium mb-2 block">
-              Filter by Dealership
-            </Label>
             <Select value={selectedDealership} onValueChange={setSelectedDealership}>
               <SelectTrigger id="dealership-filter">
                 <SelectValue placeholder="Select Dealership" />
