@@ -1,6 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { Home, FileText, PlusCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import logo from "@/assets/logo-black.svg";
 
 export const Navigation = () => {
   const location = useLocation();
@@ -17,13 +18,7 @@ export const Navigation = () => {
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center gap-8">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-gradient-primary flex items-center justify-center">
-                <span className="text-primary-foreground font-bold text-lg">DT</span>
-              </div>
-              <div>
-                <h1 className="font-bold text-lg text-foreground">BDM Reports</h1>
-                <p className="text-xs text-muted-foreground">Heavy Vehicles Team</p>
-              </div>
+              <img src={logo} alt="Daimler Truck" className="h-8" />
             </div>
             <div className="hidden md:flex gap-1">
               {navItems.map((item) => {
