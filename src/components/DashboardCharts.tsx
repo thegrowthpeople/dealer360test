@@ -26,7 +26,6 @@ export const DashboardCharts = () => {
           </div>
           <div className="text-right">
             <p className="text-3xl font-bold text-chart-1">{totalMeetings}</p>
-            <p className="text-xs text-muted-foreground">Total</p>
           </div>
         </div>
         <ResponsiveContainer width="100%" height={280}>
@@ -67,7 +66,6 @@ export const DashboardCharts = () => {
           </div>
           <div className="text-right">
             <p className="text-3xl font-bold text-chart-2">{totalOrders}</p>
-            <p className="text-xs text-muted-foreground">Total</p>
           </div>
         </div>
         <ResponsiveContainer width="100%" height={280}>
@@ -108,7 +106,6 @@ export const DashboardCharts = () => {
           </div>
           <div className="text-right">
             <p className="text-3xl font-bold text-chart-3">{totalForecast}</p>
-            <p className="text-xs text-muted-foreground">Total</p>
           </div>
         </div>
         <ResponsiveContainer width="100%" height={280}>
