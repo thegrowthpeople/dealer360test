@@ -28,8 +28,8 @@ export const DashboardCharts = () => {
             <p className="text-3xl font-bold text-chart-1">{totalMeetings}</p>
           </div>
         </div>
-        <ResponsiveContainer width="100%" height={280}>
-          <BarChart data={currentMonthData}>
+        <ResponsiveContainer width="100%" height={300}>
+          <BarChart data={currentMonthData} margin={{ top: 20, right: 10, left: 10, bottom: 5 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
             <XAxis 
               dataKey="week" 
@@ -68,8 +68,8 @@ export const DashboardCharts = () => {
             <p className="text-3xl font-bold text-chart-2">{totalOrders}</p>
           </div>
         </div>
-        <ResponsiveContainer width="100%" height={280}>
-          <BarChart data={currentMonthData}>
+        <ResponsiveContainer width="100%" height={300}>
+          <BarChart data={currentMonthData} margin={{ top: 20, right: 10, left: 10, bottom: 5 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
             <XAxis 
               dataKey="week" 
@@ -108,8 +108,8 @@ export const DashboardCharts = () => {
             <p className="text-3xl font-bold text-chart-3">{totalForecast}</p>
           </div>
         </div>
-        <ResponsiveContainer width="100%" height={280}>
-          <BarChart data={currentMonthData}>
+        <ResponsiveContainer width="100%" height={300}>
+          <BarChart data={currentMonthData} margin={{ top: 20, right: 10, left: 10, bottom: 5 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
             <XAxis 
               dataKey="week" 
