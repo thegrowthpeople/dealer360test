@@ -28,9 +28,9 @@ const Index = () => {
               size="lg"
               className="h-48 flex items-center justify-center px-12 hover:bg-accent hover:scale-105 transition-all"
             >
-              <span className="text-3xl text-center leading-relaxed">
-                <span className="font-normal">View Dealer</span><br />
-                <span className="font-medium">Performance</span>
+              <span className="text-center leading-relaxed">
+                <span className="font-normal text-2xl">View Dealer</span><br />
+                <span className="font-medium text-3xl">Performance</span>
               </span>
             </Button>
 
@@ -40,9 +40,9 @@ const Index = () => {
               size="lg"
               className="h-48 flex items-center justify-center px-12 hover:bg-accent hover:scale-105 transition-all"
             >
-              <span className="text-3xl text-center leading-relaxed">
-                <span className="font-normal">View Dealer</span><br />
-                <span className="font-medium">Forecast</span>
+              <span className="text-center leading-relaxed">
+                <span className="font-normal text-2xl">View Dealer</span><br />
+                <span className="font-medium text-3xl">Forecast</span>
               </span>
             </Button>
 
@@ -52,9 +52,9 @@ const Index = () => {
               size="lg"
               className="h-48 flex items-center justify-center px-8 hover:bg-accent hover:scale-105 transition-all"
             >
-              <span className="text-3xl text-center leading-relaxed">
-                <span className="font-normal">Review</span><br />
-                <span className="font-medium">Business Plan</span>
+              <span className="text-center leading-relaxed">
+                <span className="font-normal text-2xl">Review</span><br />
+                <span className="font-medium text-3xl">Business Plan</span>
               </span>
             </Button>
           </div>
