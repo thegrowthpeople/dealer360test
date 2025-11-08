@@ -69,26 +69,44 @@ const CustomXAxisTick = ({ x, y, payload, viewMode }: any) => {
   );
 };
 
-const CustomLabel = ({ x, y, width, value, isQuarter, viewBox }: any) => {
-  // Only hide labels for undefined values (future months)
-  // Show all numeric values including 0
+const CustomBarLabel = (props: any) => {
+  const { x, y, width, value, index, data } = props;
+  
   if (value === null || value === undefined) return null;
   
-  // Convert to number to handle string values from database
   const numValue = Number(value);
   if (isNaN(numValue)) return null;
   
-  // For line charts, x is the center point; for bar charts, we calculate center
-  const xPos = width !== undefined ? x + width / 2 : x;
-  const yPos = y !== undefined ? y - 10 : (viewBox?.y || 0) - 10;
-  
-  // Ensure positions are valid numbers
-  if (isNaN(xPos) || isNaN(yPos)) return null;
+  const isQuarter = data?.[index]?.isQuarter || false;
   
   return (
     <text
-      x={xPos}
-      y={yPos}
+      x={x + width / 2}
+      y={y - 10}
+      fill="#666"
+      textAnchor="middle"
+      fontSize={12}
+      fontWeight={isQuarter ? "bold" : "normal"}
+    >
+      {numValue}
+    </text>
+  );
+};
+
+const CustomLineLabel = (props: any) => {
+  const { x, y, value, index, data } = props;
+  
+  if (value === null || value === undefined) return null;
+  
+  const numValue = Number(value);
+  if (isNaN(numValue)) return null;
+  
+  const isQuarter = data?.[index]?.isQuarter || false;
+  
+  return (
+    <text
+      x={x}
+      y={y - 10}
       fill="#666"
       textAnchor="middle"
       fontSize={12}
@@ -127,9 +145,8 @@ export const SalesChart = ({ title, data, color, chartType, viewMode, total }: S
                 ))}
                 <LabelList
                   dataKey="value"
-                  content={(props) => (
-                    <CustomLabel {...props} isQuarter={data[props.index]?.isQuarter} />
-                  )}
+                  position="top"
+                  content={(props) => <CustomBarLabel {...props} data={data} />}
                 />
               </Bar>
             </BarChart>
@@ -153,9 +170,8 @@ export const SalesChart = ({ title, data, color, chartType, viewMode, total }: S
               >
                 <LabelList
                   dataKey="value"
-                  content={(props) => (
-                    <CustomLabel {...props} isQuarter={data[props.index]?.isQuarter} />
-                  )}
+                  position="top"
+                  content={(props) => <CustomLineLabel {...props} data={data} />}
                 />
               </Line>
             </LineChart>
