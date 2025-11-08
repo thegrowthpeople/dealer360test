@@ -45,9 +45,9 @@ const Index = () => {
               onClick={() => navigate("/business-plan")}
               variant="outline"
               size="lg"
-              className="h-48 flex items-center justify-center px-12 hover:bg-accent hover:scale-105 transition-all"
+              className="h-48 flex items-center justify-center px-8 hover:bg-accent hover:scale-105 transition-all"
             >
-              <span className="text-xl font-medium text-center whitespace-normal leading-relaxed">Business Plan Progress</span>
+              <span className="text-lg font-medium text-center whitespace-nowrap">Business Plan Progress</span>
             </Button>
           </div>
         </div>
