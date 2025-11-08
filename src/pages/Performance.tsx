@@ -235,14 +235,40 @@ const Performance = () => {
     console.log(`Monthly data for ${brand} ${type}:`, monthlyData);
 
     if (viewMode === "both") {
-      const quarterlyData = Object.entries(QUARTERS).map(([quarter, months]) => {
-        const total = brandActuals
-          .filter((a) => months.includes(a.Month))
-          .reduce((sum, a) => sum + (Number(a[type]) || 0), 0);
-        return { name: quarter, value: total, isQuarter: true };
+      // Interleave quarters after their respective months
+      const result: Array<{ name: string; value: number | undefined; isQuarter: boolean }> = [];
+      
+      MONTH_ORDER.forEach((month, index) => {
+        const monthData = brandActuals.filter((a) => a.Month === month);
+        const total = monthData.reduce((sum, a) => sum + (Number(a[type]) || 0), 0);
+        
+        const isCurrentOrFutureMonth = selectedYear === currentYear && index >= currentMonthIndex;
+        const shouldHide = isCurrentOrFutureMonth && total === 0;
+        
+        result.push({ 
+          name: month, 
+          value: shouldHide ? undefined : total, 
+          isQuarter: false 
+        });
+        
+        // Add quarter after the 3rd, 6th, 9th, and 12th month
+        if ((index + 1) % 3 === 0) {
+          const quarterIndex = Math.floor(index / 3);
+          const quarterKey = `Q${quarterIndex + 1}` as keyof typeof QUARTERS;
+          const quarterMonths = QUARTERS[quarterKey];
+          const quarterTotal = brandActuals
+            .filter((a) => quarterMonths.includes(a.Month))
+            .reduce((sum, a) => sum + (Number(a[type]) || 0), 0);
+          
+          result.push({ 
+            name: quarterKey, 
+            value: quarterTotal, 
+            isQuarter: true 
+          });
+        }
       });
-
-      return [...monthlyData, ...quarterlyData];
+      
+      return result;
     }
 
     return monthlyData;
