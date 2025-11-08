@@ -53,7 +53,7 @@ export function SimpleSidebar({ isCollapsed, onToggle }: SimpleSidebarProps) {
       </div>
 
       {/* Menu Items */}
-      <nav className="flex-1 p-2 space-y-1">
+      <nav className="flex-1 p-2 pt-4 space-y-1">
         {menuItems.map((item) => {
           const Icon = item.icon;
           const active = isActive(item.path);
