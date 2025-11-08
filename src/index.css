@@ -49,6 +49,7 @@ All colors MUST be HSL.
     --shadow-medium: 0 4px 16px -4px hsl(215 25% 15% / 0.12);
     
     --sidebar-width: 13rem;
+    --sidebar-width-icon: 3rem;
   }
 
   .dark {
@@ -97,9 +98,22 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
   }
   
-  /* Remove gap between sidebar and content */
-  .peer:has([data-sidebar]) ~ * {
+  /* Force remove any spacing from sidebar */
+  [data-sidebar] {
+    margin: 0 !important;
+  }
+  
+  .group.peer {
+    margin: 0 !important;
+  }
+  
+  .peer ~ * {
     margin-left: 0 !important;
-    padding-left: 0 !important;
+  }
+  
+  /* Override any default container padding */
+  body > div {
+    margin: 0;
+    padding: 0;
   }
 }
