@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { TrendingUp, LineChart, BarChart } from "lucide-react";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -29,7 +28,6 @@ const Index = () => {
               size="lg"
               className="h-40 flex flex-col gap-4 hover:bg-accent hover:scale-105 transition-all"
             >
-              <TrendingUp className="h-32 w-32" />
               <span className="text-base font-medium">View Dealer Performance</span>
             </Button>
 
@@ -39,7 +37,6 @@ const Index = () => {
               size="lg"
               className="h-40 flex flex-col gap-4 hover:bg-accent hover:scale-105 transition-all"
             >
-              <LineChart className="h-32 w-32" />
               <span className="text-base font-medium">Review Forecast</span>
             </Button>
 
@@ -49,7 +46,6 @@ const Index = () => {
               size="lg"
               className="h-40 flex flex-col gap-4 hover:bg-accent hover:scale-105 transition-all"
             >
-              <BarChart className="h-32 w-32" />
               <span className="text-base font-medium">Business Plan Progress</span>
             </Button>
           </div>
