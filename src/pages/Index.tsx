@@ -51,7 +51,7 @@ const Index = () => {
               className="h-48 flex items-center justify-center px-8 hover:bg-accent hover:scale-105 transition-all"
             >
               <span className="text-3xl font-medium text-center leading-relaxed">
-                Business Plan<br />Progress
+                Review<br />Business Plan
               </span>
             </Button>
           </div>
