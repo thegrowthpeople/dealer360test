@@ -205,22 +205,19 @@ const Performance = () => {
       });
     }
 
-    // Keep all months but set future months with no data to undefined (won't plot)
+    // Keep all months for X-axis labels, but set future months with no data to undefined
     const monthlyData = MONTH_ORDER.map((month, index) => {
-      // Check if this month is in the future for the selected year
-      const isFutureMonth = selectedYear === currentYear && index > currentMonthIndex;
-      
       const total = brandActuals
         .filter((a) => a.Month === month)
         .reduce((sum, a) => sum + (Number(a[type]) || 0), 0);
       
-      // For future months with no data, return undefined to skip plotting
-      // For past months, return the total (even if 0)
-      const value = isFutureMonth && total === 0 ? undefined : total;
+      // Only hide future months if we're viewing current year AND there's no data
+      const isFutureMonth = selectedYear === currentYear && index > currentMonthIndex;
+      const shouldHide = isFutureMonth && total === 0;
       
       return { 
         name: month, 
-        value: value, 
+        value: shouldHide ? undefined : total, 
         isQuarter: false 
       };
     });
