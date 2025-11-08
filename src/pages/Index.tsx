@@ -50,7 +50,7 @@ const Index = () => {
               className="h-32 flex flex-col gap-3 hover:bg-accent hover:scale-105 transition-all"
             >
               <BarChart className="h-16 w-16" />
-              <span className="text-base font-medium">Examine Business Plan</span>
+              <span className="text-base font-medium">Business Plan Progress</span>
             </Button>
           </div>
         </div>
