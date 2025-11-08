@@ -399,22 +399,6 @@ const Performance = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <SalesChart
-          title="FTL Retail"
-          data={prepareChartData("FTL", "Retail")}
-          color="#9b87f5"
-          chartType={chartType}
-          viewMode={viewMode}
-          total={chartTotals.ftlRetail}
-        />
-        <SalesChart
-          title="FTL Fleet"
-          data={prepareChartData("FTL", "Fleet")}
-          color="#9b87f5"
-          chartType={chartType}
-          viewMode={viewMode}
-          total={chartTotals.ftlFleet}
-        />
-        <SalesChart
           title="MBT Retail"
           data={prepareChartData("MBT", "Retail")}
           color="#0EA5E9"
@@ -429,6 +413,22 @@ const Performance = () => {
           chartType={chartType}
           viewMode={viewMode}
           total={chartTotals.mbtFleet}
+        />
+        <SalesChart
+          title="FTL Retail"
+          data={prepareChartData("FTL", "Retail")}
+          color="#9b87f5"
+          chartType={chartType}
+          viewMode={viewMode}
+          total={chartTotals.ftlRetail}
+        />
+        <SalesChart
+          title="FTL Fleet"
+          data={prepareChartData("FTL", "Fleet")}
+          color="#9b87f5"
+          chartType={chartType}
+          viewMode={viewMode}
+          total={chartTotals.ftlFleet}
         />
       </div>
     </div>
