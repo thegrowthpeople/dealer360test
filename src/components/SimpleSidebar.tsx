@@ -36,17 +36,18 @@ export function SimpleSidebar({ isCollapsed, onToggle }: SimpleSidebarProps) {
     >
       {/* Header */}
       <div className="border-b border-border p-4 flex items-center justify-between h-16">
-        {!isCollapsed && (
-          <div className="flex flex-col">
-            <span className="font-bold text-foreground text-sm">DEALER MANAGER</span>
-            <span className="text-xs text-muted-foreground">Heavy Duty</span>
-          </div>
-        )}
+        <div className={cn(
+          "flex flex-col transition-opacity duration-300 overflow-hidden",
+          isCollapsed ? "opacity-0 w-0" : "opacity-100 w-auto"
+        )}>
+          <span className="font-bold text-foreground text-sm whitespace-nowrap">DEALER MANAGER</span>
+          <span className="text-xs text-muted-foreground whitespace-nowrap">Heavy Duty</span>
+        </div>
         <Button
           variant="ghost"
           size="icon"
           onClick={onToggle}
-          className="h-8 w-8 ml-auto"
+          className="h-8 w-8 ml-auto shrink-0"
         >
           {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
         </Button>
@@ -62,14 +63,19 @@ export function SimpleSidebar({ isCollapsed, onToggle }: SimpleSidebarProps) {
               key={item.path}
               to={item.path}
               className={cn(
-                "flex items-center gap-3 px-3 py-2.5 rounded-md transition-colors",
+                "flex items-center gap-3 px-3 py-2.5 rounded-md transition-all duration-200",
                 "hover:bg-accent hover:text-accent-foreground",
                 active && "bg-primary text-primary-foreground hover:bg-primary/90",
                 isCollapsed && "justify-center"
               )}
             >
               <Icon className="h-5 w-5 shrink-0" />
-              {!isCollapsed && <span className="text-sm font-medium">{item.label}</span>}
+              <span className={cn(
+                "text-sm font-medium whitespace-nowrap transition-opacity duration-300",
+                isCollapsed ? "opacity-0 w-0 overflow-hidden" : "opacity-100"
+              )}>
+                {item.label}
+              </span>
             </Link>
           );
         })}
@@ -83,12 +89,13 @@ export function SimpleSidebar({ isCollapsed, onToggle }: SimpleSidebarProps) {
               GP
             </AvatarFallback>
           </Avatar>
-          {!isCollapsed && (
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-foreground truncate">Gary Parker</p>
-              <p className="text-xs text-muted-foreground truncate">BDM</p>
-            </div>
-          )}
+          <div className={cn(
+            "flex-1 min-w-0 transition-opacity duration-300 overflow-hidden",
+            isCollapsed ? "opacity-0 w-0" : "opacity-100"
+          )}>
+            <p className="text-sm font-medium text-foreground truncate whitespace-nowrap">Gary Parker</p>
+            <p className="text-xs text-muted-foreground truncate whitespace-nowrap">BDM</p>
+          </div>
         </div>
       </div>
     </aside>
