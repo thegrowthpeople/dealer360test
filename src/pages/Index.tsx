@@ -11,7 +11,7 @@ const Index = () => {
         {/* Welcome Title */}
         <div>
           <h1 className="text-5xl font-bold text-foreground mb-2">
-            Welcome, Gary Parker
+            Welcome, Gary
           </h1>
         </div>
 
@@ -29,7 +29,7 @@ const Index = () => {
               size="lg"
               className="h-32 flex flex-col gap-3 hover:bg-accent hover:scale-105 transition-all"
             >
-              <TrendingUp className="h-8 w-8" />
+              <TrendingUp className="h-12 w-12" />
               <span className="text-base font-medium">View Dealer Performance</span>
             </Button>
 
@@ -39,7 +39,7 @@ const Index = () => {
               size="lg"
               className="h-32 flex flex-col gap-3 hover:bg-accent hover:scale-105 transition-all"
             >
-              <LineChart className="h-8 w-8" />
+              <LineChart className="h-12 w-12" />
               <span className="text-base font-medium">Review Forecast</span>
             </Button>
 
@@ -49,7 +49,7 @@ const Index = () => {
               size="lg"
               className="h-32 flex flex-col gap-3 hover:bg-accent hover:scale-105 transition-all"
             >
-              <BarChart className="h-8 w-8" />
+              <BarChart className="h-12 w-12" />
               <span className="text-base font-medium">Examine Business Plan</span>
             </Button>
           </div>
