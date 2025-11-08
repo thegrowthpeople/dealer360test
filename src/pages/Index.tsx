@@ -27,9 +27,9 @@ const Index = () => {
               onClick={() => navigate("/performance")}
               variant="outline"
               size="lg"
-              className="h-48 flex flex-col items-center justify-center gap-4 px-12 hover:bg-accent hover:scale-105 transition-all"
+              className="h-48 flex flex-col items-center justify-center gap-6 px-12 hover:bg-accent hover:scale-105 transition-all"
             >
-              <TrendingUp size={48} />
+              <TrendingUp size={96} />
               <span className="text-lg font-medium text-center leading-relaxed">
                 Dealer<br />Performance
               </span>
@@ -39,11 +39,11 @@ const Index = () => {
               onClick={() => navigate("/forecast")}
               variant="outline"
               size="lg"
-              className="h-48 flex flex-col items-center justify-center gap-4 px-12 hover:bg-accent hover:scale-105 transition-all"
+              className="h-48 flex flex-col items-center justify-center gap-6 px-12 hover:bg-accent hover:scale-105 transition-all"
             >
-              <Search size={48} />
+              <Search size={96} />
               <span className="text-lg font-medium text-center leading-relaxed">
-                Forecast
+                Dealer<br />Forecast
               </span>
             </Button>
 
@@ -51,9 +51,9 @@ const Index = () => {
               onClick={() => navigate("/business-plan")}
               variant="outline"
               size="lg"
-              className="h-48 flex flex-col items-center justify-center gap-4 px-8 hover:bg-accent hover:scale-105 transition-all"
+              className="h-48 flex flex-col items-center justify-center gap-6 px-8 hover:bg-accent hover:scale-105 transition-all"
             >
-              <Target size={48} />
+              <Target size={96} />
               <span className="text-lg font-medium text-center leading-relaxed">
                 Business Plan<br />Progress
               </span>
