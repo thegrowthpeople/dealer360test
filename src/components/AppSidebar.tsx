@@ -1,4 +1,4 @@
-import { Home, TrendingUp, Search, BarChart, PlusCircle, FileText } from "lucide-react";
+import { Home, TrendingUp, Search, BarChart, PlusCircle, FileText, Truck } from "lucide-react";
 import { useLocation, Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -18,6 +18,7 @@ const menuItems = [
   { path: "/performance", label: "Performance", icon: TrendingUp },
   { path: "/forecast", label: "Forecast", icon: Search },
   { path: "/business-plan", label: "Business Plan", icon: BarChart },
+  { path: "/dealerships", label: "Dealerships", icon: Truck },
 ];
 
 export function AppSidebar() {

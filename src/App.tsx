@@ -11,6 +11,7 @@ import BusinessPlan from "./pages/BusinessPlan";
 import NewReport from "./pages/NewReport";
 import Reports from "./pages/Reports";
 import ReportDetail from "./pages/ReportDetail";
+import Dealerships from "./pages/Dealerships";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -27,6 +28,7 @@ const App = () => (
             <Route path="/performance" element={<Performance />} />
             <Route path="/forecast" element={<Forecast />} />
             <Route path="/business-plan" element={<BusinessPlan />} />
+            <Route path="/dealerships" element={<Dealerships />} />
             <Route path="/new-report" element={<NewReport />} />
             <Route path="/reports" element={<Reports />} />
             <Route path="/reports/:id" element={<ReportDetail />} />
