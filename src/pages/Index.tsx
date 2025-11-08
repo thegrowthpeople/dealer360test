@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { TrendingUp, LineChart, Target } from "lucide-react";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -21,33 +22,42 @@ const Index = () => {
           </h2>
 
           {/* Action Buttons */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-            <Button
-              onClick={() => navigate("/performance")}
-              variant="outline"
-              size="lg"
-              className="h-40 flex flex-col gap-4 hover:bg-accent hover:scale-105 transition-all"
-            >
-              <span className="text-base font-medium">View Dealer Performance</span>
-            </Button>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
+            <div className="flex flex-col items-center gap-4">
+              <TrendingUp className="h-32 w-32 text-primary" />
+              <Button
+                onClick={() => navigate("/performance")}
+                variant="outline"
+                size="lg"
+                className="w-full h-20 hover:bg-accent hover:scale-105 transition-all"
+              >
+                <span className="text-xl font-medium">View Dealer Performance</span>
+              </Button>
+            </div>
 
-            <Button
-              onClick={() => navigate("/forecast")}
-              variant="outline"
-              size="lg"
-              className="h-40 flex flex-col gap-4 hover:bg-accent hover:scale-105 transition-all"
-            >
-              <span className="text-base font-medium">Review Forecast</span>
-            </Button>
+            <div className="flex flex-col items-center gap-4">
+              <LineChart className="h-32 w-32 text-primary" />
+              <Button
+                onClick={() => navigate("/forecast")}
+                variant="outline"
+                size="lg"
+                className="w-full h-20 hover:bg-accent hover:scale-105 transition-all"
+              >
+                <span className="text-xl font-medium">Review Forecast</span>
+              </Button>
+            </div>
 
-            <Button
-              onClick={() => navigate("/business-plan")}
-              variant="outline"
-              size="lg"
-              className="h-40 flex flex-col gap-4 hover:bg-accent hover:scale-105 transition-all"
-            >
-              <span className="text-base font-medium">Business Plan Progress</span>
-            </Button>
+            <div className="flex flex-col items-center gap-4">
+              <Target className="h-32 w-32 text-primary" />
+              <Button
+                onClick={() => navigate("/business-plan")}
+                variant="outline"
+                size="lg"
+                className="w-full h-20 hover:bg-accent hover:scale-105 transition-all"
+              >
+                <span className="text-xl font-medium">Business Plan Progress</span>
+              </Button>
+            </div>
           </div>
         </div>
       </div>
