@@ -27,7 +27,7 @@ const Index = () => {
               onClick={() => navigate("/performance")}
               variant="outline"
               size="lg"
-              className="h-32 flex flex-col gap-6 px-8 hover:bg-accent hover:scale-105 transition-all"
+              className="h-48 flex flex-col gap-6 px-8 hover:bg-accent hover:scale-105 transition-all"
             >
               <TrendingUp className="h-16 w-16" />
               <span className="text-xl font-medium text-center">View Dealer Performance</span>
@@ -37,7 +37,7 @@ const Index = () => {
               onClick={() => navigate("/forecast")}
               variant="outline"
               size="lg"
-              className="h-32 flex flex-col gap-6 px-8 hover:bg-accent hover:scale-105 transition-all"
+              className="h-48 flex flex-col gap-6 px-8 hover:bg-accent hover:scale-105 transition-all"
             >
               <LineChart className="h-16 w-16" />
               <span className="text-xl font-medium text-center">Review Forecast</span>
@@ -47,7 +47,7 @@ const Index = () => {
               onClick={() => navigate("/business-plan")}
               variant="outline"
               size="lg"
-              className="h-32 flex flex-col gap-6 px-8 hover:bg-accent hover:scale-105 transition-all"
+              className="h-48 flex flex-col gap-6 px-8 hover:bg-accent hover:scale-105 transition-all"
             >
               <Target className="h-16 w-16" />
               <span className="text-xl font-medium text-center">Business Plan Progress</span>
