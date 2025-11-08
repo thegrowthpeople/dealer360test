@@ -35,7 +35,7 @@ export function SimpleSidebar({ isCollapsed, onToggle }: SimpleSidebarProps) {
       )}
     >
       {/* Header */}
-      <div className="border-b border-border p-4 flex items-center justify-between min-h-[73px]">
+      <div className="border-b border-border p-4 flex items-center justify-between h-16">
         {!isCollapsed && (
           <div className="flex flex-col">
             <span className="font-bold text-foreground text-sm">DEALER MANAGER</span>
