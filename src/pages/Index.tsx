@@ -29,7 +29,9 @@ const Index = () => {
               size="lg"
               className="h-48 flex items-center justify-center px-12 hover:bg-accent hover:scale-105 transition-all"
             >
-              <span className="text-xl font-medium text-center whitespace-normal leading-relaxed">View Dealer Performance</span>
+              <span className="text-lg font-medium text-center leading-relaxed">
+                View Dealer<br />Performance
+              </span>
             </Button>
 
             <Button
@@ -38,7 +40,9 @@ const Index = () => {
               size="lg"
               className="h-48 flex items-center justify-center px-12 hover:bg-accent hover:scale-105 transition-all"
             >
-              <span className="text-xl font-medium text-center whitespace-normal leading-relaxed">Review Forecast</span>
+              <span className="text-lg font-medium text-center leading-relaxed">
+                Review<br />Forecast
+              </span>
             </Button>
 
             <Button
