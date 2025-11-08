@@ -91,11 +91,6 @@ const CustomLabel = ({ x, y, width, value, isQuarter, viewBox }: any) => {
 };
 
 export const SalesChart = ({ title, data, color, chartType, viewMode, total }: SalesChartProps) => {
-  const chartData = data.map((d) => ({
-    ...d,
-    displayValue: d.value || null, // null for line chart to break line on zero
-  }));
-
   return (
     <Card>
       <CardHeader>
@@ -106,7 +101,7 @@ export const SalesChart = ({ title, data, color, chartType, viewMode, total }: S
       <CardContent>
         <ResponsiveContainer width="100%" height={400}>
           {chartType === "bar" ? (
-            <BarChart data={chartData}>
+            <BarChart data={data}>
               <XAxis
                 dataKey="name"
                 tick={(props) => <CustomXAxisTick {...props} viewMode={viewMode} />}
@@ -114,7 +109,7 @@ export const SalesChart = ({ title, data, color, chartType, viewMode, total }: S
               />
               <Tooltip />
               <Bar dataKey="value" radius={[8, 8, 0, 0]} maxBarSize={60}>
-                {chartData.map((entry, index) => (
+                {data.map((entry, index) => (
                   <Cell
                     key={`cell-${index}`}
                     fill={entry.isQuarter ? "#000000" : color}
@@ -123,13 +118,13 @@ export const SalesChart = ({ title, data, color, chartType, viewMode, total }: S
                 <LabelList
                   dataKey="value"
                   content={(props) => (
-                    <CustomLabel {...props} isQuarter={chartData[props.index]?.isQuarter} />
+                    <CustomLabel {...props} isQuarter={data[props.index]?.isQuarter} />
                   )}
                 />
               </Bar>
             </BarChart>
           ) : (
-            <LineChart data={chartData}>
+            <LineChart data={data}>
               <XAxis
                 dataKey="name"
                 tick={(props) => <CustomXAxisTick {...props} viewMode={viewMode} />}
@@ -138,16 +133,17 @@ export const SalesChart = ({ title, data, color, chartType, viewMode, total }: S
               <Tooltip />
               <Line
                 type="monotone"
-                dataKey="displayValue"
+                dataKey="value"
                 stroke={color}
                 strokeWidth={2}
                 dot={{ fill: color, r: 4 }}
+                activeDot={{ r: 6 }}
                 connectNulls={false}
               >
                 <LabelList
                   dataKey="value"
                   content={(props) => (
-                    <CustomLabel {...props} isQuarter={chartData[props.index]?.isQuarter} />
+                    <CustomLabel {...props} isQuarter={data[props.index]?.isQuarter} />
                   )}
                 />
               </Line>
