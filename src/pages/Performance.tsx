@@ -195,7 +195,7 @@ const Performance = () => {
       return Object.entries(QUARTERS).map(([quarter, months]) => {
         const total = brandActuals
           .filter((a) => months.includes(a.Month))
-          .reduce((sum, a) => sum + (a[type] || 0), 0);
+          .reduce((sum, a) => sum + (Number(a[type]) || 0), 0);
         return { name: quarter, value: total, isQuarter: true };
       });
     }
@@ -204,14 +204,14 @@ const Performance = () => {
       const monthlyData = MONTH_ORDER.map((month) => {
         const total = brandActuals
           .filter((a) => a.Month === month)
-          .reduce((sum, a) => sum + (a[type] || 0), 0);
+          .reduce((sum, a) => sum + (Number(a[type]) || 0), 0);
         return { name: month, value: total, isQuarter: false };
       });
 
       const quarterlyData = Object.entries(QUARTERS).map(([quarter, months]) => {
         const total = brandActuals
           .filter((a) => months.includes(a.Month))
-          .reduce((sum, a) => sum + (a[type] || 0), 0);
+          .reduce((sum, a) => sum + (Number(a[type]) || 0), 0);
         return { name: quarter, value: total, isQuarter: true };
       });
 
@@ -221,20 +221,20 @@ const Performance = () => {
     return MONTH_ORDER.map((month) => {
       const total = brandActuals
         .filter((a) => a.Month === month)
-        .reduce((sum, a) => sum + (a[type] || 0), 0);
+        .reduce((sum, a) => sum + (Number(a[type]) || 0), 0);
       return { name: month, value: total, isQuarter: false };
     });
   };
 
   const summaryData = useMemo(() => {
-    const totalRetail = actuals.reduce((sum, a) => sum + (a.Retail || 0), 0);
-    const totalFleet = actuals.reduce((sum, a) => sum + (a.Fleet || 0), 0);
+    const totalRetail = actuals.reduce((sum, a) => sum + (Number(a.Retail) || 0), 0);
+    const totalFleet = actuals.reduce((sum, a) => sum + (Number(a.Fleet) || 0), 0);
     const totalFTL = actuals
       .filter((a) => a.Brand === "FTL")
-      .reduce((sum, a) => sum + (a.Retail || 0) + (a.Fleet || 0), 0);
+      .reduce((sum, a) => sum + (Number(a.Retail) || 0) + (Number(a.Fleet) || 0), 0);
     const totalMBT = actuals
       .filter((a) => a.Brand === "MBT")
-      .reduce((sum, a) => sum + (a.Retail || 0) + (a.Fleet || 0), 0);
+      .reduce((sum, a) => sum + (Number(a.Retail) || 0) + (Number(a.Fleet) || 0), 0);
 
     return { totalRetail, totalFleet, totalFTL, totalMBT };
   }, [actuals]);
@@ -242,16 +242,16 @@ const Performance = () => {
   const chartTotals = useMemo(() => {
     const ftlRetail = actuals
       .filter((a) => a.Brand === "FTL")
-      .reduce((sum, a) => sum + (a.Retail || 0), 0);
+      .reduce((sum, a) => sum + (Number(a.Retail) || 0), 0);
     const ftlFleet = actuals
       .filter((a) => a.Brand === "FTL")
-      .reduce((sum, a) => sum + (a.Fleet || 0), 0);
+      .reduce((sum, a) => sum + (Number(a.Fleet) || 0), 0);
     const mbtRetail = actuals
       .filter((a) => a.Brand === "MBT")
-      .reduce((sum, a) => sum + (a.Retail || 0), 0);
+      .reduce((sum, a) => sum + (Number(a.Retail) || 0), 0);
     const mbtFleet = actuals
       .filter((a) => a.Brand === "MBT")
-      .reduce((sum, a) => sum + (a.Fleet || 0), 0);
+      .reduce((sum, a) => sum + (Number(a.Fleet) || 0), 0);
 
     return { ftlRetail, ftlFleet, mbtRetail, mbtFleet };
   }, [actuals]);

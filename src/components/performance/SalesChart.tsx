@@ -68,13 +68,17 @@ const CustomXAxisTick = ({ x, y, payload, viewMode }: any) => {
   );
 };
 
-const CustomLabel = ({ x, y, width, value, isQuarter }: any) => {
-  if (value === 0) return null;
+const CustomLabel = ({ x, y, width, value, isQuarter, viewBox }: any) => {
+  if (value === 0 || value === null || value === undefined) return null;
+  
+  // For line charts, x is the center point; for bar charts, we calculate center
+  const xPos = width !== undefined ? x + width / 2 : x;
+  const yPos = y !== undefined ? y - 5 : (viewBox?.y || 0) - 5;
   
   return (
     <text
-      x={x + width / 2}
-      y={y - 5}
+      x={xPos}
+      y={yPos}
       fill="#666"
       textAnchor="middle"
       fontSize={12}
