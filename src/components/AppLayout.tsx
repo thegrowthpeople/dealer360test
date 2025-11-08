@@ -10,9 +10,9 @@ interface AppLayoutProps {
 export function AppLayout({ children }: AppLayoutProps) {
   return (
     <SidebarProvider>
-      <div className="flex min-h-screen w-full bg-background">
+      <div className="flex min-h-screen w-full bg-background" style={{ gap: 0 }}>
         <AppSidebar />
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col min-w-0" style={{ marginLeft: 0 }}>
           <Header />
           <div className="flex items-center gap-4 bg-background px-4 py-2 border-b">
             <SidebarTrigger />

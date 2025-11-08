@@ -32,7 +32,7 @@ export function AppSidebar() {
   };
 
   return (
-    <Sidebar collapsible="icon" className="w-52">
+    <Sidebar collapsible="icon" className="w-52 border-r">
       <SidebarHeader className="border-b p-4">
         <div className="flex items-center justify-center">
           {open && <span className="font-semibold text-foreground text-lg">Dealer Management</span>}
