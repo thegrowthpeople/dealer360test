@@ -41,7 +41,7 @@ const Index = () => {
               className="h-48 flex items-center justify-center px-12 hover:bg-accent hover:scale-105 transition-all"
             >
               <span className="text-3xl text-center leading-relaxed">
-                <span className="font-normal">Dealer</span><br />
+                <span className="font-normal">View Dealer</span><br />
                 <span className="font-medium">Forecast</span>
               </span>
             </Button>
