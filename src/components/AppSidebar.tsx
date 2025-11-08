@@ -1,7 +1,6 @@
 import { Home, TrendingUp, LineChart, BarChart, PlusCircle, FileText } from "lucide-react";
 import { useLocation, Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import logo from "@/assets/logo-black.svg";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   Sidebar,
@@ -35,9 +34,8 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader className="border-b p-4">
-        <div className="flex items-center gap-3">
-          <img src={logo} alt="Daimler Truck" className="h-8 shrink-0" />
-          {open && <span className="font-semibold text-foreground">BDM Portal</span>}
+        <div className="flex items-center justify-center">
+          {open && <span className="font-semibold text-foreground text-lg">Dealership Management</span>}
         </div>
       </SidebarHeader>
 
