@@ -190,6 +190,11 @@ const Performance = () => {
 
   const prepareChartData = (brand: "FTL" | "MBT", type: "Retail" | "Fleet") => {
     const brandActuals = actuals.filter((a) => a.Brand === brand);
+    
+    // Get current month index to filter out future months
+    const currentDate = new Date();
+    const currentMonthIndex = currentDate.getMonth(); // 0-11
+    const currentYear = currentDate.getFullYear();
 
     if (viewMode === "quarters") {
       return Object.entries(QUARTERS).map(([quarter, months]) => {
@@ -200,12 +205,24 @@ const Performance = () => {
       });
     }
 
-    // Always return all 12 months with 0 for missing data
-    const monthlyData = MONTH_ORDER.map((month) => {
+    // Keep all months but set future months with no data to undefined (won't plot)
+    const monthlyData = MONTH_ORDER.map((month, index) => {
+      // Check if this month is in the future for the selected year
+      const isFutureMonth = selectedYear === currentYear && index > currentMonthIndex;
+      
       const total = brandActuals
         .filter((a) => a.Month === month)
         .reduce((sum, a) => sum + (Number(a[type]) || 0), 0);
-      return { name: month, value: total, isQuarter: false };
+      
+      // For future months with no data, return undefined to skip plotting
+      // For past months, return the total (even if 0)
+      const value = isFutureMonth && total === 0 ? undefined : total;
+      
+      return { 
+        name: month, 
+        value: value, 
+        isQuarter: false 
+      };
     });
 
     if (viewMode === "both") {

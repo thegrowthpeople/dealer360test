@@ -70,7 +70,7 @@ const CustomXAxisTick = ({ x, y, payload, viewMode }: any) => {
 };
 
 const CustomLabel = ({ x, y, width, value, isQuarter, viewBox }: any) => {
-  if (value === 0 || value === null || value === undefined) return null;
+  if (value === 0 || value === null || value === undefined || isNaN(value)) return null;
   
   // For line charts, x is the center point; for bar charts, we calculate center
   const xPos = width !== undefined ? x + width / 2 : x;
