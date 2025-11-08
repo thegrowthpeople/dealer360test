@@ -106,6 +106,7 @@ export const SalesChart = ({ title, data, color, chartType, viewMode, total }: S
                 dataKey="name"
                 tick={(props) => <CustomXAxisTick {...props} viewMode={viewMode} />}
                 interval={0}
+                padding={{ left: 20, right: 20 }}
               />
               <Tooltip />
               <Bar dataKey="value" radius={[8, 8, 0, 0]} maxBarSize={60}>
@@ -129,6 +130,7 @@ export const SalesChart = ({ title, data, color, chartType, viewMode, total }: S
                 dataKey="name"
                 tick={(props) => <CustomXAxisTick {...props} viewMode={viewMode} />}
                 interval={0}
+                padding={{ left: 20, right: 20 }}
               />
               <Tooltip />
               <Line
