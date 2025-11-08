@@ -27,18 +27,18 @@ interface SalesChartProps {
 }
 
 const MONTH_ABBREVIATIONS: Record<string, string> = {
-  January: "Jan",
-  February: "Feb",
-  March: "Mar",
-  April: "Apr",
+  Jan: "Jan",
+  Feb: "Feb",
+  Mar: "Mar",
+  Apr: "Apr",
   May: "May",
-  June: "Jun",
-  July: "Jul",
-  August: "Aug",
-  September: "Sep",
-  October: "Oct",
-  November: "Nov",
-  December: "Dec",
+  Jun: "Jun",
+  Jul: "Jul",
+  Aug: "Aug",
+  Sep: "Sep",
+  Oct: "Oct",
+  Nov: "Nov",
+  Dec: "Dec",
 };
 
 const CustomXAxisTick = ({ x, y, payload, viewMode }: any) => {

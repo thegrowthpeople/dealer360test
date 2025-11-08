@@ -56,15 +56,15 @@ const Performance = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const MONTH_ORDER = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
   ];
 
   const QUARTERS = {
-    Q1: ["January", "February", "March"],
-    Q2: ["April", "May", "June"],
-    Q3: ["July", "August", "September"],
-    Q4: ["October", "November", "December"]
+    Q1: ["Jan", "Feb", "Mar"],
+    Q2: ["Apr", "May", "Jun"],
+    Q3: ["Jul", "Aug", "Sep"],
+    Q4: ["Oct", "Nov", "Dec"]
   };
 
   const STATE_ORDER = ["VIC", "NSW", "QLD", "SA", "WA", "TAS", "NT"];
@@ -127,6 +127,10 @@ const Performance = () => {
           .map((d) => d["Dealer ID"]);
         if (dealerIdsInGroup.length > 0) {
           query = query.in("Dealer ID", dealerIdsInGroup);
+        } else {
+          // If no dealers in group, return empty
+          setActuals([]);
+          return;
         }
       } else if (selectedBDMId !== null) {
         const dealerIdsForBDM = dealerships
@@ -134,12 +138,17 @@ const Performance = () => {
           .map((d) => d["Dealer ID"]);
         if (dealerIdsForBDM.length > 0) {
           query = query.in("Dealer ID", dealerIdsForBDM);
+        } else {
+          // If no dealers for BDM, return empty
+          setActuals([]);
+          return;
         }
       }
 
       const { data, error } = await query;
 
       if (error) throw error;
+      console.log("Fetched actuals:", data?.length, "records");
       setActuals(data || []);
     } catch (error) {
       console.error("Error fetching actuals:", error);
@@ -191,6 +200,8 @@ const Performance = () => {
   const prepareChartData = (brand: "FTL" | "MBT", type: "Retail" | "Fleet") => {
     const brandActuals = actuals.filter((a) => a.Brand === brand);
     
+    console.log(`Preparing ${brand} ${type} data:`, brandActuals.length, "records");
+    
     // Get current month index to filter out future months
     const currentDate = new Date();
     const currentMonthIndex = currentDate.getMonth(); // 0-11
@@ -207,9 +218,8 @@ const Performance = () => {
 
     // Keep all months for X-axis labels, but set future months with no data to undefined
     const monthlyData = MONTH_ORDER.map((month, index) => {
-      const total = brandActuals
-        .filter((a) => a.Month === month)
-        .reduce((sum, a) => sum + (Number(a[type]) || 0), 0);
+      const monthData = brandActuals.filter((a) => a.Month === month);
+      const total = monthData.reduce((sum, a) => sum + (Number(a[type]) || 0), 0);
       
       // Only hide future months if we're viewing current year AND there's no data
       const isFutureMonth = selectedYear === currentYear && index > currentMonthIndex;
@@ -221,6 +231,8 @@ const Performance = () => {
         isQuarter: false 
       };
     });
+
+    console.log(`Monthly data for ${brand} ${type}:`, monthlyData);
 
     if (viewMode === "both") {
       const quarterlyData = Object.entries(QUARTERS).map(([quarter, months]) => {
