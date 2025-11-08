@@ -63,10 +63,10 @@ export function SimpleSidebar({ isCollapsed, onToggle }: SimpleSidebarProps) {
               key={item.path}
               to={item.path}
               className={cn(
-                "flex items-center gap-3 px-3 py-2.5 rounded-md transition-all duration-200",
+                "flex items-center rounded-md transition-all duration-200",
                 "hover:bg-accent hover:text-accent-foreground",
                 active && "bg-primary text-primary-foreground hover:bg-primary/90",
-                isCollapsed && "justify-center"
+                isCollapsed ? "justify-center px-3 py-2.5" : "gap-3 px-3 py-2.5"
               )}
             >
               <Icon className="h-5 w-5 shrink-0" />
