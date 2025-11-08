@@ -27,9 +27,9 @@ const Index = () => {
               onClick={() => navigate("/performance")}
               variant="outline"
               size="lg"
-              className="h-48 flex flex-col items-center justify-center gap-6 px-12 hover:bg-accent hover:scale-105 transition-all"
+              className="h-96 flex flex-col items-center justify-center gap-6 px-12 hover:bg-accent hover:scale-105 transition-all"
             >
-              <TrendingUp className="w-64 h-64" />
+              <TrendingUp className="w-64 h-64 shrink-0" />
               <span className="text-lg font-medium text-center leading-relaxed">
                 Dealer<br />Performance
               </span>
@@ -39,9 +39,9 @@ const Index = () => {
               onClick={() => navigate("/forecast")}
               variant="outline"
               size="lg"
-              className="h-48 flex flex-col items-center justify-center gap-6 px-12 hover:bg-accent hover:scale-105 transition-all"
+              className="h-96 flex flex-col items-center justify-center gap-6 px-12 hover:bg-accent hover:scale-105 transition-all"
             >
-              <Search className="w-64 h-64" />
+              <Search className="w-64 h-64 shrink-0" />
               <span className="text-lg font-medium text-center leading-relaxed">
                 Dealer<br />Forecast
               </span>
@@ -51,9 +51,9 @@ const Index = () => {
               onClick={() => navigate("/business-plan")}
               variant="outline"
               size="lg"
-              className="h-48 flex flex-col items-center justify-center gap-6 px-8 hover:bg-accent hover:scale-105 transition-all"
+              className="h-96 flex flex-col items-center justify-center gap-6 px-8 hover:bg-accent hover:scale-105 transition-all"
             >
-              <Target className="w-64 h-64" />
+              <Target className="w-64 h-64 shrink-0" />
               <span className="text-lg font-medium text-center leading-relaxed">
                 Business Plan<br />Progress
               </span>
