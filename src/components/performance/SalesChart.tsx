@@ -70,7 +70,8 @@ const CustomXAxisTick = ({ x, y, payload, viewMode }: any) => {
 };
 
 const CustomLabel = ({ x, y, width, value, isQuarter, viewBox }: any) => {
-  if (value === 0 || value === null || value === undefined || isNaN(value)) return null;
+  // Only hide labels for undefined values (future months), show everything else including 0
+  if (value === null || value === undefined) return null;
   
   // For line charts, x is the center point; for bar charts, we calculate center
   const xPos = width !== undefined ? x + width / 2 : x;
