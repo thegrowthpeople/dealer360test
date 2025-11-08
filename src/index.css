@@ -38,6 +38,10 @@ All colors MUST be HSL.
 
     --radius: 0.75rem;
 
+    --sidebar: 0 0% 100%;
+    --sidebar-foreground: 215 25% 15%;
+    --sidebar-border: 215 20% 88%;
+
     --chart-1: 210 100% 42%;
     --chart-2: 215 85% 52%;
     --chart-3: 195 75% 48%;
@@ -81,6 +85,10 @@ All colors MUST be HSL.
     --input: 215 20% 20%;
     --ring: 210 100% 55%;
 
+    --sidebar: 215 25% 12%;
+    --sidebar-foreground: 210 20% 95%;
+    --sidebar-border: 215 20% 20%;
+
     --chart-1: 210 100% 55%;
     --chart-2: 215 85% 58%;
     --chart-3: 195 75% 52%;
@@ -96,24 +104,5 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
-  }
-  
-  /* Force remove any spacing from sidebar */
-  [data-sidebar] {
-    margin: 0 !important;
-  }
-  
-  .group.peer {
-    margin: 0 !important;
-  }
-  
-  .peer ~ * {
-    margin-left: 0 !important;
-  }
-  
-  /* Override any default container padding */
-  body > div {
-    margin: 0;
-    padding: 0;
   }
 }
