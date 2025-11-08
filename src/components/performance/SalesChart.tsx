@@ -9,6 +9,7 @@ import {
   ResponsiveContainer,
   LabelList,
   Cell,
+  ComposedChart,
 } from "recharts";
 
 interface ChartDataPoint {
@@ -114,7 +115,7 @@ export const SalesChart = ({ title, data, color, chartType, viewMode, total }: S
       <CardContent>
         <ResponsiveContainer width="100%" height={400}>
           {chartType === "bar" ? (
-            <BarChart data={data} margin={{ top: 20, right: 10, left: 10, bottom: 5 }}>
+            <ComposedChart data={data} margin={{ top: 20, right: 10, left: 10, bottom: 5 }}>
               <XAxis
                 dataKey="name"
                 tick={(props) => <CustomXAxisTick {...props} viewMode={viewMode} />}
@@ -133,7 +134,16 @@ export const SalesChart = ({ title, data, color, chartType, viewMode, total }: S
                   content={(props) => renderCustomLabel(props, data)}
                 />
               </Bar>
-            </BarChart>
+              <Line
+                type="monotone"
+                dataKey="value"
+                stroke="#000000"
+                strokeWidth={2}
+                strokeDasharray="5 5"
+                dot={false}
+                connectNulls={false}
+              />
+            </ComposedChart>
           ) : (
             <LineChart data={data} margin={{ top: 20, right: 10, left: 10, bottom: 5 }}>
               <XAxis
