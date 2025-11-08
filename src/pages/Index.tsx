@@ -29,7 +29,7 @@ const Index = () => {
               size="lg"
               className="h-48 flex flex-col items-center justify-center gap-6 px-12 hover:bg-accent hover:scale-105 transition-all"
             >
-              <TrendingUp className="w-32 h-32" />
+              <TrendingUp className="w-64 h-64" />
               <span className="text-lg font-medium text-center leading-relaxed">
                 Dealer<br />Performance
               </span>
@@ -41,7 +41,7 @@ const Index = () => {
               size="lg"
               className="h-48 flex flex-col items-center justify-center gap-6 px-12 hover:bg-accent hover:scale-105 transition-all"
             >
-              <Search className="w-32 h-32" />
+              <Search className="w-64 h-64" />
               <span className="text-lg font-medium text-center leading-relaxed">
                 Dealer<br />Forecast
               </span>
@@ -53,7 +53,7 @@ const Index = () => {
               size="lg"
               className="h-48 flex flex-col items-center justify-center gap-6 px-8 hover:bg-accent hover:scale-105 transition-all"
             >
-              <Target className="w-32 h-32" />
+              <Target className="w-64 h-64" />
               <span className="text-lg font-medium text-center leading-relaxed">
                 Business Plan<br />Progress
               </span>
