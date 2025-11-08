@@ -74,7 +74,7 @@ const CustomLabel = ({ x, y, width, value, isQuarter, viewBox }: any) => {
   
   // For line charts, x is the center point; for bar charts, we calculate center
   const xPos = width !== undefined ? x + width / 2 : x;
-  const yPos = y !== undefined ? y - 5 : (viewBox?.y || 0) - 5;
+  const yPos = y !== undefined ? y - 10 : (viewBox?.y || 0) - 10;
   
   return (
     <text
