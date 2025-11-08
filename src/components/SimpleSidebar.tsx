@@ -1,4 +1,4 @@
-import { Home, TrendingUp, Search, Target, ChevronLeft, ChevronRight } from "lucide-react";
+import { Home, TrendingUp, Search, Target, ChevronLeft, ChevronRight, Truck } from "lucide-react";
 import { useLocation, Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -10,6 +10,7 @@ const menuItems = [
   { path: "/performance", label: "Performance", icon: TrendingUp },
   { path: "/forecast", label: "Forecast", icon: Search },
   { path: "/business-plan", label: "Business Plan", icon: Target },
+  { path: "/dealerships", label: "Dealerships", icon: Truck },
 ];
 
 interface SimpleSidebarProps {
