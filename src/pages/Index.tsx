@@ -28,8 +28,9 @@ const Index = () => {
               size="lg"
               className="h-48 flex items-center justify-center px-12 hover:bg-accent hover:scale-105 transition-all"
             >
-              <span className="text-3xl font-medium text-center leading-relaxed">
-                Dealer<br />Performance
+              <span className="text-3xl text-center leading-relaxed">
+                <span className="font-normal">Dealer</span><br />
+                <span className="font-medium">Performance</span>
               </span>
             </Button>
 
@@ -39,8 +40,9 @@ const Index = () => {
               size="lg"
               className="h-48 flex items-center justify-center px-12 hover:bg-accent hover:scale-105 transition-all"
             >
-              <span className="text-3xl font-medium text-center leading-relaxed">
-                Dealer<br />Forecast
+              <span className="text-3xl text-center leading-relaxed">
+                <span className="font-normal">Dealer</span><br />
+                <span className="font-medium">Forecast</span>
               </span>
             </Button>
 
@@ -50,8 +52,9 @@ const Index = () => {
               size="lg"
               className="h-48 flex items-center justify-center px-8 hover:bg-accent hover:scale-105 transition-all"
             >
-              <span className="text-3xl font-medium text-center leading-relaxed">
-                Review<br />Business Plan
+              <span className="text-3xl text-center leading-relaxed">
+                <span className="font-normal">Review</span><br />
+                <span className="font-medium">Business Plan</span>
               </span>
             </Button>
           </div>
