@@ -216,14 +216,14 @@ const Performance = () => {
       });
     }
 
-    // Keep all months for X-axis labels, but set future months with no data to undefined
+    // Keep all months for X-axis labels, but hide current and future months with no data
     const monthlyData = MONTH_ORDER.map((month, index) => {
       const monthData = brandActuals.filter((a) => a.Month === month);
       const total = monthData.reduce((sum, a) => sum + (Number(a[type]) || 0), 0);
       
-      // Only hide future months if we're viewing current year AND there's no data
-      const isFutureMonth = selectedYear === currentYear && index > currentMonthIndex;
-      const shouldHide = isFutureMonth && total === 0;
+      // Hide current month and future months if we're viewing current year AND there's no data
+      const isCurrentOrFutureMonth = selectedYear === currentYear && index >= currentMonthIndex;
+      const shouldHide = isCurrentOrFutureMonth && total === 0;
       
       return { 
         name: month, 
