@@ -32,10 +32,10 @@ export function AppSidebar() {
   };
 
   return (
-    <Sidebar collapsible="icon">
+    <Sidebar collapsible="icon" className="w-52">
       <SidebarHeader className="border-b p-4">
         <div className="flex items-center justify-center">
-          {open && <span className="font-semibold text-foreground text-lg">Dealership Management</span>}
+          {open && <span className="font-semibold text-foreground text-lg">Dealer Management</span>}
         </div>
       </SidebarHeader>
 
