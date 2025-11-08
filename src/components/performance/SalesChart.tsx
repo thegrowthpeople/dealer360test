@@ -69,62 +69,28 @@ const CustomXAxisTick = ({ x, y, payload, viewMode }: any) => {
   );
 };
 
-const CustomBarLabel = (props: any) => {
-  const { x, y, width, value, index, data } = props;
+const renderCustomLabel = (props: any, chartData: any[]) => {
+  const { x, y, width, height, value, index } = props;
   
-  console.log("Bar Label:", { index, value, x, y, width, hasData: !!data });
-  
-  if (value === null || value === undefined) {
-    console.log("Bar label null/undefined for index:", index);
-    return null;
-  }
+  // Skip if no value
+  if (value === null || value === undefined) return null;
   
   const numValue = Number(value);
-  if (isNaN(numValue)) {
-    console.log("Bar label NaN for index:", index, "value:", value);
-    return null;
-  }
+  if (isNaN(numValue)) return null;
   
-  const isQuarter = data?.[index]?.isQuarter || false;
+  const isQuarter = chartData?.[index]?.isQuarter || false;
+  
+  // Calculate position based on whether we have width (bar) or not (line)
+  const xPos = width !== undefined ? x + width / 2 : x;
+  const yPos = height !== undefined ? y - 10 : y - 10;
   
   return (
     <text
-      x={x + width / 2}
-      y={y - 10}
+      x={xPos}
+      y={yPos}
       fill="#666"
       textAnchor="middle"
-      fontSize={12}
-      fontWeight={isQuarter ? "bold" : "normal"}
-    >
-      {numValue}
-    </text>
-  );
-};
-
-const CustomLineLabel = (props: any) => {
-  const { x, y, value, index, data } = props;
-  
-  console.log("Line Label:", { index, value, x, y, hasData: !!data });
-  
-  if (value === null || value === undefined) {
-    console.log("Line label null/undefined for index:", index);
-    return null;
-  }
-  
-  const numValue = Number(value);
-  if (isNaN(numValue)) {
-    console.log("Line label NaN for index:", index, "value:", value);
-    return null;
-  }
-  
-  const isQuarter = data?.[index]?.isQuarter || false;
-  
-  return (
-    <text
-      x={x}
-      y={y - 10}
-      fill="#666"
-      textAnchor="middle"
+      dominantBaseline="auto"
       fontSize={12}
       fontWeight={isQuarter ? "bold" : "normal"}
     >
@@ -134,8 +100,6 @@ const CustomLineLabel = (props: any) => {
 };
 
 export const SalesChart = ({ title, data, color, chartType, viewMode, total }: SalesChartProps) => {
-  console.log(`${title} chart data:`, data);
-  
   return (
     <Card>
       <CardHeader>
@@ -146,7 +110,7 @@ export const SalesChart = ({ title, data, color, chartType, viewMode, total }: S
       <CardContent>
         <ResponsiveContainer width="100%" height={400}>
           {chartType === "bar" ? (
-            <BarChart data={data}>
+            <BarChart data={data} margin={{ top: 20, right: 10, left: 10, bottom: 5 }}>
               <XAxis
                 dataKey="name"
                 tick={(props) => <CustomXAxisTick {...props} viewMode={viewMode} />}
@@ -162,14 +126,12 @@ export const SalesChart = ({ title, data, color, chartType, viewMode, total }: S
                   />
                 ))}
                 <LabelList
-                  dataKey="value"
-                  position="top"
-                  content={(props) => <CustomBarLabel {...props} data={data} />}
+                  content={(props) => renderCustomLabel(props, data)}
                 />
               </Bar>
             </BarChart>
           ) : (
-            <LineChart data={data}>
+            <LineChart data={data} margin={{ top: 20, right: 10, left: 10, bottom: 5 }}>
               <XAxis
                 dataKey="name"
                 tick={(props) => <CustomXAxisTick {...props} viewMode={viewMode} />}
@@ -187,9 +149,7 @@ export const SalesChart = ({ title, data, color, chartType, viewMode, total }: S
                 connectNulls={false}
               >
                 <LabelList
-                  dataKey="value"
-                  position="top"
-                  content={(props) => <CustomLineLabel {...props} data={data} />}
+                  content={(props) => renderCustomLabel(props, data)}
                 />
               </Line>
             </LineChart>
