@@ -1,4 +1,3 @@
-import { Navigation } from "@/components/Navigation";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -124,9 +123,7 @@ const NewReport = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navigation />
-      <main className="container mx-auto px-4 py-8 max-w-7xl">
+    <div className="container mx-auto px-4 py-8 max-w-7xl">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground mb-2">Create Weekly Report</h1>
           <p className="text-muted-foreground">Submit your weekly activities and forecasts</p>
@@ -532,7 +529,6 @@ const NewReport = () => {
             Submit Report
           </Button>
         </div>
-      </main>
     </div>
   );
 };

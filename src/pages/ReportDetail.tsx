@@ -1,4 +1,3 @@
-import { Navigation } from "@/components/Navigation";
 import { Card } from "@/components/ui/card";
 import { mockReports } from "@/data/mockData";
 import { useParams, useNavigate } from "react-router-dom";
@@ -13,11 +12,8 @@ const ReportDetail = () => {
 
   if (!report) {
     return (
-      <div className="min-h-screen bg-background">
-        <Navigation />
-        <main className="container mx-auto px-4 py-8">
-          <p className="text-muted-foreground">Report not found</p>
-        </main>
+      <div className="container mx-auto px-4 py-8">
+        <p className="text-muted-foreground">Report not found</p>
       </div>
     );
   }
@@ -39,9 +35,7 @@ const ReportDetail = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navigation />
-      <main className="container mx-auto px-4 py-8 max-w-7xl">
+    <div className="container mx-auto px-4 py-8 max-w-7xl">
         <Button
           variant="ghost"
           onClick={() => navigate("/reports")}
@@ -239,7 +233,6 @@ const ReportDetail = () => {
             </div>
           </div>
         </div>
-      </main>
     </div>
   );
 };
