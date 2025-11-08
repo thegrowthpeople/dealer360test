@@ -29,7 +29,7 @@ const Index = () => {
               size="lg"
               className="h-32 flex flex-col gap-3 hover:bg-accent hover:scale-105 transition-all"
             >
-              <TrendingUp className="h-12 w-12" />
+              <TrendingUp className="h-16 w-16" />
               <span className="text-base font-medium">View Dealer Performance</span>
             </Button>
 
@@ -39,7 +39,7 @@ const Index = () => {
               size="lg"
               className="h-32 flex flex-col gap-3 hover:bg-accent hover:scale-105 transition-all"
             >
-              <LineChart className="h-12 w-12" />
+              <LineChart className="h-16 w-16" />
               <span className="text-base font-medium">Review Forecast</span>
             </Button>
 
@@ -49,7 +49,7 @@ const Index = () => {
               size="lg"
               className="h-32 flex flex-col gap-3 hover:bg-accent hover:scale-105 transition-all"
             >
-              <BarChart className="h-12 w-12" />
+              <BarChart className="h-16 w-16" />
               <span className="text-base font-medium">Examine Business Plan</span>
             </Button>
           </div>
