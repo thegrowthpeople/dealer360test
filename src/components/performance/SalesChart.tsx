@@ -72,10 +72,18 @@ const CustomXAxisTick = ({ x, y, payload, viewMode }: any) => {
 const CustomBarLabel = (props: any) => {
   const { x, y, width, value, index, data } = props;
   
-  if (value === null || value === undefined) return null;
+  console.log("Bar Label:", { index, value, x, y, width, hasData: !!data });
+  
+  if (value === null || value === undefined) {
+    console.log("Bar label null/undefined for index:", index);
+    return null;
+  }
   
   const numValue = Number(value);
-  if (isNaN(numValue)) return null;
+  if (isNaN(numValue)) {
+    console.log("Bar label NaN for index:", index, "value:", value);
+    return null;
+  }
   
   const isQuarter = data?.[index]?.isQuarter || false;
   
@@ -96,10 +104,18 @@ const CustomBarLabel = (props: any) => {
 const CustomLineLabel = (props: any) => {
   const { x, y, value, index, data } = props;
   
-  if (value === null || value === undefined) return null;
+  console.log("Line Label:", { index, value, x, y, hasData: !!data });
+  
+  if (value === null || value === undefined) {
+    console.log("Line label null/undefined for index:", index);
+    return null;
+  }
   
   const numValue = Number(value);
-  if (isNaN(numValue)) return null;
+  if (isNaN(numValue)) {
+    console.log("Line label NaN for index:", index, "value:", value);
+    return null;
+  }
   
   const isQuarter = data?.[index]?.isQuarter || false;
   
@@ -118,6 +134,8 @@ const CustomLineLabel = (props: any) => {
 };
 
 export const SalesChart = ({ title, data, color, chartType, viewMode, total }: SalesChartProps) => {
+  console.log(`${title} chart data:`, data);
+  
   return (
     <Card>
       <CardHeader>
