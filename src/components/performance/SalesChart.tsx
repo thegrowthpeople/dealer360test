@@ -46,11 +46,14 @@ const CustomXAxisTick = ({ x, y, payload, viewMode }: any) => {
   
   // In quarters view, only show quarters
   // In months view, only show months
-  // In both view, show both
+  // In both view, only show quarters
   if (viewMode === "quarters" && !isQuarter) {
     return null;
   }
   if (viewMode === "months" && isQuarter) {
+    return null;
+  }
+  if (viewMode === "both" && !isQuarter) {
     return null;
   }
   
