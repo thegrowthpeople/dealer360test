@@ -39,7 +39,7 @@ export function SimpleSidebar({ isCollapsed, onToggle }: SimpleSidebarProps) {
         {!isCollapsed && (
           <div className="flex flex-col">
             <span className="font-bold text-foreground text-sm">DEALER MANAGER</span>
-            <span className="text-xs text-muted-foreground">Heavy Duty Trucks</span>
+            <span className="text-xs text-muted-foreground">Heavy Duty</span>
           </div>
         )}
         <Button
