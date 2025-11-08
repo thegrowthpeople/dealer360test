@@ -122,7 +122,7 @@ export const SalesChart = ({ title, data, color, chartType, viewMode, total }: S
                 {data.map((entry, index) => (
                   <Cell
                     key={`cell-${index}`}
-                    fill={entry.isQuarter ? "#000000" : color}
+                    fill={color}
                   />
                 ))}
                 <LabelList
