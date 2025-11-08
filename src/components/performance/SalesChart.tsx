@@ -44,11 +44,12 @@ const MONTH_ABBREVIATIONS: Record<string, string> = {
 const CustomXAxisTick = ({ x, y, payload, viewMode }: any) => {
   const isQuarter = payload.value.startsWith("Q");
   
-  // In "both" view, only show quarter labels
-  if (viewMode === "both" && !isQuarter) {
+  // Always show month labels, hide quarters in non-"both" views
+  if (viewMode !== "both" && isQuarter) {
     return null;
   }
-
+  
+  // In "both" view, show both months and quarters
   const label = MONTH_ABBREVIATIONS[payload.value] || payload.value;
   
   return (
@@ -59,7 +60,7 @@ const CustomXAxisTick = ({ x, y, payload, viewMode }: any) => {
         dy={16}
         textAnchor="middle"
         fill="#666"
-        fontSize={12}
+        fontSize={isQuarter ? 11 : 10}
         fontWeight={isQuarter ? "bold" : "normal"}
       >
         {label}
