@@ -138,7 +138,7 @@ export const SalesChart = ({ title, data, color, chartType, viewMode, total }: S
                     <Cell
                       key={`cell-${index}`}
                       fill={fillColor}
-                      stroke={entry.isQuarter ? color : undefined}
+                      stroke={entry.isQuarter ? "#4a5568" : undefined}
                       strokeWidth={entry.isQuarter ? 3 : 0}
                     />
                   );
