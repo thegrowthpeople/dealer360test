@@ -1,9 +1,13 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { DashboardStats } from "@/components/DashboardStats";
 import { DashboardCharts } from "@/components/DashboardCharts";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { Home, PlusCircle, FileText } from "lucide-react";
 
 const Index = () => {
+  const navigate = useNavigate();
   const [selectedBDM, setSelectedBDM] = useState<string>("all");
   const [selectedDealership, setSelectedDealership] = useState<string>("all");
   const [selectedLocation, setSelectedLocation] = useState<string>("all");
@@ -29,7 +33,22 @@ const Index = () => {
     <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground mb-2">BDM Dashboard</h1>
-          <p className="text-muted-foreground">Overview of your weekly activities and performance</p>
+          <p className="text-muted-foreground mb-4">Overview of your weekly activities and performance</p>
+          
+          <div className="flex flex-wrap gap-3">
+            <Button onClick={() => navigate("/")} variant="outline" className="gap-2">
+              <Home className="w-4 h-4" />
+              Dashboard
+            </Button>
+            <Button onClick={() => navigate("/new-report")} variant="default" className="gap-2">
+              <PlusCircle className="w-4 h-4" />
+              New Report
+            </Button>
+            <Button onClick={() => navigate("/reports")} variant="outline" className="gap-2">
+              <FileText className="w-4 h-4" />
+              Previous Reports
+            </Button>
+          </div>
         </div>
 
         {/* Filters */}
