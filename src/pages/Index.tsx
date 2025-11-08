@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { TrendingUp, Search, Target } from "lucide-react";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -27,10 +26,9 @@ const Index = () => {
               onClick={() => navigate("/performance")}
               variant="outline"
               size="lg"
-              className="h-96 flex flex-col items-center justify-center gap-6 px-12 hover:bg-accent hover:scale-105 transition-all"
+              className="h-48 flex items-center justify-center px-12 hover:bg-accent hover:scale-105 transition-all"
             >
-              <TrendingUp className="w-64 h-64 shrink-0" />
-              <span className="text-lg font-medium text-center leading-relaxed">
+              <span className="text-3xl font-medium text-center leading-relaxed">
                 Dealer<br />Performance
               </span>
             </Button>
@@ -39,10 +37,9 @@ const Index = () => {
               onClick={() => navigate("/forecast")}
               variant="outline"
               size="lg"
-              className="h-96 flex flex-col items-center justify-center gap-6 px-12 hover:bg-accent hover:scale-105 transition-all"
+              className="h-48 flex items-center justify-center px-12 hover:bg-accent hover:scale-105 transition-all"
             >
-              <Search className="w-64 h-64 shrink-0" />
-              <span className="text-lg font-medium text-center leading-relaxed">
+              <span className="text-3xl font-medium text-center leading-relaxed">
                 Dealer<br />Forecast
               </span>
             </Button>
@@ -51,10 +48,9 @@ const Index = () => {
               onClick={() => navigate("/business-plan")}
               variant="outline"
               size="lg"
-              className="h-96 flex flex-col items-center justify-center gap-6 px-8 hover:bg-accent hover:scale-105 transition-all"
+              className="h-48 flex items-center justify-center px-8 hover:bg-accent hover:scale-105 transition-all"
             >
-              <Target className="w-64 h-64 shrink-0" />
-              <span className="text-lg font-medium text-center leading-relaxed">
+              <span className="text-3xl font-medium text-center leading-relaxed">
                 Business Plan<br />Progress
               </span>
             </Button>
