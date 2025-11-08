@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { TrendingUp, LineChart, Target } from "lucide-react";
+import { TrendingUp, Search, Target } from "lucide-react";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -27,10 +27,11 @@ const Index = () => {
               onClick={() => navigate("/performance")}
               variant="outline"
               size="lg"
-              className="h-48 flex items-center justify-center px-12 hover:bg-accent hover:scale-105 transition-all"
+              className="h-48 flex flex-col items-center justify-center gap-4 px-12 hover:bg-accent hover:scale-105 transition-all"
             >
+              <TrendingUp size={48} />
               <span className="text-lg font-medium text-center leading-relaxed">
-                View Dealer<br />Performance
+                Dealer<br />Performance
               </span>
             </Button>
 
@@ -38,10 +39,11 @@ const Index = () => {
               onClick={() => navigate("/forecast")}
               variant="outline"
               size="lg"
-              className="h-48 flex items-center justify-center px-12 hover:bg-accent hover:scale-105 transition-all"
+              className="h-48 flex flex-col items-center justify-center gap-4 px-12 hover:bg-accent hover:scale-105 transition-all"
             >
+              <Search size={48} />
               <span className="text-lg font-medium text-center leading-relaxed">
-                Review<br />Forecast
+                Forecast
               </span>
             </Button>
 
@@ -49,8 +51,9 @@ const Index = () => {
               onClick={() => navigate("/business-plan")}
               variant="outline"
               size="lg"
-              className="h-48 flex items-center justify-center px-8 hover:bg-accent hover:scale-105 transition-all"
+              className="h-48 flex flex-col items-center justify-center gap-4 px-8 hover:bg-accent hover:scale-105 transition-all"
             >
+              <Target size={48} />
               <span className="text-lg font-medium text-center leading-relaxed">
                 Business Plan<br />Progress
               </span>
