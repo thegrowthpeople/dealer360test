@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Header } from "@/components/Header";
 
@@ -10,18 +10,16 @@ interface AppLayoutProps {
 export function AppLayout({ children }: AppLayoutProps) {
   return (
     <SidebarProvider defaultOpen={true}>
-      <div className="relative flex min-h-screen w-full">
-        <AppSidebar />
-        <div className="flex flex-col flex-1 ml-[var(--sidebar-width)]">
-          <Header />
-          <div className="flex items-center gap-4 bg-background px-4 py-2 border-b">
-            <SidebarTrigger />
-          </div>
-          <main className="flex-1">
-            {children}
-          </main>
+      <AppSidebar />
+      <SidebarInset>
+        <Header />
+        <div className="flex items-center gap-4 bg-background px-4 py-2 border-b">
+          <SidebarTrigger />
         </div>
-      </div>
+        <main className="flex-1 p-6">
+          {children}
+        </main>
+      </SidebarInset>
     </SidebarProvider>
   );
 }
