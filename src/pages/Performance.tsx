@@ -200,14 +200,15 @@ const Performance = () => {
       });
     }
 
-    if (viewMode === "both") {
-      const monthlyData = MONTH_ORDER.map((month) => {
-        const total = brandActuals
-          .filter((a) => a.Month === month)
-          .reduce((sum, a) => sum + (Number(a[type]) || 0), 0);
-        return { name: month, value: total, isQuarter: false };
-      });
+    // Always return all 12 months with 0 for missing data
+    const monthlyData = MONTH_ORDER.map((month) => {
+      const total = brandActuals
+        .filter((a) => a.Month === month)
+        .reduce((sum, a) => sum + (Number(a[type]) || 0), 0);
+      return { name: month, value: total, isQuarter: false };
+    });
 
+    if (viewMode === "both") {
       const quarterlyData = Object.entries(QUARTERS).map(([quarter, months]) => {
         const total = brandActuals
           .filter((a) => months.includes(a.Month))
@@ -218,12 +219,7 @@ const Performance = () => {
       return [...monthlyData, ...quarterlyData];
     }
 
-    return MONTH_ORDER.map((month) => {
-      const total = brandActuals
-        .filter((a) => a.Month === month)
-        .reduce((sum, a) => sum + (Number(a[type]) || 0), 0);
-      return { name: month, value: total, isQuarter: false };
-    });
+    return monthlyData;
   };
 
   const summaryData = useMemo(() => {
