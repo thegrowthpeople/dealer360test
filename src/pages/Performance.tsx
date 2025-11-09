@@ -673,7 +673,7 @@ const Performance = () => {
 
       <div className="space-y-6">
         <SalesChart
-          title="Mercedes-Benz Total"
+          title="Mercedes-Benz"
           data={prepareCombinedChartData("MBT")}
           color="#0EA5E9"
           chartType={chartType}
@@ -681,7 +681,7 @@ const Performance = () => {
           total={chartTotals.mbtRetail + chartTotals.mbtFleet}
         />
         <SalesChart
-          title="Freightliner Total"
+          title="Freightliner"
           data={prepareCombinedChartData("FTL")}
           color="#9b87f5"
           chartType={chartType}
