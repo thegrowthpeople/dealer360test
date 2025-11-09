@@ -294,6 +294,79 @@ const Performance = () => {
     return monthlyData;
   };
 
+  const prepareCombinedChartData = (brand: "FTL" | "MBT") => {
+    const brandActuals = actuals.filter((a) => a.Brand === brand);
+    
+    // Get current month index to filter out future months
+    const currentDate = new Date();
+    const currentMonthIndex = currentDate.getMonth(); // 0-11
+    const currentYear = currentDate.getFullYear();
+
+    if (viewMode === "quarters") {
+      return Object.entries(QUARTERS).map(([quarter, months]) => {
+        const total = brandActuals
+          .filter((a) => months.includes(a.Month))
+          .reduce((sum, a) => sum + (Number(a.Retail) || 0) + (Number(a.Fleet) || 0), 0);
+        return { name: quarter, value: total, isQuarter: true };
+      });
+    }
+
+    // Keep all months for X-axis labels, but hide current and future months with no data
+    const monthlyData = MONTH_ORDER.map((month, index) => {
+      const monthData = brandActuals.filter((a) => a.Month === month);
+      const total = monthData.reduce((sum, a) => sum + (Number(a.Retail) || 0) + (Number(a.Fleet) || 0), 0);
+      
+      // Hide current month and future months if we're viewing current year AND there's no data
+      const isCurrentOrFutureMonth = selectedYear === currentYear && index >= currentMonthIndex;
+      const shouldHide = isCurrentOrFutureMonth && total === 0;
+      
+      return { 
+        name: month, 
+        value: shouldHide ? undefined : total, 
+        isQuarter: false 
+      };
+    });
+
+    if (viewMode === "both") {
+      // Interleave quarters after their respective months
+      const result: Array<{ name: string; value: number | undefined; isQuarter: boolean }> = [];
+      
+      MONTH_ORDER.forEach((month, index) => {
+        const monthData = brandActuals.filter((a) => a.Month === month);
+        const total = monthData.reduce((sum, a) => sum + (Number(a.Retail) || 0) + (Number(a.Fleet) || 0), 0);
+        
+        const isCurrentOrFutureMonth = selectedYear === currentYear && index >= currentMonthIndex;
+        const shouldHide = isCurrentOrFutureMonth && total === 0;
+        
+        result.push({ 
+          name: month, 
+          value: shouldHide ? undefined : total, 
+          isQuarter: false 
+        });
+        
+        // Add quarter after the 3rd, 6th, 9th, and 12th month
+        if ((index + 1) % 3 === 0) {
+          const quarterIndex = Math.floor(index / 3);
+          const quarterKey = `Q${quarterIndex + 1}` as keyof typeof QUARTERS;
+          const quarterMonths = QUARTERS[quarterKey];
+          const quarterTotal = brandActuals
+            .filter((a) => quarterMonths.includes(a.Month))
+            .reduce((sum, a) => sum + (Number(a.Retail) || 0) + (Number(a.Fleet) || 0), 0);
+          
+          result.push({ 
+            name: quarterKey, 
+            value: quarterTotal, 
+            isQuarter: true 
+          });
+        }
+      });
+      
+      return result;
+    }
+
+    return monthlyData;
+  };
+
   const summaryData = useMemo(() => {
     const totalRetail = actuals.reduce((sum, a) => sum + (Number(a.Retail) || 0), 0);
     const totalFleet = actuals.reduce((sum, a) => sum + (Number(a.Fleet) || 0), 0);
@@ -596,6 +669,25 @@ const Performance = () => {
           <ToggleGroupItem value="quarters">Quarters</ToggleGroupItem>
           <ToggleGroupItem value="both">Both</ToggleGroupItem>
         </ToggleGroup>
+      </div>
+
+      <div className="space-y-6">
+        <SalesChart
+          title="MBT Total"
+          data={prepareCombinedChartData("MBT")}
+          color="#0EA5E9"
+          chartType={chartType}
+          viewMode={viewMode}
+          total={chartTotals.mbtRetail + chartTotals.mbtFleet}
+        />
+        <SalesChart
+          title="FTL Total"
+          data={prepareCombinedChartData("FTL")}
+          color="#9b87f5"
+          chartType={chartType}
+          viewMode={viewMode}
+          total={chartTotals.ftlRetail + chartTotals.ftlFleet}
+        />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
