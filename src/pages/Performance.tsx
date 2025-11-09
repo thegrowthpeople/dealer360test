@@ -673,7 +673,7 @@ const Performance = () => {
 
       <div className="space-y-6">
         <SalesChart
-          title="MBT Total"
+          title="Mercedes-Benz Total"
           data={prepareCombinedChartData("MBT")}
           color="#0EA5E9"
           chartType={chartType}
@@ -681,7 +681,7 @@ const Performance = () => {
           total={chartTotals.mbtRetail + chartTotals.mbtFleet}
         />
         <SalesChart
-          title="FTL Total"
+          title="Freightliner Total"
           data={prepareCombinedChartData("FTL")}
           color="#9b87f5"
           chartType={chartType}
@@ -692,7 +692,7 @@ const Performance = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <SalesChart
-          title="MBT Retail"
+          title="Mercedes-Benz Retail"
           data={prepareChartData("MBT", "Retail")}
           color="#0EA5E9"
           chartType={chartType}
@@ -700,7 +700,7 @@ const Performance = () => {
           total={chartTotals.mbtRetail}
         />
         <SalesChart
-          title="MBT Fleet"
+          title="Mercedes-Benz Fleet"
           data={prepareChartData("MBT", "Fleet")}
           color="#0EA5E9"
           chartType={chartType}
@@ -708,7 +708,7 @@ const Performance = () => {
           total={chartTotals.mbtFleet}
         />
         <SalesChart
-          title="FTL Retail"
+          title="Freightliner Retail"
           data={prepareChartData("FTL", "Retail")}
           color="#9b87f5"
           chartType={chartType}
@@ -716,7 +716,7 @@ const Performance = () => {
           total={chartTotals.ftlRetail}
         />
         <SalesChart
-          title="FTL Fleet"
+          title="Freightliner Fleet"
           data={prepareChartData("FTL", "Fleet")}
           color="#9b87f5"
           chartType={chartType}
