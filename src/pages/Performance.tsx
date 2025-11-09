@@ -321,23 +321,23 @@ const Performance = () => {
     return { ftlRetail, ftlFleet, mbtRetail, mbtFleet };
   }, [actuals]);
 
-  const pageTitle = useMemo(() => {
+  const filterLabel = useMemo(() => {
     if (selectedDealerId !== null) {
       const dealer = filteredDealerships.find((d) => d["Dealer ID"] === selectedDealerId);
       if (dealer) {
-        return `Dealer Performance - ${dealer["Dealer Group"]} ${dealer.Dealership}`;
+        return `${dealer["Dealer Group"]} ${dealer.Dealership}`;
       }
     }
     if (selectedGroup !== null) {
-      return `Dealer Performance - ${selectedGroup}`;
+      return selectedGroup;
     }
     if (selectedBDMId !== null) {
       const bdm = bdms.find((b) => b["BDM ID"] === selectedBDMId);
       if (bdm) {
-        return `Dealer Performance - ${bdm["Full Name"]}`;
+        return bdm["Full Name"];
       }
     }
-    return "Dealer Performance";
+    return null;
   }, [selectedBDMId, selectedGroup, selectedDealerId, bdms, filteredDealerships]);
 
   if (isLoading) {
@@ -350,9 +350,14 @@ const Performance = () => {
 
   return (
     <div className="min-h-screen p-6 space-y-6">
-      <div>
-        <h1 className="text-4xl font-bold text-foreground mb-2">{pageTitle}</h1>
-        <p className="text-muted-foreground">Track dealership performance across brands</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-4xl font-bold text-foreground mb-2">Dealer Performance</h1>
+          <p className="text-muted-foreground">Track dealership performance across brands</p>
+        </div>
+        {filterLabel && (
+          <h2 className="text-3xl font-semibold text-foreground">{filterLabel}</h2>
+        )}
       </div>
 
       {!selectedBDMId && <BDMInfo bdm={selectedBDM} />}
