@@ -336,7 +336,7 @@ const Performance = () => {
         <p className="text-muted-foreground">Track dealership performance across brands</p>
       </div>
 
-      <BDMInfo bdm={selectedBDM} />
+      {!selectedBDMId && <BDMInfo bdm={selectedBDM} />}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <Popover open={bdmSearchOpen} onOpenChange={setBdmSearchOpen}>
