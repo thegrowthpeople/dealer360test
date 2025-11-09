@@ -350,14 +350,11 @@ const Performance = () => {
 
   return (
     <div className="min-h-screen p-6 space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-4xl font-bold text-foreground mb-2">Dealer Performance</h1>
-          <p className="text-muted-foreground">Track dealership performance across brands</p>
-        </div>
-        {filterLabel && (
-          <h2 className="text-3xl font-semibold text-foreground">{filterLabel}</h2>
-        )}
+      <div>
+        <h1 className="text-4xl font-bold text-foreground mb-2">Dealer Performance</h1>
+        <p className="text-muted-foreground">
+          {filterLabel || "Track dealership performance across brands"}
+        </p>
       </div>
 
       {!selectedBDMId && <BDMInfo bdm={selectedBDM} />}
