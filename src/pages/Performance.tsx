@@ -321,6 +321,25 @@ const Performance = () => {
     return { ftlRetail, ftlFleet, mbtRetail, mbtFleet };
   }, [actuals]);
 
+  const pageTitle = useMemo(() => {
+    if (selectedDealerId !== null) {
+      const dealer = filteredDealerships.find((d) => d["Dealer ID"] === selectedDealerId);
+      if (dealer) {
+        return `Dealer Performance - ${dealer["Dealer Group"]} : ${dealer.Dealership}`;
+      }
+    }
+    if (selectedGroup !== null) {
+      return `Dealer Performance - ${selectedGroup}`;
+    }
+    if (selectedBDMId !== null) {
+      const bdm = bdms.find((b) => b["BDM ID"] === selectedBDMId);
+      if (bdm) {
+        return `Dealer Performance - ${bdm["Full Name"]}`;
+      }
+    }
+    return "Dealer Performance";
+  }, [selectedBDMId, selectedGroup, selectedDealerId, bdms, filteredDealerships]);
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -332,7 +351,7 @@ const Performance = () => {
   return (
     <div className="min-h-screen p-6 space-y-6">
       <div>
-        <h1 className="text-4xl font-bold text-foreground mb-2">Dealer Performance</h1>
+        <h1 className="text-4xl font-bold text-foreground mb-2">{pageTitle}</h1>
         <p className="text-muted-foreground">Track dealership performance across brands</p>
       </div>
 
