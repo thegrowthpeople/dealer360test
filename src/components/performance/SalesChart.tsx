@@ -10,6 +10,7 @@ import {
   LabelList,
   Cell,
 } from "recharts";
+import { formatNumber } from "@/lib/utils";
 
 interface ChartDataPoint {
   name: string;
@@ -112,7 +113,7 @@ export const SalesChart = ({ title, data, color, chartType, viewMode, total }: S
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
           <span className="text-2xl font-bold text-foreground">{title}</span>
-          <span className="text-2xl font-bold text-foreground">{total}</span>
+          <span className="text-2xl font-bold text-foreground">{formatNumber(total)}</span>
         </CardTitle>
       </CardHeader>
       <CardContent>
