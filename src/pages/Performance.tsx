@@ -68,6 +68,8 @@ const Performance = () => {
   const [chartType, setChartType] = useState<"bar" | "line">("bar");
   const [viewMode, setViewMode] = useState<"months" | "quarters" | "both">("months");
   const [isLoading, setIsLoading] = useState(true);
+  const [bdmSearchOpen, setBdmSearchOpen] = useState(false);
+  const [groupSearchOpen, setGroupSearchOpen] = useState(false);
   const [dealershipSearchOpen, setDealershipSearchOpen] = useState(false);
 
   const MONTH_ORDER = [
@@ -337,46 +339,127 @@ const Performance = () => {
       <BDMInfo bdm={selectedBDM} />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Select
-          value={selectedBDMId?.toString() || "all"}
-          onValueChange={(value) => {
-            setSelectedBDMId(value === "all" ? null : parseInt(value));
-            setSelectedGroup(null);
-            setSelectedDealerId(null);
-          }}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="All BDMs" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All BDMs</SelectItem>
-            {bdms.map((bdm) => (
-              <SelectItem key={bdm["BDM ID"]} value={bdm["BDM ID"].toString()}>
-                {bdm["Full Name"]}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <Popover open={bdmSearchOpen} onOpenChange={setBdmSearchOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              role="combobox"
+              aria-expanded={bdmSearchOpen}
+              className="w-full justify-between"
+            >
+              {selectedBDMId
+                ? bdms.find((b) => b["BDM ID"] === selectedBDMId)?.["Full Name"]
+                : "All BDMs"}
+              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-full p-0" align="start">
+            <Command>
+              <CommandInput placeholder="Search BDM..." />
+              <CommandList>
+                <CommandEmpty>No BDM found.</CommandEmpty>
+                <CommandGroup>
+                  <CommandItem
+                    value="all"
+                    onSelect={() => {
+                      setSelectedBDMId(null);
+                      setSelectedGroup(null);
+                      setSelectedDealerId(null);
+                      setBdmSearchOpen(false);
+                    }}
+                  >
+                    <Check
+                      className={cn(
+                        "mr-2 h-4 w-4",
+                        selectedBDMId === null ? "opacity-100" : "opacity-0"
+                      )}
+                    />
+                    All BDMs
+                  </CommandItem>
+                  {bdms.map((bdm) => (
+                    <CommandItem
+                      key={bdm["BDM ID"]}
+                      value={`${bdm["Full Name"]}-${bdm["BDM ID"]}`}
+                      onSelect={() => {
+                        setSelectedBDMId(bdm["BDM ID"]);
+                        setSelectedGroup(null);
+                        setSelectedDealerId(null);
+                        setBdmSearchOpen(false);
+                      }}
+                    >
+                      <Check
+                        className={cn(
+                          "mr-2 h-4 w-4",
+                          selectedBDMId === bdm["BDM ID"] ? "opacity-100" : "opacity-0"
+                        )}
+                      />
+                      {bdm["Full Name"]}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </CommandList>
+            </Command>
+          </PopoverContent>
+        </Popover>
 
-        <Select
-          value={selectedGroup || "all"}
-          onValueChange={(value) => {
-            setSelectedGroup(value === "all" ? null : value);
-            setSelectedDealerId(null);
-          }}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="All Dealer Groups" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Dealer Groups</SelectItem>
-            {filteredDealerGroups.map((group) => (
-              <SelectItem key={group} value={group}>
-                {group}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <Popover open={groupSearchOpen} onOpenChange={setGroupSearchOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              role="combobox"
+              aria-expanded={groupSearchOpen}
+              className="w-full justify-between"
+            >
+              {selectedGroup || "All Dealer Groups"}
+              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-full p-0" align="start">
+            <Command>
+              <CommandInput placeholder="Search dealer group..." />
+              <CommandList>
+                <CommandEmpty>No dealer group found.</CommandEmpty>
+                <CommandGroup>
+                  <CommandItem
+                    value="all"
+                    onSelect={() => {
+                      setSelectedGroup(null);
+                      setSelectedDealerId(null);
+                      setGroupSearchOpen(false);
+                    }}
+                  >
+                    <Check
+                      className={cn(
+                        "mr-2 h-4 w-4",
+                        selectedGroup === null ? "opacity-100" : "opacity-0"
+                      )}
+                    />
+                    All Dealer Groups
+                  </CommandItem>
+                  {filteredDealerGroups.map((group) => (
+                    <CommandItem
+                      key={group}
+                      value={group}
+                      onSelect={() => {
+                        setSelectedGroup(group);
+                        setSelectedDealerId(null);
+                        setGroupSearchOpen(false);
+                      }}
+                    >
+                      <Check
+                        className={cn(
+                          "mr-2 h-4 w-4",
+                          selectedGroup === group ? "opacity-100" : "opacity-0"
+                        )}
+                      />
+                      {group}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </CommandList>
+            </Command>
+          </PopoverContent>
+        </Popover>
 
         <Popover open={dealershipSearchOpen} onOpenChange={setDealershipSearchOpen}>
           <PopoverTrigger asChild>
