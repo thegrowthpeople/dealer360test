@@ -127,10 +127,18 @@ export const SalesChart = ({ title, data, color, chartType, viewMode, total }: S
               <Tooltip />
               <Bar dataKey="value" radius={[8, 8, 0, 0]} maxBarSize={60}>
                 {data.map((entry, index) => {
+                  // In "both" mode: months are white with colored outline, quarters keep solid fill
+                  const isMonthInBothMode = viewMode === "both" && !entry.isQuarter;
+                  const fillColor = isMonthInBothMode ? "#ffffff" : color;
+                  const strokeColor = isMonthInBothMode ? color : undefined;
+                  const strokeWidth = isMonthInBothMode ? 2 : 0;
+                  
                   return (
                     <Cell
                       key={`cell-${index}`}
-                      fill={color}
+                      fill={fillColor}
+                      stroke={strokeColor}
+                      strokeWidth={strokeWidth}
                     />
                   );
                 })}
