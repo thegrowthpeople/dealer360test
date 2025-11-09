@@ -112,7 +112,7 @@ export const SalesChart = ({ title, data, color, chartType, viewMode, total }: S
       <CardHeader>
         <CardTitle className="flex items-center justify-between text-lg font-semibold">
           <span>{title}</span>
-          <span>{total}</span>
+          <span className="text-2xl font-bold text-primary">{total}</span>
         </CardTitle>
       </CardHeader>
       <CardContent>
