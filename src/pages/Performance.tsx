@@ -466,10 +466,11 @@ const Performance = () => {
                       ? dealerships.find(d => d["Dealer Group"] === filteredDealerGroups[index - 1])?.Region || ""
                       : "";
                     const showSeparator = index > 0 && currentRegion !== previousRegion;
+                    const showVelocitySeparator = group === "Velocity";
                     
                     return (
                       <div key={group}>
-                        {showSeparator && (
+                        {(showSeparator || showVelocitySeparator) && (
                           <div className="border-t border-border my-1" />
                         )}
                         <CommandItem
