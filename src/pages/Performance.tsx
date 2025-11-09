@@ -355,8 +355,8 @@ const Performance = () => {
     <div className="min-h-screen p-6 space-y-6">
       <div>
         <h1 className="text-4xl font-bold text-foreground mb-2">Dealer Performance</h1>
-        <p className="text-muted-foreground">
-          {filterLabel || "Track dealership performance across brands"}
+        <p className="text-muted-foreground font-bold">
+          {filterLabel || "All Dealerships"}
         </p>
       </div>
 
