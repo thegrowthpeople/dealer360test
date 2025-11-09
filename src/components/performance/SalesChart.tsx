@@ -127,19 +127,10 @@ export const SalesChart = ({ title, data, color, chartType, viewMode, total }: S
               <Tooltip />
               <Bar dataKey="value" radius={[8, 8, 0, 0]} maxBarSize={60}>
                 {data.map((entry, index) => {
-                  // Use darker shades for quarters to distinguish them
-                  let fillColor = color;
-                  if (entry.isQuarter) {
-                    // For FTL purple (#9b87f5), use darker shade
-                    // For MBT blue (#0EA5E9), use darker shade
-                    fillColor = color === "#9b87f5" ? "#7c3aed" : "#0284c7";
-                  }
                   return (
                     <Cell
                       key={`cell-${index}`}
-                      fill={fillColor}
-                      stroke={entry.isQuarter ? "#4a5568" : undefined}
-                      strokeWidth={entry.isQuarter ? 3 : 0}
+                      fill={color}
                     />
                   );
                 })}
