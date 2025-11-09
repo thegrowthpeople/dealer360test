@@ -9,11 +9,25 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { BarChart3, LineChart } from "lucide-react";
+import { BarChart3, LineChart, Check, ChevronsUpDown } from "lucide-react";
 import { SummaryCards } from "@/components/performance/SummaryCards";
 import { SalesChart } from "@/components/performance/SalesChart";
 import { BDMInfo } from "@/components/performance/BDMInfo";
 import { useToast } from "@/hooks/use-toast";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
 
 interface Dealership {
   "Dealer ID": number;
@@ -54,6 +68,7 @@ const Performance = () => {
   const [chartType, setChartType] = useState<"bar" | "line">("bar");
   const [viewMode, setViewMode] = useState<"months" | "quarters" | "both">("months");
   const [isLoading, setIsLoading] = useState(true);
+  const [dealershipSearchOpen, setDealershipSearchOpen] = useState(false);
 
   const MONTH_ORDER = [
     "Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -363,24 +378,64 @@ const Performance = () => {
           </SelectContent>
         </Select>
 
-        <Select
-          value={selectedDealerId?.toString() || "all"}
-          onValueChange={(value) => {
-            setSelectedDealerId(value === "all" ? null : parseInt(value));
-          }}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="All Dealerships" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Dealerships</SelectItem>
-            {filteredDealerships.map((dealer) => (
-              <SelectItem key={dealer["Dealer ID"]} value={dealer["Dealer ID"].toString()}>
-                {dealer.Dealership}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <Popover open={dealershipSearchOpen} onOpenChange={setDealershipSearchOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              role="combobox"
+              aria-expanded={dealershipSearchOpen}
+              className="w-full justify-between"
+            >
+              {selectedDealerId
+                ? filteredDealerships.find((d) => d["Dealer ID"] === selectedDealerId)?.Dealership
+                : "All Dealerships"}
+              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-full p-0" align="start">
+            <Command>
+              <CommandInput placeholder="Search dealership..." />
+              <CommandList>
+                <CommandEmpty>No dealership found.</CommandEmpty>
+                <CommandGroup>
+                  <CommandItem
+                    value="all"
+                    onSelect={() => {
+                      setSelectedDealerId(null);
+                      setDealershipSearchOpen(false);
+                    }}
+                  >
+                    <Check
+                      className={cn(
+                        "mr-2 h-4 w-4",
+                        selectedDealerId === null ? "opacity-100" : "opacity-0"
+                      )}
+                    />
+                    All Dealerships
+                  </CommandItem>
+                  {filteredDealerships.map((dealer) => (
+                    <CommandItem
+                      key={dealer["Dealer ID"]}
+                      value={`${dealer.Dealership}-${dealer["Dealer ID"]}`}
+                      onSelect={() => {
+                        setSelectedDealerId(dealer["Dealer ID"]);
+                        setDealershipSearchOpen(false);
+                      }}
+                    >
+                      <Check
+                        className={cn(
+                          "mr-2 h-4 w-4",
+                          selectedDealerId === dealer["Dealer ID"] ? "opacity-100" : "opacity-0"
+                        )}
+                      />
+                      {dealer.Dealership}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </CommandList>
+            </Command>
+          </PopoverContent>
+        </Popover>
 
         <Select
           value={selectedYear?.toString() || "all"}
