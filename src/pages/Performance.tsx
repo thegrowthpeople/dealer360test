@@ -35,6 +35,7 @@ interface Dealership {
   "Dealer Group": string | null;
   "BDM ID": number;
   State: string | null;
+  Region: string | null;
 }
 
 interface BDM {
@@ -186,12 +187,14 @@ const Performance = () => {
 
     const uniqueGroups = [...new Set(groups.map((d) => d["Dealer Group"]).filter(Boolean))];
     
-    // Sort by state order
+    // Sort by region order: Metro, Regional, Independent, NZ, Internal, then others
+    const REGION_ORDER = ["Metro", "Regional", "Independent", "NZ", "Internal"];
+    
     return uniqueGroups.sort((a, b) => {
-      const stateA = dealerships.find(d => d["Dealer Group"] === a)?.State || "";
-      const stateB = dealerships.find(d => d["Dealer Group"] === b)?.State || "";
-      const indexA = STATE_ORDER.indexOf(stateA);
-      const indexB = STATE_ORDER.indexOf(stateB);
+      const regionA = dealerships.find(d => d["Dealer Group"] === a)?.Region || "";
+      const regionB = dealerships.find(d => d["Dealer Group"] === b)?.Region || "";
+      const indexA = REGION_ORDER.indexOf(regionA);
+      const indexB = REGION_ORDER.indexOf(regionB);
       return (indexA === -1 ? 999 : indexA) - (indexB === -1 ? 999 : indexB);
     });
   }, [dealerships, selectedBDMId]);
