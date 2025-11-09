@@ -325,7 +325,7 @@ const Performance = () => {
     if (selectedDealerId !== null) {
       const dealer = filteredDealerships.find((d) => d["Dealer ID"] === selectedDealerId);
       if (dealer) {
-        return `Dealer Performance - ${dealer["Dealer Group"]} : ${dealer.Dealership}`;
+        return `Dealer Performance - ${dealer["Dealer Group"]} ${dealer.Dealership}`;
       }
     }
     if (selectedGroup !== null) {
