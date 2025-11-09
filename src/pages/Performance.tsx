@@ -460,25 +460,37 @@ const Performance = () => {
                     />
                     All Dealer Groups
                   </CommandItem>
-                  {filteredDealerGroups.map((group) => (
-                    <CommandItem
-                      key={group}
-                      value={group}
-                      onSelect={() => {
-                        setSelectedGroup(group);
-                        setSelectedDealerId(null);
-                        setGroupSearchOpen(false);
-                      }}
-                    >
-                      <Check
-                        className={cn(
-                          "mr-2 h-4 w-4",
-                          selectedGroup === group ? "opacity-100" : "opacity-0"
+                  {filteredDealerGroups.map((group, index) => {
+                    const currentRegion = dealerships.find(d => d["Dealer Group"] === group)?.Region || "";
+                    const previousRegion = index > 0 
+                      ? dealerships.find(d => d["Dealer Group"] === filteredDealerGroups[index - 1])?.Region || ""
+                      : "";
+                    const showSeparator = index > 0 && currentRegion !== previousRegion;
+                    
+                    return (
+                      <div key={group}>
+                        {showSeparator && (
+                          <div className="border-t border-border my-1" />
                         )}
-                      />
-                      {group}
-                    </CommandItem>
-                  ))}
+                        <CommandItem
+                          value={group}
+                          onSelect={() => {
+                            setSelectedGroup(group);
+                            setSelectedDealerId(null);
+                            setGroupSearchOpen(false);
+                          }}
+                        >
+                          <Check
+                            className={cn(
+                              "mr-2 h-4 w-4",
+                              selectedGroup === group ? "opacity-100" : "opacity-0"
+                            )}
+                          />
+                          {group}
+                        </CommandItem>
+                      </div>
+                    );
+                  })}
                 </CommandGroup>
               </CommandList>
             </Command>
