@@ -29,7 +29,7 @@ export const DashboardCharts = () => {
           </div>
         </div>
         <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={currentMonthData} margin={{ top: 20, right: 10, left: 10, bottom: 5 }}>
+          <BarChart data={currentMonthData} margin={{ top: 40, right: 10, left: 10, bottom: 5 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
             <XAxis 
               dataKey="week" 
@@ -50,11 +50,7 @@ export const DashboardCharts = () => {
               animationDuration={800}
               animationEasing="ease-in-out"
             >
-              <LabelList 
-                dataKey="meetings" 
-                position="top" 
-                style={{ fill: 'hsl(var(--foreground))', fontSize: '14px', fontWeight: 600 }}
-              />
+              <LabelList dataKey="meetings" position="top" fill="hsl(var(--foreground))" fontSize={14} fontWeight="bold" />
             </Bar>
           </BarChart>
         </ResponsiveContainer>
@@ -75,7 +71,7 @@ export const DashboardCharts = () => {
           </div>
         </div>
         <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={currentMonthData} margin={{ top: 20, right: 10, left: 10, bottom: 5 }}>
+          <BarChart data={currentMonthData} margin={{ top: 40, right: 10, left: 10, bottom: 5 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
             <XAxis 
               dataKey="week" 
@@ -96,11 +92,7 @@ export const DashboardCharts = () => {
               animationDuration={800}
               animationEasing="ease-in-out"
             >
-              <LabelList 
-                dataKey="orders" 
-                position="top" 
-                style={{ fill: 'hsl(var(--foreground))', fontSize: '14px', fontWeight: 600 }}
-              />
+              <LabelList dataKey="orders" position="top" fill="hsl(var(--foreground))" fontSize={14} fontWeight="bold" />
             </Bar>
           </BarChart>
         </ResponsiveContainer>
@@ -121,7 +113,7 @@ export const DashboardCharts = () => {
           </div>
         </div>
         <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={currentMonthData} margin={{ top: 20, right: 10, left: 10, bottom: 5 }}>
+          <BarChart data={currentMonthData} margin={{ top: 40, right: 10, left: 10, bottom: 5 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
             <XAxis 
               dataKey="week" 
@@ -142,11 +134,7 @@ export const DashboardCharts = () => {
               animationDuration={800}
               animationEasing="ease-in-out"
             >
-              <LabelList 
-                dataKey="forecast" 
-                position="top" 
-                style={{ fill: 'hsl(var(--foreground))', fontSize: '14px', fontWeight: 600 }}
-              />
+              <LabelList dataKey="forecast" position="top" fill="hsl(var(--foreground))" fontSize={14} fontWeight="bold" />
             </Bar>
           </BarChart>
         </ResponsiveContainer>
