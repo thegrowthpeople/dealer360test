@@ -106,6 +106,10 @@ const CustomBar = (props: any, viewMode: string, chartData: any[]) => {
       fill={fill}
       stroke={stroke}
       strokeWidth={strokeWidth}
+      style={{
+        transition: 'opacity 0.3s ease, transform 0.2s ease',
+      }}
+      className="hover:opacity-80"
     />
   );
 };
@@ -142,7 +146,7 @@ const renderCustomLabel = (props: any, chartData: any[]) => {
 
 export const SalesChart = ({ title, data, color, chartType, viewMode, total }: SalesChartProps) => {
   return (
-    <Card>
+    <Card className="animate-fade-in">
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
           <span className="text-2xl font-bold text-foreground">{title}</span>
@@ -164,6 +168,8 @@ export const SalesChart = ({ title, data, color, chartType, viewMode, total }: S
                 dataKey="value" 
                 maxBarSize={120}
                 shape={(props) => CustomBar(props, viewMode, data)}
+                animationDuration={800}
+                animationEasing="ease-in-out"
               >
                 {data.map((entry, index) => {
                   // In "both" mode: months are white with colored outline, quarters keep solid fill
@@ -203,6 +209,8 @@ export const SalesChart = ({ title, data, color, chartType, viewMode, total }: S
                 dot={{ fill: color, r: 4 }}
                 activeDot={{ r: 6 }}
                 connectNulls={false}
+                animationDuration={800}
+                animationEasing="ease-in-out"
               >
                 <LabelList
                   content={(props) => renderCustomLabel(props, data)}

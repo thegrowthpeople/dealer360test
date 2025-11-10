@@ -15,7 +15,7 @@ export const DashboardCharts = () => {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-3 gap-6 max-w-[1600px] mx-auto">
       {/* Meetings Chart */}
-      <Card className="p-6 shadow-soft">
+      <Card className="p-6 shadow-soft animate-fade-in">
         <div className="flex items-center gap-3 mb-2">
           <div className="w-10 h-10 rounded-lg bg-chart-1/10 flex items-center justify-center">
             <Users className="w-5 h-5 text-chart-1" />
@@ -43,7 +43,13 @@ export const DashboardCharts = () => {
                 borderRadius: 'var(--radius)'
               }}
             />
-            <Bar dataKey="meetings" fill="hsl(var(--chart-1))" radius={[8, 8, 0, 0]}>
+            <Bar 
+              dataKey="meetings" 
+              fill="hsl(var(--chart-1))" 
+              radius={[8, 8, 0, 0]}
+              animationDuration={800}
+              animationEasing="ease-in-out"
+            >
               <LabelList 
                 dataKey="meetings" 
                 position="top" 
@@ -55,7 +61,7 @@ export const DashboardCharts = () => {
       </Card>
 
       {/* Orders Chart */}
-      <Card className="p-6 shadow-soft">
+      <Card className="p-6 shadow-soft animate-fade-in" style={{ animationDelay: '0.1s' }}>
         <div className="flex items-center gap-3 mb-2">
           <div className="w-10 h-10 rounded-lg bg-chart-2/10 flex items-center justify-center">
             <Package className="w-5 h-5 text-chart-2" />
@@ -83,7 +89,13 @@ export const DashboardCharts = () => {
                 borderRadius: 'var(--radius)'
               }}
             />
-            <Bar dataKey="orders" fill="hsl(var(--chart-2))" radius={[8, 8, 0, 0]}>
+            <Bar 
+              dataKey="orders" 
+              fill="hsl(var(--chart-2))" 
+              radius={[8, 8, 0, 0]}
+              animationDuration={800}
+              animationEasing="ease-in-out"
+            >
               <LabelList 
                 dataKey="orders" 
                 position="top" 
@@ -95,7 +107,7 @@ export const DashboardCharts = () => {
       </Card>
 
       {/* Forecast Chart */}
-      <Card className="p-6 shadow-soft">
+      <Card className="p-6 shadow-soft animate-fade-in" style={{ animationDelay: '0.2s' }}>
         <div className="flex items-center gap-3 mb-2">
           <div className="w-10 h-10 rounded-lg bg-chart-3/10 flex items-center justify-center">
             <TrendingUp className="w-5 h-5 text-chart-3" />
@@ -123,7 +135,13 @@ export const DashboardCharts = () => {
                 borderRadius: 'var(--radius)'
               }}
             />
-            <Bar dataKey="forecast" fill="hsl(var(--chart-3))" radius={[8, 8, 0, 0]}>
+            <Bar 
+              dataKey="forecast" 
+              fill="hsl(var(--chart-3))" 
+              radius={[8, 8, 0, 0]}
+              animationDuration={800}
+              animationEasing="ease-in-out"
+            >
               <LabelList 
                 dataKey="forecast" 
                 position="top" 
