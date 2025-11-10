@@ -6,10 +6,10 @@ const Index = () => {
 
   return (
     <div className="container mx-auto px-4 pt-20 pb-8">
-      <div className="max-w-3xl mx-auto text-center space-y-16">
+      <div className="max-w-5xl mx-auto text-center space-y-16">
         {/* Welcome Title */}
         <div className="animate-fade-in">
-          <h1 className="text-5xl font-bold text-foreground mb-2">
+          <h1 className="text-5xl xl:text-6xl font-bold text-foreground mb-2">
             Welcome, Gary
           </h1>
         </div>

@@ -10,7 +10,7 @@ interface SummaryCardsProps {
 
 export const SummaryCards = ({ totalRetail, totalFleet, totalFTL, totalMBT }: SummaryCardsProps) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 gap-4">
       <Card className="p-6">
         <div className="flex items-start justify-between">
           <div>

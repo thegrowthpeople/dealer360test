@@ -425,17 +425,18 @@ const Performance = () => {
   }
 
   return (
-    <div className="min-h-screen p-6 space-y-6">
-      <div>
-        <h1 className="text-4xl font-bold text-foreground mb-2">Dealer Performance</h1>
-        <p className="text-muted-foreground">
-          {filterLabel || "All Dealerships"}
-        </p>
-      </div>
+    <div className="min-h-screen p-6 xl:px-12 2xl:px-16">
+      <div className="max-w-[1600px] mx-auto space-y-6">
+        <div>
+          <h1 className="text-4xl xl:text-5xl font-bold text-foreground mb-2">Dealer Performance</h1>
+          <p className="text-muted-foreground">
+            {filterLabel || "All Dealerships"}
+          </p>
+        </div>
 
-      {!selectedBDMId && <BDMInfo bdm={selectedBDM} />}
+        {!selectedBDMId && <BDMInfo bdm={selectedBDM} />}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-4">
         <Popover open={bdmSearchOpen} onOpenChange={setBdmSearchOpen}>
           <PopoverTrigger asChild>
             <Button
@@ -648,11 +649,11 @@ const Performance = () => {
             ))}
           </SelectContent>
         </Select>
-      </div>
+        </div>
 
-      <SummaryCards {...summaryData} />
+        <SummaryCards {...summaryData} />
 
-      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+        <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
         <ToggleGroup type="single" value={chartType} onValueChange={(v) => v && setChartType(v as any)}>
           <ToggleGroupItem value="bar" aria-label="Bar chart">
             <BarChart3 className="w-4 h-4 mr-2" />
@@ -669,60 +670,61 @@ const Performance = () => {
           <ToggleGroupItem value="quarters">Quarters</ToggleGroupItem>
           <ToggleGroupItem value="both">Both</ToggleGroupItem>
         </ToggleGroup>
-      </div>
+        </div>
 
-      <div className="space-y-6">
-        <SalesChart
-          title="Mercedes-Benz"
-          data={prepareCombinedChartData("MBT")}
-          color="#0EA5E9"
-          chartType={chartType}
-          viewMode={viewMode}
-          total={chartTotals.mbtRetail + chartTotals.mbtFleet}
-        />
-        <SalesChart
-          title="Freightliner"
-          data={prepareCombinedChartData("FTL")}
-          color="#9b87f5"
-          chartType={chartType}
-          viewMode={viewMode}
-          total={chartTotals.ftlRetail + chartTotals.ftlFleet}
-        />
-      </div>
+        <div className="space-y-6">
+          <SalesChart
+            title="Mercedes-Benz"
+            data={prepareCombinedChartData("MBT")}
+            color="#0EA5E9"
+            chartType={chartType}
+            viewMode={viewMode}
+            total={chartTotals.mbtRetail + chartTotals.mbtFleet}
+          />
+          <SalesChart
+            title="Freightliner"
+            data={prepareCombinedChartData("FTL")}
+            color="#9b87f5"
+            chartType={chartType}
+            viewMode={viewMode}
+            total={chartTotals.ftlRetail + chartTotals.ftlFleet}
+          />
+        </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <SalesChart
-          title="Mercedes-Benz Retail"
-          data={prepareChartData("MBT", "Retail")}
-          color="#0EA5E9"
-          chartType={chartType}
-          viewMode={viewMode}
-          total={chartTotals.mbtRetail}
-        />
-        <SalesChart
-          title="Mercedes-Benz Fleet"
-          data={prepareChartData("MBT", "Fleet")}
-          color="#0EA5E9"
-          chartType={chartType}
-          viewMode={viewMode}
-          total={chartTotals.mbtFleet}
-        />
-        <SalesChart
-          title="Freightliner Retail"
-          data={prepareChartData("FTL", "Retail")}
-          color="#9b87f5"
-          chartType={chartType}
-          viewMode={viewMode}
-          total={chartTotals.ftlRetail}
-        />
-        <SalesChart
-          title="Freightliner Fleet"
-          data={prepareChartData("FTL", "Fleet")}
-          color="#9b87f5"
-          chartType={chartType}
-          viewMode={viewMode}
-          total={chartTotals.ftlFleet}
-        />
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-6">
+          <SalesChart
+            title="Mercedes-Benz Retail"
+            data={prepareChartData("MBT", "Retail")}
+            color="#0EA5E9"
+            chartType={chartType}
+            viewMode={viewMode}
+            total={chartTotals.mbtRetail}
+          />
+          <SalesChart
+            title="Mercedes-Benz Fleet"
+            data={prepareChartData("MBT", "Fleet")}
+            color="#0EA5E9"
+            chartType={chartType}
+            viewMode={viewMode}
+            total={chartTotals.mbtFleet}
+          />
+          <SalesChart
+            title="Freightliner Retail"
+            data={prepareChartData("FTL", "Retail")}
+            color="#9b87f5"
+            chartType={chartType}
+            viewMode={viewMode}
+            total={chartTotals.ftlRetail}
+          />
+          <SalesChart
+            title="Freightliner Fleet"
+            data={prepareChartData("FTL", "Fleet")}
+            color="#9b87f5"
+            chartType={chartType}
+            viewMode={viewMode}
+            total={chartTotals.ftlFleet}
+          />
+        </div>
       </div>
     </div>
   );

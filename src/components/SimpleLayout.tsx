@@ -21,7 +21,7 @@ export function SimpleLayout({ children }: SimpleLayoutProps) {
         )}
       >
         <Header />
-        <main className="px-6 pb-6">
+        <main className="px-6 xl:px-12 2xl:px-16 pb-6">
           {children}
         </main>
       </div>
