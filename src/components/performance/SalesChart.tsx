@@ -83,8 +83,8 @@ const CustomBar = (props: any, viewMode: string, chartData: any[]) => {
   const isQuarter = chartData?.[index]?.isQuarter || false;
   const isMonthInBothMode = viewMode === "both" && !isQuarter;
   
-  // Make month bars 50% narrower in "both" mode
-  const barWidth = isMonthInBothMode ? width * 0.5 : width;
+  // Make month bars 80% of quarter bar width in "both" mode
+  const barWidth = isMonthInBothMode ? width * 0.8 : width;
   const barX = isMonthInBothMode ? x + (width - barWidth) / 2 : x;
   
   return (
