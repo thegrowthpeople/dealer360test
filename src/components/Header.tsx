@@ -10,9 +10,8 @@ export const Header = () => {
           <img src={logo} alt="Daimler Truck" className="h-8" />
         </div>
 
-        {/* User Welcome */}
-        <div className="text-sm text-muted-foreground shrink-0 hidden md:block">
-          <span>Welcome, </span>
+        {/* User Info */}
+        <div className="text-sm shrink-0 hidden md:block">
           <span className="font-medium text-foreground">Gary Parker</span>
         </div>
       </div>
