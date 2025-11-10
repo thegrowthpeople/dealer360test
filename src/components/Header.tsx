@@ -8,7 +8,7 @@ export const Header = () => {
       <div className="container mx-auto px-4 h-full flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center shrink-0">
-          <img src={logo} alt="Daimler Truck" className="h-8 dark:invert" />
+          <img src={logo} alt="Daimler Truck" className="h-8 dark:invert transition-all duration-500 ease-in-out" />
         </div>
         
         {/* Theme Toggle */}
