@@ -12,7 +12,7 @@ const ReportDetail = () => {
 
   if (!report) {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <div className="py-8">
         <p className="text-muted-foreground">Report not found</p>
       </div>
     );
@@ -35,7 +35,7 @@ const ReportDetail = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-7xl">
+    <div className="py-8">
         <Button
           variant="ghost"
           onClick={() => navigate("/reports")}

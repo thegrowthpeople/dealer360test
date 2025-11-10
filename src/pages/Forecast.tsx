@@ -30,7 +30,7 @@ const Forecast = () => {
   ];
 
   return (
-    <div className="container mx-auto px-4 pt-4 pb-8">
+    <div className="pt-4 pb-8">
         <div className="mb-8">
           <div className="flex items-center justify-between gap-4 mb-2">
             <h1 className="text-3xl font-bold text-foreground">BDM Dashboard</h1>

@@ -98,7 +98,7 @@ export default function Dealerships() {
   }
 
   return (
-    <div className="container mx-auto py-8">
+    <div className="py-8">
       <h1 className="text-3xl font-bold mb-6 text-foreground">Dealerships</h1>
       <div className="rounded-md border">
         <Table>

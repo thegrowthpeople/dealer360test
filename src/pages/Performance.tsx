@@ -425,14 +425,13 @@ const Performance = () => {
   }
 
   return (
-    <div className="min-h-screen p-6 xl:px-12 2xl:px-16">
-      <div className="max-w-[1600px] mx-auto space-y-6">
-        <div>
-          <h1 className="text-4xl xl:text-5xl font-bold text-foreground mb-2">Dealer Performance</h1>
-          <p className="text-muted-foreground">
-            {filterLabel || "All Dealerships"}
-          </p>
-        </div>
+    <div className="min-h-screen space-y-6">
+      <div>
+        <h1 className="text-4xl xl:text-5xl font-bold text-foreground mb-2">Dealer Performance</h1>
+        <p className="text-muted-foreground">
+          {filterLabel || "All Dealerships"}
+        </p>
+      </div>
 
         {!selectedBDMId && <BDMInfo bdm={selectedBDM} />}
 
@@ -725,7 +724,6 @@ const Performance = () => {
             total={chartTotals.ftlFleet}
           />
         </div>
-      </div>
     </div>
   );
 };
