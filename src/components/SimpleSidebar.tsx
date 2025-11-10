@@ -41,8 +41,8 @@ export function SimpleSidebar({ isCollapsed, onToggle }: SimpleSidebarProps) {
           "flex flex-col transition-opacity duration-300 overflow-hidden",
           isCollapsed ? "opacity-0 w-0" : "opacity-100 w-auto"
         )}>
-          <span className="font-bold text-foreground text-sm whitespace-nowrap">DEALER MANAGER</span>
-          <span className="text-xs text-muted-foreground whitespace-nowrap">Heavy Duty</span>
+          <span className="font-bold text-foreground text-lg whitespace-nowrap">DEALER MANAGER</span>
+          <span className="text-sm text-muted-foreground whitespace-nowrap">Heavy Duty</span>
         </div>
         <Button
           variant="ghost"
