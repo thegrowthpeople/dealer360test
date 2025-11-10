@@ -119,15 +119,15 @@ export const SalesChart = ({ title, data, color, chartType, viewMode, total }: S
       <CardContent>
         <ResponsiveContainer width="100%" height={400}>
           {chartType === "bar" ? (
-            <BarChart data={data} margin={{ top: 20, right: 10, left: 10, bottom: 5 }} barCategoryGap={8}>
+            <BarChart data={data} margin={{ top: 20, right: 10, left: 10, bottom: 5 }} barCategoryGap={2} barGap={2}>
               <XAxis
                 dataKey="name"
                 tick={(props) => <CustomXAxisTick {...props} viewMode={viewMode} />}
                 interval={0}
-                padding={{ left: 20, right: 20 }}
+                padding={{ left: 10, right: 10 }}
               />
               <Tooltip />
-              <Bar dataKey="value" radius={[8, 8, 0, 0]} maxBarSize={80}>
+              <Bar dataKey="value" radius={[8, 8, 0, 0]} maxBarSize={120}>
                 {data.map((entry, index) => {
                   // In "both" mode: months are white with colored outline, quarters keep solid fill
                   const isMonthInBothMode = viewMode === "both" && !entry.isQuarter;
