@@ -159,7 +159,7 @@ export const SalesChart = ({ title, data, color, chartType, viewMode, total }: S
                 interval={0}
                 padding={{ left: 10, right: 10 }}
               />
-              <Tooltip />
+              <Tooltip cursor={false} />
               <Bar 
                 dataKey="value" 
                 maxBarSize={120}
@@ -194,7 +194,7 @@ export const SalesChart = ({ title, data, color, chartType, viewMode, total }: S
                 interval={0}
                 padding={{ left: 20, right: 20 }}
               />
-              <Tooltip />
+              <Tooltip cursor={false} />
               <Line
                 type="monotone"
                 dataKey="value"
