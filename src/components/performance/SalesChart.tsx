@@ -96,8 +96,6 @@ const CustomBar = (props: any, viewMode: string, chartData: any[]) => {
       fill={fill}
       stroke={stroke}
       strokeWidth={strokeWidth}
-      rx={8}
-      ry={8}
     />
   );
 };
