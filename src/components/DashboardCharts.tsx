@@ -13,7 +13,7 @@ export const DashboardCharts = () => {
   const totalForecast = currentMonthData.reduce((sum, week) => sum + week.forecast, 0);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-3 gap-6 max-w-[1600px] mx-auto">
+    <div className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-3 gap-6">
       {/* Meetings Chart */}
       <Card className="p-6 shadow-soft animate-fade-in">
         <div className="flex items-center gap-3 mb-2">
