@@ -101,26 +101,16 @@ const CustomBar = (props: any, viewMode: string, chartData: any[]) => {
   `;
   
   return (
-    <g style={{ cursor: 'pointer' }}>
-      <path
-        d={path}
-        fill={fill}
-        stroke={stroke}
-        strokeWidth={strokeWidth}
-        style={{
-          transition: 'all 0.2s ease',
-          filter: 'brightness(1)',
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.filter = 'brightness(0.85)';
-          e.currentTarget.style.transform = 'scale(1.02)';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.filter = 'brightness(1)';
-          e.currentTarget.style.transform = 'scale(1)';
-        }}
-      />
-    </g>
+    <path
+      d={path}
+      fill={fill}
+      stroke={stroke}
+      strokeWidth={strokeWidth}
+      style={{
+        transition: 'opacity 0.3s ease, transform 0.2s ease',
+      }}
+      className="hover:opacity-80"
+    />
   );
 };
 
