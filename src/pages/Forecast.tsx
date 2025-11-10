@@ -30,26 +30,26 @@ const Forecast = () => {
   ];
 
   return (
-    <div className="pt-4 pb-8">
-        <div className="mb-8">
-          <div className="flex items-center justify-between gap-4 mb-2">
-            <h1 className="text-3xl font-bold text-foreground">BDM Dashboard</h1>
-            <div className="flex gap-2">
-              <Button onClick={() => navigate("/new-report")} variant="default" className="gap-2">
-                <PlusCircle className="w-4 h-4" />
-                New Report
-              </Button>
-              <Button onClick={() => navigate("/reports")} variant="outline" className="gap-2">
-                <FileText className="w-4 h-4" />
-                Previous Reports
-              </Button>
-            </div>
+    <div className="min-h-screen space-y-6">
+      <div>
+        <div className="flex items-center justify-between gap-4 mb-2">
+          <h1 className="text-4xl xl:text-5xl font-bold text-foreground">BDM Dashboard</h1>
+          <div className="flex gap-2">
+            <Button onClick={() => navigate("/new-report")} variant="default" className="gap-2">
+              <PlusCircle className="w-4 h-4" />
+              New Report
+            </Button>
+            <Button onClick={() => navigate("/reports")} variant="outline" className="gap-2">
+              <FileText className="w-4 h-4" />
+              Previous Reports
+            </Button>
           </div>
-          <p className="text-muted-foreground">Overview of your weekly activities and performance</p>
         </div>
+        <p className="text-muted-foreground">Overview of your weekly activities and performance</p>
+      </div>
 
-        {/* Filters */}
-        <div className="mb-8 flex flex-wrap gap-4">
+      {/* Filters */}
+      <div className="flex flex-wrap gap-4">
           <div className="w-full sm:w-64">
             <Select value={selectedBDM} onValueChange={setSelectedBDM}>
               <SelectTrigger id="bdm-filter">
@@ -112,12 +112,12 @@ const Forecast = () => {
               </SelectContent>
             </Select>
           </div>
-        </div>
-        
-        <div className="space-y-8">
-          <DashboardStats />
-          <DashboardCharts />
-        </div>
+      </div>
+      
+      <div className="space-y-8">
+        <DashboardStats />
+        <DashboardCharts />
+      </div>
     </div>
   );
 };
