@@ -77,6 +77,31 @@ const CustomXAxisTick = ({ x, y, payload, viewMode }: any) => {
   );
 };
 
+const CustomBar = (props: any, viewMode: string, chartData: any[]) => {
+  const { x, y, width, height, index, fill, stroke, strokeWidth } = props;
+  
+  const isQuarter = chartData?.[index]?.isQuarter || false;
+  const isMonthInBothMode = viewMode === "both" && !isQuarter;
+  
+  // Make month bars 50% narrower in "both" mode
+  const barWidth = isMonthInBothMode ? width * 0.5 : width;
+  const barX = isMonthInBothMode ? x + (width - barWidth) / 2 : x;
+  
+  return (
+    <rect
+      x={barX}
+      y={y}
+      width={barWidth}
+      height={height}
+      fill={fill}
+      stroke={stroke}
+      strokeWidth={strokeWidth}
+      rx={8}
+      ry={8}
+    />
+  );
+};
+
 const renderCustomLabel = (props: any, chartData: any[]) => {
   const { x, y, width, height, value, index } = props;
   
@@ -127,7 +152,11 @@ export const SalesChart = ({ title, data, color, chartType, viewMode, total }: S
                 padding={{ left: 10, right: 10 }}
               />
               <Tooltip />
-              <Bar dataKey="value" radius={[8, 8, 0, 0]} maxBarSize={120}>
+              <Bar 
+                dataKey="value" 
+                maxBarSize={120}
+                shape={(props) => CustomBar(props, viewMode, data)}
+              >
                 {data.map((entry, index) => {
                   // In "both" mode: months are white with colored outline, quarters keep solid fill
                   const isMonthInBothMode = viewMode === "both" && !entry.isQuarter;
