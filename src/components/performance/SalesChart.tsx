@@ -87,12 +87,22 @@ const CustomBar = (props: any, viewMode: string, chartData: any[]) => {
   const barWidth = isMonthInBothMode ? width * 0.8 : width;
   const barX = isMonthInBothMode ? x + (width - barWidth) / 2 : x;
   
+  const radius = 8;
+  
+  // Create a path for rounded top corners only
+  const path = `
+    M ${barX},${y + height}
+    L ${barX},${y + radius}
+    Q ${barX},${y} ${barX + radius},${y}
+    L ${barX + barWidth - radius},${y}
+    Q ${barX + barWidth},${y} ${barX + barWidth},${y + radius}
+    L ${barX + barWidth},${y + height}
+    Z
+  `;
+  
   return (
-    <rect
-      x={barX}
-      y={y}
-      width={barWidth}
-      height={height}
+    <path
+      d={path}
       fill={fill}
       stroke={stroke}
       strokeWidth={strokeWidth}
