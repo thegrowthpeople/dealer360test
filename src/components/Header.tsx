@@ -235,8 +235,105 @@ export const Header = () => {
           }
         }
         
+        // Check if this is Freightliner Retail (chart 5) and if Fleet (chart 6) is also selected
+        if (chartTitle === "Freightliner Retail") {
+          const fleetChartInfo = selectedCharts.find(c => c.title === "Freightliner Fleet");
+          
+          if (fleetChartInfo) {
+            // Create combined slide for both Freightliner charts
+            const retailCanvas = await html2canvas(chart as HTMLElement, {
+              scale: 3,
+              backgroundColor: "#ffffff",
+              logging: false,
+              useCORS: true,
+            });
+            
+            const fleetCanvas = await html2canvas(fleetChartInfo.element as HTMLElement, {
+              scale: 3,
+              backgroundColor: "#ffffff",
+              logging: false,
+              useCORS: true,
+            });
+            
+            const slide = pptx.addSlide();
+            const retailImgData = retailCanvas.toDataURL("image/png");
+            const fleetImgData = fleetCanvas.toDataURL("image/png");
+            
+            // Add combined title
+            const fullTitle = `Freightliner Retail & Fleet - ${filterLabel}`;
+            slide.addText(fullTitle, {
+              x: 0.5,
+              y: 0.3,
+              w: 9,
+              h: 0.5,
+              fontSize: 18,
+              bold: true,
+              color: "1a1a1a",
+            });
+            
+            // Calculate dimensions for side-by-side layout
+            const maxWidth = 4.3; // Width for each chart
+            const maxHeight = 4.5;
+            
+            // Retail chart on the left
+            const retailAspectRatio = retailCanvas.width / retailCanvas.height;
+            let retailImgWidth = maxWidth;
+            let retailImgHeight = maxWidth / retailAspectRatio;
+            if (retailImgHeight > maxHeight) {
+              retailImgHeight = maxHeight;
+              retailImgWidth = maxHeight * retailAspectRatio;
+            }
+            
+            slide.addImage({
+              data: retailImgData,
+              x: 0.5,
+              y: 0.9,
+              w: retailImgWidth,
+              h: retailImgHeight,
+            });
+            
+            // Fleet chart on the right
+            const fleetAspectRatio = fleetCanvas.width / fleetCanvas.height;
+            let fleetImgWidth = maxWidth;
+            let fleetImgHeight = maxWidth / fleetAspectRatio;
+            if (fleetImgHeight > maxHeight) {
+              fleetImgHeight = maxHeight;
+              fleetImgWidth = maxHeight * fleetAspectRatio;
+            }
+            
+            slide.addImage({
+              data: fleetImgData,
+              x: 5.2,
+              y: 0.9,
+              w: fleetImgWidth,
+              h: fleetImgHeight,
+            });
+            
+            // Add footer
+            slide.addText("STRICTLY INTERNAL USE ONLY - PRIVATE & CONFIDENTIAL", {
+              x: 0.5,
+              y: 7,
+              w: 9,
+              h: 0.3,
+              fontSize: 10,
+              bold: true,
+              align: "center",
+            });
+            
+            // Skip the fleet chart when we encounter it later
+            selectedCharts = selectedCharts.filter(c => c.title !== "Freightliner Fleet");
+            
+            continue;
+          }
+        }
+        
         // Skip if this is the Fleet chart (already processed with Retail)
         if (chartTitle === "Mercedes-Benz Fleet" && selectedCharts.some(c => c.title === "Mercedes-Benz Retail")) {
+          continue;
+        }
+        
+        // Skip if this is the Freightliner Fleet chart (already processed with Retail)
+        if (chartTitle === "Freightliner Fleet" && selectedCharts.some(c => c.title === "Freightliner Retail")) {
           continue;
         }
         
