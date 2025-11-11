@@ -87,27 +87,39 @@ export const Header = () => {
       return;
     }
     
-    const charts: ChartInfo[] = allChartElements.map((element, index) => {
-      const titleElement = element.querySelector("h3");
-      let title = titleElement ? titleElement.textContent || `Chart ${index + 1}` : `Chart ${index + 1}`;
-      
-      // Override titles for charts
-      if (index === 0) {
-        title = "Mercedes-Benz Total";
-      } else if (index === 1) {
-        title = "Freightliner Total";
-      } else if (index === 2) {
-        title = "Mercedes-Benz Retail";
-      } else if (index === 3) {
-        title = "Mercedes-Benz Fleet";
-      } else if (index === 4) {
-        title = "Freightliner Retail";
-      } else if (index === 5) {
-        title = "Freightliner Fleet";
-      }
-      
-      return { element, title, index };
-    });
+    // Filter out summary cards (tiles without h3 titles) and only keep actual charts
+    const charts: ChartInfo[] = allChartElements
+      .filter(element => element.querySelector("h3")) // Only include elements with h3 titles
+      .map((element, index) => {
+        const titleElement = element.querySelector("h3");
+        let title = titleElement ? titleElement.textContent || `Chart ${index + 1}` : `Chart ${index + 1}`;
+        
+        // Override titles for charts
+        if (index === 0) {
+          title = "Mercedes-Benz Total";
+        } else if (index === 1) {
+          title = "Freightliner Total";
+        } else if (index === 2) {
+          title = "Mercedes-Benz Retail";
+        } else if (index === 3) {
+          title = "Mercedes-Benz Fleet";
+        } else if (index === 4) {
+          title = "Freightliner Retail";
+        } else if (index === 5) {
+          title = "Freightliner Fleet";
+        }
+        
+        return { element, title, index };
+      });
+    
+    if (charts.length === 0) {
+      toast({
+        title: "No Charts Found",
+        description: "No charts available to export",
+        variant: "destructive",
+      });
+      return;
+    }
     
     setAvailableCharts(charts);
     setDialogOpen(true);
@@ -157,7 +169,7 @@ export const Header = () => {
       
       // Calculate proper dimensions to maintain aspect ratio and fit on slide
       const maxWidth = 9;
-      const maxHeight = 5.5;
+      const maxHeight = 4.8; // Reduced height to ensure horizontal charts fit better
       const aspectRatio = canvas.width / canvas.height;
       
       let imgWidth = maxWidth;
