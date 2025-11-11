@@ -42,9 +42,9 @@ const Login = () => {
       <Card className="w-full max-w-md relative z-10 backdrop-blur-sm bg-card/95">
         <CardHeader className="space-y-1">
           <div className="flex justify-center mb-6">
-            <img src={logoBlack} alt="Daimler Truck" className="h-12 dark:invert" />
+            <img src={logoBlack} alt="Daimler Truck" className="h-10 dark:invert" />
           </div>
-          <h1 className="text-lg font-semibold text-center text-muted-foreground">Dealer Management</h1>
+          <h1 className="text-lg font-semibold text-center text-foreground">Dealer Management</h1>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
