@@ -43,7 +43,7 @@ const Login = () => {
         <div className="grid md:grid-cols-2 gap-0">
           {/* Left Column - Logo and Title */}
           <div className="flex flex-col items-center justify-center p-8 border-r border-border">
-            <img src={logoBlack} alt="Daimler Truck" className="h-12 mb-6 dark:invert" />
+            <img src={logoBlack} alt="Daimler Truck" className="h-12 mb-12 dark:invert" />
             <div className="text-center">
               <h1 className="text-2xl font-bold text-foreground">Dealer 360</h1>
               <p className="text-lg text-foreground mt-1">Dealer Management</p>
