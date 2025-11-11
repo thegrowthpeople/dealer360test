@@ -107,6 +107,21 @@ All colors MUST be HSL.
   }
 }
 
+@layer utilities {
+  @keyframes button-pulse {
+    0%, 100% {
+      box-shadow: 0 0 0 0 hsl(var(--primary) / 0.7);
+    }
+    50% {
+      box-shadow: 0 0 0 8px hsl(var(--primary) / 0);
+    }
+  }
+
+  .animate-button-pulse {
+    animation: button-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+}
+
 /* Print styles - hide navigation elements and optimize for PDF export */
 @media print {
   /* Hide header, sidebar, and navigation elements */
