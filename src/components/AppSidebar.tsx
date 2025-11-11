@@ -88,7 +88,6 @@ export function AppSidebar() {
                 </SidebarMenuButton>
               </SidebarMenuItem>
               
-              <div className="border-t border-border my-2" />
               <SidebarMenuItem>
                 <SidebarMenuButton
                   asChild

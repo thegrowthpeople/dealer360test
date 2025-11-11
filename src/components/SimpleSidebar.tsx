@@ -105,7 +105,6 @@ export function SimpleSidebar({ isCollapsed, onToggle }: SimpleSidebarProps) {
               </span>
             </Link>
             
-            <div className="border-t border-border my-2" />
             <Link
               to="/admin"
               className={cn(
