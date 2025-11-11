@@ -40,7 +40,7 @@ const Forecast = () => {
   return (
     <div className="min-h-screen space-y-6">
       <div>
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between">
           <div className="flex-1">
             <h1 className="text-4xl xl:text-5xl font-bold text-foreground mb-4">Dealer Forecast</h1>
             <p className="text-muted-foreground mb-4">
