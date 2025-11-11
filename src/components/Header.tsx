@@ -91,11 +91,19 @@ export const Header = () => {
       const titleElement = element.querySelector("h3");
       let title = titleElement ? titleElement.textContent || `Chart ${index + 1}` : `Chart ${index + 1}`;
       
-      // Override titles for first two charts
+      // Override titles for charts
       if (index === 0) {
         title = "Mercedes-Benz Total";
       } else if (index === 1) {
         title = "Freightliner Total";
+      } else if (index === 2) {
+        title = "Mercedes-Benz Retail";
+      } else if (index === 3) {
+        title = "Mercedes-Benz Fleet";
+      } else if (index === 4) {
+        title = "Freightliner Retail";
+      } else if (index === 5) {
+        title = "Freightliner Fleet";
       }
       
       return { element, title, index };
