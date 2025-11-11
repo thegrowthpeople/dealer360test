@@ -16,7 +16,6 @@ import NewReport from "./pages/NewReport";
 import Reports from "./pages/Reports";
 import ReportDetail from "./pages/ReportDetail";
 import Dealerships from "./pages/Dealerships";
-import Admin from "./pages/Admin";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 
@@ -41,7 +40,6 @@ const App = () => (
                 <Route path="/new-report" element={<ProtectedRoute><SimpleLayout><NewReport /></SimpleLayout></ProtectedRoute>} />
                 <Route path="/reports" element={<ProtectedRoute><SimpleLayout><Reports /></SimpleLayout></ProtectedRoute>} />
                 <Route path="/reports/:id" element={<ProtectedRoute><SimpleLayout><ReportDetail /></SimpleLayout></ProtectedRoute>} />
-                <Route path="/admin" element={<ProtectedRoute requiredRole="admin"><Admin /></ProtectedRoute>} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>

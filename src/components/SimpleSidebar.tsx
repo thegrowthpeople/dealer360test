@@ -1,11 +1,11 @@
-import { Home, TrendingUp, Search, Target, ChevronLeft, ChevronRight, Truck, Shield } from "lucide-react";
+import { Home, TrendingUp, Search, Target, ChevronLeft, ChevronRight, Truck } from "lucide-react";
 import { useLocation, Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { usePermissions } from "@/hooks/usePermissions";
+import { useState } from "react";
 
-const baseMenuItems = [
+const menuItems = [
   { path: "/", label: "Home", icon: Home },
   { path: "/performance", label: "Performance", icon: TrendingUp },
   { path: "/forecast", label: "Forecast", icon: Search },
@@ -20,11 +20,6 @@ interface SimpleSidebarProps {
 
 export function SimpleSidebar({ isCollapsed, onToggle }: SimpleSidebarProps) {
   const location = useLocation();
-  const { isAdmin } = usePermissions();
-
-  const menuItems = isAdmin 
-    ? [...baseMenuItems, { path: "/admin", label: "Admin", icon: Shield }]
-    : baseMenuItems;
 
   const isActive = (path: string) => {
     if (path === "/") {

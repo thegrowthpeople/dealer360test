@@ -1,8 +1,7 @@
-import { Home, TrendingUp, Search, BarChart, PlusCircle, FileText, Truck, Shield } from "lucide-react";
+import { Home, TrendingUp, Search, BarChart, PlusCircle, FileText, Truck } from "lucide-react";
 import { useLocation, Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { usePermissions } from "@/hooks/usePermissions";
 import {
   Sidebar,
   SidebarContent,
@@ -14,7 +13,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 
-const baseMenuItems = [
+const menuItems = [
   { path: "/", label: "Home", icon: Home },
   { path: "/performance", label: "Performance", icon: TrendingUp },
   { path: "/forecast", label: "Forecast", icon: Search },
@@ -25,11 +24,6 @@ const baseMenuItems = [
 export function AppSidebar() {
   const location = useLocation();
   const { open } = useSidebar();
-  const { isAdmin } = usePermissions();
-
-  const menuItems = isAdmin 
-    ? [...baseMenuItems, { path: "/admin", label: "Admin", icon: Shield }]
-    : baseMenuItems;
 
   const isActive = (path: string) => {
     if (path === "/") {

@@ -9,12 +9,6 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertCircle } from 'lucide-react';
 import loginBackground from '@/assets/login-background.jpg';
 import logoBlack from '@/assets/logo-black.svg';
-import { z } from 'zod';
-
-const loginSchema = z.object({
-  email: z.string().trim().email('Invalid email address').max(255),
-  password: z.string().min(1, 'Password is required'),
-});
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -27,17 +21,6 @@ const Login = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-
-    // Validate input
-    try {
-      loginSchema.parse({ email, password });
-    } catch (err) {
-      if (err instanceof z.ZodError) {
-        setError(err.errors[0].message);
-        return;
-      }
-    }
-
     setLoading(true);
 
     const { error } = await signIn(email, password);
@@ -97,7 +80,7 @@ const Login = () => {
                 <Input
                   id="password"
                   type="password"
-                  placeholder="Enter your password"
+                  placeholder="password123"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
