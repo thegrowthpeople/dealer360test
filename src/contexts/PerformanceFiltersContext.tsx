@@ -49,10 +49,11 @@ export const usePerformanceFilters = () => {
 };
 
 export const PerformanceFiltersProvider = ({ children }: { children: ReactNode }) => {
+  const currentYear = new Date().getFullYear();
   const [selectedBDMId, setSelectedBDMId] = useState<number | null>(null);
   const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
   const [selectedDealerId, setSelectedDealerId] = useState<number | null>(null);
-  const [selectedYear, setSelectedYear] = useState<number | null>(null);
+  const [selectedYear, setSelectedYear] = useState<number | null>(currentYear);
   const [availableYears, setAvailableYears] = useState<number[]>([]);
   const [dealerships, setDealerships] = useState<Dealership[]>([]);
   const [bdms, setBDMs] = useState<BDM[]>([]);

@@ -281,7 +281,7 @@ export const PerformanceFilters = () => {
         onValueChange={(value) => setSelectedYear(value === "all" ? null : parseInt(value))}
       >
         <SelectTrigger className="w-[120px]">
-          <SelectValue placeholder="All Years" />
+          <SelectValue placeholder={new Date().getFullYear().toString()} />
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">All Years</SelectItem>
