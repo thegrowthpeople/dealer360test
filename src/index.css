@@ -106,3 +106,35 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
   }
 }
+
+/* Print styles - hide navigation elements and optimize for PDF export */
+@media print {
+  /* Hide header, sidebar, and navigation elements */
+  header,
+  aside,
+  nav,
+  .sidebar,
+  [data-sidebar],
+  button {
+    display: none !important;
+  }
+
+  /* Make main content take full width */
+  main {
+    margin: 0 !important;
+    padding: 1rem !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Optimize page layout for printing */
+  body {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  /* Ensure charts and content print properly */
+  * {
+    box-shadow: none !important;
+  }
+}
