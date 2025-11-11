@@ -206,7 +206,7 @@ export const Header = () => {
             // Add combined title
             const fullTitle = `Mercedes-Benz Retail & Fleet - ${filterLabel}`;
             slide.addText(fullTitle, {
-              x: 0.3,
+              x: 0.4,
               y: 0.15,
               w: 9,
               h: 0.4,
@@ -305,7 +305,7 @@ export const Header = () => {
             // Add combined title
             const fullTitle = `Freightliner Retail & Fleet - ${filterLabel}`;
             slide.addText(fullTitle, {
-              x: 0.3,
+              x: 0.4,
               y: 0.15,
               w: 9,
               h: 0.4,
@@ -382,7 +382,7 @@ export const Header = () => {
       
       // Add single slide title with chart name and filters
       slide.addText(fullTitle, {
-        x: 0.3,
+        x: 0.4,
         y: 0.15,
         w: 9,
         h: 0.4,
