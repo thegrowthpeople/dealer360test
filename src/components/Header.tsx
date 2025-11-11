@@ -5,11 +5,47 @@ import { Button } from "./ui/button";
 import { Download, Presentation } from "lucide-react";
 import pptxgen from "pptxgenjs";
 import html2canvas from "html2canvas";
+import { usePerformanceFilters } from "@/contexts/PerformanceFiltersContext";
 
 export const Header = () => {
+  const {
+    selectedBDMId,
+    selectedGroup,
+    selectedDealerId,
+    selectedYear,
+    dealerships,
+    bdms,
+  } = usePerformanceFilters();
+
   const handleExportPDF = () => {
     // Trigger browser print dialog which can save as PDF
     window.print();
+  };
+
+  const getFilterLabel = () => {
+    const parts = [];
+    
+    if (selectedDealerId !== null) {
+      const dealer = dealerships.find((d) => d["Dealer ID"] === selectedDealerId);
+      if (dealer) {
+        parts.push(`${dealer["Dealer Group"]} - ${dealer.Dealership}`);
+      }
+    } else if (selectedGroup !== null) {
+      parts.push(selectedGroup);
+    } else if (selectedBDMId !== null) {
+      const bdm = bdms.find((b) => b["BDM ID"] === selectedBDMId);
+      if (bdm) {
+        parts.push(bdm["Full Name"]);
+      }
+    } else {
+      parts.push("All Dealerships");
+    }
+    
+    if (selectedYear) {
+      parts.push(`${selectedYear}`);
+    }
+    
+    return parts.join(" | ");
   };
 
   const handleExportPowerPoint = async () => {
@@ -34,8 +70,14 @@ export const Header = () => {
         return;
       }
       
+      const filterLabel = getFilterLabel();
+      
       // Capture each chart as a separate slide
       for (const chart of allCharts) {
+        // Extract chart title from the card
+        const titleElement = chart.querySelector("h3");
+        const chartTitle = titleElement ? titleElement.textContent : "Chart";
+        
         const canvas = await html2canvas(chart as HTMLElement, {
           scale: 2,
           backgroundColor: "#ffffff",
@@ -45,13 +87,34 @@ export const Header = () => {
         const slide = pptx.addSlide();
         const imgData = canvas.toDataURL("image/png");
         
-        // Add chart image (centered and larger)
+        // Add slide title with chart name and filters
+        slide.addText(chartTitle || "Chart", {
+          x: 0.5,
+          y: 0.3,
+          w: 9,
+          h: 0.4,
+          fontSize: 18,
+          bold: true,
+          color: "1a1a1a",
+        });
+        
+        // Add filter information
+        slide.addText(filterLabel, {
+          x: 0.5,
+          y: 0.65,
+          w: 9,
+          h: 0.3,
+          fontSize: 12,
+          color: "666666",
+        });
+        
+        // Add chart image (adjusted position to accommodate header)
         slide.addImage({
           data: imgData,
           x: 0.5,
-          y: 0.5,
+          y: 1.1,
           w: 9,
-          h: 6.5,
+          h: 5.7,
         });
         
         // Add footer
