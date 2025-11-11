@@ -89,7 +89,15 @@ export const Header = () => {
     
     const charts: ChartInfo[] = allChartElements.map((element, index) => {
       const titleElement = element.querySelector("h3");
-      const title = titleElement ? titleElement.textContent || `Chart ${index + 1}` : `Chart ${index + 1}`;
+      let title = titleElement ? titleElement.textContent || `Chart ${index + 1}` : `Chart ${index + 1}`;
+      
+      // Override titles for first two charts
+      if (index === 0) {
+        title = "Mercedes-Benz Total";
+      } else if (index === 1) {
+        title = "Freightliner Total";
+      }
+      
       return { element, title, index };
     });
     
