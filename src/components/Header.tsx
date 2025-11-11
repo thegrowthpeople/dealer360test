@@ -207,12 +207,13 @@ export const Header = () => {
             const fullTitle = `Mercedes-Benz Retail & Fleet - ${filterLabel}`;
             slide.addText(fullTitle, {
               x: 0.5,
-              y: 0.2,
+              y: 0.15,
               w: 9,
               h: 0.4,
               fontSize: 18,
               bold: true,
               color: "1a1a1a",
+              align: "center",
             });
             
             // Calculate dimensions for side-by-side layout
@@ -256,7 +257,7 @@ export const Header = () => {
             // Add footer
             slide.addText("STRICTLY INTERNAL USE ONLY - PRIVATE & CONFIDENTIAL", {
               x: 0.5,
-              y: 5.6,
+              y: 5.4,
               w: 9,
               h: 0.2,
               fontSize: 6,
@@ -305,12 +306,13 @@ export const Header = () => {
             const fullTitle = `Freightliner Retail & Fleet - ${filterLabel}`;
             slide.addText(fullTitle, {
               x: 0.5,
-              y: 0.2,
+              y: 0.15,
               w: 9,
               h: 0.4,
               fontSize: 18,
               bold: true,
               color: "1a1a1a",
+              align: "center",
             });
             
             // Calculate dimensions for side-by-side layout
@@ -354,7 +356,7 @@ export const Header = () => {
             // Add footer
             slide.addText("STRICTLY INTERNAL USE ONLY - PRIVATE & CONFIDENTIAL", {
               x: 0.5,
-              y: 5.6,
+              y: 5.4,
               w: 9,
               h: 0.2,
               fontSize: 6,
@@ -381,12 +383,13 @@ export const Header = () => {
       // Add single slide title with chart name and filters
       slide.addText(fullTitle, {
         x: 0.5,
-        y: 0.2,
+        y: 0.15,
         w: 9,
         h: 0.4,
         fontSize: 18,
         bold: true,
         color: "1a1a1a",
+        align: "center",
       });
       
       // Calculate proper dimensions to maintain aspect ratio and fit on slide
@@ -417,7 +420,7 @@ export const Header = () => {
         // Add footer
         slide.addText("STRICTLY INTERNAL USE ONLY - PRIVATE & CONFIDENTIAL", {
           x: 0.5,
-          y: 5.6,
+          y: 5.4,
           w: 9,
           h: 0.2,
           fontSize: 6,
