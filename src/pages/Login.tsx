@@ -35,11 +35,11 @@ const Login = () => {
 
   return (
     <div 
-      className="min-h-screen flex items-start justify-center pt-8 p-4 bg-cover bg-center bg-no-repeat relative"
+      className="min-h-screen flex items-center justify-center p-4 bg-cover bg-center bg-no-repeat relative"
       style={{ backgroundImage: `url(${loginBackground})` }}
     >
       <div className="absolute inset-0 bg-black/40" />
-      <Card className="w-full max-w-3xl relative z-10 backdrop-blur-sm bg-card/95">
+      <Card className="w-full max-w-3xl relative z-10 backdrop-blur-sm bg-card/95 -translate-y-[10vh]">
         <div className="grid md:grid-cols-2 gap-0">
           {/* Left Column - Logo and Title */}
           <div className="flex flex-col items-center justify-center p-8 border-r border-border mt-2">
