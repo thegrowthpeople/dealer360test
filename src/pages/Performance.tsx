@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { Separator } from "@/components/ui/separator";
 import { BarChart3, LineChart } from "lucide-react";
 import { SummaryCards } from "@/components/performance/SummaryCards";
 import { SalesChart } from "@/components/performance/SalesChart";
@@ -338,6 +339,8 @@ const Performance = () => {
           {filterLabel || "All Dealerships"}
         </p>
       </div>
+
+      <Separator className="my-6" />
 
         {!selectedBDMId && <BDMInfo bdm={selectedBDM} />}
 
