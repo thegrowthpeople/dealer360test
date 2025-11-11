@@ -6,8 +6,10 @@ import { Download, Presentation } from "lucide-react";
 import pptxgen from "pptxgenjs";
 import html2canvas from "html2canvas";
 import { usePerformanceFilters } from "@/contexts/PerformanceFiltersContext";
+import { useToast } from "@/hooks/use-toast";
 
 export const Header = () => {
+  const { toast } = useToast();
   const {
     selectedBDMId,
     selectedGroup,
@@ -66,14 +68,25 @@ export const Header = () => {
       const allCharts = [...Array.from(fullWidthCharts), ...Array.from(gridCharts)];
       
       if (allCharts.length === 0) {
-        console.warn("No charts found for export");
+        toast({
+          title: "No Charts Found",
+          description: "No charts available to export",
+          variant: "destructive",
+        });
         return;
       }
+      
+      // Show initial loading toast
+      toast({
+        title: "Generating PowerPoint",
+        description: `Starting export of ${allCharts.length} slides...`,
+      });
       
       const filterLabel = getFilterLabel();
       
       // Capture each chart as a separate slide
-      for (const chart of allCharts) {
+      for (let i = 0; i < allCharts.length; i++) {
+        const chart = allCharts[i];
         // Extract chart title from the card
         const titleElement = chart.querySelector("h3");
         const chartTitle = titleElement ? titleElement.textContent : "Chart";
@@ -127,13 +140,37 @@ export const Header = () => {
           bold: true,
           align: "center",
         });
+        
+        // Show progress update for key milestones
+        if ((i + 1) % 2 === 0 || i === allCharts.length - 1) {
+          toast({
+            title: "Generating PowerPoint",
+            description: `Processing ${i + 1} of ${allCharts.length} slides...`,
+          });
+        }
       }
       
       // Save the presentation
+      toast({
+        title: "Saving PowerPoint",
+        description: "Finalizing your presentation...",
+      });
+      
       const today = new Date().toISOString().split("T")[0];
       await pptx.writeFile({ fileName: `Performance-Report-${today}.pptx` });
+      
+      // Show success toast
+      toast({
+        title: "PowerPoint Generated",
+        description: `Successfully created ${allCharts.length} slides`,
+      });
     } catch (error) {
       console.error("Error exporting to PowerPoint:", error);
+      toast({
+        title: "Export Failed",
+        description: "Failed to generate PowerPoint presentation",
+        variant: "destructive",
+      });
     }
   };
 
