@@ -39,7 +39,7 @@ const Login = () => {
       style={{ backgroundImage: `url(${loginBackground})` }}
     >
       <div className="absolute inset-0 bg-black/40" />
-      <Card className="w-full max-w-4xl relative z-10 backdrop-blur-sm bg-card/95">
+      <Card className="w-full max-w-3xl relative z-10 backdrop-blur-sm bg-card/95">
         <div className="grid md:grid-cols-2 gap-0">
           {/* Left Column - Logo and Title */}
           <div className="flex flex-col items-center justify-center p-12 border-r border-border">
