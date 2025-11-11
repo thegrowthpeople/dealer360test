@@ -48,7 +48,7 @@ Deno.serve(async (req) => {
     // Fetch roles
     const { data: rolesData, error: rolesError } = await supabaseAdmin
       .from('user_roles')
-      .select('user_id, role, bdm_id');
+      .select('user_id, role, bdm_id, display_name');
 
     if (rolesError) throw rolesError;
 
@@ -72,6 +72,7 @@ Deno.serve(async (req) => {
         role: userRole?.role || 'user',
         bdm_id: userRole?.bdm_id || null,
         bdm_name: bdm?.['Full Name'] || null,
+        display_name: userRole?.display_name || null,
       };
     });
 

@@ -42,12 +42,12 @@ Deno.serve(async (req) => {
     }
 
     // Get request body
-    const { email, password, role, bdm_id, display_name } = await req.json();
+    const { userId, email, role, bdm_id, display_name } = await req.json();
 
-    console.log('Creating user:', { email, role, bdm_id, display_name });
+    console.log('Updating user:', { userId, email, role, bdm_id, display_name });
 
     // Validate required fields
-    if (!email || !password || !role) {
+    if (!userId || !role) {
       throw new Error('Missing required fields');
     }
 
@@ -56,45 +56,42 @@ Deno.serve(async (req) => {
       throw new Error('BDM is required for users with user role');
     }
 
-    // Create user in auth.users
-    const { data: newUser, error: createError } = await supabaseAdmin.auth.admin.createUser({
-      email,
-      password,
-      email_confirm: true, // Auto-confirm email
-    });
+    // Update email if provided
+    if (email) {
+      const { error: updateEmailError } = await supabaseAdmin.auth.admin.updateUserById(
+        userId,
+        { email }
+      );
 
-    if (createError) {
-      console.error('Error creating user:', createError);
-      throw createError;
+      if (updateEmailError) {
+        console.error('Error updating email:', updateEmailError);
+        throw updateEmailError;
+      }
     }
 
-    console.log('User created in auth:', newUser.user.id);
-
-    // Insert role, BDM, and display name into user_roles table
-    const { error: roleInsertError } = await supabaseAdmin
+    // Update role, BDM, and display name in user_roles table
+    const { error: roleUpdateError } = await supabaseAdmin
       .from('user_roles')
-      .insert({
-        user_id: newUser.user.id,
+      .update({
         role,
         bdm_id,
         display_name,
-      });
+      })
+      .eq('user_id', userId);
 
-    if (roleInsertError) {
-      console.error('Error inserting role:', roleInsertError);
-      // Rollback: delete the created user
-      await supabaseAdmin.auth.admin.deleteUser(newUser.user.id);
-      throw new Error('Failed to assign role. User creation rolled back.');
+    if (roleUpdateError) {
+      console.error('Error updating role:', roleUpdateError);
+      throw new Error('Failed to update user role');
     }
 
-    console.log('Role assigned successfully');
+    console.log('User updated successfully');
 
     return new Response(
-      JSON.stringify({ success: true, user: newUser.user }),
+      JSON.stringify({ success: true }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
     );
   } catch (error: any) {
-    console.error('Error in create-user function:', error);
+    console.error('Error in update-user function:', error);
     return new Response(
       JSON.stringify({ error: error.message }),
       { 
