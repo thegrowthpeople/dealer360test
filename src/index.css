@@ -137,4 +137,35 @@ All colors MUST be HSL.
   * {
     box-shadow: none !important;
   }
+
+  /* Add page breaks between charts */
+  .space-y-6 > div {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* Add page break after every 2 charts for better layout */
+  .space-y-6 > div:nth-of-type(2n) {
+    page-break-after: always;
+    break-after: always;
+  }
+
+  /* Show print footer on every page */
+  @page {
+    margin-bottom: 2cm;
+  }
+
+  /* Footer that appears on every printed page */
+  .print-footer {
+    display: block !important;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-weight: bold;
+    font-size: 10pt;
+    padding: 0.5rem;
+    border-top: 1px solid #000;
+  }
 }
