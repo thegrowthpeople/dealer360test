@@ -5,6 +5,7 @@ import { BarChart3, LineChart } from "lucide-react";
 import { SummaryCards } from "@/components/performance/SummaryCards";
 import { SalesChart } from "@/components/performance/SalesChart";
 import { BDMInfo } from "@/components/performance/BDMInfo";
+import { PerformanceFilters } from "@/components/PerformanceFilters";
 import { useToast } from "@/hooks/use-toast";
 import { usePerformanceFilters } from "@/contexts/PerformanceFiltersContext";
 
@@ -336,6 +337,8 @@ const Performance = () => {
       </div>
 
         {!selectedBDMId && <BDMInfo bdm={selectedBDM} />}
+
+        <PerformanceFilters />
 
         <SummaryCards {...summaryData} />
 

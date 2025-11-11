@@ -90,7 +90,7 @@ export const PerformanceFilters = () => {
   }, [dealerships, selectedBDMId, selectedGroup, bdms]);
 
   return (
-    <div className="flex items-center gap-3 animate-fade-in">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 animate-fade-in">
       {/* BDM Filter */}
       <Popover open={bdmSearchOpen} onOpenChange={setBdmSearchOpen}>
         <PopoverTrigger asChild>
@@ -98,7 +98,7 @@ export const PerformanceFilters = () => {
             variant="outline"
             role="combobox"
             aria-expanded={bdmSearchOpen}
-            className="w-[200px] justify-between"
+            className="w-full justify-between"
           >
             {selectedBDMId
               ? bdms.find((b) => b["BDM ID"] === selectedBDMId)?.["Full Name"]
@@ -106,7 +106,7 @@ export const PerformanceFilters = () => {
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[200px] p-0" align="start">
+        <PopoverContent className="w-full p-0" align="start">
           <Command>
             <CommandInput placeholder="Search BDM..." />
             <CommandList>
@@ -162,13 +162,13 @@ export const PerformanceFilters = () => {
             variant="outline"
             role="combobox"
             aria-expanded={groupSearchOpen}
-            className="w-[200px] justify-between"
+            className="w-full justify-between"
           >
             {selectedGroup || "All Dealer Groups"}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[200px] p-0" align="start">
+        <PopoverContent className="w-full p-0" align="start">
           <Command>
             <CommandInput placeholder="Search group..." />
             <CommandList>
@@ -222,7 +222,7 @@ export const PerformanceFilters = () => {
             variant="outline"
             role="combobox"
             aria-expanded={dealershipSearchOpen}
-            className="w-[200px] justify-between"
+            className="w-full justify-between"
           >
             {selectedDealerId
               ? filteredDealerships.find((d) => d["Dealer ID"] === selectedDealerId)?.Dealership
@@ -230,7 +230,7 @@ export const PerformanceFilters = () => {
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[200px] p-0" align="start">
+        <PopoverContent className="w-full p-0" align="start">
           <Command>
             <CommandInput placeholder="Search dealership..." />
             <CommandList>
@@ -280,7 +280,7 @@ export const PerformanceFilters = () => {
         value={selectedYear?.toString() || ""}
         onValueChange={(value) => setSelectedYear(value === "all" ? null : parseInt(value))}
       >
-        <SelectTrigger className="w-[150px]">
+        <SelectTrigger className="w-full">
           <SelectValue placeholder="All Years" />
         </SelectTrigger>
         <SelectContent>
