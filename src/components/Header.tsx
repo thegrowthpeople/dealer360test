@@ -88,7 +88,7 @@ export const Header = () => {
     }
     
     // Filter out summary cards (tiles without h3 titles) and only keep actual charts
-    const charts: ChartInfo[] = allChartElements
+    const allCharts: ChartInfo[] = allChartElements
       .filter(element => element.querySelector("h3")) // Only include elements with h3 titles
       .map((element, index) => {
         const titleElement = element.querySelector("h3");
@@ -111,6 +111,32 @@ export const Header = () => {
         
         return { element, title, index };
       });
+    
+    // Merge charts 3+4 and 5+6 for the picklist
+    const charts: ChartInfo[] = [];
+    for (let i = 0; i < allCharts.length; i++) {
+      if (i === 2 && allCharts[3]) {
+        // Merge Mercedes-Benz Retail (index 2) and Fleet (index 3)
+        charts.push({
+          element: allCharts[i].element, // Store the retail chart element
+          title: "Mercedes-Benz Retail vs Fleet",
+          index: i,
+        });
+        // Skip the next chart (Fleet) as it's now merged
+        i++;
+      } else if (i === 4 && allCharts[5]) {
+        // Merge Freightliner Retail (index 4) and Fleet (index 5)
+        charts.push({
+          element: allCharts[i].element, // Store the retail chart element
+          title: "Freightliner Retail vs Fleet",
+          index: i,
+        });
+        // Skip the next chart (Fleet) as it's now merged
+        i++;
+      } else {
+        charts.push(allCharts[i]);
+      }
+    }
     
     if (charts.length === 0) {
       toast({
@@ -143,20 +169,30 @@ export const Header = () => {
         const chart = chartInfo.element;
         const chartTitle = chartInfo.title;
         
-        // Check if this is Mercedes-Benz Retail (chart 3) and if Fleet (chart 4) is also selected
-        if (chartTitle === "Mercedes-Benz Retail") {
-          const fleetChartInfo = selectedCharts.find(c => c.title === "Mercedes-Benz Fleet");
+        // Check if this is Mercedes-Benz Retail vs Fleet merged option
+        if (chartTitle === "Mercedes-Benz Retail vs Fleet") {
+          // Find both retail and fleet charts from the DOM
+          const mainContent = document.querySelector("main");
+          if (!mainContent) continue;
           
-          if (fleetChartInfo) {
+          const fullWidthCharts = mainContent.querySelectorAll(".space-y-6 > div[class*='rounded-']");
+          const gridCharts = mainContent.querySelectorAll(".grid > div[class*='rounded-']");
+          const allChartElements = [...Array.from(fullWidthCharts), ...Array.from(gridCharts)]
+            .filter(element => element.querySelector("h3"));
+          
+          const retailChart = allChartElements[2]; // Index 2 is Mercedes-Benz Retail
+          const fleetChart = allChartElements[3]; // Index 3 is Mercedes-Benz Fleet
+          
+          if (retailChart && fleetChart) {
             // Create combined slide for both Mercedes-Benz charts
-            const retailCanvas = await html2canvas(chart as HTMLElement, {
+            const retailCanvas = await html2canvas(retailChart as HTMLElement, {
               scale: 3,
               backgroundColor: "#ffffff",
               logging: false,
               useCORS: true,
             });
             
-            const fleetCanvas = await html2canvas(fleetChartInfo.element as HTMLElement, {
+            const fleetCanvas = await html2canvas(fleetChart as HTMLElement, {
               scale: 3,
               backgroundColor: "#ffffff",
               logging: false,
@@ -228,27 +264,34 @@ export const Header = () => {
               align: "center",
             });
             
-            // Skip the fleet chart when we encounter it later
-            selectedCharts = selectedCharts.filter(c => c.title !== "Mercedes-Benz Fleet");
-            
             continue;
           }
         }
         
-        // Check if this is Freightliner Retail (chart 5) and if Fleet (chart 6) is also selected
-        if (chartTitle === "Freightliner Retail") {
-          const fleetChartInfo = selectedCharts.find(c => c.title === "Freightliner Fleet");
+        // Check if this is Freightliner Retail vs Fleet merged option
+        if (chartTitle === "Freightliner Retail vs Fleet") {
+          // Find both retail and fleet charts from the DOM
+          const mainContent = document.querySelector("main");
+          if (!mainContent) continue;
           
-          if (fleetChartInfo) {
+          const fullWidthCharts = mainContent.querySelectorAll(".space-y-6 > div[class*='rounded-']");
+          const gridCharts = mainContent.querySelectorAll(".grid > div[class*='rounded-']");
+          const allChartElements = [...Array.from(fullWidthCharts), ...Array.from(gridCharts)]
+            .filter(element => element.querySelector("h3"));
+          
+          const retailChart = allChartElements[4]; // Index 4 is Freightliner Retail
+          const fleetChart = allChartElements[5]; // Index 5 is Freightliner Fleet
+          
+          if (retailChart && fleetChart) {
             // Create combined slide for both Freightliner charts
-            const retailCanvas = await html2canvas(chart as HTMLElement, {
+            const retailCanvas = await html2canvas(retailChart as HTMLElement, {
               scale: 3,
               backgroundColor: "#ffffff",
               logging: false,
               useCORS: true,
             });
             
-            const fleetCanvas = await html2canvas(fleetChartInfo.element as HTMLElement, {
+            const fleetCanvas = await html2canvas(fleetChart as HTMLElement, {
               scale: 3,
               backgroundColor: "#ffffff",
               logging: false,
@@ -320,21 +363,8 @@ export const Header = () => {
               align: "center",
             });
             
-            // Skip the fleet chart when we encounter it later
-            selectedCharts = selectedCharts.filter(c => c.title !== "Freightliner Fleet");
-            
             continue;
           }
-        }
-        
-        // Skip if this is the Fleet chart (already processed with Retail)
-        if (chartTitle === "Mercedes-Benz Fleet" && selectedCharts.some(c => c.title === "Mercedes-Benz Retail")) {
-          continue;
-        }
-        
-        // Skip if this is the Freightliner Fleet chart (already processed with Retail)
-        if (chartTitle === "Freightliner Fleet" && selectedCharts.some(c => c.title === "Freightliner Retail")) {
-          continue;
         }
         
       const canvas = await html2canvas(chart as HTMLElement, {
