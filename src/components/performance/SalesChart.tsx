@@ -126,7 +126,7 @@ const CustomBar = (props: any, viewMode: string, chartData: any[]) => {
   );
 };
 
-const renderCustomLabel = (props: any, chartData: any[]) => {
+const renderCustomLabel = (props: any, chartData: any[], viewMode: string) => {
   const { x, y, width, height, value, index } = props;
   
   // Skip if no value
@@ -136,6 +136,9 @@ const renderCustomLabel = (props: any, chartData: any[]) => {
   if (isNaN(numValue)) return null;
   
   const isQuarter = chartData?.[index]?.isQuarter || false;
+  
+  // In "both" mode, only show labels for quarters (hide month labels)
+  if (viewMode === "both" && !isQuarter) return null;
   
   // Calculate position based on whether we have width (bar) or not (line)
   const xPos = width !== undefined ? x + width / 2 : x;
@@ -200,7 +203,7 @@ export const SalesChart = ({ title, data, color, chartType, viewMode, total }: S
                   );
                 })}
                 <LabelList
-                  content={(props) => renderCustomLabel(props, data)}
+                  content={(props) => renderCustomLabel(props, data, viewMode)}
                 />
               </Bar>
             </BarChart>
@@ -225,7 +228,7 @@ export const SalesChart = ({ title, data, color, chartType, viewMode, total }: S
                 animationEasing="ease-in-out"
               >
                 <LabelList
-                  content={(props) => renderCustomLabel(props, data)}
+                  content={(props) => renderCustomLabel(props, data, viewMode)}
                 />
               </Line>
             </LineChart>
