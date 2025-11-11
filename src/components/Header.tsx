@@ -131,10 +131,6 @@ export const Header = () => {
         const chart = chartInfo.element;
         const chartTitle = chartInfo.title;
         
-      // Extract total value from the chart card
-      const totalElement = chart.querySelector(".text-2xl.font-bold");
-      const totalValue = totalElement ? totalElement.textContent : "";
-      
       const canvas = await html2canvas(chart as HTMLElement, {
         scale: 3,
         backgroundColor: "#ffffff",
@@ -145,25 +141,18 @@ export const Header = () => {
       const slide = pptx.addSlide();
       const imgData = canvas.toDataURL("image/png");
       
-      // Add slide title
-      slide.addText(chartTitle || "Chart", {
+      // Combine chart title with filter information
+      const fullTitle = `${chartTitle} - ${filterLabel}`;
+      
+      // Add single slide title with chart name and filters
+      slide.addText(fullTitle, {
         x: 0.5,
         y: 0.3,
         w: 9,
         h: 0.5,
-        fontSize: 20,
+        fontSize: 18,
         bold: true,
         color: "1a1a1a",
-      });
-      
-      // Add subtitle with total
-      slide.addText(`Primary Total: ${totalValue}`, {
-        x: 0.5,
-        y: 0.85,
-        w: 9,
-        h: 0.3,
-        fontSize: 14,
-        color: "666666",
       });
       
       // Calculate proper dimensions to maintain aspect ratio and fit on slide
@@ -182,11 +171,11 @@ export const Header = () => {
       // Center the image horizontally
       const imgX = 0.5 + (maxWidth - imgWidth) / 2;
       
-      // Add chart image with proper sizing (moved up closer to title)
+      // Add chart image with proper sizing (positioned closer to title)
       slide.addImage({
         data: imgData,
         x: imgX,
-        y: 1.25,
+        y: 0.9,
         w: imgWidth,
         h: imgHeight,
       });
