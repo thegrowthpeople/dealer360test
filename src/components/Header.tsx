@@ -206,14 +206,14 @@ export const Header = () => {
             // Add combined title
             const fullTitle = `Mercedes-Benz Retail & Fleet - ${filterLabel}`;
             slide.addText(fullTitle, {
-              x: 0.5,
+              x: 0.3,
               y: 0.15,
               w: 9,
               h: 0.4,
               fontSize: 18,
               bold: true,
               color: "1a1a1a",
-              align: "center",
+              align: "left",
             });
             
             // Calculate dimensions for side-by-side layout
@@ -305,14 +305,14 @@ export const Header = () => {
             // Add combined title
             const fullTitle = `Freightliner Retail & Fleet - ${filterLabel}`;
             slide.addText(fullTitle, {
-              x: 0.5,
+              x: 0.3,
               y: 0.15,
               w: 9,
               h: 0.4,
               fontSize: 18,
               bold: true,
               color: "1a1a1a",
-              align: "center",
+              align: "left",
             });
             
             // Calculate dimensions for side-by-side layout
@@ -382,14 +382,14 @@ export const Header = () => {
       
       // Add single slide title with chart name and filters
       slide.addText(fullTitle, {
-        x: 0.5,
+        x: 0.3,
         y: 0.15,
         w: 9,
         h: 0.4,
         fontSize: 18,
         bold: true,
         color: "1a1a1a",
-        align: "center",
+        align: "left",
       });
       
       // Calculate proper dimensions to maintain aspect ratio and fit on slide
