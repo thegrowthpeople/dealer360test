@@ -551,6 +551,7 @@ export const Header = () => {
               </Button>
             </>
           )}
+          <ThemeToggle />
           {user && (
             <Button
               variant="ghost"
@@ -561,7 +562,6 @@ export const Header = () => {
               <LogOut className="h-5 w-5" />
             </Button>
           )}
-          <ThemeToggle />
         </div>
       </div>
       
