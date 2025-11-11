@@ -51,11 +51,11 @@ const Login = () => {
       <Card className="w-full max-w-3xl relative z-10 backdrop-blur-sm bg-card/95">
         <div className="grid md:grid-cols-2 gap-0">
           {/* Left Column - Logo and Title */}
-          <div className="flex flex-col items-center justify-center p-8 border-r border-border">
-            <a href="https://www.daimlertruck.com.au" target="_blank" rel="noopener noreferrer" className="mb-20">
+          <div className="flex flex-col items-center justify-start p-8 pt-8 border-r border-border">
+            <a href="https://www.daimlertruck.com.au" target="_blank" rel="noopener noreferrer" className="mb-12">
               <img src={logoBlack} alt="Daimler Truck" className="h-12 dark:invert hover:opacity-80 transition-opacity cursor-pointer" />
             </a>
-            <div className="text-center mt-8">
+            <div className="text-center">
               <h1 className="text-2xl font-bold text-foreground">Dealer 360</h1>
               <p className="text-lg text-foreground mt-1">Dealer Management</p>
             </div>
