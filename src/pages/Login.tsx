@@ -39,57 +39,60 @@ const Login = () => {
       style={{ backgroundImage: `url(${loginBackground})` }}
     >
       <div className="absolute inset-0 bg-black/40" />
-      <Card className="w-full max-w-md relative z-10 backdrop-blur-sm bg-card/95">
-        <CardHeader className="space-y-1">
-          <div className="flex justify-center mb-6">
-            <img src={logoBlack} alt="Daimler Truck" className="h-10 dark:invert" />
+      <Card className="w-full max-w-4xl relative z-10 backdrop-blur-sm bg-card/95">
+        <div className="grid md:grid-cols-2 gap-0">
+          {/* Left Column - Logo and Title */}
+          <div className="flex flex-col items-center justify-center p-12 border-r border-border">
+            <img src={logoBlack} alt="Daimler Truck" className="h-12 mb-8 dark:invert" />
+            <h1 className="text-2xl font-semibold text-center text-foreground">Dealer 360 - Dealer Management</h1>
           </div>
-          <h1 className="text-lg font-semibold text-center text-foreground">Dealer 360 - Dealer Management</h1>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {error && (
-              <Alert variant="destructive">
-                <AlertCircle className="h-4 w-4" />
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            )}
-            
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="admin@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                disabled={loading}
-              />
-            </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="password123"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                disabled={loading}
-              />
-            </div>
+          {/* Right Column - Form */}
+          <CardContent className="p-12">
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {error && (
+                <Alert variant="destructive">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
+              )}
+              
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="admin@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  disabled={loading}
+                />
+              </div>
 
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? 'Signing in...' : 'Sign In'}
-            </Button>
+              <div className="space-y-2">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="password123"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  disabled={loading}
+                />
+              </div>
 
-            <p className="text-sm text-muted-foreground text-center mt-4">
-              Demo credentials: any email / password123
-            </p>
-          </form>
-        </CardContent>
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? 'Signing in...' : 'Sign In'}
+              </Button>
+
+              <p className="text-sm text-muted-foreground text-center mt-4">
+                Demo credentials: any email / password123
+              </p>
+            </form>
+          </CardContent>
+        </div>
       </Card>
     </div>
   );
