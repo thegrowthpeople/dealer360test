@@ -6,7 +6,7 @@ import { SummaryCards } from "@/components/performance/SummaryCards";
 import { SalesChart } from "@/components/performance/SalesChart";
 import { BDMInfo } from "@/components/performance/BDMInfo";
 import { useToast } from "@/hooks/use-toast";
-import { usePerformanceFilters, PerformanceFiltersProvider } from "@/contexts/PerformanceFiltersContext";
+import { usePerformanceFilters } from "@/contexts/PerformanceFiltersContext";
 
 interface Actual {
   "Dealer ID": number;
@@ -17,7 +17,7 @@ interface Actual {
   Fleet: number | null;
 }
 
-const PerformanceContent = () => {
+const Performance = () => {
   const { toast } = useToast();
   const {
     dealerships,
@@ -411,14 +411,6 @@ const PerformanceContent = () => {
           />
         </div>
     </div>
-  );
-};
-
-const Performance = () => {
-  return (
-    <PerformanceFiltersProvider>
-      <PerformanceContent />
-    </PerformanceFiltersProvider>
   );
 };
 
