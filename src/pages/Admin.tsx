@@ -50,63 +50,25 @@ const Admin = () => {
 
   useEffect(() => {
     fetchUsers();
-    fetchBDMs();
   }, []);
 
   const fetchUsers = async () => {
     try {
-      const { data: usersData, error: usersError } = await supabase.auth.admin.listUsers();
+      const { data, error } = await supabase.functions.invoke('list-users');
+
+      if (error) throw error;
       
-      if (usersError) throw usersError;
+      if (data.error) {
+        throw new Error(data.error);
+      }
 
-      const { data: rolesData, error: rolesError } = await supabase
-        .from('user_roles')
-        .select('user_id, role, bdm_id');
-
-      if (rolesError) throw rolesError;
-
-      const { data: bdmsData, error: bdmsError } = await supabase
-        .from('BDM')
-        .select('"BDM ID", "Full Name"')
-        .eq('Active', 1);
-
-      if (bdmsError) throw bdmsError;
-
-      const usersWithRoles: UserWithRole[] = usersData.users.map(user => {
-        const userRole = rolesData?.find(r => r.user_id === user.id);
-        const bdm = bdmsData?.find(b => b['BDM ID'] === userRole?.bdm_id);
-        
-        return {
-          id: user.id,
-          email: user.email || '',
-          created_at: user.created_at,
-          role: userRole?.role || 'user',
-          bdm_id: userRole?.bdm_id || null,
-          bdm_name: bdm?.['Full Name'] || null,
-        };
-      });
-
-      setUsers(usersWithRoles);
+      setUsers(data.users || []);
+      setBdms(data.bdms || []);
     } catch (error: any) {
-      toast.error('Failed to fetch users');
+      toast.error('Failed to fetch users: ' + (error.message || 'Unknown error'));
       console.error('Error fetching users:', error);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const fetchBDMs = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('BDM')
-        .select('"BDM ID", "Full Name"')
-        .eq('Active', 1)
-        .order('"Full Name"');
-
-      if (error) throw error;
-      setBdms(data || []);
-    } catch (error) {
-      console.error('Error fetching BDMs:', error);
     }
   };
 
