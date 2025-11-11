@@ -27,7 +27,7 @@ export function AppSidebar() {
   const location = useLocation();
   const { open } = useSidebar();
   const { isAdmin } = usePermissions();
-  const { bdmData, userEmail } = useUserBDM();
+  const { displayName, displayTitle, initials } = useUserBDM();
 
   const isActive = (path: string) => {
     if (path === "/") {
@@ -97,13 +97,13 @@ export function AppSidebar() {
         <div className="flex items-center gap-3">
           <Avatar className="h-8 w-8 shrink-0">
             <AvatarFallback className="bg-primary text-primary-foreground text-xs">
-              {bdmData?.["Full Name"] ? bdmData["Full Name"].split(' ').map(n => n[0]).join('').toUpperCase() : 'U'}
+              {initials}
             </AvatarFallback>
           </Avatar>
           {open && (
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-foreground truncate">{bdmData?.["Full Name"] || userEmail || 'User'}</p>
-              <p className="text-xs text-muted-foreground truncate">{bdmData?.Title || 'BDM'}</p>
+              <p className="text-sm font-medium text-foreground truncate">{displayName}</p>
+              <p className="text-xs text-muted-foreground truncate">{displayTitle}</p>
             </div>
           )}
         </div>

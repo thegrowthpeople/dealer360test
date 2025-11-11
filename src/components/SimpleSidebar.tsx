@@ -23,7 +23,7 @@ interface SimpleSidebarProps {
 export function SimpleSidebar({ isCollapsed, onToggle }: SimpleSidebarProps) {
   const location = useLocation();
   const { isAdmin } = usePermissions();
-  const { bdmData, userEmail } = useUserBDM();
+  const { displayName, displayTitle, initials } = useUserBDM();
 
   const isActive = (path: string) => {
     if (path === "/") {
@@ -114,15 +114,15 @@ export function SimpleSidebar({ isCollapsed, onToggle }: SimpleSidebarProps) {
         <div className={cn("flex items-center gap-3", isCollapsed && "justify-center")}>
           <Avatar className="h-8 w-8 shrink-0">
             <AvatarFallback className="bg-primary text-primary-foreground text-xs">
-              {bdmData?.["Full Name"] ? bdmData["Full Name"].split(' ').map(n => n[0]).join('').toUpperCase() : 'U'}
+              {initials}
             </AvatarFallback>
           </Avatar>
           <div className={cn(
             "flex-1 min-w-0 transition-opacity duration-300 overflow-hidden",
             isCollapsed ? "opacity-0 w-0" : "opacity-100"
           )}>
-            <p className="text-sm font-medium text-foreground truncate whitespace-nowrap">{bdmData?.["Full Name"] || userEmail || 'User'}</p>
-            <p className="text-xs text-muted-foreground truncate whitespace-nowrap">{bdmData?.Title || 'BDM'}</p>
+            <p className="text-sm font-medium text-foreground truncate whitespace-nowrap">{displayName}</p>
+            <p className="text-xs text-muted-foreground truncate whitespace-nowrap">{displayTitle}</p>
           </div>
         </div>
       </div>
