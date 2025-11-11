@@ -13,7 +13,7 @@ interface BDMData {
 }
 
 export function useUserBDM() {
-  const { bdmId, user, userRole } = useAuth();
+  const { bdmId, user, userRole, displayName: userDisplayName } = useAuth();
   const [bdmData, setBdmData] = useState<BDMData | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -47,11 +47,11 @@ export function useUserBDM() {
     fetchBDM();
   }, [bdmId]);
 
-  // Generate display values - prioritize display_name and Full Name, never show email
-  const displayName = user?.user_metadata?.display_name || bdmData?.["Full Name"] || 'User';
+  // Generate display values - prioritize display_name from user_roles, then Full Name from BDM table
+  const displayName = userDisplayName || bdmData?.["Full Name"] || 'User';
   const displayTitle = bdmData?.["Job Title"] || bdmData?.Title || (userRole ? userRole.charAt(0).toUpperCase() + userRole.slice(1) : 'User');
-  const initials = user?.user_metadata?.display_name 
-    ? user.user_metadata.display_name.split(' ').map((n: string) => n[0]).join('').toUpperCase()
+  const initials = userDisplayName
+    ? userDisplayName.split(' ').map((n: string) => n[0]).join('').toUpperCase()
     : (bdmData?.["Full Name"] 
         ? bdmData["Full Name"].split(' ').map(n => n[0]).join('').toUpperCase()
         : 'U');

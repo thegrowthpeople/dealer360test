@@ -8,6 +8,7 @@ interface AuthContextType {
   loading: boolean;
   userRole: string | null;
   bdmId: number | null;
+  displayName: string | null;
   isAdmin: boolean;
   isManager: boolean;
   isUser: boolean;
@@ -23,13 +24,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [userRole, setUserRole] = useState<string | null>(null);
   const [bdmId, setBdmId] = useState<number | null>(null);
+  const [displayName, setDisplayName] = useState<string | null>(null);
 
-  // Fetch user role and BDM ID
+  // Fetch user role, BDM ID, and display name
   const fetchUserRoleAndBdm = async (userId: string) => {
     try {
       const { data, error } = await supabase
         .from('user_roles')
-        .select('role, bdm_id')
+        .select('role, bdm_id, display_name')
         .eq('user_id', userId)
         .single();
 
@@ -41,6 +43,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (data) {
         setUserRole(data.role);
         setBdmId(data.bdm_id);
+        setDisplayName(data.display_name);
       }
     } catch (error) {
       console.error('Error in fetchUserRoleAndBdm:', error);
@@ -62,6 +65,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         } else {
           setUserRole(null);
           setBdmId(null);
+          setDisplayName(null);
         }
       }
     );
@@ -113,6 +117,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await supabase.auth.signOut();
     setUserRole(null);
     setBdmId(null);
+    setDisplayName(null);
   };
 
   const isAdmin = userRole === 'admin';
@@ -126,6 +131,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       loading, 
       userRole,
       bdmId,
+      displayName,
       isAdmin,
       isManager,
       isUser,
