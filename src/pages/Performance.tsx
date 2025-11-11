@@ -332,10 +332,10 @@ const Performance = () => {
     <div className="min-h-screen space-y-6">
       <div>
         <h1 className="text-4xl xl:text-5xl font-bold text-foreground mb-4">Dealer Performance</h1>
-        <PerformanceFilters />
-        <p className="text-muted-foreground mt-4">
+        <p className="text-muted-foreground mb-4">
           {filterLabel || "All Dealerships"}
         </p>
+        <PerformanceFilters />
       </div>
 
       <Separator className="my-6" />
