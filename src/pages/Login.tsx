@@ -44,7 +44,7 @@ const Login = () => {
           <div className="flex justify-center mb-6">
             <img src={logoBlack} alt="Daimler Truck" className="h-10 dark:invert" />
           </div>
-          <h1 className="text-lg font-semibold text-center text-foreground">Dealer Management</h1>
+          <h1 className="text-lg font-semibold text-center text-foreground">Dealer 360 - Dealer Management</h1>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
