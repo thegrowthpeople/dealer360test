@@ -5,9 +5,10 @@ import { cn } from "@/lib/utils";
 
 interface SimpleLayoutProps {
   children: ReactNode;
+  headerFilters?: ReactNode;
 }
 
-export function SimpleLayout({ children }: SimpleLayoutProps) {
+export function SimpleLayout({ children, headerFilters }: SimpleLayoutProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
@@ -20,7 +21,7 @@ export function SimpleLayout({ children }: SimpleLayoutProps) {
           isCollapsed ? "ml-16" : "ml-64"
         )}
       >
-        <Header />
+        <Header>{headerFilters}</Header>
         <main className="pt-[26px] px-6 pb-6 xl:px-12 xl:pb-12 2xl:px-16 2xl:pb-16">
           {children}
         </main>
