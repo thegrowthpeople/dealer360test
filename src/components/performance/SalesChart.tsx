@@ -42,6 +42,18 @@ const MONTH_ABBREVIATIONS: Record<string, string> = {
   Dec: "Dec",
 };
 
+const CustomTooltip = ({ active, payload }: any) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-background border border-border rounded-lg shadow-lg p-3">
+        <p className="text-foreground font-semibold">{payload[0].payload.name}</p>
+        <p className="text-foreground text-lg font-bold">{payload[0].value}</p>
+      </div>
+    );
+  }
+  return null;
+};
+
 const CustomXAxisTick = ({ x, y, payload, viewMode }: any) => {
   const isQuarter = payload.value.startsWith("Q");
   
@@ -163,7 +175,7 @@ export const SalesChart = ({ title, data, color, chartType, viewMode, total }: S
                 interval={0}
                 padding={{ left: 10, right: 10 }}
               />
-              <Tooltip cursor={false} formatter={(value) => [value, ""]} />
+              <Tooltip cursor={false} content={<CustomTooltip />} />
               <Bar 
                 dataKey="value" 
                 maxBarSize={120}
@@ -200,7 +212,7 @@ export const SalesChart = ({ title, data, color, chartType, viewMode, total }: S
                 interval={0}
                 padding={{ left: 20, right: 20 }}
               />
-              <Tooltip cursor={false} formatter={(value) => [value, ""]} />
+              <Tooltip cursor={false} content={<CustomTooltip />} />
               <Line
                 type="monotone"
                 dataKey="value"
