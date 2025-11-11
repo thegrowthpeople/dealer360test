@@ -48,13 +48,13 @@ export function useUserBDM() {
   }, [bdmId]);
 
   // Generate display values - prioritize display_name from user_roles, then Full Name from BDM table
-  const displayName = userDisplayName || bdmData?.["Full Name"] || 'User';
+  const displayName = userDisplayName || bdmData?.["Full Name"] || user?.email?.split('@')[0] || 'User';
   const displayTitle = bdmData?.["Job Title"] || bdmData?.Title || (userRole ? userRole.charAt(0).toUpperCase() + userRole.slice(1) : 'User');
   const initials = userDisplayName
     ? userDisplayName.split(' ').map((n: string) => n[0]).join('').toUpperCase()
     : (bdmData?.["Full Name"] 
         ? bdmData["Full Name"].split(' ').map(n => n[0]).join('').toUpperCase()
-        : 'U');
+        : (user?.email ? user.email.substring(0, 2).toUpperCase() : 'U'));
 
   return {
     bdmData,
