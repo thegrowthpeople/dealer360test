@@ -12,7 +12,6 @@ const menuItems = [
   { path: "/performance", label: "Performance", icon: TrendingUp },
   { path: "/forecast", label: "Forecast", icon: Search },
   { path: "/business-plan", label: "Business Plan", icon: Target },
-  { path: "/dealerships", label: "Dealerships", icon: Truck },
 ];
 
 interface SimpleSidebarProps {
@@ -60,35 +59,52 @@ export function SimpleSidebar({ isCollapsed, onToggle }: SimpleSidebarProps) {
 
       {/* Menu Items */}
       <nav className="flex-1 p-2 pt-4 space-y-1">
-        {menuItems
-          .filter((item) => item.path !== '/dealerships' || isAdmin)
-          .map((item) => {
-            const Icon = item.icon;
-            const active = isActive(item.path);
-            return (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={cn(
-                  "flex items-center rounded-md transition-all duration-200",
-                  "hover:bg-accent hover:text-accent-foreground",
-                  active && "bg-primary text-primary-foreground hover:bg-primary/90",
-                  isCollapsed ? "justify-center px-3 py-2.5" : "gap-3 px-3 py-2.5"
-                )}
-              >
-                <Icon className="h-5 w-5 shrink-0" />
-                <span className={cn(
-                  "text-sm font-medium whitespace-nowrap transition-opacity duration-300",
-                  isCollapsed ? "opacity-0 w-0 overflow-hidden" : "opacity-100"
-                )}>
-                  {item.label}
-                </span>
-              </Link>
-            );
-          })}
+        {menuItems.map((item) => {
+          const Icon = item.icon;
+          const active = isActive(item.path);
+          return (
+            <Link
+              key={item.path}
+              to={item.path}
+              className={cn(
+                "flex items-center rounded-md transition-all duration-200",
+                "hover:bg-accent hover:text-accent-foreground",
+                active && "bg-primary text-primary-foreground hover:bg-primary/90",
+                isCollapsed ? "justify-center px-3 py-2.5" : "gap-3 px-3 py-2.5"
+              )}
+            >
+              <Icon className="h-5 w-5 shrink-0" />
+              <span className={cn(
+                "text-sm font-medium whitespace-nowrap transition-opacity duration-300",
+                isCollapsed ? "opacity-0 w-0 overflow-hidden" : "opacity-100"
+              )}>
+                {item.label}
+              </span>
+            </Link>
+          );
+        })}
         
         {isAdmin && (
           <>
+            <div className="border-t border-border mt-6 mb-2" />
+            <Link
+              to="/dealerships"
+              className={cn(
+                "flex items-center rounded-md transition-all duration-200",
+                "hover:bg-accent hover:text-accent-foreground",
+                location.pathname === '/dealerships' && "bg-primary text-primary-foreground hover:bg-primary/90",
+                isCollapsed ? "justify-center px-3 py-2.5" : "gap-3 px-3 py-2.5"
+              )}
+            >
+              <Truck className="h-5 w-5 shrink-0" />
+              <span className={cn(
+                "text-sm font-medium whitespace-nowrap transition-opacity duration-300",
+                isCollapsed ? "opacity-0 w-0 overflow-hidden" : "opacity-100"
+              )}>
+                Dealerships
+              </span>
+            </Link>
+            
             <div className="border-t border-border my-2" />
             <Link
               to="/admin"

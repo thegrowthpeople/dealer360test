@@ -20,7 +20,6 @@ const menuItems = [
   { path: "/performance", label: "Performance", icon: TrendingUp },
   { path: "/forecast", label: "Forecast", icon: Search },
   { path: "/business-plan", label: "Business Plan", icon: BarChart },
-  { path: "/dealerships", label: "Dealerships", icon: Truck },
 ];
 
 export function AppSidebar() {
@@ -46,33 +45,49 @@ export function AppSidebar() {
 
       <SidebarContent>
         <SidebarMenu className="gap-1 p-2">
-          {menuItems
-            .filter((item) => item.path !== '/dealerships' || isAdmin)
-            .map((item) => {
-              const Icon = item.icon;
-              const active = isActive(item.path);
-              return (
-                <SidebarMenuItem key={item.path}>
-                  <SidebarMenuButton
-                    asChild
-                    isActive={active}
-                    tooltip={item.label}
-                    className={cn(
-                      "transition-all",
-                      active && "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground"
-                    )}
-                  >
-                    <Link to={item.path}>
-                      <Icon className="w-4 h-4" />
-                      <span>{item.label}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              );
-            })}
+          {menuItems.map((item) => {
+            const Icon = item.icon;
+            const active = isActive(item.path);
+            return (
+              <SidebarMenuItem key={item.path}>
+                <SidebarMenuButton
+                  asChild
+                  isActive={active}
+                  tooltip={item.label}
+                  className={cn(
+                    "transition-all",
+                    active && "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground"
+                  )}
+                >
+                  <Link to={item.path}>
+                    <Icon className="w-4 h-4" />
+                    <span>{item.label}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            );
+          })}
           
           {isAdmin && (
             <>
+              <div className="border-t border-border mt-6 mb-2" />
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  isActive={location.pathname === '/dealerships'}
+                  tooltip="Dealerships"
+                  className={cn(
+                    "transition-all",
+                    location.pathname === '/dealerships' && "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground"
+                  )}
+                >
+                  <Link to="/dealerships">
+                    <Truck className="w-4 h-4" />
+                    <span>Dealerships</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              
               <div className="border-t border-border my-2" />
               <SidebarMenuItem>
                 <SidebarMenuButton
