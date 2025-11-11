@@ -1,19 +1,34 @@
 import { cn } from "@/lib/utils";
 import logo from "@/assets/logo-black.svg";
 import { ThemeToggle } from "./ThemeToggle";
+import { ReactNode } from "react";
 
-export const Header = () => {
+interface HeaderProps {
+  children?: ReactNode;
+}
+
+export const Header = ({ children }: HeaderProps) => {
   return (
     <header className="border-b bg-card shadow-soft sticky top-0 z-20 h-16">
-      <div className="px-6 xl:px-12 2xl:px-16 h-full flex items-center justify-between">
-        {/* Title */}
-        <div className="flex flex-col shrink-0">
-          <span className="font-semibold text-foreground text-lg">DEALER MANAGER</span>
-          <span className="text-sm text-muted-foreground">Heavy Duty</span>
+      <div className="px-6 xl:px-12 2xl:px-16 h-full flex items-center gap-6">
+        {/* Logo */}
+        <div className="flex items-center shrink-0">
+          <a href="https://www.daimlertruck.com.au/" target="_blank" rel="noopener noreferrer">
+            <img src={logo} alt="Daimler Truck" className="h-8 dark:invert transition-all duration-500 ease-in-out hover:opacity-80 cursor-pointer" />
+          </a>
         </div>
         
+        {/* Optional filters or content */}
+        {children && (
+          <div className="flex-1 flex items-center gap-3 max-w-4xl">
+            {children}
+          </div>
+        )}
+        
         {/* Theme Toggle */}
-        <ThemeToggle />
+        <div className="ml-auto">
+          <ThemeToggle />
+        </div>
       </div>
     </header>
   );
