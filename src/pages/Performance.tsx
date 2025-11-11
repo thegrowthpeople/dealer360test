@@ -116,9 +116,9 @@ const Performance = () => {
       if (yearsRes.data) {
         const uniqueYears = [...new Set(yearsRes.data.map((d) => d.Year))].sort((a, b) => b - a);
         setAvailableYears(uniqueYears);
-        if (uniqueYears.length > 0) {
-          setSelectedYear(uniqueYears[0]);
-        }
+        // Set default to current calendar year
+        const currentYear = new Date().getFullYear();
+        setSelectedYear(currentYear);
       }
     } catch (error) {
       console.error("Error fetching initial data:", error);

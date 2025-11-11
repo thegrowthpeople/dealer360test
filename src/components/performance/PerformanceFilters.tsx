@@ -273,13 +273,13 @@ export function PerformanceFilters({
       </Popover>
 
       <Select
-        value={selectedYear?.toString() || "all"}
+        value={selectedYear?.toString() || ""}
         onValueChange={(value) => {
           setSelectedYear(value === "all" ? null : parseInt(value));
         }}
       >
         <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="All Years" />
+          <SelectValue />
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">All Years</SelectItem>
