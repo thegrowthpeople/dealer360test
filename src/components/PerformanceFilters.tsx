@@ -162,13 +162,13 @@ export const PerformanceFilters = () => {
             variant="outline"
             role="combobox"
             aria-expanded={groupSearchOpen}
-            className="w-[240px] justify-between"
+            className="w-[260px] justify-between"
           >
             {selectedGroup || "All Dealer Groups"}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[240px] p-0" align="end">
+        <PopoverContent className="w-[260px] p-0" align="end">
           <Command>
             <CommandInput placeholder="Search group..." />
             <CommandList>
