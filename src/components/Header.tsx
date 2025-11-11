@@ -66,9 +66,9 @@ export const Header = () => {
     const mainContent = document.querySelector("main");
     if (!mainContent) return;
     
-    // Find all individual chart cards
-    const fullWidthCharts = mainContent.querySelectorAll(".space-y-6 > div > div[class*='rounded-xl']");
-    const gridCharts = mainContent.querySelectorAll(".grid > div[class*='rounded-xl']");
+    // Find all individual chart cards (Card components have rounded-lg class)
+    const fullWidthCharts = mainContent.querySelectorAll(".space-y-6 > div[class*='rounded-']");
+    const gridCharts = mainContent.querySelectorAll(".grid > div[class*='rounded-']");
     
     // Combine all charts and extract their information
     const allChartElements = [...Array.from(fullWidthCharts), ...Array.from(gridCharts)];
