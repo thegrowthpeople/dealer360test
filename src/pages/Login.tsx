@@ -7,7 +7,6 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertCircle } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
 import loginBackground from '@/assets/login-background.jpg';
 import logoBlack from '@/assets/logo-black.svg';
 
@@ -18,7 +17,6 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { signIn } = useAuth();
-  const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,13 +31,6 @@ const Login = () => {
     } else {
       navigate('/performance');
     }
-  };
-
-  const handleForgotPassword = () => {
-    toast({
-      title: "Password Reset",
-      description: "Please contact your administrator for password reset assistance.",
-    });
   };
 
   return (
@@ -100,16 +91,6 @@ const Login = () => {
               <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? 'Signing in...' : 'Sign In'}
               </Button>
-
-              <div className="text-center mt-4">
-                <button
-                  type="button"
-                  onClick={handleForgotPassword}
-                  className="text-xs text-muted-foreground/60 hover:text-muted-foreground transition-colors"
-                >
-                  Forgot Password?
-                </button>
-              </div>
             </form>
           </CardContent>
         </div>
