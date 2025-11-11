@@ -39,12 +39,12 @@ const Login = () => {
       style={{ backgroundImage: `url(${loginBackground})` }}
     >
       <div className="absolute inset-0 bg-black/40" />
-      <Card className="w-full max-w-3xl relative z-10 backdrop-blur-sm bg-card/95">
+      <Card className="w-full max-w-3xl relative z-10 backdrop-blur-md bg-card/98 shadow-2xl border-border/50 animate-fade-in">
         <div className="grid md:grid-cols-2 gap-0">
           {/* Left Column - Logo and Title */}
-          <div className="flex flex-col items-center justify-center p-8 border-r border-border">
-            <a href="https://www.daimlertruck.com.au" target="_blank" rel="noopener noreferrer" className="mb-12">
-              <img src={logoBlack} alt="Daimler Truck" className="h-12 dark:invert hover:opacity-80 transition-opacity cursor-pointer" />
+          <div className="flex flex-col items-center justify-center p-8 border-r border-border/50 bg-gradient-to-br from-muted/30 to-transparent">
+            <a href="https://www.daimlertruck.com.au" target="_blank" rel="noopener noreferrer" className="mb-12 transition-transform duration-300 hover:scale-105">
+              <img src={logoBlack} alt="Daimler Truck" className="h-12 dark:invert" />
             </a>
             <div className="text-center">
               <h1 className="text-2xl font-bold text-foreground">Dealer 360</h1>
@@ -56,7 +56,7 @@ const Login = () => {
           <CardContent className="p-8">
             <form onSubmit={handleSubmit} className="space-y-4">
               {error && (
-                <Alert variant="destructive">
+                <Alert variant="destructive" className="animate-scale-in">
                   <AlertCircle className="h-4 w-4" />
                   <AlertDescription>{error}</AlertDescription>
                 </Alert>
@@ -72,6 +72,7 @@ const Login = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   disabled={loading}
+                  className="transition-all duration-200 focus:scale-[1.01]"
                 />
               </div>
 
@@ -85,10 +86,11 @@ const Login = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   disabled={loading}
+                  className="transition-all duration-200 focus:scale-[1.01]"
                 />
               </div>
 
-              <Button type="submit" className="w-full" disabled={loading}>
+              <Button type="submit" className="w-full transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]" disabled={loading}>
                 {loading ? 'Signing in...' : 'Sign In'}
               </Button>
             </form>
