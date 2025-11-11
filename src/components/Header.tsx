@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 import logo from "@/assets/logo-black.svg";
 import { ThemeToggle } from "./ThemeToggle";
@@ -7,9 +8,19 @@ import pptxgen from "pptxgenjs";
 import html2canvas from "html2canvas";
 import { usePerformanceFilters } from "@/contexts/PerformanceFiltersContext";
 import { useToast } from "@/hooks/use-toast";
+import { ChartExportDialog } from "./ChartExportDialog";
+
+interface ChartInfo {
+  element: Element;
+  title: string;
+  index: number;
+}
 
 export const Header = () => {
   const { toast } = useToast();
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [availableCharts, setAvailableCharts] = useState<ChartInfo[]>([]);
+  
   const {
     selectedBDMId,
     selectedGroup,
@@ -50,46 +61,54 @@ export const Header = () => {
     return parts.join(" | ");
   };
 
-  const handleExportPowerPoint = async () => {
+  const handleOpenExportDialog = () => {
+    // Find the main content area (exclude header and sidebar)
+    const mainContent = document.querySelector("main");
+    if (!mainContent) return;
+    
+    // Find all individual chart cards
+    const fullWidthCharts = mainContent.querySelectorAll(".space-y-6 > div > div[class*='rounded-xl']");
+    const gridCharts = mainContent.querySelectorAll(".grid > div[class*='rounded-xl']");
+    
+    // Combine all charts and extract their information
+    const allChartElements = [...Array.from(fullWidthCharts), ...Array.from(gridCharts)];
+    
+    if (allChartElements.length === 0) {
+      toast({
+        title: "No Charts Found",
+        description: "No charts available to export",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    const charts: ChartInfo[] = allChartElements.map((element, index) => {
+      const titleElement = element.querySelector("h3");
+      const title = titleElement ? titleElement.textContent || `Chart ${index + 1}` : `Chart ${index + 1}`;
+      return { element, title, index };
+    });
+    
+    setAvailableCharts(charts);
+    setDialogOpen(true);
+  };
+
+  const handleExportPowerPoint = async (selectedCharts: ChartInfo[]) => {
     try {
       const pptx = new pptxgen();
-      
-      // Find the main content area (exclude header and sidebar)
-      const mainContent = document.querySelector("main");
-      if (!mainContent) return;
-      
-      // Find all individual chart cards
-      // First get charts from .space-y-6 container (full-width charts)
-      const fullWidthCharts = mainContent.querySelectorAll(".space-y-6 > div > div[class*='rounded-xl']");
-      // Then get charts from grid layout (4 smaller charts)
-      const gridCharts = mainContent.querySelectorAll(".grid > div[class*='rounded-xl']");
-      
-      // Combine all charts
-      const allCharts = [...Array.from(fullWidthCharts), ...Array.from(gridCharts)];
-      
-      if (allCharts.length === 0) {
-        toast({
-          title: "No Charts Found",
-          description: "No charts available to export",
-          variant: "destructive",
-        });
-        return;
-      }
       
       // Show initial loading toast
       toast({
         title: "Generating PowerPoint",
-        description: `Starting export of ${allCharts.length} slides...`,
+        description: `Starting export of ${selectedCharts.length} slides...`,
       });
       
       const filterLabel = getFilterLabel();
       
-      // Capture each chart as a separate slide
-      for (let i = 0; i < allCharts.length; i++) {
-        const chart = allCharts[i];
-        // Extract chart title from the card
-        const titleElement = chart.querySelector("h3");
-        const chartTitle = titleElement ? titleElement.textContent : "Chart";
+      // Capture each selected chart as a separate slide
+      for (let i = 0; i < selectedCharts.length; i++) {
+        const chartInfo = selectedCharts[i];
+        const chart = chartInfo.element;
+        const chartTitle = chartInfo.title;
         
         const canvas = await html2canvas(chart as HTMLElement, {
           scale: 2,
@@ -142,10 +161,10 @@ export const Header = () => {
         });
         
         // Show progress update for key milestones
-        if ((i + 1) % 2 === 0 || i === allCharts.length - 1) {
+        if ((i + 1) % 2 === 0 || i === selectedCharts.length - 1) {
           toast({
             title: "Generating PowerPoint",
-            description: `Processing ${i + 1} of ${allCharts.length} slides...`,
+            description: `Processing ${i + 1} of ${selectedCharts.length} slides...`,
           });
         }
       }
@@ -162,7 +181,7 @@ export const Header = () => {
       // Show success toast
       toast({
         title: "PowerPoint Generated",
-        description: `Successfully created ${allCharts.length} slides`,
+        description: `Successfully created ${selectedCharts.length} slides`,
       });
     } catch (error) {
       console.error("Error exporting to PowerPoint:", error);
@@ -189,7 +208,7 @@ export const Header = () => {
           <Button
             variant="ghost"
             size="icon"
-            onClick={handleExportPowerPoint}
+            onClick={handleOpenExportDialog}
             title="Export to PowerPoint"
           >
             <Presentation className="h-5 w-5" />
@@ -205,6 +224,13 @@ export const Header = () => {
           <ThemeToggle />
         </div>
       </div>
+      
+      <ChartExportDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        charts={availableCharts}
+        onExport={handleExportPowerPoint}
+      />
     </header>
   );
 };
