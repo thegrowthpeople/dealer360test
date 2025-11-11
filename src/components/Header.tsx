@@ -1,8 +1,23 @@
 import { cn } from "@/lib/utils";
 import logo from "@/assets/logo-black.svg";
 import { ThemeToggle } from "./ThemeToggle";
+import { Button } from "./ui/button";
+import { Download } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 export const Header = () => {
+  const { toast } = useToast();
+
+  const handleExportPDF = () => {
+    toast({
+      title: "Exporting to PDF",
+      description: "Preparing your report for download...",
+    });
+    
+    // Trigger browser print dialog which can save as PDF
+    window.print();
+  };
+
   return (
     <header className="border-b bg-card shadow-soft sticky top-0 z-20 h-16">
       <div className="px-6 xl:px-12 2xl:px-16 h-full flex items-center justify-between">
@@ -13,8 +28,18 @@ export const Header = () => {
           </a>
         </div>
         
-        {/* Theme Toggle */}
-        <ThemeToggle />
+        {/* Right Side Actions */}
+        <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={handleExportPDF}
+            title="Export to PDF"
+          >
+            <Download className="h-5 w-5" />
+          </Button>
+          <ThemeToggle />
+        </div>
       </div>
     </header>
   );
