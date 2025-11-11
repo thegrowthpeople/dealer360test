@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronsUpDown, RotateCcw } from "lucide-react";
 import {
   Command,
   CommandEmpty,
@@ -44,6 +44,16 @@ export const PerformanceFilters = () => {
     dealershipSearchOpen,
     setDealershipSearchOpen,
   } = usePerformanceFilters();
+
+  const handleClearFilters = () => {
+    const currentYear = new Date().getFullYear();
+    setSelectedBDMId(null);
+    setSelectedGroup(null);
+    setSelectedDealerId(null);
+    setSelectedYear(currentYear);
+  };
+
+  const hasActiveFilters = selectedBDMId !== null || selectedGroup !== null || selectedDealerId !== null;
 
   const filteredDealerGroups = useMemo(() => {
     let groups = dealerships;
@@ -291,6 +301,19 @@ export const PerformanceFilters = () => {
           ))}
         </SelectContent>
       </Select>
+
+      {/* Clear Filters Button */}
+      {hasActiveFilters && (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={handleClearFilters}
+          className="gap-2"
+        >
+          <RotateCcw className="h-4 w-4" />
+          Clear Filters
+        </Button>
+      )}
     </div>
   );
 };
