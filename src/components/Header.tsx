@@ -110,44 +110,61 @@ export const Header = () => {
         const chart = chartInfo.element;
         const chartTitle = chartInfo.title;
         
-        const canvas = await html2canvas(chart as HTMLElement, {
-          scale: 2,
-          backgroundColor: "#ffffff",
-          logging: false,
-        });
-        
-        const slide = pptx.addSlide();
-        const imgData = canvas.toDataURL("image/png");
-        
-        // Add slide title with chart name and filters
-        slide.addText(chartTitle || "Chart", {
-          x: 0.5,
-          y: 0.3,
-          w: 9,
-          h: 0.4,
-          fontSize: 18,
-          bold: true,
-          color: "1a1a1a",
-        });
-        
-        // Add filter information
-        slide.addText(filterLabel, {
-          x: 0.5,
-          y: 0.65,
-          w: 9,
-          h: 0.3,
-          fontSize: 12,
-          color: "666666",
-        });
-        
-        // Add chart image (adjusted position to accommodate header)
-        slide.addImage({
-          data: imgData,
-          x: 0.5,
-          y: 1.1,
-          w: 9,
-          h: 5.7,
-        });
+      const canvas = await html2canvas(chart as HTMLElement, {
+        scale: 3,
+        backgroundColor: "#ffffff",
+        logging: false,
+        useCORS: true,
+      });
+      
+      const slide = pptx.addSlide();
+      const imgData = canvas.toDataURL("image/png");
+      
+      // Add slide title with chart name and filters
+      slide.addText(chartTitle || "Chart", {
+        x: 0.5,
+        y: 0.3,
+        w: 9,
+        h: 0.5,
+        fontSize: 20,
+        bold: true,
+        color: "1a1a1a",
+      });
+      
+      // Add filter information
+      slide.addText(filterLabel, {
+        x: 0.5,
+        y: 0.85,
+        w: 9,
+        h: 0.3,
+        fontSize: 11,
+        color: "666666",
+      });
+      
+      // Calculate proper dimensions to maintain aspect ratio and fit on slide
+      const maxWidth = 9;
+      const maxHeight = 5.2;
+      const aspectRatio = canvas.width / canvas.height;
+      
+      let imgWidth = maxWidth;
+      let imgHeight = maxWidth / aspectRatio;
+      
+      if (imgHeight > maxHeight) {
+        imgHeight = maxHeight;
+        imgWidth = maxHeight * aspectRatio;
+      }
+      
+      // Center the image horizontally
+      const imgX = 0.5 + (maxWidth - imgWidth) / 2;
+      
+      // Add chart image with proper sizing
+      slide.addImage({
+        data: imgData,
+        x: imgX,
+        y: 1.3,
+        w: imgWidth,
+        h: imgHeight,
+      });
         
         // Add footer
         slide.addText("STRICTLY INTERNAL USE ONLY - PRIVATE & CONFIDENTIAL", {
