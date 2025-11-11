@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import { usePerformanceFilters } from "@/contexts/PerformanceFiltersContext";
 import {
   Select,
@@ -55,6 +55,28 @@ export const PerformanceFilters = () => {
 
   const hasActiveFilters = selectedBDMId !== null || selectedGroup !== null || selectedDealerId !== null;
 
+  // Get BDMs associated with selected dealership or group
+  const filteredBDMs = useMemo(() => {
+    if (selectedDealerId !== null) {
+      const dealership = dealerships.find((d) => d["Dealer ID"] === selectedDealerId);
+      if (dealership) {
+        return bdms.filter((b) => b["BDM ID"] === dealership["BDM ID"]);
+      }
+    } else if (selectedGroup !== null) {
+      const dealershipsInGroup = dealerships.filter((d) => d["Dealer Group"] === selectedGroup);
+      const bdmIds = [...new Set(dealershipsInGroup.map((d) => d["BDM ID"]))];
+      return bdms.filter((b) => bdmIds.includes(b["BDM ID"]));
+    }
+    return bdms;
+  }, [selectedDealerId, selectedGroup, dealerships, bdms]);
+
+  // Auto-select BDM when dealership or group is selected
+  useEffect(() => {
+    if ((selectedDealerId !== null || selectedGroup !== null) && filteredBDMs.length === 1) {
+      setSelectedBDMId(filteredBDMs[0]["BDM ID"]);
+    }
+  }, [selectedDealerId, selectedGroup, filteredBDMs, setSelectedBDMId]);
+
   const filteredDealerGroups = useMemo(() => {
     let groups = dealerships;
     
@@ -104,15 +126,16 @@ export const PerformanceFilters = () => {
       {/* BDM Filter */}
       <Popover open={bdmSearchOpen} onOpenChange={setBdmSearchOpen}>
         <PopoverTrigger asChild>
-          <Button
+            <Button
             variant="outline"
             role="combobox"
             aria-expanded={bdmSearchOpen}
             className="w-[180px] justify-between"
+            disabled={filteredBDMs.length === 0}
           >
             {selectedBDMId
-              ? bdms.find((b) => b["BDM ID"] === selectedBDMId)?.["Full Name"]
-              : "All BDMs"}
+              ? filteredBDMs.find((b) => b["BDM ID"] === selectedBDMId)?.["Full Name"]
+              : filteredBDMs.length === 1 ? filteredBDMs[0]["Full Name"] : "All BDMs"}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
@@ -122,43 +145,39 @@ export const PerformanceFilters = () => {
             <CommandList>
               <CommandEmpty>No BDM found.</CommandEmpty>
               <CommandGroup>
-                <CommandItem
-                  value="all"
-                  onSelect={() => {
-                    setSelectedBDMId(null);
-                    setSelectedGroup(null);
-                    setSelectedDealerId(null);
-                    setBdmSearchOpen(false);
-                  }}
-                >
-                  <Check
-                    className={cn(
-                      "mr-2 h-4 w-4",
-                      selectedBDMId === null ? "opacity-100" : "opacity-0"
-                    )}
-                  />
-                  All BDMs
-                </CommandItem>
-                {bdms.map((bdm) => (
                   <CommandItem
-                    key={bdm["BDM ID"]}
-                    value={bdm["Full Name"] || ""}
+                    value="all"
                     onSelect={() => {
-                      setSelectedBDMId(bdm["BDM ID"]);
-                      setSelectedGroup(null);
-                      setSelectedDealerId(null);
+                      setSelectedBDMId(null);
                       setBdmSearchOpen(false);
                     }}
                   >
                     <Check
                       className={cn(
                         "mr-2 h-4 w-4",
-                        selectedBDMId === bdm["BDM ID"] ? "opacity-100" : "opacity-0"
+                        selectedBDMId === null ? "opacity-100" : "opacity-0"
                       )}
                     />
-                    {bdm["Full Name"]}
+                    All BDMs
                   </CommandItem>
-                ))}
+                  {filteredBDMs.map((bdm) => (
+                    <CommandItem
+                      key={bdm["BDM ID"]}
+                      value={bdm["Full Name"] || ""}
+                      onSelect={() => {
+                        setSelectedBDMId(bdm["BDM ID"]);
+                        setBdmSearchOpen(false);
+                      }}
+                    >
+                      <Check
+                        className={cn(
+                          "mr-2 h-4 w-4",
+                          selectedBDMId === bdm["BDM ID"] ? "opacity-100" : "opacity-0"
+                        )}
+                      />
+                      {bdm["Full Name"]}
+                    </CommandItem>
+                  ))}
               </CommandGroup>
             </CommandList>
           </Command>
