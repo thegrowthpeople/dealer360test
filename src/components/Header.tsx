@@ -20,18 +20,32 @@ export const Header = () => {
       const mainContent = document.querySelector("main");
       if (!mainContent) return;
       
-      // Find all chart rows (space-y-6 > div elements)
-      const chartContainers = mainContent.querySelectorAll(".space-y-6 > div");
+      // Find all individual chart cards
+      // First get charts from .space-y-6 container (full-width charts)
+      const fullWidthCharts = mainContent.querySelectorAll(".space-y-6 > div > div[class*='rounded-xl']");
+      // Then get charts from grid layout (4 smaller charts)
+      const gridCharts = mainContent.querySelectorAll(".grid > div[class*='rounded-xl']");
       
-      if (chartContainers.length === 0) {
-        // No charts found, capture entire main content
-        const canvas = await html2canvas(mainContent as HTMLElement, {
+      // Combine all charts
+      const allCharts = [...Array.from(fullWidthCharts), ...Array.from(gridCharts)];
+      
+      if (allCharts.length === 0) {
+        console.warn("No charts found for export");
+        return;
+      }
+      
+      // Capture each chart as a separate slide
+      for (const chart of allCharts) {
+        const canvas = await html2canvas(chart as HTMLElement, {
           scale: 2,
           backgroundColor: "#ffffff",
+          logging: false,
         });
         
         const slide = pptx.addSlide();
         const imgData = canvas.toDataURL("image/png");
+        
+        // Add chart image (centered and larger)
         slide.addImage({
           data: imgData,
           x: 0.5,
@@ -50,37 +64,6 @@ export const Header = () => {
           bold: true,
           align: "center",
         });
-      } else {
-        // Capture each chart row as a separate slide
-        for (const container of Array.from(chartContainers)) {
-          const canvas = await html2canvas(container as HTMLElement, {
-            scale: 2,
-            backgroundColor: "#ffffff",
-          });
-          
-          const slide = pptx.addSlide();
-          const imgData = canvas.toDataURL("image/png");
-          
-          // Add chart image
-          slide.addImage({
-            data: imgData,
-            x: 0.5,
-            y: 0.5,
-            w: 9,
-            h: 6.5,
-          });
-          
-          // Add footer
-          slide.addText("STRICTLY INTERNAL USE ONLY - PRIVATE & CONFIDENTIAL", {
-            x: 0.5,
-            y: 7,
-            w: 9,
-            h: 0.3,
-            fontSize: 10,
-            bold: true,
-            align: "center",
-          });
-        }
       }
       
       // Save the presentation
