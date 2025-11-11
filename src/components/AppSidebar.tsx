@@ -2,7 +2,6 @@ import { Home, TrendingUp, Search, BarChart, PlusCircle, FileText, Truck } from 
 import { useLocation, Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import logo from "@/assets/logo-black.svg";
 import {
   Sidebar,
   SidebarContent,
@@ -36,10 +35,8 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon" className="w-52 border-r">
       <SidebarHeader className="border-b p-4">
-        <div className="flex flex-col items-start gap-1 w-full">
-          <a href="https://www.daimlertruck.com.au/" target="_blank" rel="noopener noreferrer">
-            <img src={logo} alt="Daimler Truck" className={cn("dark:invert transition-all duration-300 hover:opacity-80 cursor-pointer", open ? "h-8" : "h-6")} />
-          </a>
+        <div className="flex items-center justify-center">
+          {open && <span className="font-semibold text-foreground text-lg">Dealer Management</span>}
         </div>
       </SidebarHeader>
 

@@ -4,7 +4,6 @@ import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import logo from "@/assets/logo-black.svg";
 
 const menuItems = [
   { path: "/", label: "Home", icon: Home },
@@ -38,21 +37,13 @@ export function SimpleSidebar({ isCollapsed, onToggle }: SimpleSidebarProps) {
     >
       {/* Header */}
       <div className="border-b border-border p-4 flex items-center justify-between h-16">
-        <a 
-          href="https://www.daimlertruck.com.au/" 
-          target="_blank" 
-          rel="noopener noreferrer"
-          className={cn(
-            "transition-opacity duration-300 overflow-hidden",
-            isCollapsed ? "opacity-0 w-0" : "opacity-100"
-          )}
-        >
-          <img 
-            src={logo} 
-            alt="Daimler Truck" 
-            className="h-8 dark:invert transition-all duration-300 hover:opacity-80 cursor-pointer" 
-          />
-        </a>
+        <div className={cn(
+          "flex flex-col transition-opacity duration-300 overflow-hidden",
+          isCollapsed ? "opacity-0 w-0" : "opacity-100 w-auto"
+        )}>
+          <span className="font-bold text-foreground text-lg whitespace-nowrap">DEALER MANAGER</span>
+          <span className="text-sm text-muted-foreground whitespace-nowrap">Heavy Duty</span>
+        </div>
         <Button
           variant="ghost"
           size="icon"
