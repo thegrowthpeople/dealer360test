@@ -4,10 +4,11 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertCircle } from 'lucide-react';
 import loginBackground from '@/assets/login-background.jpg';
+import logoBlack from '@/assets/logo-black.svg';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -40,10 +41,9 @@ const Login = () => {
       <div className="absolute inset-0 bg-black/40" />
       <Card className="w-full max-w-md relative z-10 backdrop-blur-sm bg-card/95">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center">Sign In</CardTitle>
-          <CardDescription className="text-center">
-            Enter your credentials to access the dashboard
-          </CardDescription>
+          <div className="flex justify-center mb-6">
+            <img src={logoBlack} alt="Daimler Truck" className="h-12 dark:invert" />
+          </div>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
