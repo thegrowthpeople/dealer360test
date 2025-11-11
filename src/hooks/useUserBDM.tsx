@@ -8,6 +8,7 @@ interface BDMData {
   eMail: string | null;
   "Phone Number": string | null;
   Title: string | null;
+  "Job Title": string | null;
   [key: string]: any;
 }
 
@@ -48,7 +49,7 @@ export function useUserBDM() {
 
   // Generate display values
   const displayName = bdmData?.["Full Name"] || user?.email || 'User';
-  const displayTitle = bdmData?.Title || (userRole ? userRole.charAt(0).toUpperCase() + userRole.slice(1) : 'BDM');
+  const displayTitle = bdmData?.["Job Title"] || bdmData?.Title || (userRole ? userRole.charAt(0).toUpperCase() + userRole.slice(1) : 'BDM');
   const initials = bdmData?.["Full Name"] 
     ? bdmData["Full Name"].split(' ').map(n => n[0]).join('').toUpperCase()
     : (user?.email ? user.email.substring(0, 2).toUpperCase() : 'U');
