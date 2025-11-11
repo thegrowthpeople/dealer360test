@@ -245,9 +245,15 @@ const Admin = () => {
                 <Label htmlFor="role">Role</Label>
                 <Select
                   value={formData.role}
-                  onValueChange={(value: 'admin' | 'manager' | 'user') => 
-                    setFormData({ ...formData, role: value, bdm_id: value === 'admin' ? null : formData.bdm_id })
-                  }
+                  onValueChange={(value: 'admin' | 'manager' | 'user') => {
+                    // When switching to admin, clear BDM
+                    // When switching to manager/user from admin, keep bdm_id as null
+                    setFormData({ 
+                      ...formData, 
+                      role: value, 
+                      bdm_id: value === 'admin' ? null : formData.bdm_id 
+                    });
+                  }}
                 >
                   <SelectTrigger>
                     <SelectValue />
@@ -260,18 +266,18 @@ const Admin = () => {
                 </Select>
               </div>
 
-              {showBdmField && (
+              {showBdmField && bdms.length > 0 && (
                 <div className="space-y-2">
                   <Label htmlFor="bdm">BDM {bdmRequired && <span className="text-destructive">*</span>}</Label>
                   <Select
-                    value={formData.bdm_id?.toString() || ''}
-                    onValueChange={(value) => setFormData({ ...formData, bdm_id: value ? parseInt(value) : null })}
+                    value={formData.bdm_id?.toString() || 'none'}
+                    onValueChange={(value) => setFormData({ ...formData, bdm_id: value === 'none' ? null : parseInt(value) })}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select BDM" />
                     </SelectTrigger>
                     <SelectContent>
-                      {!bdmRequired && <SelectItem value="">None</SelectItem>}
+                      {!bdmRequired && <SelectItem value="none">None</SelectItem>}
                       {bdms.map(bdm => (
                         <SelectItem key={bdm['BDM ID']} value={bdm['BDM ID'].toString()}>
                           {bdm['Full Name']} (ID: {bdm['BDM ID']})
@@ -280,6 +286,10 @@ const Admin = () => {
                     </SelectContent>
                   </Select>
                 </div>
+              )}
+              
+              {showBdmField && bdms.length === 0 && (
+                <div className="text-sm text-muted-foreground">Loading BDMs...</div>
               )}
 
               <Button type="submit" className="w-full">Create User</Button>
@@ -323,9 +333,13 @@ const Admin = () => {
                 <Label htmlFor="edit-role">Role</Label>
                 <Select
                   value={editingUser.role}
-                  onValueChange={(value: 'admin' | 'manager' | 'user') => 
-                    setEditingUser({ ...editingUser, role: value, bdm_id: value === 'admin' ? null : editingUser.bdm_id })
-                  }
+                  onValueChange={(value: 'admin' | 'manager' | 'user') => {
+                    setEditingUser({ 
+                      ...editingUser, 
+                      role: value, 
+                      bdm_id: value === 'admin' ? null : editingUser.bdm_id 
+                    });
+                  }}
                 >
                   <SelectTrigger>
                     <SelectValue />
@@ -338,18 +352,18 @@ const Admin = () => {
                 </Select>
               </div>
 
-              {editShowBdmField && (
+              {editShowBdmField && bdms.length > 0 && (
                 <div className="space-y-2">
                   <Label htmlFor="edit-bdm">BDM {editBdmRequired && <span className="text-destructive">*</span>}</Label>
                   <Select
-                    value={editingUser.bdm_id?.toString() || ''}
-                    onValueChange={(value) => setEditingUser({ ...editingUser, bdm_id: value ? parseInt(value) : null })}
+                    value={editingUser.bdm_id?.toString() || 'none'}
+                    onValueChange={(value) => setEditingUser({ ...editingUser, bdm_id: value === 'none' ? null : parseInt(value) })}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select BDM" />
                     </SelectTrigger>
                     <SelectContent>
-                      {!editBdmRequired && <SelectItem value="">None</SelectItem>}
+                      {!editBdmRequired && <SelectItem value="none">None</SelectItem>}
                       {bdms.map(bdm => (
                         <SelectItem key={bdm['BDM ID']} value={bdm['BDM ID'].toString()}>
                           {bdm['Full Name']} (ID: {bdm['BDM ID']})
@@ -358,6 +372,10 @@ const Admin = () => {
                     </SelectContent>
                   </Select>
                 </div>
+              )}
+              
+              {editShowBdmField && bdms.length === 0 && (
+                <div className="text-sm text-muted-foreground">Loading BDMs...</div>
               )}
 
               <Button type="submit" className="w-full">Update User</Button>
