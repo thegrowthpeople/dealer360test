@@ -207,9 +207,9 @@ export const Header = () => {
             const fullTitle = `Mercedes-Benz Retail & Fleet - ${filterLabel}`;
             slide.addText(fullTitle, {
               x: 0.5,
-              y: 0.3,
+              y: 0.2,
               w: 9,
-              h: 0.5,
+              h: 0.4,
               fontSize: 18,
               bold: true,
               color: "1a1a1a",
@@ -256,7 +256,7 @@ export const Header = () => {
             // Add footer
             slide.addText("STRICTLY INTERNAL USE ONLY - PRIVATE & CONFIDENTIAL", {
               x: 0.5,
-              y: 5.2,
+              y: 5.6,
               w: 9,
               h: 0.2,
               fontSize: 6,
@@ -305,9 +305,9 @@ export const Header = () => {
             const fullTitle = `Freightliner Retail & Fleet - ${filterLabel}`;
             slide.addText(fullTitle, {
               x: 0.5,
-              y: 0.3,
+              y: 0.2,
               w: 9,
-              h: 0.5,
+              h: 0.4,
               fontSize: 18,
               bold: true,
               color: "1a1a1a",
@@ -354,7 +354,7 @@ export const Header = () => {
             // Add footer
             slide.addText("STRICTLY INTERNAL USE ONLY - PRIVATE & CONFIDENTIAL", {
               x: 0.5,
-              y: 5.2,
+              y: 5.6,
               w: 9,
               h: 0.2,
               fontSize: 6,
@@ -381,9 +381,9 @@ export const Header = () => {
       // Add single slide title with chart name and filters
       slide.addText(fullTitle, {
         x: 0.5,
-        y: 0.3,
+        y: 0.2,
         w: 9,
-        h: 0.5,
+        h: 0.4,
         fontSize: 18,
         bold: true,
         color: "1a1a1a",
@@ -417,7 +417,7 @@ export const Header = () => {
         // Add footer
         slide.addText("STRICTLY INTERNAL USE ONLY - PRIVATE & CONFIDENTIAL", {
           x: 0.5,
-          y: 5.2,
+          y: 5.6,
           w: 9,
           h: 0.2,
           fontSize: 6,
