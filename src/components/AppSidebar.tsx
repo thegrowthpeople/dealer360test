@@ -37,16 +37,11 @@ export function AppSidebar() {
     <Sidebar collapsible="icon" className="w-52 border-r">
       <SidebarHeader className="border-b p-4">
         <div className="flex items-center justify-center">
-          <a href="https://www.daimlertruck.com.au/" target="_blank" rel="noopener noreferrer">
-            <img 
-              src={logo} 
-              alt="Daimler Truck" 
-              className={cn(
-                "dark:invert transition-all duration-300 ease-in-out hover:opacity-80 cursor-pointer",
-                open ? "h-8" : "h-6"
-              )} 
-            />
-          </a>
+          {open && (
+            <a href="https://www.daimlertruck.com.au/" target="_blank" rel="noopener noreferrer">
+              <img src={logo} alt="Daimler Truck" className="h-8 dark:invert transition-all duration-500 ease-in-out hover:opacity-80 cursor-pointer" />
+            </a>
+          )}
         </div>
       </SidebarHeader>
 
