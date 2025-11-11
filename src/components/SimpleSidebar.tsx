@@ -5,6 +5,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { usePermissions } from "@/hooks/usePermissions";
+import { useUserBDM } from "@/hooks/useUserBDM";
 
 const menuItems = [
   { path: "/", label: "Home", icon: Home },
@@ -22,6 +23,7 @@ interface SimpleSidebarProps {
 export function SimpleSidebar({ isCollapsed, onToggle }: SimpleSidebarProps) {
   const location = useLocation();
   const { isAdmin } = usePermissions();
+  const { bdmData, userEmail } = useUserBDM();
 
   const isActive = (path: string) => {
     if (path === "/") {
@@ -112,15 +114,15 @@ export function SimpleSidebar({ isCollapsed, onToggle }: SimpleSidebarProps) {
         <div className={cn("flex items-center gap-3", isCollapsed && "justify-center")}>
           <Avatar className="h-8 w-8 shrink-0">
             <AvatarFallback className="bg-primary text-primary-foreground text-xs">
-              GP
+              {userEmail ? userEmail.substring(0, 2).toUpperCase() : 'U'}
             </AvatarFallback>
           </Avatar>
           <div className={cn(
             "flex-1 min-w-0 transition-opacity duration-300 overflow-hidden",
             isCollapsed ? "opacity-0 w-0" : "opacity-100"
           )}>
-            <p className="text-sm font-medium text-foreground truncate whitespace-nowrap">Gary Parker</p>
-            <p className="text-xs text-muted-foreground truncate whitespace-nowrap">Head of Heavy Duty (Sales)</p>
+            <p className="text-sm font-medium text-foreground truncate whitespace-nowrap">{userEmail || 'User'}</p>
+            <p className="text-xs text-muted-foreground truncate whitespace-nowrap">{bdmData?.Title || bdmData?.["Full Name"] || 'BDM'}</p>
           </div>
         </div>
       </div>

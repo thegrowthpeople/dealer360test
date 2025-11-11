@@ -3,6 +3,7 @@ import { useLocation, Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { usePermissions } from "@/hooks/usePermissions";
+import { useUserBDM } from "@/hooks/useUserBDM";
 import {
   Sidebar,
   SidebarContent,
@@ -26,6 +27,7 @@ export function AppSidebar() {
   const location = useLocation();
   const { open } = useSidebar();
   const { isAdmin } = usePermissions();
+  const { bdmData, userEmail } = useUserBDM();
 
   const isActive = (path: string) => {
     if (path === "/") {
@@ -95,13 +97,13 @@ export function AppSidebar() {
         <div className="flex items-center gap-3">
           <Avatar className="h-8 w-8 shrink-0">
             <AvatarFallback className="bg-primary text-primary-foreground text-xs">
-              GP
+              {userEmail ? userEmail.substring(0, 2).toUpperCase() : 'U'}
             </AvatarFallback>
           </Avatar>
           {open && (
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-foreground truncate">Gary Parker</p>
-              <p className="text-xs text-muted-foreground truncate">BDM</p>
+              <p className="text-sm font-medium text-foreground truncate">{userEmail || 'User'}</p>
+              <p className="text-xs text-muted-foreground truncate">{bdmData?.Title || bdmData?.["Full Name"] || 'BDM'}</p>
             </div>
           )}
         </div>
