@@ -71,23 +71,29 @@ Deno.serve(async (req) => {
     console.log('User created in auth:', newUser.user.id);
 
     // Insert role, BDM, and display name into user_roles table
-    const { error: roleInsertError } = await supabaseAdmin
+    const insertData = {
+      user_id: newUser.user.id,
+      role,
+      bdm_id,
+      display_name,
+    };
+    
+    console.log('Inserting user_role data:', insertData);
+    
+    const { data: insertedRole, error: roleInsertError } = await supabaseAdmin
       .from('user_roles')
-      .insert({
-        user_id: newUser.user.id,
-        role,
-        bdm_id,
-        display_name,
-      });
+      .insert(insertData)
+      .select();
 
     if (roleInsertError) {
       console.error('Error inserting role:', roleInsertError);
+      console.error('Error details:', JSON.stringify(roleInsertError, null, 2));
       // Rollback: delete the created user
       await supabaseAdmin.auth.admin.deleteUser(newUser.user.id);
       throw new Error('Failed to assign role. User creation rolled back.');
     }
 
-    console.log('Role assigned successfully');
+    console.log('Role assigned successfully:', insertedRole);
 
     return new Response(
       JSON.stringify({ success: true, user: newUser.user }),
