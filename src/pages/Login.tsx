@@ -29,7 +29,7 @@ const Login = () => {
       setError(error.message);
       setLoading(false);
     } else {
-      navigate('/performance');
+      navigate('/');
     }
   };
 
