@@ -34,7 +34,7 @@ const Login = () => {
 
   return (
     <div 
-      className="min-h-screen flex items-center justify-center p-4 bg-cover bg-center bg-no-repeat relative"
+      className="min-h-screen flex items-start justify-center pt-20 p-4 bg-cover bg-center bg-no-repeat relative"
       style={{ backgroundImage: `url(${loginBackground})` }}
     >
       <div className="absolute inset-0 bg-black/40" />
