@@ -1,20 +1,16 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-
-// Toggle between mock and real Supabase authentication
-const MOCK_MODE = true;
-
-interface User {
-  id: string;
-  email: string;
-  user_metadata?: {
-    full_name?: string;
-  };
-}
+import { User, Session } from '@supabase/supabase-js';
 
 interface AuthContextType {
   user: User | null;
+  session: Session | null;
   loading: boolean;
+  userRole: string | null;
+  bdmId: number | null;
+  isAdmin: boolean;
+  isManager: boolean;
+  isUser: boolean;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
 }
@@ -23,71 +19,115 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const [userRole, setUserRole] = useState<string | null>(null);
+  const [bdmId, setBdmId] = useState<number | null>(null);
+
+  // Computed role flags
+  const isAdmin = userRole === 'admin';
+  const isManager = userRole === 'manager';
+  const isUser = userRole === 'user';
+
+  // Fetch user role and BDM ID
+  const fetchUserRoleAndBdm = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('user_roles')
+        .select('role, bdm_id')
+        .eq('user_id', userId)
+        .single();
+
+      if (error) throw error;
+
+      if (data) {
+        setUserRole(data.role);
+        setBdmId(data.bdm_id);
+      }
+    } catch (error) {
+      console.error('Error fetching user role:', error);
+      setUserRole(null);
+      setBdmId(null);
+    }
+  };
 
   useEffect(() => {
-    if (MOCK_MODE) {
-      // Check for mock auth token in localStorage
-      const mockToken = localStorage.getItem('mock_auth_token');
-      if (mockToken) {
-        setUser({
-          id: 'mock-user-id',
-          email: 'admin@example.com',
-          user_metadata: { full_name: 'Admin User' }
-        });
+    // Set up auth state listener FIRST
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setSession(session);
+        setUser(session?.user ?? null);
+        
+        // Fetch role and BDM asynchronously using setTimeout
+        if (session?.user) {
+          setTimeout(() => {
+            fetchUserRoleAndBdm(session.user.id);
+          }, 0);
+        } else {
+          setUserRole(null);
+          setBdmId(null);
+        }
       }
+    );
+
+    // THEN check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      
+      if (session?.user) {
+        fetchUserRoleAndBdm(session.user.id);
+      }
+      
       setLoading(false);
-    } else {
-      // Real Supabase authentication
-      supabase.auth.getSession().then(({ data: { session } }) => {
-        setUser(session?.user as User | null);
-        setLoading(false);
-      });
+    });
 
-      const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-        setUser(session?.user as User | null);
-      });
-
-      return () => subscription.unsubscribe();
-    }
+    return () => subscription.unsubscribe();
   }, []);
 
   const signIn = async (email: string, password: string) => {
-    if (MOCK_MODE) {
-      // Mock authentication - accept any email with password "password123"
-      if (password === 'password123') {
-        const mockUser = {
-          id: 'mock-user-id',
-          email: email,
-          user_metadata: { full_name: email.split('@')[0] }
-        };
-        setUser(mockUser);
-        localStorage.setItem('mock_auth_token', 'mock-token');
-        return { error: null };
-      } else {
-        return { error: new Error('Invalid credentials. Use password: password123') };
-      }
-    } else {
-      // Real Supabase authentication
+    try {
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
-      return { error };
+      
+      if (error) {
+        // Map Supabase errors to user-friendly messages
+        if (error.message.includes('Invalid login credentials')) {
+          return { error: new Error('Invalid email or password') };
+        }
+        if (error.message.includes('Email not confirmed')) {
+          return { error: new Error('Please confirm your email address') };
+        }
+        return { error: new Error('Login failed. Please try again.') };
+      }
+      
+      return { error: null };
+    } catch (error) {
+      return { error: new Error('Network error. Please check your connection.') };
     }
   };
 
   const signOut = async () => {
-    if (MOCK_MODE) {
-      setUser(null);
-      localStorage.removeItem('mock_auth_token');
-    } else {
-      await supabase.auth.signOut();
-    }
+    await supabase.auth.signOut();
+    setUserRole(null);
+    setBdmId(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, signIn, signOut }}>
+    <AuthContext.Provider value={{ 
+      user, 
+      session, 
+      loading, 
+      userRole, 
+      bdmId,
+      isAdmin,
+      isManager,
+      isUser,
+      signIn, 
+      signOut 
+    }}>
       {children}
     </AuthContext.Provider>
   );
