@@ -231,7 +231,7 @@ export const Header = () => {
             slide.addImage({
               data: retailImgData,
               x: 0.5,
-              y: 0.9,
+              y: 0.7,
               w: retailImgWidth,
               h: retailImgHeight,
             });
@@ -248,7 +248,7 @@ export const Header = () => {
             slide.addImage({
               data: fleetImgData,
               x: 5.2,
-              y: 0.9,
+              y: 0.7,
               w: fleetImgWidth,
               h: fleetImgHeight,
             });
@@ -329,7 +329,7 @@ export const Header = () => {
             slide.addImage({
               data: retailImgData,
               x: 0.5,
-              y: 0.9,
+              y: 0.7,
               w: retailImgWidth,
               h: retailImgHeight,
             });
@@ -346,7 +346,7 @@ export const Header = () => {
             slide.addImage({
               data: fleetImgData,
               x: 5.2,
-              y: 0.9,
+              y: 0.7,
               w: fleetImgWidth,
               h: fleetImgHeight,
             });
@@ -409,7 +409,7 @@ export const Header = () => {
       slide.addImage({
         data: imgData,
         x: imgX,
-        y: 0.9,
+        y: 0.7,
         w: imgWidth,
         h: imgHeight,
       });
