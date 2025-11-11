@@ -4,11 +4,17 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertCircle } from 'lucide-react';
 import loginBackground from '@/assets/login-background.jpg';
 import logoBlack from '@/assets/logo-black.svg';
+import { z } from 'zod';
+
+const loginSchema = z.object({
+  email: z.string().trim().email('Invalid email address').max(255),
+  password: z.string().min(1, 'Password is required').max(100),
+});
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -16,20 +22,32 @@ const Login = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { signIn, user } = useAuth();
+  const { signIn } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setLoading(true);
 
-    const { error } = await signIn(email, password);
+    try {
+      // Validate input
+      const validatedData = loginSchema.parse({ email, password });
 
-    if (error) {
-      setError(error.message);
+      const { error } = await signIn(validatedData.email, validatedData.password);
+
+      if (error) {
+        setError(error.message);
+        setLoading(false);
+      } else {
+        navigate('/');
+      }
+    } catch (err: any) {
+      if (err instanceof z.ZodError) {
+        setError(err.errors[0].message);
+      } else {
+        setError('An unexpected error occurred');
+      }
       setLoading(false);
-    } else {
-      navigate('/');
     }
   };
 
@@ -80,7 +98,7 @@ const Login = () => {
                 <Input
                   id="password"
                   type="password"
-                  placeholder="password123"
+                  placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required

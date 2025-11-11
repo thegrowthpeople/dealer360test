@@ -1,7 +1,8 @@
-import { Home, TrendingUp, Search, BarChart, PlusCircle, FileText, Truck } from "lucide-react";
+import { Home, TrendingUp, Search, BarChart, PlusCircle, FileText, Truck, Settings } from "lucide-react";
 import { useLocation, Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { usePermissions } from "@/hooks/usePermissions";
 import {
   Sidebar,
   SidebarContent,
@@ -24,6 +25,7 @@ const menuItems = [
 export function AppSidebar() {
   const location = useLocation();
   const { open } = useSidebar();
+  const { isAdmin } = usePermissions();
 
   const isActive = (path: string) => {
     if (path === "/") {
@@ -64,6 +66,28 @@ export function AppSidebar() {
               </SidebarMenuItem>
             );
           })}
+          
+          {isAdmin && (
+            <>
+              <div className="border-t border-border my-2" />
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  isActive={location.pathname === '/admin'}
+                  tooltip="Admin"
+                  className={cn(
+                    "transition-all",
+                    location.pathname === '/admin' && "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground"
+                  )}
+                >
+                  <Link to="/admin">
+                    <Settings className="w-4 h-4" />
+                    <span>Admin</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </>
+          )}
         </SidebarMenu>
       </SidebarContent>
 
