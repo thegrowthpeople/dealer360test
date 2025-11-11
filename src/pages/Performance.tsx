@@ -102,9 +102,9 @@ const Performance = () => {
       setIsLoading(true);
 
       const [dealershipsRes, bdmRes, yearsRes] = await Promise.all([
-        supabase.from("Dealerships").select("*").order("Dealership"),
-        supabase.from("BDM").select("*").order("Full Name"),
-        supabase.from("Actuals").select("Year").not("Year", "is", null),
+        supabase.from("Dealerships").select("*").eq("Active", 1).order("Dealership"),
+        supabase.from("BDM").select("*").eq("Active", 1).order("Full Name"),
+        supabase.from("Actuals").select("Year").eq("Active", 1).not("Year", "is", null),
       ]);
 
       if (dealershipsRes.data) setDealerships(dealershipsRes.data);
@@ -131,7 +131,7 @@ const Performance = () => {
 
   const fetchActuals = async () => {
     try {
-      let query = supabase.from("Actuals").select("*");
+      let query = supabase.from("Actuals").select("*").eq("Active", 1);
 
       if (selectedYear) {
         query = query.eq("Year", selectedYear);
