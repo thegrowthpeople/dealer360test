@@ -1,10 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/contexts/AuthContext";
+import { useUserBDM } from "@/hooks/useUserBDM";
 
 const Index = () => {
   const navigate = useNavigate();
-  const { displayName } = useAuth();
+  const { displayName } = useUserBDM();
   
   // Extract first name from display name
   const firstName = displayName?.split(' ')[0] || 'User';
