@@ -137,4 +137,28 @@ All colors MUST be HSL.
   * {
     box-shadow: none !important;
   }
+
+  /* Page breaks between charts */
+  .space-y-6 > div {
+    page-break-after: always;
+    page-break-inside: avoid;
+  }
+
+  /* Print footer on each page */
+  @page {
+    margin-bottom: 1.5cm;
+  }
+
+  .print-footer {
+    display: block !important;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-weight: bold;
+    font-size: 10pt;
+    padding: 0.5rem;
+    background: white;
+  }
 }

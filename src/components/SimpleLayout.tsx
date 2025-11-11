@@ -24,6 +24,9 @@ export function SimpleLayout({ children }: SimpleLayoutProps) {
         <main className="pt-[26px] px-6 pb-6 xl:px-12 xl:pb-12 2xl:px-16 2xl:pb-16">
           {children}
         </main>
+        <div className="print-footer hidden">
+          STRICTLY INTERNAL USE ONLY - PRIVATE & CONFIDENTIAL
+        </div>
       </div>
     </div>
   );
