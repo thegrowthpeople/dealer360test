@@ -138,10 +138,33 @@ All colors MUST be HSL.
     box-shadow: none !important;
   }
 
-  /* Add page breaks between charts */
+  /* Optimize chart containers for print */
+  .recharts-wrapper {
+    width: 100% !important;
+    height: 350px !important;
+  }
+
+  /* Optimize summary cards for print */
+  .grid {
+    gap: 0.75rem !important;
+  }
+
+  /* Reduce excessive spacing in print */
+  .space-y-6 > * {
+    margin-top: 1rem !important;
+    margin-bottom: 1rem !important;
+  }
+
+  /* Add page breaks between major sections */
   .space-y-6 > div {
     page-break-inside: avoid;
     break-inside: avoid;
+  }
+
+  /* Add page break after summary cards */
+  .grid + .space-y-6 {
+    page-break-before: always;
+    break-before: always;
   }
 
   /* Add page break after every 2 charts for better layout */
@@ -150,9 +173,27 @@ All colors MUST be HSL.
     break-after: always;
   }
 
+  /* Optimize text sizes for print */
+  h1 {
+    font-size: 24pt !important;
+    margin-bottom: 0.5rem !important;
+  }
+
+  h2 {
+    font-size: 18pt !important;
+  }
+
+  /* Hide interactive elements like toggles and filters in print */
+  .toggle-group,
+  [role="combobox"],
+  .animate-fade-in > div {
+    display: none !important;
+  }
+
   /* Show print footer on every page */
   @page {
     margin-bottom: 2cm;
+    margin-top: 1.5cm;
   }
 
   /* Footer that appears on every printed page */
@@ -167,5 +208,15 @@ All colors MUST be HSL.
     font-size: 10pt;
     padding: 0.5rem;
     border-top: 1px solid #000;
+  }
+
+  /* Ensure cards have proper borders in print */
+  .border {
+    border: 1px solid #ccc !important;
+  }
+
+  /* Optimize spacing for print readability */
+  .separator {
+    margin: 1rem 0 !important;
   }
 }
