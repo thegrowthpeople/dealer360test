@@ -47,18 +47,14 @@ export function useUserBDM() {
     fetchBDM();
   }, [bdmId]);
 
-  // Generate display values
-  const displayName = userRole === 'admin' 
-    ? (user?.email || 'Admin')
-    : (user?.user_metadata?.display_name || bdmData?.["Full Name"] || user?.email || 'User');
-  const displayTitle = bdmData?.["Job Title"] || bdmData?.Title || (userRole ? userRole.charAt(0).toUpperCase() + userRole.slice(1) : 'BDM');
-  const initials = userRole === 'admin'
-    ? (user?.email ? user.email.substring(0, 2).toUpperCase() : 'AD')
-    : (user?.user_metadata?.display_name 
-        ? user.user_metadata.display_name.split(' ').map((n: string) => n[0]).join('').toUpperCase()
-        : (bdmData?.["Full Name"] 
-            ? bdmData["Full Name"].split(' ').map(n => n[0]).join('').toUpperCase()
-            : (user?.email ? user.email.substring(0, 2).toUpperCase() : 'U')));
+  // Generate display values - prioritize display_name and Full Name, never show email
+  const displayName = user?.user_metadata?.display_name || bdmData?.["Full Name"] || 'User';
+  const displayTitle = bdmData?.["Job Title"] || bdmData?.Title || (userRole ? userRole.charAt(0).toUpperCase() + userRole.slice(1) : 'User');
+  const initials = user?.user_metadata?.display_name 
+    ? user.user_metadata.display_name.split(' ').map((n: string) => n[0]).join('').toUpperCase()
+    : (bdmData?.["Full Name"] 
+        ? bdmData["Full Name"].split(' ').map(n => n[0]).join('').toUpperCase()
+        : 'U');
 
   return {
     bdmData,
