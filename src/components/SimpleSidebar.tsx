@@ -95,7 +95,7 @@ export function SimpleSidebar({ isCollapsed, onToggle }: SimpleSidebarProps) {
             isCollapsed ? "opacity-0 w-0" : "opacity-100"
           )}>
             <p className="text-sm font-medium text-foreground truncate whitespace-nowrap">Gary Parker</p>
-            <p className="text-xs text-muted-foreground truncate whitespace-nowrap">BDM</p>
+            <p className="text-xs text-muted-foreground truncate whitespace-nowrap">Head of Heavy Duty (Sales)</p>
           </div>
         </div>
       </div>
