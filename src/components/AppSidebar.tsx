@@ -46,28 +46,30 @@ export function AppSidebar() {
 
       <SidebarContent>
         <SidebarMenu className="gap-1 p-2">
-          {menuItems.map((item) => {
-            const Icon = item.icon;
-            const active = isActive(item.path);
-            return (
-              <SidebarMenuItem key={item.path}>
-                <SidebarMenuButton
-                  asChild
-                  isActive={active}
-                  tooltip={item.label}
-                  className={cn(
-                    "transition-all",
-                    active && "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground"
-                  )}
-                >
-                  <Link to={item.path}>
-                    <Icon className="w-4 h-4" />
-                    <span>{item.label}</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            );
-          })}
+          {menuItems
+            .filter((item) => item.path !== '/dealerships' || isAdmin)
+            .map((item) => {
+              const Icon = item.icon;
+              const active = isActive(item.path);
+              return (
+                <SidebarMenuItem key={item.path}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={active}
+                    tooltip={item.label}
+                    className={cn(
+                      "transition-all",
+                      active && "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground"
+                    )}
+                  >
+                    <Link to={item.path}>
+                      <Icon className="w-4 h-4" />
+                      <span>{item.label}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              );
+            })}
           
           {isAdmin && (
             <>

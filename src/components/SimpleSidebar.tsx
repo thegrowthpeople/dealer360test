@@ -60,30 +60,32 @@ export function SimpleSidebar({ isCollapsed, onToggle }: SimpleSidebarProps) {
 
       {/* Menu Items */}
       <nav className="flex-1 p-2 pt-4 space-y-1">
-        {menuItems.map((item) => {
-          const Icon = item.icon;
-          const active = isActive(item.path);
-          return (
-            <Link
-              key={item.path}
-              to={item.path}
-              className={cn(
-                "flex items-center rounded-md transition-all duration-200",
-                "hover:bg-accent hover:text-accent-foreground",
-                active && "bg-primary text-primary-foreground hover:bg-primary/90",
-                isCollapsed ? "justify-center px-3 py-2.5" : "gap-3 px-3 py-2.5"
-              )}
-            >
-              <Icon className="h-5 w-5 shrink-0" />
-              <span className={cn(
-                "text-sm font-medium whitespace-nowrap transition-opacity duration-300",
-                isCollapsed ? "opacity-0 w-0 overflow-hidden" : "opacity-100"
-              )}>
-                {item.label}
-              </span>
-            </Link>
-          );
-        })}
+        {menuItems
+          .filter((item) => item.path !== '/dealerships' || isAdmin)
+          .map((item) => {
+            const Icon = item.icon;
+            const active = isActive(item.path);
+            return (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={cn(
+                  "flex items-center rounded-md transition-all duration-200",
+                  "hover:bg-accent hover:text-accent-foreground",
+                  active && "bg-primary text-primary-foreground hover:bg-primary/90",
+                  isCollapsed ? "justify-center px-3 py-2.5" : "gap-3 px-3 py-2.5"
+                )}
+              >
+                <Icon className="h-5 w-5 shrink-0" />
+                <span className={cn(
+                  "text-sm font-medium whitespace-nowrap transition-opacity duration-300",
+                  isCollapsed ? "opacity-0 w-0 overflow-hidden" : "opacity-100"
+                )}>
+                  {item.label}
+                </span>
+              </Link>
+            );
+          })}
         
         {isAdmin && (
           <>
