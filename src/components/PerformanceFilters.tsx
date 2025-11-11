@@ -148,7 +148,12 @@ export const PerformanceFilters = () => {
                   <CommandItem
                     value="all"
                     onSelect={() => {
-                      setSelectedBDMId(null);
+                      if (selectedGroup !== null || selectedDealerId !== null) {
+                        // If group or dealership is selected, reset all filters
+                        handleClearFilters();
+                      } else {
+                        setSelectedBDMId(null);
+                      }
                       setBdmSearchOpen(false);
                     }}
                   >
