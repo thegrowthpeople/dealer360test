@@ -1,15 +1,16 @@
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import logo from "@/assets/logo-black.svg";
 import { ThemeToggle } from "./ThemeToggle";
 import { Button } from "./ui/button";
-import { Download, Presentation } from "lucide-react";
+import { Download, Presentation, LogOut } from "lucide-react";
 import pptxgen from "pptxgenjs";
 import html2canvas from "html2canvas";
 import { usePerformanceFilters } from "@/contexts/PerformanceFiltersContext";
 import { useToast } from "@/hooks/use-toast";
 import { ChartExportDialog } from "./ChartExportDialog";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface ChartInfo {
   element: Element;
@@ -19,7 +20,9 @@ interface ChartInfo {
 
 export const Header = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { toast } = useToast();
+  const { user, signOut } = useAuth();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [availableCharts, setAvailableCharts] = useState<ChartInfo[]>([]);
   
@@ -34,6 +37,11 @@ export const Header = () => {
   
   // Only show export buttons on Performance page
   const showExportButtons = location.pathname === "/performance";
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate('/login');
+  };
 
   const handleExportPDF = () => {
     // Trigger browser print dialog which can save as PDF
@@ -542,6 +550,16 @@ export const Header = () => {
                 <Download className="h-5 w-5" />
               </Button>
             </>
+          )}
+          {user && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleSignOut}
+              title="Sign Out"
+            >
+              <LogOut className="h-5 w-5" />
+            </Button>
           )}
           <ThemeToggle />
         </div>
