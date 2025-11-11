@@ -330,15 +330,16 @@ const Performance = () => {
   return (
     <div className="min-h-screen space-y-6">
       <div>
-        <h1 className="text-4xl xl:text-5xl font-bold text-foreground mb-2">Dealer Performance</h1>
+        <div className="flex items-start justify-between gap-6 mb-2">
+          <h1 className="text-4xl xl:text-5xl font-bold text-foreground">Dealer Performance</h1>
+          <PerformanceFilters />
+        </div>
         <p className="text-muted-foreground">
           {filterLabel || "All Dealerships"}
         </p>
       </div>
 
         {!selectedBDMId && <BDMInfo bdm={selectedBDM} />}
-
-        <PerformanceFilters />
 
         <SummaryCards {...summaryData} />
 
