@@ -256,11 +256,10 @@ export const Header = () => {
             // Add footer
             slide.addText("STRICTLY INTERNAL USE ONLY - PRIVATE & CONFIDENTIAL", {
               x: 0.5,
-              y: 7,
+              y: 7.2,
               w: 9,
-              h: 0.3,
-              fontSize: 10,
-              bold: true,
+              h: 0.2,
+              fontSize: 6,
               align: "center",
             });
             
@@ -355,11 +354,10 @@ export const Header = () => {
             // Add footer
             slide.addText("STRICTLY INTERNAL USE ONLY - PRIVATE & CONFIDENTIAL", {
               x: 0.5,
-              y: 7,
+              y: 7.2,
               w: 9,
-              h: 0.3,
-              fontSize: 10,
-              bold: true,
+              h: 0.2,
+              fontSize: 6,
               align: "center",
             });
             
@@ -419,11 +417,10 @@ export const Header = () => {
         // Add footer
         slide.addText("STRICTLY INTERNAL USE ONLY - PRIVATE & CONFIDENTIAL", {
           x: 0.5,
-          y: 7,
+          y: 7.2,
           w: 9,
-          h: 0.3,
-          fontSize: 10,
-          bold: true,
+          h: 0.2,
+          fontSize: 6,
           align: "center",
         });
         
