@@ -160,11 +160,24 @@ const renderCustomLabel = (props: any, chartData: any[], viewMode: string) => {
 };
 
 export const SalesChart = ({ title, data, color, chartType, viewMode, total }: SalesChartProps) => {
+  // Split title into brand and type (Retail/Fleet) for better display
+  const titleParts = title.split(' ');
+  const hasType = titleParts[titleParts.length - 1] === 'Retail' || titleParts[titleParts.length - 1] === 'Fleet';
+  const brandName = hasType ? titleParts.slice(0, -1).join(' ') : title;
+  const typeName = hasType ? titleParts[titleParts.length - 1] : null;
+  
   return (
     <Card className="animate-fade-in">
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
-          <span className="text-2xl font-bold text-foreground">{title}</span>
+          {typeName ? (
+            <div className="flex flex-col">
+              <span className="text-2xl font-bold text-foreground">{brandName}</span>
+              <span className="text-2xl font-bold text-foreground">{typeName}</span>
+            </div>
+          ) : (
+            <span className="text-2xl font-bold text-foreground">{title}</span>
+          )}
           <span className="text-2xl font-bold text-foreground">{formatNumber(total)}</span>
         </CardTitle>
       </CardHeader>
