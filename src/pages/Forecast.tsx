@@ -1,39 +1,52 @@
-import { useState } from "react";
+import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { DashboardStats } from "@/components/DashboardStats";
 import { DashboardCharts } from "@/components/DashboardCharts";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { PlusCircle, FileText } from "lucide-react";
+import { PerformanceFilters } from "@/components/PerformanceFilters";
+import { usePerformanceFilters } from "@/contexts/PerformanceFiltersContext";
+import { Separator } from "@/components/ui/separator";
 
 const Forecast = () => {
   const navigate = useNavigate();
-  const [selectedBDM, setSelectedBDM] = useState<string>("all");
-  const [selectedDealership, setSelectedDealership] = useState<string>("all");
-  const [selectedLocation, setSelectedLocation] = useState<string>("all");
-  const [selectedMonth, setSelectedMonth] = useState<string>("october");
+  const {
+    selectedBDMId,
+    selectedGroup,
+    selectedDealerId,
+    bdms,
+    dealerships,
+  } = usePerformanceFilters();
 
-  const bdmNames = ["Darren", "Jimmy", "Jason", "Steve", "Giulio", "Mark"];
-  const dealerships = ["VTC", "TriStar", "RGM"];
-  const locations = [
-    "Adelaide", "Albury", "Ballarat", "Brisbane", "Cairns", "Canberra", 
-    "Dandenong", "Darwin", "Geelong", "Gold Coast", "Huntingwood", "Laverton", 
-    "Mildura", "Mount Gambier", "Perth", "Shepparton", "Somerton", "Townsville", "Wagga"
-  ];
-  const months = [
-    { value: "october", label: "October 2025" },
-    { value: "november", label: "November 2025" },
-    { value: "december", label: "December 2025" },
-    { value: "january", label: "January 2026" },
-    { value: "february", label: "February 2026" },
-    { value: "march", label: "March 2026" },
-  ];
+  const filterLabel = useMemo(() => {
+    if (selectedDealerId !== null) {
+      const dealer = dealerships.find((d) => d["Dealer ID"] === selectedDealerId);
+      if (dealer) {
+        return `${dealer["Dealer Group"]} - ${dealer.Dealership}`;
+      }
+    }
+    if (selectedGroup !== null) {
+      return selectedGroup;
+    }
+    if (selectedBDMId !== null) {
+      const bdm = bdms.find((b) => b["BDM ID"] === selectedBDMId);
+      if (bdm) {
+        return bdm["Full Name"];
+      }
+    }
+    return null;
+  }, [selectedBDMId, selectedGroup, selectedDealerId, bdms, dealerships]);
 
   return (
     <div className="min-h-screen space-y-6">
       <div>
         <div className="flex items-center justify-between gap-4 mb-2">
-          <h1 className="text-4xl xl:text-5xl font-bold text-foreground">BDM Dashboard</h1>
+          <div>
+            <h1 className="text-4xl xl:text-5xl font-bold text-foreground mb-4">Dealer Forecast</h1>
+            <p className="text-muted-foreground mb-4">
+              {filterLabel || "All Dealerships"}
+            </p>
+          </div>
           <div className="flex gap-2">
             <Button onClick={() => navigate("/new-report")} variant="default" className="gap-2">
               <PlusCircle className="w-4 h-4" />
@@ -45,74 +58,10 @@ const Forecast = () => {
             </Button>
           </div>
         </div>
-        <p className="text-muted-foreground">Overview of your weekly activities and performance</p>
+        <PerformanceFilters />
       </div>
 
-      {/* Filters */}
-      <div className="flex flex-wrap gap-4">
-          <div className="w-full sm:w-64">
-            <Select value={selectedBDM} onValueChange={setSelectedBDM}>
-              <SelectTrigger id="bdm-filter">
-                <SelectValue placeholder="Select BDM" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All BDMs</SelectItem>
-                {bdmNames.map((name) => (
-                  <SelectItem key={name} value={name}>
-                    {name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="w-full sm:w-64">
-            <Select value={selectedDealership} onValueChange={setSelectedDealership}>
-              <SelectTrigger id="dealership-filter">
-                <SelectValue placeholder="Select Dealership" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Dealer Groups</SelectItem>
-                {dealerships.map((dealership) => (
-                  <SelectItem key={dealership} value={dealership}>
-                    {dealership}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="w-full sm:w-64">
-            <Select value={selectedLocation} onValueChange={setSelectedLocation}>
-              <SelectTrigger id="location-filter">
-                <SelectValue placeholder="Select Location" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Locations</SelectItem>
-                {locations.map((location) => (
-                  <SelectItem key={location} value={location}>
-                    {location}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="w-full sm:w-64">
-            <Select value={selectedMonth} onValueChange={setSelectedMonth}>
-              <SelectTrigger id="month-filter">
-                <SelectValue placeholder="Select Month" />
-              </SelectTrigger>
-              <SelectContent>
-                {months.map((month) => (
-                  <SelectItem key={month.value} value={month.value}>
-                    {month.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-      </div>
+      <Separator className="my-6" />
       
       <div className="space-y-8">
         <DashboardStats />
