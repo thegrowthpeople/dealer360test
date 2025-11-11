@@ -43,6 +43,7 @@ interface BDM {
   "Full Name": string | null;
   eMail: string | null;
   "Phone Number": string | null;
+  IsManager: number | null;
 }
 
 interface Actual {
@@ -151,16 +152,24 @@ const Performance = () => {
           return;
         }
       } else if (selectedBDMId !== null) {
-        const dealerIdsForBDM = dealerships
-          .filter((d) => d["BDM ID"] === selectedBDMId)
-          .map((d) => d["Dealer ID"]);
-        if (dealerIdsForBDM.length > 0) {
-          query = query.in("Dealer ID", dealerIdsForBDM);
-        } else {
-          // If no dealers for BDM, return empty
-          setActuals([]);
-          return;
+        // Check if selected BDM is a manager
+        const selectedBdm = bdms.find((b) => b["BDM ID"] === selectedBDMId);
+        const isManager = selectedBdm?.IsManager === 1;
+        
+        // If not a manager, filter by BDM's dealerships
+        if (!isManager) {
+          const dealerIdsForBDM = dealerships
+            .filter((d) => d["BDM ID"] === selectedBDMId)
+            .map((d) => d["Dealer ID"]);
+          if (dealerIdsForBDM.length > 0) {
+            query = query.in("Dealer ID", dealerIdsForBDM);
+          } else {
+            // If no dealers for BDM, return empty
+            setActuals([]);
+            return;
+          }
         }
+        // If is a manager, don't filter by BDM (show all)
       }
 
       const { data, error } = await query;
@@ -182,7 +191,14 @@ const Performance = () => {
     let groups = dealerships;
     
     if (selectedBDMId !== null) {
-      groups = groups.filter((d) => d["BDM ID"] === selectedBDMId);
+      // Check if selected BDM is a manager
+      const selectedBdm = bdms.find((b) => b["BDM ID"] === selectedBDMId);
+      const isManager = selectedBdm?.IsManager === 1;
+      
+      // Only filter if not a manager
+      if (!isManager) {
+        groups = groups.filter((d) => d["BDM ID"] === selectedBDMId);
+      }
     }
 
     const uniqueGroups = [...new Set(groups.map((d) => d["Dealer Group"]).filter(Boolean))];
@@ -197,13 +213,20 @@ const Performance = () => {
       const indexB = REGION_ORDER.indexOf(regionB);
       return (indexA === -1 ? 999 : indexA) - (indexB === -1 ? 999 : indexB);
     });
-  }, [dealerships, selectedBDMId]);
+  }, [dealerships, selectedBDMId, bdms]);
 
   const filteredDealerships = useMemo(() => {
     let filtered = dealerships;
 
     if (selectedBDMId !== null) {
-      filtered = filtered.filter((d) => d["BDM ID"] === selectedBDMId);
+      // Check if selected BDM is a manager
+      const selectedBdm = bdms.find((b) => b["BDM ID"] === selectedBDMId);
+      const isManager = selectedBdm?.IsManager === 1;
+      
+      // Only filter if not a manager
+      if (!isManager) {
+        filtered = filtered.filter((d) => d["BDM ID"] === selectedBDMId);
+      }
     }
 
     if (selectedGroup !== null) {
@@ -211,7 +234,7 @@ const Performance = () => {
     }
 
     return filtered;
-  }, [dealerships, selectedBDMId, selectedGroup]);
+  }, [dealerships, selectedBDMId, selectedGroup, bdms]);
 
   const selectedBDM = useMemo(() => {
     return bdms.find((b) => b["BDM ID"] === selectedBDMId) || null;
