@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import logo from "@/assets/logo-black.svg";
 import { ThemeToggle } from "./ThemeToggle";
@@ -17,6 +18,7 @@ interface ChartInfo {
 }
 
 export const Header = () => {
+  const location = useLocation();
   const { toast } = useToast();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [availableCharts, setAvailableCharts] = useState<ChartInfo[]>([]);
@@ -29,6 +31,9 @@ export const Header = () => {
     dealerships,
     bdms,
   } = usePerformanceFilters();
+  
+  // Only show export buttons on Performance page
+  const showExportButtons = location.pathname === "/performance";
 
   const handleExportPDF = () => {
     // Trigger browser print dialog which can save as PDF
@@ -222,22 +227,26 @@ export const Header = () => {
         
         {/* Right Side Actions */}
         <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={handleOpenExportDialog}
-            title="Export to PowerPoint"
-          >
-            <Presentation className="h-5 w-5" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={handleExportPDF}
-            title="Export to PDF"
-          >
-            <Download className="h-5 w-5" />
-          </Button>
+          {showExportButtons && (
+            <>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleOpenExportDialog}
+                title="Export to PowerPoint"
+              >
+                <Presentation className="h-5 w-5" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleExportPDF}
+                title="Export to PDF"
+              >
+                <Download className="h-5 w-5" />
+              </Button>
+            </>
+          )}
           <ThemeToggle />
         </div>
       </div>
