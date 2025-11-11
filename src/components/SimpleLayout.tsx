@@ -25,11 +25,6 @@ export function SimpleLayout({ children }: SimpleLayoutProps) {
           {children}
         </main>
       </div>
-      
-      {/* Print-only footer that appears on every page */}
-      <div className="print-footer hidden">
-        STRICTLY INTERNAL USE - PRIVATE &amp; CONFIDENTIAL
-      </div>
     </div>
   );
 }
