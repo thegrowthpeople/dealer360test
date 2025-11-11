@@ -87,41 +87,43 @@ export function SimpleSidebar({ isCollapsed, onToggle }: SimpleSidebarProps) {
         {isAdmin && (
           <>
             <div className="border-t border-border mt-6 mb-2" />
-            <Link
-              to="/dealerships"
-              className={cn(
-                "flex items-center rounded-md transition-all duration-200",
-                "hover:bg-accent hover:text-accent-foreground",
-                location.pathname === '/dealerships' && "bg-primary text-primary-foreground hover:bg-primary/90",
-                isCollapsed ? "justify-center px-3 py-2.5" : "gap-3 px-3 py-2.5"
-              )}
-            >
-              <Truck className="h-5 w-5 shrink-0" />
-              <span className={cn(
-                "text-sm font-medium whitespace-nowrap transition-opacity duration-300",
-                isCollapsed ? "opacity-0 w-0 overflow-hidden" : "opacity-100"
-              )}>
-                Dealerships
-              </span>
-            </Link>
-            
-            <Link
-              to="/admin"
-              className={cn(
-                "flex items-center rounded-md transition-all duration-200",
-                "hover:bg-accent hover:text-accent-foreground",
-                location.pathname === '/admin' && "bg-primary text-primary-foreground hover:bg-primary/90",
-                isCollapsed ? "justify-center px-3 py-2.5" : "gap-3 px-3 py-2.5"
-              )}
-            >
-              <Settings className="h-5 w-5 shrink-0" />
-              <span className={cn(
-                "text-sm font-medium whitespace-nowrap transition-opacity duration-300",
-                isCollapsed ? "opacity-0 w-0 overflow-hidden" : "opacity-100"
-              )}>
-                Admin
-              </span>
-            </Link>
+            <div className="space-y-0">
+              <Link
+                to="/dealerships"
+                className={cn(
+                  "flex items-center rounded-md transition-all duration-200",
+                  "hover:bg-accent hover:text-accent-foreground",
+                  location.pathname === '/dealerships' && "bg-primary text-primary-foreground hover:bg-primary/90",
+                  isCollapsed ? "justify-center px-3 py-2.5" : "gap-3 px-3 py-2.5"
+                )}
+              >
+                <Truck className="h-5 w-5 shrink-0" />
+                <span className={cn(
+                  "text-sm font-medium whitespace-nowrap transition-opacity duration-300",
+                  isCollapsed ? "opacity-0 w-0 overflow-hidden" : "opacity-100"
+                )}>
+                  Dealerships
+                </span>
+              </Link>
+              
+              <Link
+                to="/admin"
+                className={cn(
+                  "flex items-center rounded-md transition-all duration-200",
+                  "hover:bg-accent hover:text-accent-foreground",
+                  location.pathname === '/admin' && "bg-primary text-primary-foreground hover:bg-primary/90",
+                  isCollapsed ? "justify-center px-3 py-2.5" : "gap-3 px-3 py-2.5"
+                )}
+              >
+                <Settings className="h-5 w-5 shrink-0" />
+                <span className={cn(
+                  "text-sm font-medium whitespace-nowrap transition-opacity duration-300",
+                  isCollapsed ? "opacity-0 w-0 overflow-hidden" : "opacity-100"
+                )}>
+                  Admin
+                </span>
+              </Link>
+            </div>
           </>
         )}
       </nav>

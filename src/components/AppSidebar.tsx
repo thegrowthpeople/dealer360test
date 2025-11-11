@@ -71,39 +71,41 @@ export function AppSidebar() {
           {isAdmin && (
             <>
               <div className="border-t border-border mt-6 mb-2" />
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  asChild
-                  isActive={location.pathname === '/dealerships'}
-                  tooltip="Dealerships"
-                  className={cn(
-                    "transition-all",
-                    location.pathname === '/dealerships' && "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground"
-                  )}
-                >
-                  <Link to="/dealerships">
-                    <Truck className="w-4 h-4" />
-                    <span>Dealerships</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  asChild
-                  isActive={location.pathname === '/admin'}
-                  tooltip="Admin"
-                  className={cn(
-                    "transition-all",
-                    location.pathname === '/admin' && "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground"
-                  )}
-                >
-                  <Link to="/admin">
-                    <Settings className="w-4 h-4" />
-                    <span>Admin</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
+              <div className="space-y-0">
+                <SidebarMenuItem>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={location.pathname === '/dealerships'}
+                    tooltip="Dealerships"
+                    className={cn(
+                      "transition-all",
+                      location.pathname === '/dealerships' && "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground"
+                    )}
+                  >
+                    <Link to="/dealerships">
+                      <Truck className="w-4 h-4" />
+                      <span>Dealerships</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+                
+                <SidebarMenuItem>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={location.pathname === '/admin'}
+                    tooltip="Admin"
+                    className={cn(
+                      "transition-all",
+                      location.pathname === '/admin' && "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground"
+                    )}
+                  >
+                    <Link to="/admin">
+                      <Settings className="w-4 h-4" />
+                      <span>Admin</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              </div>
             </>
           )}
         </SidebarMenu>
