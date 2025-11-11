@@ -114,15 +114,15 @@ export function SimpleSidebar({ isCollapsed, onToggle }: SimpleSidebarProps) {
         <div className={cn("flex items-center gap-3", isCollapsed && "justify-center")}>
           <Avatar className="h-8 w-8 shrink-0">
             <AvatarFallback className="bg-primary text-primary-foreground text-xs">
-              {userEmail ? userEmail.substring(0, 2).toUpperCase() : 'U'}
+              {bdmData?.["Full Name"] ? bdmData["Full Name"].split(' ').map(n => n[0]).join('').toUpperCase() : 'U'}
             </AvatarFallback>
           </Avatar>
           <div className={cn(
             "flex-1 min-w-0 transition-opacity duration-300 overflow-hidden",
             isCollapsed ? "opacity-0 w-0" : "opacity-100"
           )}>
-            <p className="text-sm font-medium text-foreground truncate whitespace-nowrap">{userEmail || 'User'}</p>
-            <p className="text-xs text-muted-foreground truncate whitespace-nowrap">{bdmData?.Title || bdmData?.["Full Name"] || 'BDM'}</p>
+            <p className="text-sm font-medium text-foreground truncate whitespace-nowrap">{bdmData?.["Full Name"] || userEmail || 'User'}</p>
+            <p className="text-xs text-muted-foreground truncate whitespace-nowrap">{bdmData?.Title || 'BDM'}</p>
           </div>
         </div>
       </div>

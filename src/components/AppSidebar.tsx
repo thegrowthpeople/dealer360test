@@ -97,13 +97,13 @@ export function AppSidebar() {
         <div className="flex items-center gap-3">
           <Avatar className="h-8 w-8 shrink-0">
             <AvatarFallback className="bg-primary text-primary-foreground text-xs">
-              {userEmail ? userEmail.substring(0, 2).toUpperCase() : 'U'}
+              {bdmData?.["Full Name"] ? bdmData["Full Name"].split(' ').map(n => n[0]).join('').toUpperCase() : 'U'}
             </AvatarFallback>
           </Avatar>
           {open && (
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-foreground truncate">{userEmail || 'User'}</p>
-              <p className="text-xs text-muted-foreground truncate">{bdmData?.Title || bdmData?.["Full Name"] || 'BDM'}</p>
+              <p className="text-sm font-medium text-foreground truncate">{bdmData?.["Full Name"] || userEmail || 'User'}</p>
+              <p className="text-xs text-muted-foreground truncate">{bdmData?.Title || 'BDM'}</p>
             </div>
           )}
         </div>
