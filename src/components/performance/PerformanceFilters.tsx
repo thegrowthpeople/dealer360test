@@ -278,7 +278,7 @@ export function PerformanceFilters({
           setSelectedYear(value === "all" ? null : parseInt(value));
         }}
       >
-        <SelectTrigger className="w-[160px]">
+        <SelectTrigger className="w-[180px]">
           <SelectValue placeholder="All Years" />
         </SelectTrigger>
         <SelectContent>
