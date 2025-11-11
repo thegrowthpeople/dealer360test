@@ -203,17 +203,34 @@ export const Header = () => {
             const retailImgData = retailCanvas.toDataURL("image/png");
             const fleetImgData = fleetCanvas.toDataURL("image/png");
             
-            // Add combined title
-            const fullTitle = `Mercedes-Benz Retail & Fleet - ${filterLabel}`;
+            // Split filter label to separate year
+            const filterParts = filterLabel.split(" | ");
+            const year = filterParts[filterParts.length - 1];
+            const titleWithoutYear = filterParts.slice(0, -1).join(" | ");
+            
+            // Add combined title without year
+            const fullTitle = `Mercedes-Benz Retail & Fleet - ${titleWithoutYear}`;
             slide.addText(fullTitle, {
               x: 0.4,
               y: 0.15,
-              w: 9,
+              w: 7,
               h: 0.4,
               fontSize: 18,
               bold: true,
               color: "1a1a1a",
               align: "left",
+            });
+            
+            // Add year on the right
+            slide.addText(year, {
+              x: 7.5,
+              y: 0.15,
+              w: 2,
+              h: 0.4,
+              fontSize: 18,
+              bold: true,
+              color: "1a1a1a",
+              align: "right",
             });
             
             // Calculate dimensions for side-by-side layout
@@ -302,17 +319,34 @@ export const Header = () => {
             const retailImgData = retailCanvas.toDataURL("image/png");
             const fleetImgData = fleetCanvas.toDataURL("image/png");
             
-            // Add combined title
-            const fullTitle = `Freightliner Retail & Fleet - ${filterLabel}`;
+            // Split filter label to separate year
+            const filterParts = filterLabel.split(" | ");
+            const year = filterParts[filterParts.length - 1];
+            const titleWithoutYear = filterParts.slice(0, -1).join(" | ");
+            
+            // Add combined title without year
+            const fullTitle = `Freightliner Retail & Fleet - ${titleWithoutYear}`;
             slide.addText(fullTitle, {
               x: 0.4,
               y: 0.15,
-              w: 9,
+              w: 7,
               h: 0.4,
               fontSize: 18,
               bold: true,
               color: "1a1a1a",
               align: "left",
+            });
+            
+            // Add year on the right
+            slide.addText(year, {
+              x: 7.5,
+              y: 0.15,
+              w: 2,
+              h: 0.4,
+              fontSize: 18,
+              bold: true,
+              color: "1a1a1a",
+              align: "right",
             });
             
             // Calculate dimensions for side-by-side layout
@@ -377,19 +411,36 @@ export const Header = () => {
       const slide = pptx.addSlide();
       const imgData = canvas.toDataURL("image/png");
       
-      // Combine chart title with filter information
-      const fullTitle = `${chartTitle} - ${filterLabel}`;
+      // Split filter label to separate year
+      const filterParts = filterLabel.split(" | ");
+      const year = filterParts[filterParts.length - 1];
+      const titleWithoutYear = filterParts.slice(0, -1).join(" | ");
       
-      // Add single slide title with chart name and filters
+      // Combine chart title with filter information (without year)
+      const fullTitle = `${chartTitle} - ${titleWithoutYear}`;
+      
+      // Add single slide title with chart name and filters (without year)
       slide.addText(fullTitle, {
         x: 0.4,
         y: 0.15,
-        w: 9,
+        w: 7,
         h: 0.4,
         fontSize: 18,
         bold: true,
         color: "1a1a1a",
         align: "left",
+      });
+      
+      // Add year on the right
+      slide.addText(year, {
+        x: 7.5,
+        y: 0.15,
+        w: 2,
+        h: 0.4,
+        fontSize: 18,
+        bold: true,
+        color: "1a1a1a",
+        align: "right",
       });
       
       // Calculate proper dimensions to maintain aspect ratio and fit on slide
