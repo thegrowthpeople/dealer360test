@@ -44,7 +44,10 @@ const Login = () => {
           {/* Left Column - Logo and Title */}
           <div className="flex flex-col items-center justify-center p-12 border-r border-border">
             <img src={logoBlack} alt="Daimler Truck" className="h-12 mb-8 dark:invert" />
-            <h1 className="text-2xl font-semibold text-center text-foreground">Dealer 360 - Dealer Management</h1>
+            <div className="text-center">
+              <h1 className="text-2xl font-bold text-foreground">Dealer 360</h1>
+              <p className="text-lg text-foreground mt-1">Dealer Management</p>
+            </div>
           </div>
 
           {/* Right Column - Form */}
@@ -86,10 +89,6 @@ const Login = () => {
               <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? 'Signing in...' : 'Sign In'}
               </Button>
-
-              <p className="text-sm text-muted-foreground text-center mt-4">
-                Demo credentials: any email / password123
-              </p>
             </form>
           </CardContent>
         </div>
