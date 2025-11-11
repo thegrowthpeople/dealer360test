@@ -56,16 +56,24 @@ Deno.serve(async (req) => {
       throw new Error('BDM is required for users with user role');
     }
 
-    // Update email if provided
+    // Update email and display_name in auth metadata
+    const authUpdateData: any = {};
     if (email) {
-      const { error: updateEmailError } = await supabaseAdmin.auth.admin.updateUserById(
+      authUpdateData.email = email;
+    }
+    if (display_name) {
+      authUpdateData.user_metadata = { display_name };
+    }
+
+    if (Object.keys(authUpdateData).length > 0) {
+      const { error: updateAuthError } = await supabaseAdmin.auth.admin.updateUserById(
         userId,
-        { email }
+        authUpdateData
       );
 
-      if (updateEmailError) {
-        console.error('Error updating email:', updateEmailError);
-        throw updateEmailError;
+      if (updateAuthError) {
+        console.error('Error updating auth user:', updateAuthError);
+        throw updateAuthError;
       }
     }
 
