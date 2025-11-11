@@ -331,11 +331,9 @@ const Performance = () => {
   return (
     <div className="min-h-screen space-y-6">
       <div>
-        <div className="flex items-end justify-between gap-6 mb-2">
-          <h1 className="text-4xl xl:text-5xl font-bold text-foreground">Dealer Performance</h1>
-          <PerformanceFilters />
-        </div>
-        <p className="text-muted-foreground">
+        <h1 className="text-4xl xl:text-5xl font-bold text-foreground mb-4">Dealer Performance</h1>
+        <PerformanceFilters />
+        <p className="text-muted-foreground mt-4">
           {filterLabel || "All Dealerships"}
         </p>
       </div>
