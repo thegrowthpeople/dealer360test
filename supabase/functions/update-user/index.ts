@@ -58,10 +58,13 @@ Deno.serve(async (req) => {
 
     // Update email and display_name in auth metadata
     const authUpdateData: any = {};
+    
     if (email) {
       authUpdateData.email = email;
     }
-    if (display_name) {
+    
+    // Always update user_metadata with display_name if provided
+    if (display_name !== undefined) {
       authUpdateData.user_metadata = { display_name };
     }
 
@@ -76,6 +79,8 @@ Deno.serve(async (req) => {
         throw updateAuthError;
       }
     }
+
+    console.log('Auth user updated with metadata:', authUpdateData);
 
     // Update role, BDM, and display name in user_roles table
     const { error: roleUpdateError } = await supabaseAdmin
