@@ -95,16 +95,6 @@ const Login = () => {
           </CardContent>
         </div>
       </Card>
-      <div className="relative z-10 mt-2 max-w-3xl w-full">
-        <a 
-          href="https://www.thegrowthpeople.com.au" 
-          target="_blank" 
-          rel="noopener noreferrer"
-          className="text-xs text-muted-foreground hover:text-foreground transition-colors block text-right"
-        >
-          created by The Growth People
-        </a>
-      </div>
     </div>
   );
 };
