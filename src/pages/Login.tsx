@@ -105,7 +105,7 @@ const Login = () => {
                 <button
                   type="button"
                   onClick={handleForgotPassword}
-                  className="text-sm text-muted-foreground hover:text-primary transition-colors underline-offset-4 hover:underline"
+                  className="text-xs text-muted-foreground/60 hover:text-muted-foreground transition-colors"
                 >
                   Forgot Password?
                 </button>
