@@ -1,8 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Index = () => {
   const navigate = useNavigate();
+  const { displayName } = useAuth();
+  
+  // Extract first name from display name
+  const firstName = displayName?.split(' ')[0] || 'User';
 
   return (
     <div className="pt-20 pb-8">
@@ -10,7 +15,7 @@ const Index = () => {
         {/* Welcome Title */}
         <div className="animate-fade-in">
           <h1 className="text-5xl xl:text-6xl font-bold text-foreground mb-2">
-            Welcome, Gary
+            Welcome, {firstName}
           </h1>
         </div>
 
