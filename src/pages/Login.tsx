@@ -91,6 +91,18 @@ const Login = () => {
               <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? 'Signing in...' : 'Sign In'}
               </Button>
+              
+              <p className="text-sm text-muted-foreground mt-2">
+                Created by{' '}
+                <a 
+                  href="https://www.thegrowthpeople.com.au" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="hover:underline"
+                >
+                  The Growth People
+                </a>
+              </p>
             </form>
           </CardContent>
         </div>
