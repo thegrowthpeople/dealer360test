@@ -3,17 +3,9 @@ import logo from "@/assets/logo-black.svg";
 import { ThemeToggle } from "./ThemeToggle";
 import { Button } from "./ui/button";
 import { Download } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
 
 export const Header = () => {
-  const { toast } = useToast();
-
   const handleExportPDF = () => {
-    toast({
-      title: "Exporting to PDF",
-      description: "Preparing your report for download...",
-    });
-    
     // Trigger browser print dialog which can save as PDF
     window.print();
   };
