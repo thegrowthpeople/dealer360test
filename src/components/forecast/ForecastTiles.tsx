@@ -243,7 +243,7 @@ export const ForecastTiles = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Tile 4: Pipeline Growth */}
         <Card className="p-6">
-          <div className="flex items-start justify-between">
+          <div className="flex items-start justify-between mb-4">
             <div>
               <p className="text-sm font-medium text-muted-foreground mb-1">Pipeline Growth</p>
               <p className="text-3xl font-bold text-foreground">{formatNumber(pipelineGrowth)}</p>
@@ -252,17 +252,37 @@ export const ForecastTiles = () => {
               <TrendingUp className="w-6 h-6 text-primary" />
             </div>
           </div>
+          <div className="space-y-1">
+            <div className="flex justify-between text-sm">
+              <span className="text-muted-foreground">Mercedes-Benz:</span>
+              <span className="font-medium text-foreground">{formatNumber(data["MBT Pipeline Growth"])}</span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-muted-foreground">Freightliner:</span>
+              <span className="font-medium text-foreground">{formatNumber(data["FTL Pipeline Growth"])}</span>
+            </div>
+          </div>
         </Card>
 
         {/* Tile 5: Pipeline Lost */}
         <Card className="p-6">
-          <div className="flex items-start justify-between">
+          <div className="flex items-start justify-between mb-4">
             <div>
               <p className="text-sm font-medium text-muted-foreground mb-1">Pipeline Lost</p>
               <p className="text-3xl font-bold text-foreground">{formatNumber(pipelineLost)}</p>
             </div>
             <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
               <TrendingDown className="w-6 h-6 text-primary" />
+            </div>
+          </div>
+          <div className="space-y-1">
+            <div className="flex justify-between text-sm">
+              <span className="text-muted-foreground">Mercedes-Benz:</span>
+              <span className="font-medium text-foreground">{formatNumber(data["MBT Pipeline Lost"])}</span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-muted-foreground">Freightliner:</span>
+              <span className="font-medium text-foreground">{formatNumber(data["FTL Pipeline Lost"])}</span>
             </div>
           </div>
         </Card>
