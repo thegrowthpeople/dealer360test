@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
-import { Users, Package, TrendingUp, Truck, Building } from "lucide-react";
+import { Users, Package, TrendingUp, Truck, Building, TrendingDown } from "lucide-react";
 import { supabase } from "@/integrations/supabase";
 import { usePerformanceFilters } from "@/contexts/PerformanceFiltersContext";
 import { Separator } from "@/components/ui/separator";
@@ -15,6 +15,10 @@ interface ForecastData {
   "MBT Pipeline Size Next QTR": number;
   "FTL Pipeline Size This QTR": number;
   "FTL Pipeline Size Next QTR": number;
+  "MBT Pipeline Growth": number;
+  "FTL Pipeline Growth": number;
+  "MBT Pipeline Lost": number;
+  "FTL Pipeline Lost": number;
 }
 
 export const ForecastTiles = () => {
@@ -28,6 +32,10 @@ export const ForecastTiles = () => {
     "MBT Pipeline Size Next QTR": 0,
     "FTL Pipeline Size This QTR": 0,
     "FTL Pipeline Size Next QTR": 0,
+    "MBT Pipeline Growth": 0,
+    "FTL Pipeline Growth": 0,
+    "MBT Pipeline Lost": 0,
+    "FTL Pipeline Lost": 0,
   });
 
   useEffect(() => {
@@ -77,6 +85,10 @@ export const ForecastTiles = () => {
             "MBT Pipeline Size Next QTR": acc["MBT Pipeline Size Next QTR"] + (row["MBT Pipeline Size Next QTR"] || 0),
             "FTL Pipeline Size This QTR": acc["FTL Pipeline Size This QTR"] + (row["FTL Pipeline Size This QTR"] || 0),
             "FTL Pipeline Size Next QTR": acc["FTL Pipeline Size Next QTR"] + (row["FTL Pipeline Size Next QTR"] || 0),
+            "MBT Pipeline Growth": acc["MBT Pipeline Growth"] + (row["MBT Pipeline Growth"] || 0),
+            "FTL Pipeline Growth": acc["FTL Pipeline Growth"] + (row["FTL Pipeline Growth"] || 0),
+            "MBT Pipeline Lost": acc["MBT Pipeline Lost"] + (row["MBT Pipeline Lost"] || 0),
+            "FTL Pipeline Lost": acc["FTL Pipeline Lost"] + (row["FTL Pipeline Lost"] || 0),
           }),
           {
             "Conquest Meetings": 0,
@@ -87,6 +99,10 @@ export const ForecastTiles = () => {
             "MBT Pipeline Size Next QTR": 0,
             "FTL Pipeline Size This QTR": 0,
             "FTL Pipeline Size Next QTR": 0,
+            "MBT Pipeline Growth": 0,
+            "FTL Pipeline Growth": 0,
+            "MBT Pipeline Lost": 0,
+            "FTL Pipeline Lost": 0,
           }
         );
         setData(aggregated);
@@ -99,6 +115,8 @@ export const ForecastTiles = () => {
   const totalMeetings = data["Conquest Meetings"] + data["Customer Meetings"];
   const mbtPipeline = data["MBT Pipeline Size This QTR"] + data["MBT Pipeline Size Next QTR"];
   const ftlPipeline = data["FTL Pipeline Size This QTR"] + data["FTL Pipeline Size Next QTR"];
+  const pipelineGrowth = data["MBT Pipeline Growth"] + data["FTL Pipeline Growth"];
+  const pipelineLost = data["MBT Pipeline Lost"] + data["FTL Pipeline Lost"];
 
   return (
     <div className="space-y-6">
@@ -160,7 +178,7 @@ export const ForecastTiles = () => {
 
       <div>
         <h2 className="text-2xl font-bold text-foreground mb-4">Pipeline</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Tile 4: Mercedes-Benz Pipeline */}
         <Card className="p-6">
           <div className="flex items-start justify-between mb-4">
@@ -203,6 +221,32 @@ export const ForecastTiles = () => {
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Next QTR:</span>
               <span className="font-medium text-foreground">{formatNumber(data["FTL Pipeline Size Next QTR"])}</span>
+            </div>
+          </div>
+        </Card>
+
+        {/* Tile 6: Pipeline Growth */}
+        <Card className="p-6">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-sm font-medium text-muted-foreground mb-1">Pipeline Growth</p>
+              <p className="text-3xl font-bold text-foreground">{formatNumber(pipelineGrowth)}</p>
+            </div>
+            <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
+              <TrendingUp className="w-6 h-6 text-primary" />
+            </div>
+          </div>
+        </Card>
+
+        {/* Tile 7: Pipeline Lost */}
+        <Card className="p-6">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-sm font-medium text-muted-foreground mb-1">Pipeline Lost</p>
+              <p className="text-3xl font-bold text-foreground">{formatNumber(pipelineLost)}</p>
+            </div>
+            <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
+              <TrendingDown className="w-6 h-6 text-primary" />
             </div>
           </div>
         </Card>
