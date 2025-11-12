@@ -274,7 +274,7 @@ export const ForecastTiles = () => {
             <div className="hidden md:block w-px bg-border"></div>
             
             {/* Right side - Breakdown with white background */}
-            <div className="p-6 bg-background flex items-end w-[260px]">
+            <div className="p-6 bg-white flex items-end w-[260px]">
               <div className="flex gap-8">
                 <div className="space-y-1 text-center">
                   <span className="text-xs text-muted-foreground block uppercase tracking-wider">Mercedes-Benz</span>
@@ -302,7 +302,7 @@ export const ForecastTiles = () => {
             <div className="hidden md:block w-px bg-border"></div>
             
             {/* Right side - Breakdown with white background */}
-            <div className="p-6 bg-background flex items-end w-[260px]">
+            <div className="p-6 bg-white flex items-end w-[260px]">
               <div className="flex gap-8">
                 <div className="space-y-1 text-center">
                   <span className="text-xs text-muted-foreground block uppercase tracking-wider">Mercedes-Benz</span>
@@ -330,7 +330,7 @@ export const ForecastTiles = () => {
             <div className="hidden md:block w-px bg-border"></div>
             
             {/* Right side - Breakdown with white background */}
-            <div className="p-6 bg-background flex items-end w-[260px]">
+            <div className="p-6 bg-white flex items-end w-[260px]">
               <div className="flex gap-8">
                 <div className="space-y-1 text-center">
                   <span className="text-xs text-muted-foreground block uppercase tracking-wider">This QTR</span>
@@ -358,7 +358,7 @@ export const ForecastTiles = () => {
             <div className="hidden md:block w-px bg-border"></div>
             
             {/* Right side - Breakdown with white background */}
-            <div className="p-6 bg-background flex items-end w-[260px]">
+            <div className="p-6 bg-white flex items-end w-[260px]">
               <div className="flex gap-8">
                 <div className="space-y-1 text-center">
                   <span className="text-xs text-muted-foreground block uppercase tracking-wider">This QTR</span>
