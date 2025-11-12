@@ -7,8 +7,8 @@ interface ForecastTotalCardProps {
 }
 
 export const ForecastTotalCard = ({ title, mbTotal, ftlTotal }: ForecastTotalCardProps) => {
-  // Split title on space for multiline display
-  const titleParts = title.split(' ');
+  // Split title on newline if present, otherwise split on space for multiline display
+  const titleParts = title.includes('\n') ? title.split('\n') : title.split(' ');
   
   return (
     <Card className="p-0 overflow-hidden border-primary/20 shadow-md hover:shadow-lg hover:scale-[1.02] transition-all duration-300">

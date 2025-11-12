@@ -236,7 +236,7 @@ export const NewForecastDialog = ({
           New Forecast
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-[1700px] h-[90vh] flex flex-col">
+      <DialogContent className="max-w-[1700px] h-[90vh] flex flex-col p-8">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold">NEW FORECAST</DialogTitle>
           <DialogDescription>
@@ -617,8 +617,17 @@ export const NewForecastDialog = ({
                 </TabsContent>
 
                 <TabsContent value="forecast" className="space-y-4 mt-0 h-full">
-                  {/* First Row: Three Total Columns */}
-                  <div className="grid grid-cols-3 gap-6 mb-6">
+                  {/* First Row: Four Total Columns */}
+                  <div className="grid grid-cols-4 gap-6 mb-6">
+                    <ForecastTotalCard
+                      title="Forecast\nTotal"
+                      mbTotal={
+                        (form.watch("forecastRows")?.filter(r => r.brand === "Mercedes-Benz" && (r.type === "Retail" || r.type === "Indirect Fleet" || r.type === "Direct Fleet")).reduce((sum, r) => sum + (typeof r.qty === 'string' ? parseFloat(r.qty) || 0 : r.qty || 0), 0) || 0)
+                      }
+                      ftlTotal={
+                        (form.watch("forecastRows")?.filter(r => r.brand === "Freightliner" && (r.type === "Retail" || r.type === "Indirect Fleet" || r.type === "Direct Fleet")).reduce((sum, r) => sum + (typeof r.qty === 'string' ? parseFloat(r.qty) || 0 : r.qty || 0), 0) || 0)
+                      }
+                    />
                     <ForecastTotalCard
                       title="Own Retail"
                       mbTotal={form.watch("forecastRows")?.filter(r => r.brand === "Mercedes-Benz" && r.type === "Retail").reduce((sum, r) => sum + (typeof r.qty === 'string' ? parseFloat(r.qty) || 0 : r.qty || 0), 0) || 0}
