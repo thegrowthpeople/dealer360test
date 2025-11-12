@@ -1,13 +1,9 @@
 import { useMemo } from "react";
-import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { PlusCircle, FileText } from "lucide-react";
 import { PerformanceFilters } from "@/components/PerformanceFilters";
 import { usePerformanceFilters } from "@/contexts/PerformanceFiltersContext";
 import { Separator } from "@/components/ui/separator";
 
 const Forecast = () => {
-  const navigate = useNavigate();
   const {
     selectedBDMId,
     selectedGroup,
@@ -38,23 +34,11 @@ const Forecast = () => {
   return (
     <div className="min-h-screen space-y-6">
       <div>
-        <div className="flex items-center justify-between">
-          <div className="flex-1">
-            <h1 className="text-4xl xl:text-5xl font-bold text-foreground mb-4">Dealer Forecast</h1>
-            <p className="text-muted-foreground mb-4">
-              {filterLabel || "All Dealerships"}
-            </p>
-          </div>
-          <div className="flex gap-2">
-            <Button onClick={() => navigate("/new-report")} variant="default" className="gap-2">
-              <PlusCircle className="w-4 h-4" />
-              New Report
-            </Button>
-            <Button onClick={() => navigate("/reports")} variant="outline" className="gap-2">
-              <FileText className="w-4 h-4" />
-              Previous Reports
-            </Button>
-          </div>
+        <div className="flex-1">
+          <h1 className="text-4xl xl:text-5xl font-bold text-foreground mb-4">Dealer Forecast</h1>
+          <p className="text-muted-foreground mb-4">
+            {filterLabel || "All Dealerships"}
+          </p>
         </div>
         <PerformanceFilters />
       </div>
