@@ -3,6 +3,7 @@ import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isMonday } from "date-fns";
+import { CalendarIcon } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -28,6 +29,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus, Trash2, Copy, X } from "lucide-react";
@@ -35,6 +42,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { usePerformanceFilters } from "@/contexts/PerformanceFiltersContext";
 import { ForecastTotalCard } from "./ForecastTotalCard";
+import { cn } from "@/lib/utils";
 
 const forecastSchema = z.object({
   // Activity fields
@@ -69,6 +77,7 @@ const forecastSchema = z.object({
     type: z.enum(["Retail", "Indirect Fleet", "Direct Fleet"]).nullable().refine((val) => val !== null, { message: "Source is required" }),
     bdm: z.enum(["Met in Person", "Relationship", "Supported", ""]),
     upside: z.boolean(),
+    estimatedDelivery: z.string().optional(),
   })),
 });
 
@@ -180,6 +189,7 @@ export const NewForecastDialog = ({
       type: null,
       bdm: "",
       upside: false,
+      estimatedDelivery: undefined,
     });
   };
 
@@ -294,7 +304,7 @@ export const NewForecastDialog = ({
                   value="orders" 
                   className="text-base font-semibold data-[state=active]:bg-background data-[state=active]:shadow-md transition-all"
                 >
-                  Orders
+                  Orders Received
                 </TabsTrigger>
                 <TabsTrigger 
                   value="forecast" 
@@ -627,7 +637,7 @@ Total"
                     <CardHeader>
                       <div className="flex items-center justify-between">
                         <div>
-                          <CardTitle>Order Outlook</CardTitle>
+                          <CardTitle>Orders Received in last week</CardTitle>
                         </div>
                         <div className="flex gap-2">
                           <Button
@@ -647,6 +657,7 @@ Total"
                                 type: null,
                                 bdm: "" as const,
                                 upside: false,
+                                estimatedDelivery: undefined,
                               });
                             }}
                             title="Clear all table data"
@@ -667,7 +678,7 @@ Total"
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-2 max-h-[450px] overflow-y-auto pr-2 pl-4">
-                        <div className="grid grid-cols-[40px_70px_320px_100px_120px_110px_160px_280px_140px_140px_80px] gap-2 font-semibold text-xs mb-2">
+                        <div className="grid grid-cols-[40px_70px_320px_100px_120px_110px_160px_280px_140px_140px_160px] gap-2 font-semibold text-xs mb-2">
                           <div></div>
                           <div>QTY</div>
                           <div>Customer Name</div>
@@ -678,10 +689,10 @@ Total"
                           <div>Model</div>
                           <div>Source</div>
                           <div>BDM</div>
-                          <div>Confirmed</div>
+                          <div>Est. Delivery</div>
                         </div>
                         {fields.map((field, index) => (
-                          <div key={field.id} className="grid grid-cols-[40px_70px_320px_100px_120px_110px_160px_280px_140px_140px_80px] gap-2 focus-within:bg-primary/5 focus-within:shadow-sm rounded-sm p-1 -m-1 transition-all duration-150">
+                          <div key={field.id} className="grid grid-cols-[40px_70px_320px_100px_120px_110px_160px_280px_140px_140px_160px] gap-2 focus-within:bg-primary/5 focus-within:shadow-sm rounded-sm p-1 -m-1 transition-all duration-150">
                             <div className="flex items-center justify-center">
                               <Button
                                 type="button"
@@ -856,18 +867,33 @@ Total"
                             />
                             <FormField
                               control={form.control}
-                              name={`forecastRows.${index}.upside`}
+                              name={`forecastRows.${index}.estimatedDelivery`}
                               render={({ field }) => (
                                 <FormItem>
                                   <FormControl>
-                                    <div className="flex items-center h-9">
-                                      <input
-                                        type="checkbox"
-                                        checked={field.value}
-                                        onChange={field.onChange}
-                                        className="h-4 w-4 rounded border-input"
-                                      />
-                                    </div>
+                                    <Popover>
+                                      <PopoverTrigger asChild>
+                                        <Button
+                                          variant="outline"
+                                          className={cn(
+                                            "h-9 text-sm justify-start text-left font-normal w-full",
+                                            !field.value && "text-muted-foreground"
+                                          )}
+                                        >
+                                          <CalendarIcon className="mr-2 h-4 w-4" />
+                                          {field.value ? format(new Date(field.value), "PP") : <span>Pick date</span>}
+                                        </Button>
+                                      </PopoverTrigger>
+                                      <PopoverContent className="w-auto p-0" align="start">
+                                        <Calendar
+                                          mode="single"
+                                          selected={field.value ? new Date(field.value) : undefined}
+                                          onSelect={(date) => field.onChange(date?.toISOString())}
+                                          initialFocus
+                                          className={cn("p-3 pointer-events-auto")}
+                                        />
+                                      </PopoverContent>
+                                    </Popover>
                                   </FormControl>
                                 </FormItem>
                               )}
@@ -950,6 +976,7 @@ Total"
                                 type: null,
                                 bdm: "" as const,
                                 upside: false,
+                                estimatedDelivery: undefined,
                               });
                             }}
                             title="Clear all table data"
