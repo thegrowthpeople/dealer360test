@@ -67,6 +67,7 @@ const forecastSchema = z.object({
     brand: z.enum(["Mercedes-Benz", "Freightliner"]),
     model: z.string(),
     type: z.enum(["Retail", "Indirect Fleet", "Direct Fleet"]),
+    upside: z.boolean(),
   })),
 });
 
@@ -139,7 +140,8 @@ export const NewForecastDialog = ({
         demoTruck: 0, 
         brand: "Mercedes-Benz" as const, 
         model: "", 
-        type: "Retail" as const 
+        type: "Retail" as const,
+        upside: false,
       })),
     },
   });
@@ -232,7 +234,7 @@ export const NewForecastDialog = ({
           New Forecast
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-6xl h-[85vh] flex flex-col">
+      <DialogContent className="max-w-6xl h-[90vh] flex flex-col">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold">NEW FORECAST</DialogTitle>
           <DialogDescription>
@@ -616,7 +618,7 @@ export const NewForecastDialog = ({
                   {/* First Row: Three Total Columns */}
                   <div className="grid grid-cols-3 gap-6 mb-6">
                     <ForecastTotalCard
-                      title="Retail"
+                      title="Own Retail"
                       mbTotal={form.watch("forecastRows")?.filter(r => r.brand === "Mercedes-Benz" && r.type === "Retail").reduce((sum, r) => sum + (typeof r.qty === 'string' ? parseFloat(r.qty) || 0 : r.qty || 0), 0) || 0}
                       ftlTotal={form.watch("forecastRows")?.filter(r => r.brand === "Freightliner" && r.type === "Retail").reduce((sum, r) => sum + (typeof r.qty === 'string' ? parseFloat(r.qty) || 0 : r.qty || 0), 0) || 0}
                     />
@@ -639,19 +641,20 @@ export const NewForecastDialog = ({
                       <CardDescription>Enter up to 15 forecast items</CardDescription>
                     </CardHeader>
                     <CardContent>
-                      <div className="space-y-2 max-h-[400px] overflow-y-auto pr-2">
-                        <div className="grid grid-cols-[70px_180px_100px_90px_90px_140px_180px_140px] gap-2 font-semibold text-xs mb-2">
+                      <div className="space-y-2 max-h-[450px] overflow-y-auto pr-2">
+                        <div className="grid grid-cols-[70px_160px_100px_90px_100px_150px_160px_140px_80px] gap-2 font-semibold text-xs mb-2">
                           <div>QTY</div>
                           <div>Customer Name</div>
                           <div>Customer</div>
                           <div>Sales Support $</div>
-                          <div>Demo Truck</div>
+                          <div>Demo Truck $</div>
                           <div>Brand</div>
                           <div>Model</div>
                           <div>Type</div>
+                          <div>Upside</div>
                         </div>
                         {Array.from({ length: 15 }).map((_, index) => (
-                          <div key={index} className="grid grid-cols-[70px_180px_100px_90px_90px_140px_180px_140px] gap-2">
+                          <div key={index} className="grid grid-cols-[70px_160px_100px_90px_100px_150px_160px_140px_80px] gap-2">
                             <FormField
                               control={form.control}
                               name={`forecastRows.${index}.qty`}
@@ -787,6 +790,24 @@ export const NewForecastDialog = ({
                                         <SelectItem value="Direct Fleet">Direct Fleet</SelectItem>
                                       </SelectContent>
                                     </Select>
+                                  </FormControl>
+                                </FormItem>
+                              )}
+                            />
+                            <FormField
+                              control={form.control}
+                              name={`forecastRows.${index}.upside`}
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormControl>
+                                    <div className="flex items-center justify-center h-9">
+                                      <input
+                                        type="checkbox"
+                                        checked={field.value}
+                                        onChange={field.onChange}
+                                        className="h-4 w-4 rounded border-input"
+                                      />
+                                    </div>
                                   </FormControl>
                                 </FormItem>
                               )}
