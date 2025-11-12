@@ -59,15 +59,15 @@ const forecastSchema = z.object({
   
   // Forecast fields - single shared array
   forecastRows: z.array(z.object({
-    qty: z.coerce.number().min(0, "Must be 0 or greater"),
-    customerName: z.string(),
-    customerType: z.enum(["Existing", "New", ""]),
-    salesSupport: z.coerce.number().min(0, "Must be 0 or greater"),
-    demoTruck: z.coerce.number().min(0, "Must be 0 or greater"),
-    brand: z.enum(["Mercedes-Benz", "Freightliner", ""]),
+    qty: z.coerce.number().min(1, "QTY is required").nullable(),
+    customerName: z.string().min(1, "Customer Name is required"),
+    customerType: z.enum(["Existing", "New", ""]).optional(),
+    salesSupport: z.coerce.number().min(0, "Must be 0 or greater").nullable(),
+    demoTruck: z.coerce.number().min(0, "Must be 0 or greater").nullable(),
+    brand: z.enum(["Mercedes-Benz", "Freightliner"]).nullable().refine((val) => val !== null, { message: "Brand is required" }),
     model: z.string(),
-    type: z.enum(["Retail", "Indirect Fleet", "Direct Fleet", ""]),
-    bdm: z.enum(["Met in Person", "Relationship", "Supported", ""]),
+    type: z.enum(["Retail", "Indirect Fleet", "Direct Fleet"]).nullable().refine((val) => val !== null, { message: "Source is required" }),
+    bdm: z.enum(["Met in Person", "Relationship", "Supported", ""]).optional(),
     upside: z.boolean(),
   })),
 });
@@ -133,18 +133,7 @@ export const NewForecastDialog = ({
       mbtPipelineNextQtr: null,
       ftlPipelineThisQtr: null,
       ftlPipelineNextQtr: null,
-      forecastRows: Array(1).fill(null).map(() => ({ 
-        qty: null, 
-        customerName: "", 
-        customerType: "" as const, 
-        salesSupport: null, 
-        demoTruck: null, 
-        brand: "" as const, 
-        model: "", 
-        type: "" as const,
-        bdm: "" as const,
-        upside: false,
-      })),
+      forecastRows: [],
     },
   });
 
@@ -674,9 +663,9 @@ Total"
                                 customerType: "" as const,
                                 salesSupport: null,
                                 demoTruck: null,
-                                brand: "" as const,
+                                brand: null,
                                 model: "",
-                                type: "" as const,
+                                type: null,
                                 bdm: "" as const,
                                 upside: false,
                               });
@@ -807,7 +796,7 @@ Total"
                                 </FormItem>
                               )}
                             />
-                            <FormField
+                             <FormField
                               control={form.control}
                               name={`forecastRows.${index}.brand`}
                               render={({ field }) => (
@@ -823,6 +812,7 @@ Total"
                                       </SelectContent>
                                     </Select>
                                   </FormControl>
+                                  <FormMessage className="text-xs" />
                                 </FormItem>
                               )}
                             />
@@ -840,7 +830,7 @@ Total"
                                 </FormItem>
                               )}
                             />
-                            <FormField
+                             <FormField
                               control={form.control}
                               name={`forecastRows.${index}.type`}
                               render={({ field }) => (
@@ -857,6 +847,7 @@ Total"
                                       </SelectContent>
                                     </Select>
                                   </FormControl>
+                                  <FormMessage className="text-xs" />
                                 </FormItem>
                               )}
                             />
@@ -912,9 +903,9 @@ Total"
                               customerType: "" as const,
                               salesSupport: null,
                               demoTruck: null,
-                              brand: "" as const,
+                              brand: null,
                               model: "",
-                              type: "" as const,
+                              type: null,
                               bdm: "" as const,
                               upside: false,
                             })}
