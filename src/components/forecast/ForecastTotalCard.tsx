@@ -6,9 +6,10 @@ interface ForecastTotalCardProps {
   ftlTotal: number;
   leftBgColor?: string;
   rightBgColor?: string;
+  leftTextColor?: string;
 }
 
-export const ForecastTotalCard = ({ title, mbTotal, ftlTotal, leftBgColor = "bg-primary/10", rightBgColor = "bg-white" }: ForecastTotalCardProps) => {
+export const ForecastTotalCard = ({ title, mbTotal, ftlTotal, leftBgColor = "bg-primary/10", rightBgColor = "bg-white", leftTextColor = "text-foreground" }: ForecastTotalCardProps) => {
   // Split title on newline if present, otherwise split on space for multiline display
   const titleParts = title.includes('\n') ? title.split('\n') : title.split(' ');
   
@@ -17,7 +18,7 @@ export const ForecastTotalCard = ({ title, mbTotal, ftlTotal, leftBgColor = "bg-
       <div className="flex flex-col md:flex-row">
         {/* Left side - Total with colored background */}
         <div className={`p-4 w-[120px] ${leftBgColor}`}>
-          <p className="text-xl font-bold text-foreground mb-2">
+          <p className={`text-xl font-bold mb-2 ${leftTextColor}`}>
             {titleParts.map((part, index) => (
               <span key={index}>
                 {part}
@@ -25,7 +26,7 @@ export const ForecastTotalCard = ({ title, mbTotal, ftlTotal, leftBgColor = "bg-
               </span>
             ))}
           </p>
-          <p className="text-3xl font-bold text-foreground">{mbTotal + ftlTotal}</p>
+          <p className={`text-3xl font-bold ${leftTextColor}`}>{mbTotal + ftlTotal}</p>
         </div>
         
         {/* Vertical separator */}
