@@ -175,19 +175,29 @@ export const ForecastTiles = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 
         {/* Tile 2: Quotes Issued */}
-        <Card className="p-6">
-          <div className="mb-4">
-            <p className="text-xl font-bold text-foreground mb-2">Quotes Issued</p>
-            <p className="text-3xl font-bold text-foreground">{formatNumber(totalQuotesIssued)}</p>
-          </div>
-          <div className="space-y-1">
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Mercedes-Benz:</span>
-              <span className="font-medium text-foreground">{formatNumber(data["MBT Quotes Issued"])}</span>
+        <Card className="p-0 overflow-hidden border-primary/20">
+          <div className="flex flex-col md:flex-row">
+            {/* Left side - Total with colored background */}
+            <div className="p-6 bg-primary/10">
+              <p className="text-xl font-bold text-foreground mb-2">Quotes Issued</p>
+              <p className="text-3xl font-bold text-foreground">{formatNumber(totalQuotesIssued)}</p>
             </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Freightliner:</span>
-              <span className="font-medium text-foreground">{formatNumber(data["FTL Quotes Issued"])}</span>
+            
+            {/* Vertical separator */}
+            <div className="hidden md:block w-px bg-border"></div>
+            
+            {/* Right side - Breakdown with white background */}
+            <div className="p-6 bg-background flex items-end">
+              <div className="flex gap-8">
+                <div className="space-y-1 text-center">
+                  <span className="text-xs text-muted-foreground block uppercase tracking-wider">Mercedes-Benz</span>
+                  <span className="text-2xl text-foreground block">{formatNumber(data["MBT Quotes Issued"])}</span>
+                </div>
+                <div className="space-y-1 text-center">
+                  <span className="text-xs text-muted-foreground block uppercase tracking-wider">Freightliner</span>
+                  <span className="text-2xl text-foreground block">{formatNumber(data["FTL Quotes Issued"])}</span>
+                </div>
+              </div>
             </div>
           </div>
         </Card>
