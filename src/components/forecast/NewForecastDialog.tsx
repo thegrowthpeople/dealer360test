@@ -221,7 +221,7 @@ export const NewForecastDialog = ({
           New Forecast
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-[1900px] h-[90vh] flex flex-col p-12">
+      <DialogContent className="max-w-[1700px] h-[90vh] flex flex-col p-6">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold">NEW FORECAST</DialogTitle>
           <DialogDescription>
@@ -334,7 +334,7 @@ export const NewForecastDialog = ({
                 </TabsTrigger>
               </TabsList>
 
-              <div className="flex-1 overflow-visible mt-4 px-2 -mx-2">
+              <div className="flex-1 overflow-visible mt-2 px-1 -mx-1">
                 <TabsContent value="activity" className="space-y-4 mt-0 h-full overflow-visible">
                 <Card>
                   <CardHeader>
@@ -516,7 +516,7 @@ export const NewForecastDialog = ({
 
                 <TabsContent value="bdmVisitations" className="space-y-4 mt-0 h-full overflow-visible">
                   {/* First Row: Four Total Columns */}
-                  <div className="grid grid-cols-4 gap-6 mb-6 overflow-visible">
+                  <div className="grid grid-cols-4 gap-4 mb-4 overflow-visible">
                     <ForecastTotalCard
                       title="BDM
 Visits"
@@ -856,7 +856,7 @@ Visits"
 
                 <TabsContent value="orders" className="space-y-4 mt-0 h-full overflow-visible">
                   {/* First Row: Four Total Columns */}
-                  <div className="grid grid-cols-4 gap-6 mb-6 overflow-visible">
+                  <div className="grid grid-cols-4 gap-4 mb-4 overflow-visible">
                     <ForecastTotalCard
                       title="Orders
 Received"
@@ -1193,7 +1193,7 @@ Received"
 
                 <TabsContent value="ordersDue" className="space-y-4 mt-0 h-full overflow-visible">
                   {/* First Row: Four Total Columns */}
-                  <div className="grid grid-cols-4 gap-6 mb-6 overflow-visible">
+                  <div className="grid grid-cols-4 gap-4 mb-4 overflow-visible">
                     <ForecastTotalCard
                       title="Orders
 Expected"
@@ -1530,7 +1530,7 @@ Expected"
 
                 <TabsContent value="forecast" className="space-y-4 mt-0 h-full overflow-visible">
                   {/* First Row: Four Total Columns */}
-                  <div className="grid grid-cols-4 gap-6 mb-6 overflow-visible">
+                  <div className="grid grid-cols-4 gap-4 mb-4 overflow-visible">
                     <ForecastTotalCard
                       title="Forecast
 Total"
