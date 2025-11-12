@@ -141,7 +141,7 @@ export const ForecastTiles = () => {
       <div>
         <h2 className="text-2xl font-bold text-foreground mb-4">Activity</h2>
         {/* Total Meetings Row */}
-        <div className="mb-4 max-w-xl">
+        <div className="mb-4 max-w-lg">
           {/* Total Meetings - Combined Tile */}
           <Card className="p-0 overflow-hidden border-primary/20">
             <div className="flex flex-col md:flex-row">
@@ -155,8 +155,8 @@ export const ForecastTiles = () => {
               <div className="hidden md:block w-px bg-border"></div>
               
               {/* Right side - Breakdown with white background */}
-              <div className="p-6 bg-background min-w-[200px]">
-                <div className="space-y-3">
+              <div className="p-6 bg-background">
+                <div className="flex gap-6">
                   <div className="space-y-1">
                     <span className="text-xs text-muted-foreground block">Conquest</span>
                     <span className="text-2xl font-bold text-foreground block">{formatNumber(data["Conquest Meetings"])}</span>
