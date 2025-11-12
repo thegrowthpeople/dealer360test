@@ -102,7 +102,9 @@ export const ForecastTiles = () => {
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div>
+        <h2 className="text-2xl font-bold text-foreground mb-4">Activity</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Tile 1: Total Meetings */}
         <Card className="p-6">
           <div className="flex items-start justify-between mb-4">
@@ -151,11 +153,14 @@ export const ForecastTiles = () => {
             </div>
           </div>
         </Card>
+        </div>
       </div>
 
       <Separator className="my-6" />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <h2 className="text-2xl font-bold text-foreground mb-4">Pipeline</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Tile 4: Mercedes-Benz Pipeline */}
         <Card className="p-6">
           <div className="flex items-start justify-between mb-4">
@@ -201,6 +206,7 @@ export const ForecastTiles = () => {
             </div>
           </div>
         </Card>
+        </div>
       </div>
     </div>
   );
