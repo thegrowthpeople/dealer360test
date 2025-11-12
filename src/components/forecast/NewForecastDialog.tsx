@@ -691,20 +691,20 @@ Total"
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-2 max-h-[450px] overflow-y-auto pr-2">
-                        <div className="grid grid-cols-[90px_320px_100px_120px_110px_160px_280px_140px_140px_80px] gap-2 font-semibold text-xs mb-2">
+                        <div className="grid grid-cols-[70px_320px_100px_120px_110px_160px_280px_140px_140px_80px] gap-2 font-semibold text-xs mb-2">
                           <div>QTY</div>
                           <div>Customer Name</div>
-                          <div>Customer</div>
+                          <div>Type</div>
                           <div>Sales Support $</div>
                           <div>Demo Truck $</div>
                           <div>Brand</div>
                           <div>Model</div>
-                          <div>Type</div>
+                          <div>Source</div>
                           <div>BDM</div>
                           <div>Upside</div>
                         </div>
                         {Array.from({ length: 15 }).map((_, index) => (
-                          <div key={index} className="grid grid-cols-[90px_320px_100px_120px_110px_160px_280px_140px_140px_80px] gap-2 focus-within:bg-primary/5 focus-within:shadow-sm rounded-sm p-1 -m-1 transition-all duration-150">
+                          <div key={index} className="grid grid-cols-[70px_320px_100px_120px_110px_160px_280px_140px_140px_80px] gap-2 focus-within:bg-primary/5 focus-within:shadow-sm rounded-sm p-1 -m-1 transition-all duration-150">
                             <FormField
                               control={form.control}
                               name={`forecastRows.${index}.qty`}
@@ -715,7 +715,7 @@ Total"
                                       type="number"
                                       {...field}
                                       onChange={(e) => field.onChange(parseFloat(e.target.value) || null)}
-                                      className="h-9 text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none border-l-2 border-l-transparent focus-visible:border-l-primary focus-visible:border-l-4 transition-all"
+                                      className="h-9 text-sm text-right pr-3 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none border-l-2 border-l-transparent focus-visible:border-l-primary focus-visible:border-l-4 transition-all"
                                     />
                                   </FormControl>
                                 </FormItem>
