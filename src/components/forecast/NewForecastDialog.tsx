@@ -241,7 +241,7 @@ export const NewForecastDialog = ({
           New Forecast
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-[1700px] h-[90vh] flex flex-col p-8">
+      <DialogContent className="max-w-[1800px] h-[90vh] flex flex-col p-8">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold">NEW FORECAST</DialogTitle>
           <DialogDescription>
