@@ -13,7 +13,8 @@ interface ForecastData {
   "FTL Quotes Issued": number;
   "MBT Orders Received": number;
   "FTL Orders Received": number;
-  "Orders Expected": number;
+  "MBT Orders Expected NW": number;
+  "FTL Orders Expected NW": number;
   "MBT Pipeline Size This QTR": number;
   "MBT Pipeline Size Next QTR": number;
   "FTL Pipeline Size This QTR": number;
@@ -33,7 +34,8 @@ export const ForecastTiles = () => {
     "FTL Quotes Issued": 0,
     "MBT Orders Received": 0,
     "FTL Orders Received": 0,
-    "Orders Expected": 0,
+    "MBT Orders Expected NW": 0,
+    "FTL Orders Expected NW": 0,
     "MBT Pipeline Size This QTR": 0,
     "MBT Pipeline Size Next QTR": 0,
     "FTL Pipeline Size This QTR": 0,
@@ -89,7 +91,8 @@ export const ForecastTiles = () => {
             "FTL Quotes Issued": acc["FTL Quotes Issued"] + (row["FTL Quotes Issued"] || 0),
             "MBT Orders Received": acc["MBT Orders Received"] + (row["MBT Orders Received"] || 0),
             "FTL Orders Received": acc["FTL Orders Received"] + (row["FTL Orders Received"] || 0),
-            "Orders Expected": acc["Orders Expected"] + (row["Orders Expected"] || 0),
+            "MBT Orders Expected NW": acc["MBT Orders Expected NW"] + (row["MBT Orders Expected NW"] || 0),
+            "FTL Orders Expected NW": acc["FTL Orders Expected NW"] + (row["FTL Orders Expected NW"] || 0),
             "MBT Pipeline Size This QTR": acc["MBT Pipeline Size This QTR"] + (row["MBT Pipeline Size This QTR"] || 0),
             "MBT Pipeline Size Next QTR": acc["MBT Pipeline Size Next QTR"] + (row["MBT Pipeline Size Next QTR"] || 0),
             "FTL Pipeline Size This QTR": acc["FTL Pipeline Size This QTR"] + (row["FTL Pipeline Size This QTR"] || 0),
@@ -106,7 +109,8 @@ export const ForecastTiles = () => {
             "FTL Quotes Issued": 0,
             "MBT Orders Received": 0,
             "FTL Orders Received": 0,
-            "Orders Expected": 0,
+            "MBT Orders Expected NW": 0,
+            "FTL Orders Expected NW": 0,
             "MBT Pipeline Size This QTR": 0,
             "MBT Pipeline Size Next QTR": 0,
             "FTL Pipeline Size This QTR": 0,
@@ -127,6 +131,7 @@ export const ForecastTiles = () => {
   const totalMeetings = data["Conquest Meetings"] + data["Customer Meetings"];
   const totalQuotesIssued = data["MBT Quotes Issued"] + data["FTL Quotes Issued"];
   const totalOrdersReceived = data["MBT Orders Received"] + data["FTL Orders Received"];
+  const totalOrdersExpected = data["MBT Orders Expected NW"] + data["FTL Orders Expected NW"];
   const mbtPipeline = data["MBT Pipeline Size This QTR"] + data["MBT Pipeline Size Next QTR"];
   const ftlPipeline = data["FTL Pipeline Size This QTR"] + data["FTL Pipeline Size Next QTR"];
   const pipelineGrowth = data["MBT Pipeline Growth"] + data["FTL Pipeline Growth"];
@@ -208,13 +213,23 @@ export const ForecastTiles = () => {
 
         {/* Tile 4: Orders Expected */}
         <Card className="p-6">
-          <div className="flex items-start justify-between">
+          <div className="flex items-start justify-between mb-4">
             <div>
               <p className="text-sm font-medium text-muted-foreground mb-1">Orders Expected</p>
-              <p className="text-3xl font-bold text-foreground">{formatNumber(data["Orders Expected"])}</p>
+              <p className="text-3xl font-bold text-foreground">{formatNumber(totalOrdersExpected)}</p>
             </div>
             <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
               <TrendingUp className="w-6 h-6 text-primary" />
+            </div>
+          </div>
+          <div className="space-y-1">
+            <div className="flex justify-between text-sm">
+              <span className="text-muted-foreground">Mercedes-Benz:</span>
+              <span className="font-medium text-foreground">{formatNumber(data["MBT Orders Expected NW"])}</span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-muted-foreground">Freightliner:</span>
+              <span className="font-medium text-foreground">{formatNumber(data["FTL Orders Expected NW"])}</span>
             </div>
           </div>
         </Card>
