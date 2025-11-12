@@ -155,15 +155,15 @@ export const ForecastTiles = () => {
               <div className="hidden md:block w-px bg-border"></div>
               
               {/* Right side - Breakdown with white background */}
-              <div className="p-6 bg-background flex items-center">
+              <div className="p-6 bg-background flex items-end">
                 <div className="flex gap-8">
                   <div className="space-y-1 text-center">
                     <span className="text-xs text-muted-foreground block uppercase tracking-wider">Conquest</span>
-                    <span className="text-2xl font-bold text-foreground block">{formatNumber(data["Conquest Meetings"])}</span>
+                    <span className="text-2xl text-foreground block">{formatNumber(data["Conquest Meetings"])}</span>
                   </div>
                   <div className="space-y-1 text-center">
                     <span className="text-xs text-muted-foreground block uppercase tracking-wider">Customer</span>
-                    <span className="text-2xl font-bold text-foreground block">{formatNumber(data["Customer Meetings"])}</span>
+                    <span className="text-2xl text-foreground block">{formatNumber(data["Customer Meetings"])}</span>
                   </div>
                 </div>
               </div>
