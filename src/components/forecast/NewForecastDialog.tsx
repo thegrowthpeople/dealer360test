@@ -611,7 +611,7 @@ Visits"
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-2 max-h-[450px] overflow-y-auto pr-2 pl-0">
-                        <div className="grid grid-cols-[40px_70px_278px_100px_120px_110px_160px_280px_140px_180px_160px] gap-2 font-semibold text-xs mb-2">
+                        <div className="grid grid-cols-[40px_70px_238px_100px_120px_110px_160px_280px_140px_180px_160px] gap-2 font-semibold text-xs mb-2">
                           <div></div>
                           <div>QTY</div>
                           <div>Customer Name</div>
@@ -625,7 +625,7 @@ Visits"
                           <div>Meeting Date</div>
                         </div>
                         {fields.map((field, index) => (
-                          <div key={field.id} className="grid grid-cols-[40px_70px_278px_100px_120px_110px_160px_280px_140px_180px_160px] gap-2 focus-within:bg-primary/5 focus-within:shadow-sm rounded-sm transition-all duration-150">
+                          <div key={field.id} className="grid grid-cols-[40px_70px_238px_100px_120px_110px_160px_280px_140px_180px_160px] gap-2 focus-within:bg-primary/5 focus-within:shadow-sm rounded-sm transition-all duration-150">
                             <div className="flex items-center justify-center">
                               <Button
                                 type="button"
@@ -951,7 +951,7 @@ Received"
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-2 max-h-[450px] overflow-y-auto pr-2 pl-0">
-                        <div className="grid grid-cols-[40px_70px_278px_100px_120px_110px_160px_280px_140px_140px_160px] gap-2 font-semibold text-xs mb-2">
+                        <div className="grid grid-cols-[40px_70px_238px_100px_120px_110px_160px_280px_140px_140px_160px] gap-2 font-semibold text-xs mb-2">
                           <div></div>
                           <div>QTY</div>
                           <div>Customer Name</div>
@@ -965,7 +965,7 @@ Received"
                           <div>Est. Delivery</div>
                         </div>
                         {fields.map((field, index) => (
-                          <div key={field.id} className="grid grid-cols-[40px_70px_278px_100px_120px_110px_160px_280px_140px_140px_160px] gap-2 focus-within:bg-primary/5 focus-within:shadow-sm rounded-sm transition-all duration-150">
+                          <div key={field.id} className="grid grid-cols-[40px_70px_238px_100px_120px_110px_160px_280px_140px_140px_160px] gap-2 focus-within:bg-primary/5 focus-within:shadow-sm rounded-sm transition-all duration-150">
                             <div className="flex items-center justify-center">
                               <Button
                                 type="button"
@@ -1288,7 +1288,7 @@ Expected"
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-2 max-h-[450px] overflow-y-auto pr-2 pl-0">
-                        <div className="grid grid-cols-[40px_70px_278px_100px_120px_110px_160px_280px_140px_140px_160px] gap-2 font-semibold text-xs mb-2">
+                        <div className="grid grid-cols-[40px_70px_238px_100px_120px_110px_160px_280px_140px_140px_160px] gap-2 font-semibold text-xs mb-2">
                           <div></div>
                           <div>QTY</div>
                           <div>Customer Name</div>
@@ -1302,7 +1302,7 @@ Expected"
                           <div>Order Date</div>
                         </div>
                         {fields.map((field, index) => (
-                          <div key={field.id} className="grid grid-cols-[40px_70px_278px_100px_120px_110px_160px_280px_140px_140px_160px] gap-2 focus-within:bg-primary/5 focus-within:shadow-sm rounded-sm transition-all duration-150">
+                          <div key={field.id} className="grid grid-cols-[40px_70px_238px_100px_120px_110px_160px_280px_140px_140px_160px] gap-2 focus-within:bg-primary/5 focus-within:shadow-sm rounded-sm transition-all duration-150">
                             <div className="flex items-center justify-center">
                               <Button
                                 type="button"
@@ -1625,7 +1625,7 @@ Total"
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-2 max-h-[450px] overflow-y-auto pr-2 pl-0">
-                        <div className="grid grid-cols-[40px_70px_278px_100px_120px_110px_160px_280px_140px_140px_80px] gap-2 font-semibold text-xs mb-2">
+                        <div className="grid grid-cols-[40px_70px_238px_100px_120px_110px_160px_280px_140px_140px_80px] gap-2 font-semibold text-xs mb-2">
                           <div></div>
                           <div>QTY</div>
                           <div>Customer Name</div>
@@ -1639,7 +1639,7 @@ Total"
                           <div>Upside</div>
                         </div>
                         {fields.map((field, index) => (
-                          <div key={field.id} className="grid grid-cols-[40px_70px_278px_100px_120px_110px_160px_280px_140px_140px_80px] gap-2 focus-within:bg-primary/5 focus-within:shadow-sm rounded-sm transition-all duration-150">
+                          <div key={field.id} className="grid grid-cols-[40px_70px_238px_100px_120px_110px_160px_280px_140px_140px_80px] gap-2 focus-within:bg-primary/5 focus-within:shadow-sm rounded-sm transition-all duration-150">
                             <div className="flex items-center justify-center">
                               <Button
                                 type="button"
