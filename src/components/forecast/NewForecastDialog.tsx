@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isMonday } from "date-fns";
@@ -30,7 +30,7 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Plus, Trash2, Copy } from "lucide-react";
+import { Plus, Trash2, Copy, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { usePerformanceFilters } from "@/contexts/PerformanceFiltersContext";
@@ -133,7 +133,7 @@ export const NewForecastDialog = ({
       mbtPipelineNextQtr: null,
       ftlPipelineThisQtr: null,
       ftlPipelineNextQtr: null,
-      forecastRows: Array(15).fill(null).map(() => ({ 
+      forecastRows: Array(1).fill(null).map(() => ({ 
         qty: null, 
         customerName: "", 
         customerType: "" as const, 
@@ -146,6 +146,11 @@ export const NewForecastDialog = ({
         upside: false,
       })),
     },
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "forecastRows"
   });
 
   const onSubmit = async (values: ForecastFormValues) => {
@@ -662,7 +667,8 @@ Total"
                             variant="outline"
                             size="sm"
                             onClick={() => {
-                              const emptyRows = Array(15).fill(null).map(() => ({
+                              remove(Array.from({ length: fields.length }, (_, i) => i));
+                              append({
                                 qty: null,
                                 customerName: "",
                                 customerType: "" as const,
@@ -673,8 +679,7 @@ Total"
                                 type: "" as const,
                                 bdm: "" as const,
                                 upside: false,
-                              }));
-                              form.setValue("forecastRows", emptyRows);
+                              });
                             }}
                             title="Clear all table data"
                           >
@@ -694,7 +699,8 @@ Total"
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-2 max-h-[450px] overflow-y-auto pr-2 pl-4">
-                        <div className="grid grid-cols-[70px_320px_100px_120px_110px_160px_280px_140px_140px_80px] gap-2 font-semibold text-xs mb-2">
+                        <div className="grid grid-cols-[40px_70px_320px_100px_120px_110px_160px_280px_140px_140px_80px] gap-2 font-semibold text-xs mb-2">
+                          <div></div>
                           <div>QTY</div>
                           <div>Customer Name</div>
                           <div>Type</div>
@@ -706,8 +712,20 @@ Total"
                           <div>BDM</div>
                           <div>Upside</div>
                         </div>
-                        {Array.from({ length: 15 }).map((_, index) => (
-                          <div key={index} className="grid grid-cols-[70px_320px_100px_120px_110px_160px_280px_140px_140px_80px] gap-2 focus-within:bg-primary/5 focus-within:shadow-sm rounded-sm p-1 -m-1 transition-all duration-150">
+                        {fields.map((field, index) => (
+                          <div key={field.id} className="grid grid-cols-[40px_70px_320px_100px_120px_110px_160px_280px_140px_140px_80px] gap-2 focus-within:bg-primary/5 focus-within:shadow-sm rounded-sm p-1 -m-1 transition-all duration-150">
+                            <div className="flex items-center justify-center">
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => remove(index)}
+                                className="h-7 w-7 p-0 hover:bg-destructive/10"
+                                title="Delete row"
+                              >
+                                <X className="h-4 w-4 text-destructive" />
+                              </Button>
+                            </div>
                             <FormField
                               control={form.control}
                               name={`forecastRows.${index}.qty`}
@@ -882,6 +900,30 @@ Total"
                             />
                           </div>
                         ))}
+                        
+                        <div className="pt-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => append({
+                              qty: null,
+                              customerName: "",
+                              customerType: "" as const,
+                              salesSupport: null,
+                              demoTruck: null,
+                              brand: "" as const,
+                              model: "",
+                              type: "" as const,
+                              bdm: "" as const,
+                              upside: false,
+                            })}
+                            className="gap-2"
+                          >
+                            <Plus className="h-4 w-4" />
+                            Add Row
+                          </Button>
+                        </div>
                       </div>
                     </CardContent>
                   </Card>
