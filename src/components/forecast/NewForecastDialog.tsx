@@ -127,8 +127,6 @@ export const NewForecastDialog = ({
     try {
       const { error } = await supabase.from("Forecast").insert({
         "Dealer ID": selectedDealerId,
-        "Year": selectedYear,
-        "Month": selectedMonth,
         "Forecast Date": selectedWeekStarting,
         "Conquest Meetings": values.conquestMeetings,
         "Customer Meetings": values.customerMeetings,

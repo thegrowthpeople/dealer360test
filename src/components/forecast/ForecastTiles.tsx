@@ -67,14 +67,6 @@ export const ForecastTiles = () => {
     try {
       let query = supabase.from("Forecast").select("*");
 
-      if (selectedYear) {
-        query = query.eq("Year", selectedYear);
-      }
-
-      if (selectedMonth) {
-        query = query.eq("Month", selectedMonth);
-      }
-
       // Filter by week starting date if selected
       if (selectedWeekStarting) {
         const weekStart = new Date(selectedWeekStarting);
@@ -86,6 +78,16 @@ export const ForecastTiles = () => {
         query = query
           .gte("Forecast Date", formatDate(weekStart))
           .lte("Forecast Date", formatDate(weekEnd));
+      } else if (selectedMonth && selectedYear) {
+        // Filter by month if no specific week is selected
+        const monthStart = new Date(selectedYear, selectedMonth - 1, 1);
+        const monthEnd = new Date(selectedYear, selectedMonth, 0);
+        
+        const formatDate = (date: Date) => date.toISOString().split('T')[0];
+        
+        query = query
+          .gte("Forecast Date", formatDate(monthStart))
+          .lte("Forecast Date", formatDate(monthEnd));
       }
 
       if (selectedDealerId !== null) {
