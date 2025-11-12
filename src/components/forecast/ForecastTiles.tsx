@@ -317,13 +317,13 @@ export const ForecastTiles = () => {
           </div>
         </Card>
 
-        {/* Tile 7: Mercedes-Benz Pipeline */}
+        {/* Tile 7: This QTR Pipeline */}
         <Card className="p-0 overflow-hidden border-primary/20">
           <div className="flex flex-col md:flex-row">
             {/* Left side - Total with colored background */}
             <div className="p-4 bg-primary/10 w-[150px]">
-              <p className="text-xl font-bold text-foreground mb-2">Mercedes-Benz<br />Pipeline</p>
-              <p className="text-3xl font-bold text-foreground">{formatNumber(mbtPipeline)}</p>
+              <p className="text-xl font-bold text-foreground mb-2">This QTR<br />Pipeline</p>
+              <p className="text-3xl font-bold text-foreground">{formatNumber(data["MBT Pipeline Size This QTR"] + data["FTL Pipeline Size This QTR"])}</p>
             </div>
             
             {/* Vertical separator */}
@@ -333,25 +333,25 @@ export const ForecastTiles = () => {
             <div className="px-4 py-6 bg-white flex items-center justify-center flex-1">
               <div className="flex gap-8">
                 <div className="space-y-1 text-center">
-                  <span className="text-xs text-muted-foreground block uppercase tracking-wider">This QTR</span>
+                  <span className="text-xs text-muted-foreground block uppercase tracking-wider">Mercedes-Benz</span>
                   <span className="text-2xl text-foreground block">{formatNumber(data["MBT Pipeline Size This QTR"])}</span>
                 </div>
                 <div className="space-y-1 text-center">
-                  <span className="text-xs text-muted-foreground block uppercase tracking-wider">Next QTR</span>
-                  <span className="text-2xl text-foreground block">{formatNumber(data["MBT Pipeline Size Next QTR"])}</span>
+                  <span className="text-xs text-muted-foreground block uppercase tracking-wider">Freightliner</span>
+                  <span className="text-2xl text-foreground block">{formatNumber(data["FTL Pipeline Size This QTR"])}</span>
                 </div>
               </div>
             </div>
           </div>
         </Card>
 
-        {/* Tile 8: Freightliner Pipeline */}
+        {/* Tile 8: Next QTR Pipeline */}
         <Card className="p-0 overflow-hidden border-primary/20">
           <div className="flex flex-col md:flex-row">
             {/* Left side - Total with colored background */}
             <div className="p-4 bg-primary/10 w-[150px]">
-              <p className="text-xl font-bold text-foreground mb-2">Freightliner<br />Pipeline</p>
-              <p className="text-3xl font-bold text-foreground">{formatNumber(ftlPipeline)}</p>
+              <p className="text-xl font-bold text-foreground mb-2">Next QTR<br />Pipeline</p>
+              <p className="text-3xl font-bold text-foreground">{formatNumber(data["MBT Pipeline Size Next QTR"] + data["FTL Pipeline Size Next QTR"])}</p>
             </div>
             
             {/* Vertical separator */}
@@ -361,11 +361,11 @@ export const ForecastTiles = () => {
             <div className="px-4 py-6 bg-white flex items-center justify-center flex-1">
               <div className="flex gap-8">
                 <div className="space-y-1 text-center">
-                  <span className="text-xs text-muted-foreground block uppercase tracking-wider">This QTR</span>
-                  <span className="text-2xl text-foreground block">{formatNumber(data["FTL Pipeline Size This QTR"])}</span>
+                  <span className="text-xs text-muted-foreground block uppercase tracking-wider">Mercedes-Benz</span>
+                  <span className="text-2xl text-foreground block">{formatNumber(data["MBT Pipeline Size Next QTR"])}</span>
                 </div>
                 <div className="space-y-1 text-center">
-                  <span className="text-xs text-muted-foreground block uppercase tracking-wider">Next QTR</span>
+                  <span className="text-xs text-muted-foreground block uppercase tracking-wider">Freightliner</span>
                   <span className="text-2xl text-foreground block">{formatNumber(data["FTL Pipeline Size Next QTR"])}</span>
                 </div>
               </div>
