@@ -221,7 +221,7 @@ export const NewForecastDialog = ({
           New Forecast
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-[1700px] h-[90vh] flex flex-col p-6">
+      <DialogContent className="max-w-[1900px] h-[90vh] flex flex-col p-12">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold">NEW FORECAST</DialogTitle>
           <DialogDescription>
@@ -334,7 +334,7 @@ export const NewForecastDialog = ({
                 </TabsTrigger>
               </TabsList>
 
-              <div className="flex-1 overflow-visible mt-2 px-1 -mx-1">
+              <div className="flex-1 overflow-visible mt-4 px-2 -mx-2">
                 <TabsContent value="activity" className="space-y-4 mt-0 h-full overflow-visible">
                 <Card>
                   <CardHeader>
@@ -361,6 +361,111 @@ export const NewForecastDialog = ({
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Customer Meetings</FormLabel>
+                          <FormControl>
+                            <Input type="number" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Quotes</CardTitle>
+                    <CardDescription>Enter quote information</CardDescription>
+                  </CardHeader>
+                  <CardContent className="grid grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="mbtQuotesIssued"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Mercedes-Benz Quotes</FormLabel>
+                          <FormControl>
+                            <Input type="number" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="ftlQuotesIssued"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Freightliner Quotes</FormLabel>
+                          <FormControl>
+                            <Input type="number" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Orders Received</CardTitle>
+                    <CardDescription>Enter booked orders</CardDescription>
+                  </CardHeader>
+                  <CardContent className="grid grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="mbtOrdersReceived"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Mercedes-Benz Orders</FormLabel>
+                          <FormControl>
+                            <Input type="number" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="ftlOrdersReceived"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Freightliner Orders</FormLabel>
+                          <FormControl>
+                            <Input type="number" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Expected Orders</CardTitle>
+                    <CardDescription>Enter expected order counts</CardDescription>
+                  </CardHeader>
+                  <CardContent className="grid grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="mbtOrdersExpected"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Mercedes-Benz Expected</FormLabel>
+                          <FormControl>
+                            <Input type="number" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="ftlOrdersExpected"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Freightliner Expected</FormLabel>
                           <FormControl>
                             <Input type="number" {...field} />
                           </FormControl>
@@ -516,7 +621,7 @@ export const NewForecastDialog = ({
 
                 <TabsContent value="bdmVisitations" className="space-y-4 mt-0 h-full overflow-visible">
                   {/* First Row: Four Total Columns */}
-                  <div className="grid grid-cols-4 gap-4 mb-4 overflow-visible">
+                  <div className="grid grid-cols-4 gap-6 mb-6 overflow-visible">
                     <ForecastTotalCard
                       title="BDM
 Visits"
@@ -610,8 +715,8 @@ Visits"
                       </div>
                     </CardHeader>
                     <CardContent>
-                      <div className="space-y-2 max-h-[450px] overflow-y-auto pr-2 pl-0">
-                        <div className="grid grid-cols-[40px_70px_238px_100px_120px_110px_160px_160px_140px_180px_160px] gap-2 font-semibold text-xs mb-2">
+                      <div className="space-y-2 max-h-[450px] overflow-y-auto pr-2 pl-4">
+                        <div className="grid grid-cols-[40px_70px_278px_100px_120px_110px_160px_280px_140px_180px_160px] gap-2 font-semibold text-xs mb-2">
                           <div></div>
                           <div>QTY</div>
                           <div>Customer Name</div>
@@ -625,7 +730,7 @@ Visits"
                           <div>Meeting Date</div>
                         </div>
                         {fields.map((field, index) => (
-                          <div key={field.id} className="grid grid-cols-[40px_70px_238px_100px_120px_110px_160px_160px_140px_180px_160px] gap-2 focus-within:bg-primary/5 focus-within:shadow-sm rounded-sm transition-all duration-150">
+                          <div key={field.id} className="grid grid-cols-[40px_70px_278px_100px_120px_110px_160px_280px_140px_180px_160px] gap-2 focus-within:bg-primary/5 focus-within:shadow-sm rounded-sm transition-all duration-150">
                             <div className="flex items-center justify-center">
                               <Button
                                 type="button"
@@ -856,7 +961,7 @@ Visits"
 
                 <TabsContent value="orders" className="space-y-4 mt-0 h-full overflow-visible">
                   {/* First Row: Four Total Columns */}
-                  <div className="grid grid-cols-4 gap-4 mb-4 overflow-visible">
+                  <div className="grid grid-cols-4 gap-6 mb-6 overflow-visible">
                     <ForecastTotalCard
                       title="Orders
 Received"
@@ -950,8 +1055,8 @@ Received"
                       </div>
                     </CardHeader>
                     <CardContent>
-                      <div className="space-y-2 max-h-[450px] overflow-y-auto pr-2 pl-0">
-                        <div className="grid grid-cols-[40px_70px_238px_100px_120px_110px_160px_160px_140px_140px_160px] gap-2 font-semibold text-xs mb-2">
+                      <div className="space-y-2 max-h-[450px] overflow-y-auto pr-2 pl-4">
+                        <div className="grid grid-cols-[40px_70px_278px_100px_120px_110px_160px_280px_140px_140px_160px] gap-2 font-semibold text-xs mb-2">
                           <div></div>
                           <div>QTY</div>
                           <div>Customer Name</div>
@@ -965,7 +1070,7 @@ Received"
                           <div>Est. Delivery</div>
                         </div>
                         {fields.map((field, index) => (
-                          <div key={field.id} className="grid grid-cols-[40px_70px_238px_100px_120px_110px_160px_160px_140px_140px_160px] gap-2 focus-within:bg-primary/5 focus-within:shadow-sm rounded-sm transition-all duration-150">
+                          <div key={field.id} className="grid grid-cols-[40px_70px_278px_100px_120px_110px_160px_280px_140px_140px_160px] gap-2 focus-within:bg-primary/5 focus-within:shadow-sm rounded-sm transition-all duration-150">
                             <div className="flex items-center justify-center">
                               <Button
                                 type="button"
@@ -1193,7 +1298,7 @@ Received"
 
                 <TabsContent value="ordersDue" className="space-y-4 mt-0 h-full overflow-visible">
                   {/* First Row: Four Total Columns */}
-                  <div className="grid grid-cols-4 gap-4 mb-4 overflow-visible">
+                  <div className="grid grid-cols-4 gap-6 mb-6 overflow-visible">
                     <ForecastTotalCard
                       title="Orders
 Expected"
@@ -1287,8 +1392,8 @@ Expected"
                       </div>
                     </CardHeader>
                     <CardContent>
-                      <div className="space-y-2 max-h-[450px] overflow-y-auto pr-2 pl-0">
-                        <div className="grid grid-cols-[40px_70px_238px_100px_120px_110px_160px_160px_140px_140px_160px] gap-2 font-semibold text-xs mb-2">
+                      <div className="space-y-2 max-h-[450px] overflow-y-auto pr-2 pl-4">
+                        <div className="grid grid-cols-[40px_70px_278px_100px_120px_110px_160px_280px_140px_140px_160px] gap-2 font-semibold text-xs mb-2">
                           <div></div>
                           <div>QTY</div>
                           <div>Customer Name</div>
@@ -1302,7 +1407,7 @@ Expected"
                           <div>Order Date</div>
                         </div>
                         {fields.map((field, index) => (
-                          <div key={field.id} className="grid grid-cols-[40px_70px_238px_100px_120px_110px_160px_160px_140px_140px_160px] gap-2 focus-within:bg-primary/5 focus-within:shadow-sm rounded-sm transition-all duration-150">
+                          <div key={field.id} className="grid grid-cols-[40px_70px_278px_100px_120px_110px_160px_280px_140px_140px_160px] gap-2 focus-within:bg-primary/5 focus-within:shadow-sm rounded-sm transition-all duration-150">
                             <div className="flex items-center justify-center">
                               <Button
                                 type="button"
@@ -1530,7 +1635,7 @@ Expected"
 
                 <TabsContent value="forecast" className="space-y-4 mt-0 h-full overflow-visible">
                   {/* First Row: Four Total Columns */}
-                  <div className="grid grid-cols-4 gap-4 mb-4 overflow-visible">
+                  <div className="grid grid-cols-4 gap-6 mb-6 overflow-visible">
                     <ForecastTotalCard
                       title="Forecast
 Total"
@@ -1624,8 +1729,8 @@ Total"
                       </div>
                     </CardHeader>
                     <CardContent>
-                      <div className="space-y-2 max-h-[450px] overflow-y-auto pr-2 pl-0">
-                        <div className="grid grid-cols-[40px_70px_238px_100px_120px_110px_160px_160px_140px_140px_80px] gap-2 font-semibold text-xs mb-2">
+                      <div className="space-y-2 max-h-[450px] overflow-y-auto pr-2 pl-4">
+                        <div className="grid grid-cols-[40px_70px_278px_100px_120px_110px_160px_280px_140px_140px_80px] gap-2 font-semibold text-xs mb-2">
                           <div></div>
                           <div>QTY</div>
                           <div>Customer Name</div>
@@ -1639,7 +1744,7 @@ Total"
                           <div>Upside</div>
                         </div>
                         {fields.map((field, index) => (
-                          <div key={field.id} className="grid grid-cols-[40px_70px_238px_100px_120px_110px_160px_160px_140px_140px_80px] gap-2 focus-within:bg-primary/5 focus-within:shadow-sm rounded-sm transition-all duration-150">
+                          <div key={field.id} className="grid grid-cols-[40px_70px_278px_100px_120px_110px_160px_280px_140px_140px_80px] gap-2 focus-within:bg-primary/5 focus-within:shadow-sm rounded-sm transition-all duration-150">
                             <div className="flex items-center justify-center">
                               <Button
                                 type="button"

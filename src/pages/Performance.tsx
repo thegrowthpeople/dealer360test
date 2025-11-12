@@ -335,7 +335,7 @@ const Performance = () => {
         <p className="text-muted-foreground mb-4">
           {filterLabel || "All Dealerships"}
         </p>
-        <PerformanceFilters showWeekFilter={false} />
+        <PerformanceFilters />
       </div>
 
       <Separator className="my-6" />
