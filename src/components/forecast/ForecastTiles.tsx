@@ -9,6 +9,8 @@ import { formatNumber } from "@/lib/utils";
 interface ForecastData {
   "Conquest Meetings": number;
   "Customer Meetings": number;
+  "MBT Quotes Issued": number;
+  "FTL Quotes Issued": number;
   "MBT Orders Received": number;
   "FTL Orders Received": number;
   "Orders Expected": number;
@@ -27,6 +29,8 @@ export const ForecastTiles = () => {
   const [data, setData] = useState<ForecastData>({
     "Conquest Meetings": 0,
     "Customer Meetings": 0,
+    "MBT Quotes Issued": 0,
+    "FTL Quotes Issued": 0,
     "MBT Orders Received": 0,
     "FTL Orders Received": 0,
     "Orders Expected": 0,
@@ -81,6 +85,8 @@ export const ForecastTiles = () => {
           (acc, row) => ({
             "Conquest Meetings": acc["Conquest Meetings"] + (row["Conquest Meetings"] || 0),
             "Customer Meetings": acc["Customer Meetings"] + (row["Customer Meetings"] || 0),
+            "MBT Quotes Issued": acc["MBT Quotes Issued"] + (row["MBT Quotes Issued"] || 0),
+            "FTL Quotes Issued": acc["FTL Quotes Issued"] + (row["FTL Quotes Issued"] || 0),
             "MBT Orders Received": acc["MBT Orders Received"] + (row["MBT Orders Received"] || 0),
             "FTL Orders Received": acc["FTL Orders Received"] + (row["FTL Orders Received"] || 0),
             "Orders Expected": acc["Orders Expected"] + (row["Orders Expected"] || 0),
@@ -96,6 +102,8 @@ export const ForecastTiles = () => {
           {
             "Conquest Meetings": 0,
             "Customer Meetings": 0,
+            "MBT Quotes Issued": 0,
+            "FTL Quotes Issued": 0,
             "MBT Orders Received": 0,
             "FTL Orders Received": 0,
             "Orders Expected": 0,
@@ -117,6 +125,7 @@ export const ForecastTiles = () => {
   };
 
   const totalMeetings = data["Conquest Meetings"] + data["Customer Meetings"];
+  const totalQuotesIssued = data["MBT Quotes Issued"] + data["FTL Quotes Issued"];
   const totalOrdersReceived = data["MBT Orders Received"] + data["FTL Orders Received"];
   const mbtPipeline = data["MBT Pipeline Size This QTR"] + data["MBT Pipeline Size Next QTR"];
   const ftlPipeline = data["FTL Pipeline Size This QTR"] + data["FTL Pipeline Size Next QTR"];
@@ -127,7 +136,7 @@ export const ForecastTiles = () => {
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold text-foreground mb-4">Activity</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Tile 1: Total Meetings */}
         <Card className="p-6">
           <div className="flex items-start justify-between mb-4">
@@ -151,7 +160,30 @@ export const ForecastTiles = () => {
           </div>
         </Card>
 
-        {/* Tile 2: Orders Received */}
+        {/* Tile 2: Quotes Issued */}
+        <Card className="p-6">
+          <div className="flex items-start justify-between mb-4">
+            <div>
+              <p className="text-sm font-medium text-muted-foreground mb-1">Quotes Issued</p>
+              <p className="text-3xl font-bold text-foreground">{formatNumber(totalQuotesIssued)}</p>
+            </div>
+            <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
+              <Package className="w-6 h-6 text-primary" />
+            </div>
+          </div>
+          <div className="space-y-1">
+            <div className="flex justify-between text-sm">
+              <span className="text-muted-foreground">Mercedes-Benz:</span>
+              <span className="font-medium text-foreground">{formatNumber(data["MBT Quotes Issued"])}</span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-muted-foreground">Freightliner:</span>
+              <span className="font-medium text-foreground">{formatNumber(data["FTL Quotes Issued"])}</span>
+            </div>
+          </div>
+        </Card>
+
+        {/* Tile 3: Orders Received */}
         <Card className="p-6">
           <div className="flex items-start justify-between mb-4">
             <div>
@@ -174,7 +206,7 @@ export const ForecastTiles = () => {
           </div>
         </Card>
 
-        {/* Tile 3: Orders Expected */}
+        {/* Tile 4: Orders Expected */}
         <Card className="p-6">
           <div className="flex items-start justify-between">
             <div>
