@@ -218,7 +218,7 @@ export const NewForecastDialog = ({
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold">NEW FORECAST</DialogTitle>
           <DialogDescription>
-            Create a new forecast entry
+            Create a new dealership forecast
           </DialogDescription>
         </DialogHeader>
 
@@ -595,110 +595,112 @@ export const NewForecastDialog = ({
                 </TabsContent>
 
                 <TabsContent value="forecast" className="space-y-4 mt-0 h-full">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Retail</CardTitle>
-                    <CardDescription>Enter retail forecast data</CardDescription>
-                  </CardHeader>
-                  <CardContent className="grid grid-cols-2 gap-4">
-                    <FormField
-                      control={form.control}
-                      name="mbtRetail"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Mercedes-Benz Retail</FormLabel>
-                          <FormControl>
-                            <Input type="number" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="ftlRetail"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Freightliner Retail</FormLabel>
-                          <FormControl>
-                            <Input type="number" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </CardContent>
-                </Card>
+                  <div className="grid grid-cols-3 gap-4">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Retail</CardTitle>
+                        <CardDescription>Enter retail forecast data</CardDescription>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <FormField
+                          control={form.control}
+                          name="mbtRetail"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Mercedes-Benz Retail</FormLabel>
+                              <FormControl>
+                                <Input type="number" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="ftlRetail"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Freightliner Retail</FormLabel>
+                              <FormControl>
+                                <Input type="number" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </CardContent>
+                    </Card>
 
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Indirect Fleet</CardTitle>
-                    <CardDescription>Enter indirect fleet forecast data</CardDescription>
-                  </CardHeader>
-                  <CardContent className="grid grid-cols-2 gap-4">
-                    <FormField
-                      control={form.control}
-                      name="mbtFleetIndirect"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Mercedes-Benz Indirect</FormLabel>
-                          <FormControl>
-                            <Input type="number" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="ftlFleetIndirect"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Freightliner Indirect</FormLabel>
-                          <FormControl>
-                            <Input type="number" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </CardContent>
-                </Card>
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Indirect Fleet</CardTitle>
+                        <CardDescription>Enter indirect fleet forecast data</CardDescription>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <FormField
+                          control={form.control}
+                          name="mbtFleetIndirect"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Mercedes-Benz Indirect</FormLabel>
+                              <FormControl>
+                                <Input type="number" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="ftlFleetIndirect"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Freightliner Indirect</FormLabel>
+                              <FormControl>
+                                <Input type="number" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </CardContent>
+                    </Card>
 
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Direct Fleet</CardTitle>
-                    <CardDescription>Enter direct fleet forecast data</CardDescription>
-                  </CardHeader>
-                  <CardContent className="grid grid-cols-2 gap-4">
-                    <FormField
-                      control={form.control}
-                      name="mbtFleetDirect"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Mercedes-Benz Direct</FormLabel>
-                          <FormControl>
-                            <Input type="number" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="ftlFleetDirect"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Freightliner Direct</FormLabel>
-                          <FormControl>
-                            <Input type="number" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </CardContent>
-                </Card>
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Direct Fleet</CardTitle>
+                        <CardDescription>Enter direct fleet forecast data</CardDescription>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <FormField
+                          control={form.control}
+                          name="mbtFleetDirect"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Mercedes-Benz Direct</FormLabel>
+                              <FormControl>
+                                <Input type="number" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="ftlFleetDirect"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Freightliner Direct</FormLabel>
+                              <FormControl>
+                                <Input type="number" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </CardContent>
+                    </Card>
+                  </div>
                 </TabsContent>
               </div>
             </Tabs>
