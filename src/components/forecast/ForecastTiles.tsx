@@ -141,9 +141,9 @@ export const ForecastTiles = () => {
       <div>
         <h2 className="text-2xl font-bold text-foreground mb-4">Activity</h2>
         {/* Activity Metrics Row */}
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 mb-4">
+        <div className="flex gap-4 mb-4 overflow-x-auto">
           {/* Total Meetings */}
-          <Card className="p-0 overflow-hidden border-primary/20">
+          <Card className="p-0 overflow-hidden border-primary/20 flex-shrink-0 w-[500px]">
             <div className="flex flex-col md:flex-row">
               {/* Left side - Total with colored background */}
               <div className="p-6 bg-primary/10">
@@ -171,7 +171,7 @@ export const ForecastTiles = () => {
           </Card>
 
           {/* Quotes Issued */}
-          <Card className="p-0 overflow-hidden border-primary/20">
+          <Card className="p-0 overflow-hidden border-primary/20 flex-shrink-0 w-[500px]">
             <div className="flex flex-col md:flex-row">
               {/* Left side - Total with colored background */}
               <div className="p-6 bg-primary/10">
@@ -196,13 +196,10 @@ export const ForecastTiles = () => {
                 </div>
               </div>
             </div>
-          </Card>
-        </div>
-
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 mb-4">
+           </Card>
 
           {/* Orders Received */}
-          <Card className="p-0 overflow-hidden border-primary/20">
+          <Card className="p-0 overflow-hidden border-primary/20 flex-shrink-0 w-[500px]">
             <div className="flex flex-col md:flex-row">
               {/* Left side - Total with colored background */}
               <div className="p-6 bg-primary/10">
@@ -230,8 +227,7 @@ export const ForecastTiles = () => {
           </Card>
 
           {/* Orders Expected */}
-
-          <Card className="p-0 overflow-hidden border-primary/20">
+          <Card className="p-0 overflow-hidden border-primary/20 flex-shrink-0 w-[500px]">
             <div className="flex flex-col md:flex-row">
               {/* Left side - Total with colored background */}
               <div className="p-6 bg-primary/10">
