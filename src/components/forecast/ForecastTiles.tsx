@@ -266,7 +266,7 @@ export const ForecastTiles = () => {
           <div className="flex flex-col md:flex-row">
             {/* Left side - Total with colored background */}
             <div className="p-4 bg-primary/10 w-[150px]">
-              <p className="text-xl font-bold text-foreground mb-2">Pipeline Growth</p>
+              <p className="text-xl font-bold text-foreground mb-2">Pipeline<br />Growth</p>
               <p className="text-3xl font-bold text-foreground">{formatNumber(pipelineGrowth)}</p>
             </div>
             
@@ -294,7 +294,7 @@ export const ForecastTiles = () => {
           <div className="flex flex-col md:flex-row">
             {/* Left side - Total with colored background */}
             <div className="p-4 bg-primary/10 w-[150px]">
-              <p className="text-xl font-bold text-foreground mb-2">Pipeline Lost</p>
+              <p className="text-xl font-bold text-foreground mb-2">Pipeline<br />Lost</p>
               <p className="text-3xl font-bold text-foreground">{formatNumber(pipelineLost)}</p>
             </div>
             
@@ -322,7 +322,7 @@ export const ForecastTiles = () => {
           <div className="flex flex-col md:flex-row">
             {/* Left side - Total with colored background */}
             <div className="p-4 bg-primary/10 w-[150px]">
-              <p className="text-xl font-bold text-foreground mb-2">Mercedes-Benz Pipeline</p>
+              <p className="text-xl font-bold text-foreground mb-2">Mercedes-Benz<br />Pipeline</p>
               <p className="text-3xl font-bold text-foreground">{formatNumber(mbtPipeline)}</p>
             </div>
             
@@ -350,7 +350,7 @@ export const ForecastTiles = () => {
           <div className="flex flex-col md:flex-row">
             {/* Left side - Total with colored background */}
             <div className="p-4 bg-primary/10 w-[150px]">
-              <p className="text-xl font-bold text-foreground mb-2">Freightliner Pipeline</p>
+              <p className="text-xl font-bold text-foreground mb-2">Freightliner<br />Pipeline</p>
               <p className="text-3xl font-bold text-foreground">{formatNumber(ftlPipeline)}</p>
             </div>
             
