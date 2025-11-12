@@ -640,7 +640,7 @@ export const NewForecastDialog = ({
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-2 max-h-[400px] overflow-y-auto pr-2">
-                        <div className="grid grid-cols-[70px_130px_100px_100px_100px_140px_120px_140px] gap-2 font-semibold text-xs mb-2">
+                        <div className="grid grid-cols-[70px_180px_100px_90px_90px_140px_180px_140px] gap-2 font-semibold text-xs mb-2">
                           <div>QTY</div>
                           <div>Customer Name</div>
                           <div>Customer</div>
@@ -651,7 +651,7 @@ export const NewForecastDialog = ({
                           <div>Type</div>
                         </div>
                         {Array.from({ length: 15 }).map((_, index) => (
-                          <div key={index} className="grid grid-cols-[70px_130px_100px_100px_100px_140px_120px_140px] gap-2">
+                          <div key={index} className="grid grid-cols-[70px_180px_100px_90px_90px_140px_180px_140px] gap-2">
                             <FormField
                               control={form.control}
                               name={`forecastRows.${index}.qty`}
@@ -662,7 +662,7 @@ export const NewForecastDialog = ({
                                       type="number"
                                       {...field}
                                       onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
-                                      className="h-9 text-sm"
+                                      className="h-9 text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                       placeholder="0"
                                     />
                                   </FormControl>
@@ -713,7 +713,7 @@ export const NewForecastDialog = ({
                                       type="number"
                                       {...field}
                                       onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
-                                      className="h-9 text-sm"
+                                      className="h-9 text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                       placeholder="0"
                                     />
                                   </FormControl>
@@ -730,7 +730,7 @@ export const NewForecastDialog = ({
                                       type="number"
                                       {...field}
                                       onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
-                                      className="h-9 text-sm"
+                                      className="h-9 text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                       placeholder="0"
                                     />
                                   </FormControl>
