@@ -490,7 +490,7 @@ export const NewForecastDialog = ({
                   <div className="grid grid-cols-4 gap-6 mb-6 overflow-visible">
                     <ForecastTotalCard
                       title="Orders
-Received"
+Lost"
                       mbTotal={
                         (form.watch("forecastRows")?.filter(r => r.brand === "Mercedes-Benz" && (r.type === "Retail" || r.type === "Indirect Fleet" || r.type === "Direct Fleet")).reduce((sum, r) => sum + (typeof r.qty === 'string' ? parseFloat(r.qty) || 0 : r.qty || 0), 0) || 0)
                       }
@@ -523,7 +523,7 @@ Received"
                     <CardHeader>
                       <div className="flex items-center justify-between">
                         <div>
-                          <CardTitle>Orders Received in last week</CardTitle>
+                          <CardTitle>Orders LOST in last week</CardTitle>
                         </div>
                         <div className="flex gap-2">
                           <TooltipProvider>
@@ -593,7 +593,7 @@ Received"
                           <div>Model</div>
                           <div>Source</div>
                           <div>BDM</div>
-                          <div>Est. Delivery</div>
+                          <div>Lost Reason</div>
                         </div>
                         {fields.map((field, index) => (
                           <div key={field.id} className="grid grid-cols-[40px_70px_278px_100px_120px_110px_160px_280px_140px_140px_160px] gap-2 focus-within:bg-primary/5 focus-within:shadow-sm rounded-sm transition-all duration-150">
@@ -774,30 +774,20 @@ Received"
                               render={({ field }) => (
                                 <FormItem>
                                   <FormControl>
-                                    <Popover>
-                                      <PopoverTrigger asChild>
-                                        <Button
-                                          variant="outline"
-                                          className={cn(
-                                            "h-9 text-sm justify-start text-left font-normal w-full",
-                                            !field.value && "text-muted-foreground border-destructive"
-                                          )}
-                                        >
-                                          <CalendarIcon className="mr-2 h-4 w-4" />
-                                          {field.value ? format(new Date(field.value), "PP") : <span>Pick date</span>}
-                                        </Button>
-                                      </PopoverTrigger>
-                                      <PopoverContent className="w-auto p-0" align="start">
-                                        <Calendar
-                                          mode="single"
-                                          selected={field.value ? new Date(field.value) : undefined}
-                                          onSelect={(date) => field.onChange(date?.toISOString())}
-                                          initialFocus
-                                          className={cn("p-3 pointer-events-auto")}
-                                        />
-                                      </PopoverContent>
-                                    </Popover>
+                                    <Select value={field.value} onValueChange={field.onChange}>
+                                      <SelectTrigger className={`h-9 text-sm ${!field.value ? 'border-destructive' : ''}`}>
+                                        <SelectValue placeholder="Select reason" />
+                                      </SelectTrigger>
+                                      <SelectContent className="z-[100] bg-popover">
+                                        <SelectItem value="Price">Price</SelectItem>
+                                        <SelectItem value="Specification">Specification</SelectItem>
+                                        <SelectItem value="Availability">Availability</SelectItem>
+                                        <SelectItem value="Relationship">Relationship</SelectItem>
+                                        <SelectItem value="Other">Other</SelectItem>
+                                      </SelectContent>
+                                    </Select>
                                   </FormControl>
+                                  <FormMessage className="text-xs" />
                                 </FormItem>
                               )}
                             />
@@ -813,7 +803,7 @@ Received"
                             className="gap-2"
                           >
                             <Plus className="h-4 w-4" />
-                            Add Order Received
+                            Add Lost Order
                           </Button>
                         </div>
                       </div>
