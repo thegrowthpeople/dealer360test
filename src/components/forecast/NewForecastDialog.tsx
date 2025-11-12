@@ -690,7 +690,7 @@ Total"
                       </div>
                     </CardHeader>
                     <CardContent>
-                      <div className="space-y-2 max-h-[450px] overflow-y-auto pr-2">
+                      <div className="space-y-2 max-h-[450px] overflow-y-auto pr-2 pl-4">
                         <div className="grid grid-cols-[70px_320px_100px_120px_110px_160px_280px_140px_140px_80px] gap-2 font-semibold text-xs mb-2">
                           <div>QTY</div>
                           <div>Customer Name</div>
