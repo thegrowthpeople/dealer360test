@@ -381,15 +381,15 @@ export const PerformanceFilters = () => {
 
       {/* Week Starting Filter */}
       <Select
-        value={selectedWeekStarting || ""}
-        onValueChange={(value) => setSelectedWeekStarting(value || null)}
+        value={selectedWeekStarting || "all"}
+        onValueChange={(value) => setSelectedWeekStarting(value === "all" ? null : value)}
         disabled={availableWeeks.length === 0}
       >
         <SelectTrigger className="w-[160px]">
           <SelectValue placeholder="Week Starting" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="">All Weeks</SelectItem>
+          <SelectItem value="all">All Weeks</SelectItem>
           {availableWeeks.map((week) => (
             <SelectItem key={week.date} value={week.date}>
               {week.display}
