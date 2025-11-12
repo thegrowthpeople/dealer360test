@@ -23,6 +23,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { startOfMonth, endOfMonth, eachDayOfInterval, isMonday, format } from "date-fns";
 
 export const PerformanceFilters = () => {
   const {
@@ -36,6 +37,8 @@ export const PerformanceFilters = () => {
     setSelectedYear,
     selectedMonth,
     setSelectedMonth,
+    selectedWeekStarting,
+    setSelectedWeekStarting,
     availableYears,
     dealerships,
     bdms,
@@ -55,6 +58,7 @@ export const PerformanceFilters = () => {
     setSelectedDealerId(null);
     setSelectedYear(currentYear);
     setSelectedMonth(currentMonth);
+    setSelectedWeekStarting(null);
   };
 
   const hasActiveFilters = selectedBDMId !== null || selectedGroup !== null || selectedDealerId !== null;
@@ -124,6 +128,27 @@ export const PerformanceFilters = () => {
 
     return filtered;
   }, [dealerships, selectedBDMId, selectedGroup, bdms]);
+
+  // Calculate Mondays in the selected month
+  const availableWeeks = useMemo(() => {
+    if (!selectedYear || !selectedMonth) return [];
+    
+    const monthStart = startOfMonth(new Date(selectedYear, selectedMonth - 1));
+    const monthEnd = endOfMonth(new Date(selectedYear, selectedMonth - 1));
+    const allDays = eachDayOfInterval({ start: monthStart, end: monthEnd });
+    
+    return allDays
+      .filter(day => isMonday(day))
+      .map(monday => ({
+        date: format(monday, "yyyy-MM-dd"),
+        display: format(monday, "MMM d, yyyy")
+      }));
+  }, [selectedYear, selectedMonth]);
+
+  // Reset week starting when month changes
+  useEffect(() => {
+    setSelectedWeekStarting(null);
+  }, [selectedMonth, selectedYear, setSelectedWeekStarting]);
 
   return (
     <div className="flex flex-wrap items-center gap-3 animate-fade-in">
@@ -351,6 +376,25 @@ export const PerformanceFilters = () => {
           <SelectItem value="10">October</SelectItem>
           <SelectItem value="11">November</SelectItem>
           <SelectItem value="12">December</SelectItem>
+        </SelectContent>
+      </Select>
+
+      {/* Week Starting Filter */}
+      <Select
+        value={selectedWeekStarting || ""}
+        onValueChange={(value) => setSelectedWeekStarting(value || null)}
+        disabled={availableWeeks.length === 0}
+      >
+        <SelectTrigger className="w-[160px]">
+          <SelectValue placeholder="Week Starting" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="">All Weeks</SelectItem>
+          {availableWeeks.map((week) => (
+            <SelectItem key={week.date} value={week.date}>
+              {week.display}
+            </SelectItem>
+          ))}
         </SelectContent>
       </Select>
 
