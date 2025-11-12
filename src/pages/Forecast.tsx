@@ -1,7 +1,5 @@
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { DashboardStats } from "@/components/DashboardStats";
-import { DashboardCharts } from "@/components/DashboardCharts";
 import { Button } from "@/components/ui/button";
 import { PlusCircle, FileText } from "lucide-react";
 import { PerformanceFilters } from "@/components/PerformanceFilters";
@@ -62,11 +60,6 @@ const Forecast = () => {
       </div>
 
       <Separator className="my-6" />
-      
-      <div className="space-y-8">
-        <DashboardStats />
-        <DashboardCharts />
-      </div>
     </div>
   );
 };
