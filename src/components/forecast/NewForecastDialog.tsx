@@ -694,7 +694,7 @@ export const NewForecastDialog = ({
                           <div>Upside</div>
                         </div>
                         {Array.from({ length: 15 }).map((_, index) => (
-                          <div key={index} className="grid grid-cols-[90px_320px_100px_120px_110px_160px_280px_140px_140px_80px] gap-2 focus-within:bg-primary/5 focus-within:shadow-sm rounded-sm pr-1 py-1 -mr-1 -my-1 transition-all duration-150">
+                          <div key={index} className="grid grid-cols-[90px_320px_100px_120px_110px_160px_280px_140px_140px_80px] gap-2 focus-within:bg-primary/5 focus-within:shadow-sm rounded-sm p-1 -m-1 transition-all duration-150">
                             <FormField
                               control={form.control}
                               name={`forecastRows.${index}.qty`}
@@ -705,7 +705,7 @@ export const NewForecastDialog = ({
                                       type="number"
                                       {...field}
                                       onChange={(e) => field.onChange(parseFloat(e.target.value) || null)}
-                                      className="h-9 text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none focus-visible:shadow-[-4px_0_0_0_hsl(var(--primary))] pl-3"
+                                      className="h-9 text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none focus-visible:shadow-[inset_4px_0_0_0_hsl(var(--primary))]"
                                     />
                                   </FormControl>
                                 </FormItem>
