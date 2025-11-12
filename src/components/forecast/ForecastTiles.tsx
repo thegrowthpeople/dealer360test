@@ -463,11 +463,11 @@ export const ForecastTiles = () => {
             </div>
           </Card>
 
-          {/* Fleet - Indirect */}
+          {/* Indirect Fleet */}
           <Card className="p-0 overflow-hidden border-primary/20 shadow-md hover:shadow-lg hover:scale-[1.02] transition-all duration-300">
             <div className="flex flex-col md:flex-row">
               <div className="p-4 bg-primary/10 w-[150px]">
-                <p className="text-xl font-bold text-foreground mb-2">Fleet<br />Indirect</p>
+                <p className="text-xl font-bold text-foreground mb-2">Indirect<br />Fleet</p>
                 <p className="text-3xl font-bold text-foreground">{formatNumber(data["MBT Fleet Indirect"] + data["FTL Fleet Indirect"])}</p>
               </div>
               <div className="hidden md:block w-px bg-border"></div>
@@ -486,11 +486,11 @@ export const ForecastTiles = () => {
             </div>
           </Card>
 
-          {/* Fleet - Direct */}
+          {/* Direct Fleet */}
           <Card className="p-0 overflow-hidden border-primary/20 shadow-md hover:shadow-lg hover:scale-[1.02] transition-all duration-300">
             <div className="flex flex-col md:flex-row">
               <div className="p-4 bg-primary/10 w-[150px]">
-                <p className="text-xl font-bold text-foreground mb-2">Fleet<br />Direct</p>
+                <p className="text-xl font-bold text-foreground mb-2">Direct<br />Fleet</p>
                 <p className="text-3xl font-bold text-foreground">{formatNumber(data["MBT Fleet Direct"] + data["FTL Fleet Direct"])}</p>
               </div>
               <div className="hidden md:block w-px bg-border"></div>
