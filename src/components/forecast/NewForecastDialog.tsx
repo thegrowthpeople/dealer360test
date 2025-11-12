@@ -679,8 +679,8 @@ export const NewForecastDialog = ({
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-2 max-h-[450px] overflow-y-auto pr-2">
-                        <div className="grid grid-cols-[70px_180px_100px_120px_110px_160px_200px_140px_80px] gap-2 font-semibold text-xs mb-2">
-                          <div>QTY</div>
+                        <div className="grid grid-cols-[80px_220px_100px_120px_110px_160px_240px_140px_80px] gap-2 font-semibold text-xs mb-2">
+                          <div className="pl-2">QTY</div>
                           <div>Customer Name</div>
                           <div>Customer</div>
                           <div>Sales Support $</div>
@@ -691,7 +691,7 @@ export const NewForecastDialog = ({
                           <div>Upside</div>
                         </div>
                         {Array.from({ length: 15 }).map((_, index) => (
-                          <div key={index} className="grid grid-cols-[70px_180px_100px_120px_110px_160px_200px_140px_80px] gap-2">
+                          <div key={index} className="grid grid-cols-[80px_220px_100px_120px_110px_160px_240px_140px_80px] gap-2">
                             <FormField
                               control={form.control}
                               name={`forecastRows.${index}.qty`}
@@ -702,7 +702,7 @@ export const NewForecastDialog = ({
                                       type="number"
                                       {...field}
                                       onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
-                                      className="h-9 text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                      className="h-9 text-sm pl-3 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                       placeholder="0"
                                     />
                                   </FormControl>
@@ -837,7 +837,7 @@ export const NewForecastDialog = ({
                               render={({ field }) => (
                                 <FormItem>
                                   <FormControl>
-                                    <div className="flex items-center justify-center h-9">
+                                    <div className="flex items-center h-9">
                                       <input
                                         type="checkbox"
                                         checked={field.value}

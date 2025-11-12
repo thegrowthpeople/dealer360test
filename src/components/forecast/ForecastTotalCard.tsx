@@ -7,12 +7,22 @@ interface ForecastTotalCardProps {
 }
 
 export const ForecastTotalCard = ({ title, mbTotal, ftlTotal }: ForecastTotalCardProps) => {
+  // Split title on space for multiline display
+  const titleParts = title.split(' ');
+  
   return (
     <Card className="p-0 overflow-hidden border-primary/20 shadow-md hover:shadow-lg hover:scale-[1.02] transition-all duration-300">
       <div className="flex flex-col md:flex-row">
         {/* Left side - Total with colored background */}
         <div className="p-4 bg-primary/10 w-[150px]">
-          <p className="text-xl font-bold text-foreground mb-2">{title}</p>
+          <p className="text-xl font-bold text-foreground mb-2">
+            {titleParts.map((part, index) => (
+              <span key={index}>
+                {part}
+                {index < titleParts.length - 1 && <br />}
+              </span>
+            ))}
+          </p>
           <p className="text-3xl font-bold text-foreground">{mbTotal + ftlTotal}</p>
         </div>
         
