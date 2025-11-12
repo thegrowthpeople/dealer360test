@@ -27,6 +27,8 @@ interface PerformanceFiltersContextType {
   setSelectedDealerId: (id: number | null) => void;
   selectedYear: number | null;
   setSelectedYear: (year: number | null) => void;
+  selectedMonth: number | null;
+  setSelectedMonth: (month: number | null) => void;
   availableYears: number[];
   dealerships: Dealership[];
   bdms: BDM[];
@@ -50,10 +52,12 @@ export const usePerformanceFilters = () => {
 
 export const PerformanceFiltersProvider = ({ children }: { children: ReactNode }) => {
   const currentYear = new Date().getFullYear();
+  const currentMonth = new Date().getMonth() + 1; // JavaScript months are 0-indexed
   const [selectedBDMId, setSelectedBDMId] = useState<number | null>(null);
   const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
   const [selectedDealerId, setSelectedDealerId] = useState<number | null>(null);
   const [selectedYear, setSelectedYear] = useState<number | null>(currentYear);
+  const [selectedMonth, setSelectedMonth] = useState<number | null>(currentMonth);
   const [availableYears, setAvailableYears] = useState<number[]>([]);
   const [dealerships, setDealerships] = useState<Dealership[]>([]);
   const [bdms, setBDMs] = useState<BDM[]>([]);
@@ -98,6 +102,8 @@ export const PerformanceFiltersProvider = ({ children }: { children: ReactNode }
         setSelectedDealerId,
         selectedYear,
         setSelectedYear,
+        selectedMonth,
+        setSelectedMonth,
         availableYears,
         dealerships,
         bdms,
