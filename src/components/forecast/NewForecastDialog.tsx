@@ -628,6 +628,8 @@ Total"
                       ftlTotal={
                         (form.watch("forecastRows")?.filter(r => r.brand === "Freightliner" && (r.type === "Retail" || r.type === "Indirect Fleet" || r.type === "Direct Fleet")).reduce((sum, r) => sum + (typeof r.qty === 'string' ? parseFloat(r.qty) || 0 : r.qty || 0), 0) || 0)
                       }
+                      leftBgColor="bg-primary/60"
+                      rightBgColor="bg-primary/10"
                     />
                     <ForecastTotalCard
                       title="Own Retail"

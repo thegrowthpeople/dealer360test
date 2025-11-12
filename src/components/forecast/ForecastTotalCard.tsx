@@ -4,9 +4,11 @@ interface ForecastTotalCardProps {
   title: string;
   mbTotal: number;
   ftlTotal: number;
+  leftBgColor?: string;
+  rightBgColor?: string;
 }
 
-export const ForecastTotalCard = ({ title, mbTotal, ftlTotal }: ForecastTotalCardProps) => {
+export const ForecastTotalCard = ({ title, mbTotal, ftlTotal, leftBgColor = "bg-primary/10", rightBgColor = "bg-white" }: ForecastTotalCardProps) => {
   // Split title on newline if present, otherwise split on space for multiline display
   const titleParts = title.includes('\n') ? title.split('\n') : title.split(' ');
   
@@ -14,7 +16,7 @@ export const ForecastTotalCard = ({ title, mbTotal, ftlTotal }: ForecastTotalCar
     <Card className="p-0 overflow-hidden border-primary/20 shadow-md hover:shadow-lg hover:scale-[1.02] transition-all duration-300">
       <div className="flex flex-col md:flex-row">
         {/* Left side - Total with colored background */}
-        <div className="p-4 bg-primary/10 w-[120px]">
+        <div className={`p-4 w-[120px] ${leftBgColor}`}>
           <p className="text-xl font-bold text-foreground mb-2">
             {titleParts.map((part, index) => (
               <span key={index}>
@@ -30,7 +32,7 @@ export const ForecastTotalCard = ({ title, mbTotal, ftlTotal }: ForecastTotalCar
         <div className="hidden md:block w-px bg-border"></div>
         
         {/* Right side - Breakdown with white background */}
-        <div className="px-4 py-6 bg-white flex items-center justify-center flex-1">
+        <div className={`px-4 py-6 flex items-center justify-center flex-1 ${rightBgColor}`}>
           <div className="flex gap-6">
             <div className="space-y-1 text-center">
               <span className="text-xs text-muted-foreground block uppercase tracking-wider">Mercedes-Benz</span>
