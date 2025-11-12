@@ -294,8 +294,14 @@ export const NewForecastDialog = ({
               </div>
             </div>
 
-            <Tabs defaultValue="activity" className="flex-1 flex flex-col overflow-visible">
+            <Tabs defaultValue="bdmVisitations" className="flex-1 flex flex-col overflow-visible">
               <TabsList className="grid w-full grid-cols-7 h-12 p-1 bg-muted">
+                <TabsTrigger 
+                  value="bdmVisitations" 
+                  className="text-base font-semibold data-[state=active]:bg-background data-[state=active]:shadow-md transition-all"
+                >
+                  BDM Visitations
+                </TabsTrigger>
                 <TabsTrigger 
                   value="activity" 
                   className="text-base font-semibold data-[state=active]:bg-background data-[state=active]:shadow-md transition-all"
@@ -313,12 +319,6 @@ export const NewForecastDialog = ({
                   className="text-base font-semibold data-[state=active]:bg-background data-[state=active]:shadow-md transition-all"
                 >
                   Lost Opportunities
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="bdmVisitations" 
-                  className="text-base font-semibold data-[state=active]:bg-background data-[state=active]:shadow-md transition-all"
-                >
-                  BDM Visitations
                 </TabsTrigger>
                 <TabsTrigger 
                   value="orders" 
