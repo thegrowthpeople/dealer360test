@@ -59,7 +59,6 @@ const forecastSchema = z.object({
   
   // Forecast fields - single shared array
   forecastRows: z.array(z.object({
-    commit: z.boolean(),
     qty: z.coerce.number().min(0, "Must be 0 or greater"),
     customerName: z.string(),
     customerType: z.enum(["Existing", "New", ""]),
@@ -135,7 +134,6 @@ export const NewForecastDialog = ({
       ftlPipelineThisQtr: null,
       ftlPipelineNextQtr: null,
       forecastRows: Array(15).fill(null).map(() => ({ 
-        commit: false,
         qty: null, 
         customerName: "", 
         customerType: "" as const, 
@@ -662,7 +660,6 @@ Total"
                             size="sm"
                             onClick={() => {
                               const emptyRows = Array(15).fill(null).map(() => ({
-                                commit: false,
                                 qty: null,
                                 customerName: "",
                                 customerType: "" as const,
@@ -694,8 +691,7 @@ Total"
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-2 max-h-[450px] overflow-y-auto pr-2 pl-4">
-                        <div className="grid grid-cols-[80px_70px_320px_100px_120px_110px_160px_280px_140px_140px_80px] gap-2 font-semibold text-xs mb-2">
-                          <div>Commit</div>
+                        <div className="grid grid-cols-[70px_320px_100px_120px_110px_160px_280px_140px_140px_80px] gap-2 font-semibold text-xs mb-2">
                           <div>QTY</div>
                           <div>Customer Name</div>
                           <div>Type</div>
@@ -708,23 +704,7 @@ Total"
                           <div>Upside</div>
                         </div>
                         {Array.from({ length: 15 }).map((_, index) => (
-                          <div key={index} className="grid grid-cols-[80px_70px_320px_100px_120px_110px_160px_280px_140px_140px_80px] gap-2 focus-within:bg-primary/5 focus-within:shadow-sm rounded-sm p-1 -m-1 transition-all duration-150">
-                            <FormField
-                              control={form.control}
-                              name={`forecastRows.${index}.commit`}
-                              render={({ field }) => (
-                                <FormItem className="flex items-center justify-center h-9">
-                                  <FormControl>
-                                    <input
-                                      type="checkbox"
-                                      checked={field.value}
-                                      onChange={field.onChange}
-                                      className="h-4 w-4 cursor-pointer"
-                                    />
-                                  </FormControl>
-                                </FormItem>
-                              )}
-                            />
+                          <div key={index} className="grid grid-cols-[70px_320px_100px_120px_110px_160px_280px_140px_140px_80px] gap-2 focus-within:bg-primary/5 focus-within:shadow-sm rounded-sm p-1 -m-1 transition-all duration-150">
                             <FormField
                               control={form.control}
                               name={`forecastRows.${index}.qty`}
