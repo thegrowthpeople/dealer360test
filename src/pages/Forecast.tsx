@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { PerformanceFilters } from "@/components/PerformanceFilters";
 import { usePerformanceFilters } from "@/contexts/PerformanceFiltersContext";
-import { Separator } from "@/components/ui/separator";
+import { ForecastTiles } from "@/components/forecast/ForecastTiles";
 
 const Forecast = () => {
   const {
@@ -43,7 +43,7 @@ const Forecast = () => {
         <PerformanceFilters />
       </div>
 
-      <Separator className="my-6" />
+      <ForecastTiles />
     </div>
   );
 };
