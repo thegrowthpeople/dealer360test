@@ -61,13 +61,13 @@ const forecastSchema = z.object({
   forecastRows: z.array(z.object({
     qty: z.coerce.number().min(1, "QTY is required").nullable(),
     customerName: z.string().min(1, "Customer Name is required"),
-    customerType: z.enum(["Existing", "New", ""]).optional(),
+    customerType: z.enum(["Existing", "New", ""]),
     salesSupport: z.coerce.number().min(0, "Must be 0 or greater").nullable(),
     demoTruck: z.coerce.number().min(0, "Must be 0 or greater").nullable(),
     brand: z.enum(["Mercedes-Benz", "Freightliner"]).nullable().refine((val) => val !== null, { message: "Brand is required" }),
-    model: z.string(),
+    model: z.string().min(1, "Model is required"),
     type: z.enum(["Retail", "Indirect Fleet", "Direct Fleet"]).nullable().refine((val) => val !== null, { message: "Source is required" }),
-    bdm: z.enum(["Met in Person", "Relationship", "Supported", ""]).optional(),
+    bdm: z.enum(["Met in Person", "Relationship", "Supported", ""]),
     upside: z.boolean(),
   })),
 });
@@ -141,6 +141,47 @@ export const NewForecastDialog = ({
     control: form.control,
     name: "forecastRows"
   });
+
+  const validateCurrentRows = () => {
+    const rows = form.getValues("forecastRows");
+    if (rows.length === 0) return true;
+    
+    return rows.every(row => 
+      row.qty && 
+      row.qty > 0 && 
+      row.customerName && 
+      row.customerName.trim() !== "" &&
+      row.customerType &&
+      row.brand && 
+      row.model && 
+      row.model.trim() !== "" &&
+      row.type
+    );
+  };
+
+  const handleAddRow = () => {
+    if (!validateCurrentRows()) {
+      toast({
+        title: "Validation Error",
+        description: "Please fill in all required fields (QTY, Customer Name, Type, Brand, Model, Source) before adding a new row",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    append({
+      qty: null,
+      customerName: "",
+      customerType: "",
+      salesSupport: null,
+      demoTruck: null,
+      brand: null,
+      model: "",
+      type: null,
+      bdm: "",
+      upside: false,
+    });
+  };
 
   const onSubmit = async (values: ForecastFormValues) => {
     if (!effectiveWeekStarting) {
@@ -725,9 +766,10 @@ Total"
                                       type="number"
                                       {...field}
                                       onChange={(e) => field.onChange(parseFloat(e.target.value) || null)}
-                                      className="h-9 text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                      className={`h-9 text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${(!field.value || field.value <= 0) ? 'border-destructive' : ''}`}
                                     />
                                   </FormControl>
+                                  <FormMessage className="text-xs" />
                                 </FormItem>
                               )}
                             />
@@ -739,9 +781,10 @@ Total"
                                   <FormControl>
                                     <Input
                                       {...field}
-                                      className="h-9 text-sm"
+                                      className={`h-9 text-sm ${!field.value || field.value.trim() === '' ? 'border-destructive' : ''}`}
                                     />
                                   </FormControl>
+                                  <FormMessage className="text-xs" />
                                 </FormItem>
                               )}
                             />
@@ -752,7 +795,7 @@ Total"
                                 <FormItem>
                                   <FormControl>
                                     <Select value={field.value} onValueChange={field.onChange}>
-                                      <SelectTrigger className="h-9 text-sm">
+                                      <SelectTrigger className={`h-9 text-sm ${!field.value ? 'border-destructive' : ''}`}>
                                         <SelectValue />
                                       </SelectTrigger>
                                       <SelectContent>
@@ -761,6 +804,7 @@ Total"
                                       </SelectContent>
                                     </Select>
                                   </FormControl>
+                                  <FormMessage className="text-xs" />
                                 </FormItem>
                               )}
                             />
@@ -803,7 +847,7 @@ Total"
                                 <FormItem>
                                   <FormControl>
                                     <Select value={field.value} onValueChange={field.onChange}>
-                                      <SelectTrigger className="h-9 text-sm">
+                                      <SelectTrigger className={`h-9 text-sm ${!field.value ? 'border-destructive' : ''}`}>
                                         <SelectValue />
                                       </SelectTrigger>
                                       <SelectContent>
@@ -824,9 +868,10 @@ Total"
                                   <FormControl>
                                     <Input
                                       {...field}
-                                      className="h-9 text-sm"
+                                      className={`h-9 text-sm ${!field.value || field.value.trim() === '' ? 'border-destructive' : ''}`}
                                     />
                                   </FormControl>
+                                  <FormMessage className="text-xs" />
                                 </FormItem>
                               )}
                             />
@@ -837,7 +882,7 @@ Total"
                                 <FormItem>
                                   <FormControl>
                                     <Select value={field.value} onValueChange={field.onChange}>
-                                      <SelectTrigger className="h-9 text-sm">
+                                      <SelectTrigger className={`h-9 text-sm ${!field.value ? 'border-destructive' : ''}`}>
                                         <SelectValue />
                                       </SelectTrigger>
                                       <SelectContent>
@@ -897,18 +942,7 @@ Total"
                             type="button"
                             variant="outline"
                             size="sm"
-                            onClick={() => append({
-                              qty: null,
-                              customerName: "",
-                              customerType: "" as const,
-                              salesSupport: null,
-                              demoTruck: null,
-                              brand: null,
-                              model: "",
-                              type: null,
-                              bdm: "" as const,
-                              upside: false,
-                            })}
+                            onClick={handleAddRow}
                             className="gap-2"
                           >
                             <Plus className="h-4 w-4" />
