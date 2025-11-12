@@ -641,8 +641,7 @@ export const NewForecastDialog = ({
                     <CardHeader>
                       <div className="flex items-center justify-between">
                         <div>
-                          <CardTitle>Forecast Data Entry</CardTitle>
-                          <CardDescription>Enter up to 15 forecast items</CardDescription>
+                          <CardTitle>Forecast Detail</CardTitle>
                         </div>
                         <div className="flex gap-2">
                           <Button
@@ -651,11 +650,11 @@ export const NewForecastDialog = ({
                             size="sm"
                             onClick={() => {
                               const emptyRows = Array(15).fill(null).map(() => ({
-                                qty: 0,
+                                qty: null,
                                 customerName: "",
                                 customerType: "" as const,
-                                salesSupport: 0,
-                                demoTruck: 0,
+                                salesSupport: null,
+                                demoTruck: null,
                                 brand: "" as const,
                                 model: "",
                                 type: "" as const,
