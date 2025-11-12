@@ -141,7 +141,7 @@ export const ForecastTiles = () => {
       <div>
         <h2 className="text-2xl font-bold text-foreground mb-4">Activity</h2>
         {/* Total Meetings Row */}
-        <div className="mb-4">
+        <div className="mb-4 max-w-2xl">
           {/* Total Meetings - Combined Tile */}
           <Card className="p-0 overflow-hidden border-primary/20">
             <div className="flex flex-col md:flex-row">
