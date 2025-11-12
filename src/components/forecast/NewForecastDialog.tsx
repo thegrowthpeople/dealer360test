@@ -30,7 +30,7 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Plus } from "lucide-react";
+import { Plus, Trash2, Copy } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { usePerformanceFilters } from "@/contexts/PerformanceFiltersContext";
@@ -234,7 +234,7 @@ export const NewForecastDialog = ({
           New Forecast
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-6xl h-[90vh] flex flex-col">
+      <DialogContent className="max-w-[90vw] h-[90vh] flex flex-col">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold">NEW FORECAST</DialogTitle>
           <DialogDescription>
@@ -637,12 +637,49 @@ export const NewForecastDialog = ({
                   {/* Second Row: Data Entry Table */}
                   <Card>
                     <CardHeader>
-                      <CardTitle>Forecast Data Entry</CardTitle>
-                      <CardDescription>Enter up to 15 forecast items</CardDescription>
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <CardTitle>Forecast Data Entry</CardTitle>
+                          <CardDescription>Enter up to 15 forecast items</CardDescription>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              const emptyRows = Array(15).fill(null).map(() => ({
+                                qty: 0,
+                                customerName: "",
+                                customerType: "Existing" as const,
+                                salesSupport: 0,
+                                demoTruck: 0,
+                                brand: "Mercedes-Benz" as const,
+                                model: "",
+                                type: "Retail" as const,
+                                upside: false,
+                              }));
+                              form.setValue("forecastRows", emptyRows);
+                            }}
+                            title="Clear all table data"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            title="Copy from previous week (coming soon)"
+                            disabled
+                          >
+                            <Copy className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-2 max-h-[450px] overflow-y-auto pr-2">
-                        <div className="grid grid-cols-[70px_160px_100px_90px_100px_150px_160px_140px_80px] gap-2 font-semibold text-xs mb-2">
+                        <div className="grid grid-cols-[70px_180px_100px_120px_110px_160px_200px_140px_80px] gap-2 font-semibold text-xs mb-2">
                           <div>QTY</div>
                           <div>Customer Name</div>
                           <div>Customer</div>
@@ -654,7 +691,7 @@ export const NewForecastDialog = ({
                           <div>Upside</div>
                         </div>
                         {Array.from({ length: 15 }).map((_, index) => (
-                          <div key={index} className="grid grid-cols-[70px_160px_100px_90px_100px_150px_160px_140px_80px] gap-2">
+                          <div key={index} className="grid grid-cols-[70px_180px_100px_120px_110px_160px_200px_140px_80px] gap-2">
                             <FormField
                               control={form.control}
                               name={`forecastRows.${index}.qty`}
