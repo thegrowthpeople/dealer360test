@@ -164,7 +164,9 @@ export const NewForecastDialog = ({
       row.brand && 
       row.model && 
       row.model.trim() !== "" &&
-      row.type
+      row.type &&
+      row.estimatedDelivery && 
+      row.estimatedDelivery.trim() !== ""
     );
   };
 
@@ -172,7 +174,7 @@ export const NewForecastDialog = ({
     if (!validateCurrentRows()) {
       toast({
         title: "Validation Error",
-        description: "Please fill in all required fields (QTY, Customer Name, Type, Brand, Model, Source) before adding a new row",
+        description: "Please fill in all required fields (QTY, Customer Name, Type, Brand, Model, Source, Est. Delivery) before adding a new row",
         variant: "destructive",
       });
       return;
@@ -912,7 +914,7 @@ Total"
                             className="gap-2"
                           >
                             <Plus className="h-4 w-4" />
-                            Add Row
+                            Add Order Received
                           </Button>
                         </div>
                       </div>
