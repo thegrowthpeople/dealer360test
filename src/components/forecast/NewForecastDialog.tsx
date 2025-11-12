@@ -1541,7 +1541,7 @@ Total"
                             className="gap-2"
                           >
                             <Plus className="h-4 w-4" />
-                            Add Row
+                            Add Delivery Detail
                           </Button>
                         </div>
                       </div>
