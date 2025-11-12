@@ -117,6 +117,7 @@ export const ForecastTiles = () => {
   };
 
   const totalMeetings = data["Conquest Meetings"] + data["Customer Meetings"];
+  const totalOrdersReceived = data["MBT Orders Received"] + data["FTL Orders Received"];
   const mbtPipeline = data["MBT Pipeline Size This QTR"] + data["MBT Pipeline Size Next QTR"];
   const ftlPipeline = data["FTL Pipeline Size This QTR"] + data["FTL Pipeline Size Next QTR"];
   const pipelineGrowth = data["MBT Pipeline Growth"] + data["FTL Pipeline Growth"];
@@ -126,7 +127,7 @@ export const ForecastTiles = () => {
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold text-foreground mb-4">Activity</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Tile 1: Total Meetings */}
         <Card className="p-6">
           <div className="flex items-start justify-between mb-4">
@@ -150,33 +151,30 @@ export const ForecastTiles = () => {
           </div>
         </Card>
 
-        {/* Tile 2: Mercedes-Benz Orders Received */}
+        {/* Tile 2: Orders Received */}
         <Card className="p-6">
-          <div className="flex items-start justify-between">
+          <div className="flex items-start justify-between mb-4">
             <div>
-              <p className="text-sm font-medium text-muted-foreground mb-1">Mercedes-Benz Orders Received</p>
-              <p className="text-3xl font-bold text-foreground">{formatNumber(data["MBT Orders Received"])}</p>
+              <p className="text-sm font-medium text-muted-foreground mb-1">Orders Received</p>
+              <p className="text-3xl font-bold text-foreground">{formatNumber(totalOrdersReceived)}</p>
             </div>
-            <div className="w-12 h-12 rounded-lg" style={{ backgroundColor: 'rgba(14, 165, 233, 0.1)' }}>
-              <Building className="w-6 h-6 m-3" style={{ color: '#0EA5E9' }} />
+            <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
+              <Package className="w-6 h-6 text-primary" />
+            </div>
+          </div>
+          <div className="space-y-1">
+            <div className="flex justify-between text-sm">
+              <span className="text-muted-foreground">Mercedes-Benz Orders:</span>
+              <span className="font-medium text-foreground">{formatNumber(data["MBT Orders Received"])}</span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-muted-foreground">Freightliner Orders:</span>
+              <span className="font-medium text-foreground">{formatNumber(data["FTL Orders Received"])}</span>
             </div>
           </div>
         </Card>
 
-        {/* Tile 3: Freightliner Orders Received */}
-        <Card className="p-6">
-          <div className="flex items-start justify-between">
-            <div>
-              <p className="text-sm font-medium text-muted-foreground mb-1">Freightliner Orders Received</p>
-              <p className="text-3xl font-bold text-foreground">{formatNumber(data["FTL Orders Received"])}</p>
-            </div>
-            <div className="w-12 h-12 rounded-lg" style={{ backgroundColor: 'rgba(155, 135, 245, 0.1)' }}>
-              <Truck className="w-6 h-6 m-3" style={{ color: '#9b87f5' }} />
-            </div>
-          </div>
-        </Card>
-
-        {/* Tile 4: Orders Expected */}
+        {/* Tile 3: Orders Expected */}
         <Card className="p-6">
           <div className="flex items-start justify-between">
             <div>
