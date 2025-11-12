@@ -68,6 +68,7 @@ const forecastSchema = z.object({
     model: z.string(),
     type: z.enum(["Retail", "Indirect Fleet", "Direct Fleet"]),
     upside: z.boolean(),
+    bdmEngaged: z.boolean(),
   })),
 });
 
@@ -142,6 +143,7 @@ export const NewForecastDialog = ({
         model: "", 
         type: "Retail" as const,
         upside: false,
+        bdmEngaged: false,
       })),
     },
   });
@@ -658,6 +660,7 @@ export const NewForecastDialog = ({
                                 model: "",
                                 type: "Retail" as const,
                                 upside: false,
+                                bdmEngaged: false,
                               }));
                               form.setValue("forecastRows", emptyRows);
                             }}
@@ -679,7 +682,7 @@ export const NewForecastDialog = ({
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-2 max-h-[450px] overflow-y-auto pr-2">
-                        <div className="grid grid-cols-[80px_220px_100px_120px_110px_160px_240px_140px_80px] gap-2 font-semibold text-xs mb-2">
+                        <div className="grid grid-cols-[80px_260px_100px_120px_110px_160px_280px_140px_80px_100px] gap-2 font-semibold text-xs mb-2">
                           <div className="pl-2">QTY</div>
                           <div>Customer Name</div>
                           <div>Customer</div>
@@ -689,9 +692,10 @@ export const NewForecastDialog = ({
                           <div>Model</div>
                           <div>Type</div>
                           <div>Upside</div>
+                          <div>BDM Engaged</div>
                         </div>
                         {Array.from({ length: 15 }).map((_, index) => (
-                          <div key={index} className="grid grid-cols-[80px_220px_100px_120px_110px_160px_240px_140px_80px] gap-2">
+                          <div key={index} className="grid grid-cols-[80px_260px_100px_120px_110px_160px_280px_140px_80px_100px] gap-2">
                             <FormField
                               control={form.control}
                               name={`forecastRows.${index}.qty`}
@@ -703,7 +707,6 @@ export const NewForecastDialog = ({
                                       {...field}
                                       onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
                                       className="h-9 text-sm pl-3 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                                      placeholder="0"
                                     />
                                   </FormControl>
                                 </FormItem>
@@ -718,7 +721,6 @@ export const NewForecastDialog = ({
                                     <Input
                                       {...field}
                                       className="h-9 text-sm"
-                                      placeholder="Name"
                                     />
                                   </FormControl>
                                 </FormItem>
@@ -754,7 +756,6 @@ export const NewForecastDialog = ({
                                       {...field}
                                       onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
                                       className="h-9 text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                                      placeholder="0"
                                     />
                                   </FormControl>
                                 </FormItem>
@@ -771,7 +772,6 @@ export const NewForecastDialog = ({
                                       {...field}
                                       onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
                                       className="h-9 text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                                      placeholder="0"
                                     />
                                   </FormControl>
                                 </FormItem>
@@ -805,7 +805,6 @@ export const NewForecastDialog = ({
                                     <Input
                                       {...field}
                                       className="h-9 text-sm"
-                                      placeholder="Model"
                                     />
                                   </FormControl>
                                 </FormItem>
@@ -834,6 +833,24 @@ export const NewForecastDialog = ({
                             <FormField
                               control={form.control}
                               name={`forecastRows.${index}.upside`}
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormControl>
+                                    <div className="flex items-center h-9">
+                                      <input
+                                        type="checkbox"
+                                        checked={field.value}
+                                        onChange={field.onChange}
+                                        className="h-4 w-4 rounded border-input"
+                                      />
+                                    </div>
+                                  </FormControl>
+                                </FormItem>
+                              )}
+                            />
+                            <FormField
+                              control={form.control}
+                              name={`forecastRows.${index}.bdmEngaged`}
                               render={({ field }) => (
                                 <FormItem>
                                   <FormControl>
