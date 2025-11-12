@@ -9,7 +9,8 @@ import { formatNumber } from "@/lib/utils";
 interface ForecastData {
   "Conquest Meetings": number;
   "Customer Meetings": number;
-  "Orders Received": number;
+  "MBT Orders Received": number;
+  "FTL Orders Received": number;
   "Orders Expected": number;
   "MBT Pipeline Size This QTR": number;
   "MBT Pipeline Size Next QTR": number;
@@ -26,7 +27,8 @@ export const ForecastTiles = () => {
   const [data, setData] = useState<ForecastData>({
     "Conquest Meetings": 0,
     "Customer Meetings": 0,
-    "Orders Received": 0,
+    "MBT Orders Received": 0,
+    "FTL Orders Received": 0,
     "Orders Expected": 0,
     "MBT Pipeline Size This QTR": 0,
     "MBT Pipeline Size Next QTR": 0,
@@ -79,7 +81,8 @@ export const ForecastTiles = () => {
           (acc, row) => ({
             "Conquest Meetings": acc["Conquest Meetings"] + (row["Conquest Meetings"] || 0),
             "Customer Meetings": acc["Customer Meetings"] + (row["Customer Meetings"] || 0),
-            "Orders Received": acc["Orders Received"] + (row["Orders Received"] || 0),
+            "MBT Orders Received": acc["MBT Orders Received"] + (row["MBT Orders Received"] || 0),
+            "FTL Orders Received": acc["FTL Orders Received"] + (row["FTL Orders Received"] || 0),
             "Orders Expected": acc["Orders Expected"] + (row["Orders Expected"] || 0),
             "MBT Pipeline Size This QTR": acc["MBT Pipeline Size This QTR"] + (row["MBT Pipeline Size This QTR"] || 0),
             "MBT Pipeline Size Next QTR": acc["MBT Pipeline Size Next QTR"] + (row["MBT Pipeline Size Next QTR"] || 0),
@@ -93,7 +96,8 @@ export const ForecastTiles = () => {
           {
             "Conquest Meetings": 0,
             "Customer Meetings": 0,
-            "Orders Received": 0,
+            "MBT Orders Received": 0,
+            "FTL Orders Received": 0,
             "Orders Expected": 0,
             "MBT Pipeline Size This QTR": 0,
             "MBT Pipeline Size Next QTR": 0,
@@ -122,7 +126,7 @@ export const ForecastTiles = () => {
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold text-foreground mb-4">Activity</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Tile 1: Total Meetings */}
         <Card className="p-6">
           <div className="flex items-start justify-between mb-4">
@@ -146,20 +150,33 @@ export const ForecastTiles = () => {
           </div>
         </Card>
 
-        {/* Tile 2: Orders Received */}
+        {/* Tile 2: Mercedes-Benz Orders Received */}
         <Card className="p-6">
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-sm font-medium text-muted-foreground mb-1">Orders Received</p>
-              <p className="text-3xl font-bold text-foreground">{formatNumber(data["Orders Received"])}</p>
+              <p className="text-sm font-medium text-muted-foreground mb-1">Mercedes-Benz Orders Received</p>
+              <p className="text-3xl font-bold text-foreground">{formatNumber(data["MBT Orders Received"])}</p>
             </div>
-            <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
-              <Package className="w-6 h-6 text-primary" />
+            <div className="w-12 h-12 rounded-lg" style={{ backgroundColor: 'rgba(14, 165, 233, 0.1)' }}>
+              <Building className="w-6 h-6 m-3" style={{ color: '#0EA5E9' }} />
             </div>
           </div>
         </Card>
 
-        {/* Tile 3: Orders Expected */}
+        {/* Tile 3: Freightliner Orders Received */}
+        <Card className="p-6">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-sm font-medium text-muted-foreground mb-1">Freightliner Orders Received</p>
+              <p className="text-3xl font-bold text-foreground">{formatNumber(data["FTL Orders Received"])}</p>
+            </div>
+            <div className="w-12 h-12 rounded-lg" style={{ backgroundColor: 'rgba(155, 135, 245, 0.1)' }}>
+              <Truck className="w-6 h-6 m-3" style={{ color: '#9b87f5' }} />
+            </div>
+          </div>
+        </Card>
+
+        {/* Tile 4: Orders Expected */}
         <Card className="p-6">
           <div className="flex items-start justify-between">
             <div>
