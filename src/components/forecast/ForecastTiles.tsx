@@ -156,7 +156,7 @@ export const ForecastTiles = () => {
               
               {/* Right side - Breakdown with white background */}
               <div className="p-6 bg-white flex items-end w-[260px]">
-                <div className="flex gap-8">
+                <div className="flex gap-4 w-full justify-around">
                   <div className="space-y-1 text-center">
                     <span className="text-xs text-muted-foreground block uppercase tracking-wider">Conquest</span>
                     <span className="text-2xl text-foreground block">{formatNumber(data["Conquest Meetings"])}</span>
@@ -184,7 +184,7 @@ export const ForecastTiles = () => {
               
               {/* Right side - Breakdown with white background */}
               <div className="p-6 bg-white flex items-end w-[260px]">
-                <div className="flex gap-8">
+                <div className="flex gap-4 w-full justify-around">
                   <div className="space-y-1 text-center">
                     <span className="text-xs text-muted-foreground block uppercase tracking-wider">Mercedes-Benz</span>
                     <span className="text-2xl text-foreground block">{formatNumber(data["MBT Quotes Issued"])}</span>
@@ -212,7 +212,7 @@ export const ForecastTiles = () => {
               
               {/* Right side - Breakdown with white background */}
               <div className="p-6 bg-white flex items-end w-[260px]">
-                <div className="flex gap-8">
+                <div className="flex gap-4 w-full justify-around">
                   <div className="space-y-1 text-center">
                     <span className="text-xs text-muted-foreground block uppercase tracking-wider">Mercedes-Benz</span>
                     <span className="text-2xl text-foreground block">{formatNumber(data["MBT Orders Received"])}</span>
@@ -240,7 +240,7 @@ export const ForecastTiles = () => {
               
               {/* Right side - Breakdown with white background */}
               <div className="p-6 bg-white flex items-end w-[260px]">
-                <div className="flex gap-8">
+                <div className="flex gap-4 w-full justify-around">
                   <div className="space-y-1 text-center">
                     <span className="text-xs text-muted-foreground block uppercase tracking-wider">Mercedes-Benz</span>
                     <span className="text-2xl text-foreground block">{formatNumber(data["MBT Orders Expected NW"])}</span>
