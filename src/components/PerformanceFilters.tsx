@@ -25,7 +25,11 @@ import {
 import { cn } from "@/lib/utils";
 import { startOfMonth, endOfMonth, eachDayOfInterval, isMonday, format } from "date-fns";
 
-export const PerformanceFilters = () => {
+interface PerformanceFiltersProps {
+  showWeekFilter?: boolean;
+}
+
+export const PerformanceFilters = ({ showWeekFilter = true }: PerformanceFiltersProps) => {
   const {
     selectedBDMId,
     setSelectedBDMId,
@@ -380,23 +384,25 @@ export const PerformanceFilters = () => {
       </Select>
 
       {/* Week Starting Filter */}
-      <Select
-        value={selectedWeekStarting || "all"}
-        onValueChange={(value) => setSelectedWeekStarting(value === "all" ? null : value)}
-        disabled={availableWeeks.length === 0}
-      >
-        <SelectTrigger className="w-[160px]">
-          <SelectValue placeholder="Week Starting" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="all">All Weeks</SelectItem>
-          {availableWeeks.map((week) => (
-            <SelectItem key={week.date} value={week.date}>
-              {week.display}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+      {showWeekFilter && (
+        <Select
+          value={selectedWeekStarting || "all"}
+          onValueChange={(value) => setSelectedWeekStarting(value === "all" ? null : value)}
+          disabled={availableWeeks.length === 0}
+        >
+          <SelectTrigger className="w-[160px]">
+            <SelectValue placeholder="Week Starting" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Weeks</SelectItem>
+            {availableWeeks.map((week) => (
+              <SelectItem key={week.date} value={week.date}>
+                {week.display}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      )}
 
       {/* Clear Filters Button */}
       {hasActiveFilters && (
