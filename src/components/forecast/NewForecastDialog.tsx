@@ -381,106 +381,99 @@ export const NewForecastDialog = ({
                 <TabsContent value="pipeline2" className="space-y-4 mt-0 h-full">
                 <Card>
                   <CardHeader>
-                    <CardTitle>Pipeline Growth</CardTitle>
-                    <CardDescription>Enter pipeline growth data</CardDescription>
+                    <CardTitle>Pipeline Data</CardTitle>
+                    <CardDescription>Enter pipeline information</CardDescription>
                   </CardHeader>
-                  <CardContent className="grid grid-cols-3 gap-4">
-                    <FormField
-                      control={form.control}
-                      name="mbtPipelineGrowth"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Mercedes-Benz Growth</FormLabel>
-                          <FormControl>
-                            <Input type="number" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="ftlPipelineGrowth"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Freightliner Growth</FormLabel>
-                          <FormControl>
-                            <Input type="number" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </CardContent>
-                </Card>
+                  <CardContent className="grid grid-cols-3 gap-6">
+                    <div className="space-y-4">
+                      <h3 className="font-semibold text-sm">Pipeline Growth</h3>
+                      <FormField
+                        control={form.control}
+                        name="mbtPipelineGrowth"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Mercedes-Benz Growth</FormLabel>
+                            <FormControl>
+                              <Input type="number" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="ftlPipelineGrowth"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Freightliner Growth</FormLabel>
+                            <FormControl>
+                              <Input type="number" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
 
-                <Card>
-                  <CardHeader>
-                    <CardTitle>This Quarter Pipeline</CardTitle>
-                    <CardDescription>Enter current quarter pipeline size</CardDescription>
-                  </CardHeader>
-                  <CardContent className="grid grid-cols-3 gap-4">
-                    <FormField
-                      control={form.control}
-                      name="mbtPipelineThisQtr"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Mercedes-Benz This QTR</FormLabel>
-                          <FormControl>
-                            <Input type="number" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="ftlPipelineThisQtr"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Freightliner This QTR</FormLabel>
-                          <FormControl>
-                            <Input type="number" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </CardContent>
-                </Card>
+                    <div className="space-y-4">
+                      <h3 className="font-semibold text-sm">This Quarter Pipeline</h3>
+                      <FormField
+                        control={form.control}
+                        name="mbtPipelineThisQtr"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Mercedes-Benz This QTR</FormLabel>
+                            <FormControl>
+                              <Input type="number" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="ftlPipelineThisQtr"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Freightliner This QTR</FormLabel>
+                            <FormControl>
+                              <Input type="number" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
 
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Next Quarter Pipeline</CardTitle>
-                    <CardDescription>Enter next quarter pipeline size</CardDescription>
-                  </CardHeader>
-                  <CardContent className="grid grid-cols-3 gap-4">
-                    <FormField
-                      control={form.control}
-                      name="mbtPipelineNextQtr"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Mercedes-Benz Next QTR</FormLabel>
-                          <FormControl>
-                            <Input type="number" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="ftlPipelineNextQtr"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Freightliner Next QTR</FormLabel>
-                          <FormControl>
-                            <Input type="number" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                    <div className="space-y-4">
+                      <h3 className="font-semibold text-sm">Next Quarter Pipeline</h3>
+                      <FormField
+                        control={form.control}
+                        name="mbtPipelineNextQtr"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Mercedes-Benz Next QTR</FormLabel>
+                            <FormControl>
+                              <Input type="number" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="ftlPipelineNextQtr"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Freightliner Next QTR</FormLabel>
+                            <FormControl>
+                              <Input type="number" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
                   </CardContent>
                 </Card>
                 </TabsContent>
