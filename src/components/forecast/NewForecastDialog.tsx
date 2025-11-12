@@ -386,7 +386,7 @@ export const NewForecastDialog = ({
                   </CardHeader>
                   <CardContent className="grid grid-cols-3 gap-6">
                     <div className="space-y-4">
-                      <h3 className="font-semibold text-sm">Pipeline Growth</h3>
+                      <h3 className="font-semibold text-lg">Pipeline Growth</h3>
                       <FormField
                         control={form.control}
                         name="mbtPipelineGrowth"
@@ -416,7 +416,7 @@ export const NewForecastDialog = ({
                     </div>
 
                     <div className="space-y-4">
-                      <h3 className="font-semibold text-sm">This Quarter Pipeline</h3>
+                      <h3 className="font-semibold text-lg">This Quarter Pipeline</h3>
                       <FormField
                         control={form.control}
                         name="mbtPipelineThisQtr"
@@ -446,7 +446,7 @@ export const NewForecastDialog = ({
                     </div>
 
                     <div className="space-y-4">
-                      <h3 className="font-semibold text-sm">Next Quarter Pipeline</h3>
+                      <h3 className="font-semibold text-lg">Next Quarter Pipeline</h3>
                       <FormField
                         control={form.control}
                         name="mbtPipelineNextQtr"
