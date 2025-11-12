@@ -22,6 +22,12 @@ interface ForecastData {
   "FTL Pipeline Growth": number;
   "MBT Pipeline Lost": number;
   "FTL Pipeline Lost": number;
+  "MBT Retail": number;
+  "FTL Retail": number;
+  "MBT Fleet Indirect": number;
+  "FTL Fleet Indirect": number;
+  "MBT Fleet Direct": number;
+  "FTL Fleet Direct": number;
 }
 
 export const ForecastTiles = () => {
@@ -43,6 +49,12 @@ export const ForecastTiles = () => {
     "FTL Pipeline Growth": 0,
     "MBT Pipeline Lost": 0,
     "FTL Pipeline Lost": 0,
+    "MBT Retail": 0,
+    "FTL Retail": 0,
+    "MBT Fleet Indirect": 0,
+    "FTL Fleet Indirect": 0,
+    "MBT Fleet Direct": 0,
+    "FTL Fleet Direct": 0,
   });
 
   useEffect(() => {
@@ -100,6 +112,12 @@ export const ForecastTiles = () => {
             "FTL Pipeline Growth": acc["FTL Pipeline Growth"] + (row["FTL Pipeline Growth"] || 0),
             "MBT Pipeline Lost": acc["MBT Pipeline Lost"] + (row["MBT Pipeline Lost"] || 0),
             "FTL Pipeline Lost": acc["FTL Pipeline Lost"] + (row["FTL Pipeline Lost"] || 0),
+            "MBT Retail": acc["MBT Retail"] + (row["MBT Retail"] || 0),
+            "FTL Retail": acc["FTL Retail"] + (row["FTL Retail"] || 0),
+            "MBT Fleet Indirect": acc["MBT Fleet Indirect"] + (row["MBT Fleet Indirect"] || 0),
+            "FTL Fleet Indirect": acc["FTL Fleet Indirect"] + (row["FTL Fleet Indirect"] || 0),
+            "MBT Fleet Direct": acc["MBT Fleet Direct"] + (row["MBT Fleet Direct"] || 0),
+            "FTL Fleet Direct": acc["FTL Fleet Direct"] + (row["FTL Fleet Direct"] || 0),
           }),
           {
             "Conquest Meetings": 0,
@@ -118,6 +136,12 @@ export const ForecastTiles = () => {
             "FTL Pipeline Growth": 0,
             "MBT Pipeline Lost": 0,
             "FTL Pipeline Lost": 0,
+            "MBT Retail": 0,
+            "FTL Retail": 0,
+            "MBT Fleet Indirect": 0,
+            "FTL Fleet Indirect": 0,
+            "MBT Fleet Direct": 0,
+            "FTL Fleet Direct": 0,
           }
         );
         setData(aggregated);
@@ -372,6 +396,82 @@ export const ForecastTiles = () => {
             </div>
           </div>
         </Card>
+        </div>
+      </div>
+
+      <Separator className="my-6" />
+
+      <div>
+        <h2 className="text-2xl font-bold text-foreground mb-4">Forecast</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+          {/* Retail */}
+          <Card className="p-0 overflow-hidden border-primary/20 shadow-md hover:shadow-lg hover:scale-[1.02] transition-all duration-300">
+            <div className="flex flex-col md:flex-row">
+              <div className="p-4 bg-primary/10 w-[150px]">
+                <p className="text-xl font-bold text-foreground mb-2">Retail</p>
+                <p className="text-3xl font-bold text-foreground">{formatNumber(data["MBT Retail"] + data["FTL Retail"])}</p>
+              </div>
+              <div className="hidden md:block w-px bg-border"></div>
+              <div className="px-4 py-6 bg-white flex items-center justify-center flex-1">
+                <div className="flex gap-6">
+                  <div className="space-y-1 text-center">
+                    <span className="text-xs text-muted-foreground block uppercase tracking-wider">Mercedes-Benz</span>
+                    <span className="text-2xl text-foreground block">{formatNumber(data["MBT Retail"])}</span>
+                  </div>
+                  <div className="space-y-1 text-center">
+                    <span className="text-xs text-muted-foreground block uppercase tracking-wider">Freightliner</span>
+                    <span className="text-2xl text-foreground block">{formatNumber(data["FTL Retail"])}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Card>
+
+          {/* Fleet - Indirect */}
+          <Card className="p-0 overflow-hidden border-primary/20 shadow-md hover:shadow-lg hover:scale-[1.02] transition-all duration-300">
+            <div className="flex flex-col md:flex-row">
+              <div className="p-4 bg-primary/10 w-[150px]">
+                <p className="text-xl font-bold text-foreground mb-2">Fleet<br />Indirect</p>
+                <p className="text-3xl font-bold text-foreground">{formatNumber(data["MBT Fleet Indirect"] + data["FTL Fleet Indirect"])}</p>
+              </div>
+              <div className="hidden md:block w-px bg-border"></div>
+              <div className="px-4 py-6 bg-white flex items-center justify-center flex-1">
+                <div className="flex gap-6">
+                  <div className="space-y-1 text-center">
+                    <span className="text-xs text-muted-foreground block uppercase tracking-wider">Mercedes-Benz</span>
+                    <span className="text-2xl text-foreground block">{formatNumber(data["MBT Fleet Indirect"])}</span>
+                  </div>
+                  <div className="space-y-1 text-center">
+                    <span className="text-xs text-muted-foreground block uppercase tracking-wider">Freightliner</span>
+                    <span className="text-2xl text-foreground block">{formatNumber(data["FTL Fleet Indirect"])}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Card>
+
+          {/* Fleet - Direct */}
+          <Card className="p-0 overflow-hidden border-primary/20 shadow-md hover:shadow-lg hover:scale-[1.02] transition-all duration-300">
+            <div className="flex flex-col md:flex-row">
+              <div className="p-4 bg-primary/10 w-[150px]">
+                <p className="text-xl font-bold text-foreground mb-2">Fleet<br />Direct</p>
+                <p className="text-3xl font-bold text-foreground">{formatNumber(data["MBT Fleet Direct"] + data["FTL Fleet Direct"])}</p>
+              </div>
+              <div className="hidden md:block w-px bg-border"></div>
+              <div className="px-4 py-6 bg-white flex items-center justify-center flex-1">
+                <div className="flex gap-6">
+                  <div className="space-y-1 text-center">
+                    <span className="text-xs text-muted-foreground block uppercase tracking-wider">Mercedes-Benz</span>
+                    <span className="text-2xl text-foreground block">{formatNumber(data["MBT Fleet Direct"])}</span>
+                  </div>
+                  <div className="space-y-1 text-center">
+                    <span className="text-xs text-muted-foreground block uppercase tracking-wider">Freightliner</span>
+                    <span className="text-2xl text-foreground block">{formatNumber(data["FTL Fleet Direct"])}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Card>
         </div>
       </div>
     </div>
