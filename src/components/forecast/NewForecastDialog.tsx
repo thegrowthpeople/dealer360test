@@ -735,7 +735,7 @@ Total"
                                       type="number"
                                       {...field}
                                       onChange={(e) => field.onChange(parseFloat(e.target.value) || null)}
-                                      className="h-9 text-sm text-right pr-3 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none border-l-2 border-l-transparent focus-visible:border-l-primary focus-visible:border-l-4 transition-all"
+                                      className="h-9 text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                     />
                                   </FormControl>
                                 </FormItem>
