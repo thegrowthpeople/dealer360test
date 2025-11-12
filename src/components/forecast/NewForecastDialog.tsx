@@ -34,6 +34,7 @@ import { Plus } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { usePerformanceFilters } from "@/contexts/PerformanceFiltersContext";
+import { ForecastColumnEditor } from "./ForecastColumnEditor";
 
 const forecastSchema = z.object({
   // Activity fields
@@ -56,13 +57,37 @@ const forecastSchema = z.object({
   ftlPipelineThisQtr: z.coerce.number().min(0, "Must be 0 or greater"),
   ftlPipelineNextQtr: z.coerce.number().min(0, "Must be 0 or greater"),
   
-  // Forecast fields
-  mbtRetail: z.coerce.number().min(0, "Must be 0 or greater"),
-  ftlRetail: z.coerce.number().min(0, "Must be 0 or greater"),
-  mbtFleetIndirect: z.coerce.number().min(0, "Must be 0 or greater"),
-  ftlFleetIndirect: z.coerce.number().min(0, "Must be 0 or greater"),
-  mbtFleetDirect: z.coerce.number().min(0, "Must be 0 or greater"),
-  ftlFleetDirect: z.coerce.number().min(0, "Must be 0 or greater"),
+  // Forecast fields - now arrays of line items
+  mbtRetailRows: z.array(z.object({
+    qty: z.coerce.number().min(0, "Must be 0 or greater"),
+    customer: z.string(),
+    model: z.string(),
+  })),
+  ftlRetailRows: z.array(z.object({
+    qty: z.coerce.number().min(0, "Must be 0 or greater"),
+    customer: z.string(),
+    model: z.string(),
+  })),
+  mbtIndirectRows: z.array(z.object({
+    qty: z.coerce.number().min(0, "Must be 0 or greater"),
+    customer: z.string(),
+    model: z.string(),
+  })),
+  ftlIndirectRows: z.array(z.object({
+    qty: z.coerce.number().min(0, "Must be 0 or greater"),
+    customer: z.string(),
+    model: z.string(),
+  })),
+  mbtDirectRows: z.array(z.object({
+    qty: z.coerce.number().min(0, "Must be 0 or greater"),
+    customer: z.string(),
+    model: z.string(),
+  })),
+  ftlDirectRows: z.array(z.object({
+    qty: z.coerce.number().min(0, "Must be 0 or greater"),
+    customer: z.string(),
+    model: z.string(),
+  })),
 });
 
 type ForecastFormValues = z.infer<typeof forecastSchema>;
@@ -126,12 +151,12 @@ export const NewForecastDialog = ({
       mbtPipelineNextQtr: 0,
       ftlPipelineThisQtr: 0,
       ftlPipelineNextQtr: 0,
-      mbtRetail: 0,
-      ftlRetail: 0,
-      mbtFleetIndirect: 0,
-      ftlFleetIndirect: 0,
-      mbtFleetDirect: 0,
-      ftlFleetDirect: 0,
+      mbtRetailRows: Array(15).fill({ qty: 0, customer: "", model: "" }),
+      ftlRetailRows: Array(15).fill({ qty: 0, customer: "", model: "" }),
+      mbtIndirectRows: Array(15).fill({ qty: 0, customer: "", model: "" }),
+      ftlIndirectRows: Array(15).fill({ qty: 0, customer: "", model: "" }),
+      mbtDirectRows: Array(15).fill({ qty: 0, customer: "", model: "" }),
+      ftlDirectRows: Array(15).fill({ qty: 0, customer: "", model: "" }),
     },
   });
 
@@ -155,6 +180,14 @@ export const NewForecastDialog = ({
     }
 
     try {
+      // Calculate totals from rows
+      const mbtRetailTotal = values.mbtRetailRows.reduce((sum, row) => sum + row.qty, 0);
+      const ftlRetailTotal = values.ftlRetailRows.reduce((sum, row) => sum + row.qty, 0);
+      const mbtIndirectTotal = values.mbtIndirectRows.reduce((sum, row) => sum + row.qty, 0);
+      const ftlIndirectTotal = values.ftlIndirectRows.reduce((sum, row) => sum + row.qty, 0);
+      const mbtDirectTotal = values.mbtDirectRows.reduce((sum, row) => sum + row.qty, 0);
+      const ftlDirectTotal = values.ftlDirectRows.reduce((sum, row) => sum + row.qty, 0);
+
       const { error } = await supabase.from("Forecast").insert({
         "Dealer ID": effectiveDealerId,
         "Forecast Date": effectiveWeekStarting,
@@ -174,12 +207,12 @@ export const NewForecastDialog = ({
         "MBT Pipeline Size Next QTR": values.mbtPipelineNextQtr,
         "FTL Pipeline Size This QTR": values.ftlPipelineThisQtr,
         "FTL Pipeline Size Next QTR": values.ftlPipelineNextQtr,
-        "MBT Retail": values.mbtRetail,
-        "FTL Retail": values.ftlRetail,
-        "MBT Fleet Indirect": values.mbtFleetIndirect,
-        "FTL Fleet Indirect": values.ftlFleetIndirect,
-        "MBT Fleet Direct": values.mbtFleetDirect,
-        "FTL Fleet Direct": values.ftlFleetDirect,
+        "MBT Retail": mbtRetailTotal,
+        "FTL Retail": ftlRetailTotal,
+        "MBT Fleet Indirect": mbtIndirectTotal,
+        "FTL Fleet Indirect": ftlIndirectTotal,
+        "MBT Fleet Direct": mbtDirectTotal,
+        "FTL Fleet Direct": ftlDirectTotal,
       });
 
       if (error) throw error;
@@ -214,7 +247,7 @@ export const NewForecastDialog = ({
           New Forecast
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-6xl h-[85vh] flex flex-col">
+      <DialogContent className="max-w-[95vw] h-[85vh] flex flex-col">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold">NEW FORECAST</DialogTitle>
           <DialogDescription>
@@ -595,39 +628,31 @@ export const NewForecastDialog = ({
                 </TabsContent>
 
                 <TabsContent value="forecast" className="space-y-4 mt-0 h-full">
-                  <div className="grid grid-cols-3 gap-4">
+                  <div className="grid grid-cols-3 gap-6">
                     <Card>
                       <CardHeader>
                         <CardTitle>Retail</CardTitle>
                         <CardDescription>Enter retail forecast data</CardDescription>
                       </CardHeader>
-                      <CardContent className="space-y-4">
-                        <FormField
-                          control={form.control}
-                          name="mbtRetail"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Mercedes-Benz Retail</FormLabel>
-                              <FormControl>
-                                <Input type="number" {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={form.control}
-                          name="ftlRetail"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Freightliner Retail</FormLabel>
-                              <FormControl>
-                                <Input type="number" {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
+                      <CardContent className="space-y-6">
+                        <div>
+                          <p className="text-sm font-semibold mb-2">Mercedes-Benz</p>
+                          <ForecastColumnEditor
+                            form={form}
+                            brandFieldName="mbtRetailRows"
+                            brandLabel="Mercedes-Benz Total"
+                            title="Retail"
+                          />
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold mb-2">Freightliner</p>
+                          <ForecastColumnEditor
+                            form={form}
+                            brandFieldName="ftlRetailRows"
+                            brandLabel="Freightliner Total"
+                            title="Retail"
+                          />
+                        </div>
                       </CardContent>
                     </Card>
 
@@ -636,33 +661,25 @@ export const NewForecastDialog = ({
                         <CardTitle>Indirect Fleet</CardTitle>
                         <CardDescription>Enter indirect fleet forecast data</CardDescription>
                       </CardHeader>
-                      <CardContent className="space-y-4">
-                        <FormField
-                          control={form.control}
-                          name="mbtFleetIndirect"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Mercedes-Benz Indirect</FormLabel>
-                              <FormControl>
-                                <Input type="number" {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={form.control}
-                          name="ftlFleetIndirect"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Freightliner Indirect</FormLabel>
-                              <FormControl>
-                                <Input type="number" {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
+                      <CardContent className="space-y-6">
+                        <div>
+                          <p className="text-sm font-semibold mb-2">Mercedes-Benz</p>
+                          <ForecastColumnEditor
+                            form={form}
+                            brandFieldName="mbtIndirectRows"
+                            brandLabel="Mercedes-Benz Total"
+                            title="Indirect Fleet"
+                          />
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold mb-2">Freightliner</p>
+                          <ForecastColumnEditor
+                            form={form}
+                            brandFieldName="ftlIndirectRows"
+                            brandLabel="Freightliner Total"
+                            title="Indirect Fleet"
+                          />
+                        </div>
                       </CardContent>
                     </Card>
 
@@ -671,33 +688,25 @@ export const NewForecastDialog = ({
                         <CardTitle>Direct Fleet</CardTitle>
                         <CardDescription>Enter direct fleet forecast data</CardDescription>
                       </CardHeader>
-                      <CardContent className="space-y-4">
-                        <FormField
-                          control={form.control}
-                          name="mbtFleetDirect"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Mercedes-Benz Direct</FormLabel>
-                              <FormControl>
-                                <Input type="number" {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={form.control}
-                          name="ftlFleetDirect"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Freightliner Direct</FormLabel>
-                              <FormControl>
-                                <Input type="number" {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
+                      <CardContent className="space-y-6">
+                        <div>
+                          <p className="text-sm font-semibold mb-2">Mercedes-Benz</p>
+                          <ForecastColumnEditor
+                            form={form}
+                            brandFieldName="mbtDirectRows"
+                            brandLabel="Mercedes-Benz Total"
+                            title="Direct Fleet"
+                          />
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold mb-2">Freightliner</p>
+                          <ForecastColumnEditor
+                            form={form}
+                            brandFieldName="ftlDirectRows"
+                            brandLabel="Freightliner Total"
+                            title="Direct Fleet"
+                          />
+                        </div>
                       </CardContent>
                     </Card>
                   </div>
