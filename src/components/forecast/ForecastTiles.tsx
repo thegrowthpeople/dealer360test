@@ -403,12 +403,35 @@ export const ForecastTiles = () => {
 
       <div>
         <h2 className="text-2xl font-bold text-foreground mb-4">Forecast</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+          {/* Deliveries Committed */}
+          <Card className="p-0 overflow-hidden border-primary/20 shadow-md hover:shadow-lg hover:scale-[1.02] transition-all duration-300">
+            <div className="flex flex-col md:flex-row">
+              <div className="p-4 bg-primary/10 w-[150px]">
+                <p className="text-xl font-bold text-foreground mb-2">Deliveries<br />Committed</p>
+                <p className="text-3xl font-bold text-foreground">{formatNumber(data["MBT Retail"] + data["MBT Fleet Indirect"] + data["MBT Fleet Direct"] + data["FTL Retail"] + data["FTL Fleet Indirect"] + data["FTL Fleet Direct"])}</p>
+              </div>
+              <div className="hidden md:block w-px bg-border"></div>
+              <div className="px-4 py-6 bg-white flex items-center justify-center flex-1">
+                <div className="flex gap-6">
+                  <div className="space-y-1 text-center">
+                    <span className="text-xs text-muted-foreground block uppercase tracking-wider">Mercedes-Benz</span>
+                    <span className="text-2xl text-foreground block">{formatNumber(data["MBT Retail"] + data["MBT Fleet Indirect"] + data["MBT Fleet Direct"])}</span>
+                  </div>
+                  <div className="space-y-1 text-center">
+                    <span className="text-xs text-muted-foreground block uppercase tracking-wider">Freightliner</span>
+                    <span className="text-2xl text-foreground block">{formatNumber(data["FTL Retail"] + data["FTL Fleet Indirect"] + data["FTL Fleet Direct"])}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Card>
+
           {/* Retail */}
           <Card className="p-0 overflow-hidden border-primary/20 shadow-md hover:shadow-lg hover:scale-[1.02] transition-all duration-300">
             <div className="flex flex-col md:flex-row">
               <div className="p-4 bg-primary/10 w-[150px]">
-                <p className="text-xl font-bold text-foreground mb-2">Retail</p>
+                <p className="text-xl font-bold text-foreground mb-2">Retail<br />&nbsp;</p>
                 <p className="text-3xl font-bold text-foreground">{formatNumber(data["MBT Retail"] + data["FTL Retail"])}</p>
               </div>
               <div className="hidden md:block w-px bg-border"></div>
