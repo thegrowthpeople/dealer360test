@@ -345,7 +345,7 @@ export const NewForecastDialog = ({
                 <Card>
                   <CardHeader>
                     <CardTitle>Meetings</CardTitle>
-                    <CardDescription>Enter meeting activity data</CardDescription>
+                    <CardDescription>Number of meetings done in last week</CardDescription>
                   </CardHeader>
                   <CardContent className="grid grid-cols-2 gap-4">
                     <FormField
