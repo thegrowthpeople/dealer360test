@@ -627,7 +627,7 @@ Total"
                     <CardHeader>
                       <div className="flex items-center justify-between">
                         <div>
-                          <CardTitle>Delivery Forecast Detail</CardTitle>
+                          <CardTitle>Order Outlook</CardTitle>
                         </div>
                         <div className="flex gap-2">
                           <Button
@@ -678,7 +678,7 @@ Total"
                           <div>Model</div>
                           <div>Source</div>
                           <div>BDM</div>
-                          <div>Upside</div>
+                          <div>Confirmed</div>
                         </div>
                         {fields.map((field, index) => (
                           <div key={field.id} className="grid grid-cols-[40px_70px_320px_100px_120px_110px_160px_280px_140px_140px_80px] gap-2 focus-within:bg-primary/5 focus-within:shadow-sm rounded-sm p-1 -m-1 transition-all duration-150">
