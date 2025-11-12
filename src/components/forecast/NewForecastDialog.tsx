@@ -610,7 +610,7 @@ Visits"
                       </div>
                     </CardHeader>
                     <CardContent>
-                      <div className="space-y-2 max-h-[450px] overflow-y-auto pr-2 pl-4">
+                      <div className="space-y-2 max-h-[450px] overflow-y-auto pr-2 pl-0">
                         <div className="grid grid-cols-[40px_70px_278px_100px_120px_110px_160px_280px_140px_180px_160px] gap-2 font-semibold text-xs mb-2">
                           <div></div>
                           <div>QTY</div>
@@ -950,7 +950,7 @@ Received"
                       </div>
                     </CardHeader>
                     <CardContent>
-                      <div className="space-y-2 max-h-[450px] overflow-y-auto pr-2 pl-4">
+                      <div className="space-y-2 max-h-[450px] overflow-y-auto pr-2 pl-0">
                         <div className="grid grid-cols-[40px_70px_278px_100px_120px_110px_160px_280px_140px_140px_160px] gap-2 font-semibold text-xs mb-2">
                           <div></div>
                           <div>QTY</div>
@@ -1287,7 +1287,7 @@ Expected"
                       </div>
                     </CardHeader>
                     <CardContent>
-                      <div className="space-y-2 max-h-[450px] overflow-y-auto pr-2 pl-4">
+                      <div className="space-y-2 max-h-[450px] overflow-y-auto pr-2 pl-0">
                         <div className="grid grid-cols-[40px_70px_278px_100px_120px_110px_160px_280px_140px_140px_160px] gap-2 font-semibold text-xs mb-2">
                           <div></div>
                           <div>QTY</div>
@@ -1624,7 +1624,7 @@ Total"
                       </div>
                     </CardHeader>
                     <CardContent>
-                      <div className="space-y-2 max-h-[450px] overflow-y-auto pr-2 pl-4">
+                      <div className="space-y-2 max-h-[450px] overflow-y-auto pr-2 pl-0">
                         <div className="grid grid-cols-[40px_70px_278px_100px_120px_110px_160px_280px_140px_140px_80px] gap-2 font-semibold text-xs mb-2">
                           <div></div>
                           <div>QTY</div>
