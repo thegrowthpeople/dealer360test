@@ -716,7 +716,7 @@ Received"
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-2 max-h-[450px] overflow-y-auto pr-2 pl-4">
-                        <div className="grid grid-cols-[40px_70px_320px_100px_120px_110px_160px_280px_140px_140px_160px] gap-2 font-semibold text-xs mb-2">
+                        <div className="grid grid-cols-[40px_70px_320px_100px_120px_110px_160px_280px_140px_180px_160px] gap-2 font-semibold text-xs mb-2">
                           <div></div>
                           <div>QTY</div>
                           <div>Customer Name</div>
@@ -730,7 +730,7 @@ Received"
                           <div>Meeting Date</div>
                         </div>
                         {fields.map((field, index) => (
-                          <div key={field.id} className="grid grid-cols-[40px_70px_320px_100px_120px_110px_160px_280px_140px_140px_160px] gap-2 focus-within:bg-primary/5 focus-within:shadow-sm rounded-sm p-1 -m-1 transition-all duration-150">
+                          <div key={field.id} className="grid grid-cols-[40px_70px_320px_100px_120px_110px_160px_280px_140px_180px_160px] gap-2 focus-within:bg-primary/5 focus-within:shadow-sm rounded-sm p-1 -m-1 transition-all duration-150">
                             <div className="flex items-center justify-center">
                               <Button
                                 type="button"
