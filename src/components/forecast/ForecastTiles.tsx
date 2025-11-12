@@ -156,7 +156,7 @@ export const ForecastTiles = () => {
               
               {/* Right side - Breakdown with white background */}
               <div className="px-4 py-6 bg-white flex items-center justify-center flex-1">
-                <div className="flex gap-8">
+                <div className="flex gap-6">
                   <div className="space-y-1 text-center">
                     <span className="text-xs text-muted-foreground block uppercase tracking-wider">Conquest</span>
                     <span className="text-2xl text-foreground block">{formatNumber(data["Conquest Meetings"])}</span>
@@ -184,7 +184,7 @@ export const ForecastTiles = () => {
               
               {/* Right side - Breakdown with white background */}
               <div className="px-4 py-6 bg-white flex items-center justify-center flex-1">
-                <div className="flex gap-8">
+                <div className="flex gap-6">
                   <div className="space-y-1 text-center">
                     <span className="text-xs text-muted-foreground block uppercase tracking-wider">Mercedes-Benz</span>
                     <span className="text-2xl text-foreground block">{formatNumber(data["MBT Quotes Issued"])}</span>
@@ -212,7 +212,7 @@ export const ForecastTiles = () => {
               
               {/* Right side - Breakdown with white background */}
               <div className="px-4 py-6 bg-white flex items-center justify-center flex-1">
-                <div className="flex gap-8">
+                <div className="flex gap-6">
                   <div className="space-y-1 text-center">
                     <span className="text-xs text-muted-foreground block uppercase tracking-wider">Mercedes-Benz</span>
                     <span className="text-2xl text-foreground block">{formatNumber(data["MBT Orders Received"])}</span>
@@ -240,7 +240,7 @@ export const ForecastTiles = () => {
               
               {/* Right side - Breakdown with white background */}
               <div className="px-4 py-6 bg-white flex items-center justify-center flex-1">
-                <div className="flex gap-8">
+                <div className="flex gap-6">
                   <div className="space-y-1 text-center">
                     <span className="text-xs text-muted-foreground block uppercase tracking-wider">Mercedes-Benz</span>
                     <span className="text-2xl text-foreground block">{formatNumber(data["MBT Orders Expected NW"])}</span>
@@ -275,7 +275,7 @@ export const ForecastTiles = () => {
             
             {/* Right side - Breakdown with white background */}
             <div className="px-4 py-6 bg-white flex items-center justify-center flex-1">
-              <div className="flex gap-8">
+              <div className="flex gap-6">
                 <div className="space-y-1 text-center">
                   <span className="text-xs text-muted-foreground block uppercase tracking-wider">Mercedes-Benz</span>
                   <span className="text-2xl text-foreground block">{formatNumber(data["MBT Pipeline Growth"])}</span>
@@ -303,7 +303,7 @@ export const ForecastTiles = () => {
             
             {/* Right side - Breakdown with white background */}
             <div className="px-4 py-6 bg-white flex items-center justify-center flex-1">
-              <div className="flex gap-8">
+              <div className="flex gap-6">
                 <div className="space-y-1 text-center">
                   <span className="text-xs text-muted-foreground block uppercase tracking-wider">Mercedes-Benz</span>
                   <span className="text-2xl text-foreground block">{formatNumber(data["MBT Pipeline Lost"])}</span>
@@ -331,7 +331,7 @@ export const ForecastTiles = () => {
             
             {/* Right side - Breakdown with white background */}
             <div className="px-4 py-6 bg-white flex items-center justify-center flex-1">
-              <div className="flex gap-8">
+              <div className="flex gap-6">
                 <div className="space-y-1 text-center">
                   <span className="text-xs text-muted-foreground block uppercase tracking-wider">Mercedes-Benz</span>
                   <span className="text-2xl text-foreground block">{formatNumber(data["MBT Pipeline Size This QTR"])}</span>
@@ -359,7 +359,7 @@ export const ForecastTiles = () => {
             
             {/* Right side - Breakdown with white background */}
             <div className="px-4 py-6 bg-white flex items-center justify-center flex-1">
-              <div className="flex gap-8">
+              <div className="flex gap-6">
                 <div className="space-y-1 text-center">
                   <span className="text-xs text-muted-foreground block uppercase tracking-wider">Mercedes-Benz</span>
                   <span className="text-2xl text-foreground block">{formatNumber(data["MBT Pipeline Size Next QTR"])}</span>
