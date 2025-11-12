@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { format } from "date-fns";
+import { format, startOfMonth, endOfMonth, eachDayOfInterval, isMonday } from "date-fns";
 import {
   Dialog,
   DialogContent,
@@ -21,11 +21,19 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { usePerformanceFilters } from "@/contexts/PerformanceFiltersContext";
 
 const forecastSchema = z.object({
   // Activity fields
@@ -60,22 +68,44 @@ const forecastSchema = z.object({
 type ForecastFormValues = z.infer<typeof forecastSchema>;
 
 interface NewForecastDialogProps {
-  selectedWeekStarting: string | null;
-  selectedDealerId: number | null;
-  selectedYear: number | null;
-  selectedMonth: number | null;
   onSuccess: () => void;
 }
 
 export const NewForecastDialog = ({
-  selectedWeekStarting,
-  selectedDealerId,
-  selectedYear,
-  selectedMonth,
   onSuccess,
 }: NewForecastDialogProps) => {
   const [open, setOpen] = useState(false);
   const { toast } = useToast();
+  const {
+    selectedWeekStarting,
+    selectedDealerId,
+    selectedYear,
+    selectedMonth,
+    dealerships,
+  } = usePerformanceFilters();
+
+  const [localDealerId, setLocalDealerId] = useState<number | null>(null);
+  const [localWeekStarting, setLocalWeekStarting] = useState<string | null>(null);
+
+  // Use filter values or local values
+  const effectiveDealerId = selectedDealerId ?? localDealerId;
+  const effectiveWeekStarting = selectedWeekStarting ?? localWeekStarting;
+
+  // Calculate available weeks based on selected year and month
+  const availableWeeks = useMemo(() => {
+    if (!selectedYear || !selectedMonth) return [];
+    
+    const monthStart = startOfMonth(new Date(selectedYear, selectedMonth - 1));
+    const monthEnd = endOfMonth(new Date(selectedYear, selectedMonth - 1));
+    const allDays = eachDayOfInterval({ start: monthStart, end: monthEnd });
+    
+    return allDays
+      .filter(day => isMonday(day))
+      .map(monday => ({
+        date: format(monday, "yyyy-MM-dd"),
+        display: format(monday, "MMM d, yyyy")
+      }));
+  }, [selectedYear, selectedMonth]);
 
   const form = useForm<ForecastFormValues>({
     resolver: zodResolver(forecastSchema),
@@ -106,7 +136,7 @@ export const NewForecastDialog = ({
   });
 
   const onSubmit = async (values: ForecastFormValues) => {
-    if (!selectedWeekStarting) {
+    if (!effectiveWeekStarting) {
       toast({
         title: "Error",
         description: "Please select a week starting date",
@@ -115,7 +145,7 @@ export const NewForecastDialog = ({
       return;
     }
 
-    if (!selectedDealerId) {
+    if (!effectiveDealerId) {
       toast({
         title: "Error",
         description: "Please select a dealership",
@@ -126,8 +156,8 @@ export const NewForecastDialog = ({
 
     try {
       const { error } = await supabase.from("Forecast").insert({
-        "Dealer ID": selectedDealerId,
-        "Forecast Date": selectedWeekStarting,
+        "Dealer ID": effectiveDealerId,
+        "Forecast Date": effectiveWeekStarting,
         "Conquest Meetings": values.conquestMeetings,
         "Customer Meetings": values.customerMeetings,
         "MBT Quotes Issued": values.mbtQuotesIssued,
@@ -161,6 +191,8 @@ export const NewForecastDialog = ({
 
       form.reset();
       setOpen(false);
+      setLocalDealerId(null);
+      setLocalWeekStarting(null);
       onSuccess();
     } catch (error) {
       console.error("Error creating forecast:", error);
@@ -182,25 +214,88 @@ export const NewForecastDialog = ({
           New Forecast
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-4xl h-[85vh] flex flex-col">
         <DialogHeader>
           <DialogTitle>New Forecast Entry</DialogTitle>
           <DialogDescription>
-            Create a new forecast entry for{" "}
-            {selectedWeekStarting && format(new Date(selectedWeekStarting), "MMMM d, yyyy")}
+            Create a new forecast entry
           </DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <Tabs defaultValue="activity" className="w-full">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="flex-1 flex flex-col overflow-hidden">
+            <div className="space-y-4 mb-4">
+              {/* Dealership Selection */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Dealership</label>
+                  {selectedDealerId ? (
+                    <div className="p-3 bg-primary/10 rounded-md border border-primary/20">
+                      <p className="text-sm font-medium">
+                        {dealerships.find(d => d["Dealer ID"] === selectedDealerId)?.Dealership}
+                      </p>
+                      <p className="text-xs text-muted-foreground">From filters</p>
+                    </div>
+                  ) : (
+                    <Select
+                      value={localDealerId?.toString() || ""}
+                      onValueChange={(value) => setLocalDealerId(parseInt(value))}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select dealership" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {dealerships.map((dealer) => (
+                          <SelectItem key={dealer["Dealer ID"]} value={dealer["Dealer ID"].toString()}>
+                            {dealer.Dealership}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                </div>
+
+                {/* Week Selection */}
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Week Starting</label>
+                  {selectedWeekStarting ? (
+                    <div className="p-3 bg-primary/10 rounded-md border border-primary/20">
+                      <p className="text-sm font-medium">
+                        {format(new Date(selectedWeekStarting), "MMMM d, yyyy")}
+                      </p>
+                      <p className="text-xs text-muted-foreground">From filters</p>
+                    </div>
+                  ) : (
+                    <Select
+                      value={localWeekStarting || ""}
+                      onValueChange={setLocalWeekStarting}
+                      disabled={availableWeeks.length === 0}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder={availableWeeks.length === 0 ? "Select month first" : "Select week"} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {availableWeeks.map((week) => (
+                          <SelectItem key={week.date} value={week.date}>
+                            {week.display}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <Tabs defaultValue="activity" className="flex-1 flex flex-col overflow-hidden">
               <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="activity">Activity</TabsTrigger>
                 <TabsTrigger value="pipeline">Pipeline</TabsTrigger>
                 <TabsTrigger value="forecast">Forecast</TabsTrigger>
               </TabsList>
 
-              <TabsContent value="activity" className="space-y-4 mt-4">
+              <div className="flex-1 overflow-y-auto mt-4">
+                <TabsContent value="activity" className="space-y-4 mt-0 h-full">
                 <Card>
                   <CardHeader>
                     <CardTitle>Meetings</CardTitle>
@@ -340,9 +435,9 @@ export const NewForecastDialog = ({
                     />
                   </CardContent>
                 </Card>
-              </TabsContent>
+                </TabsContent>
 
-              <TabsContent value="pipeline" className="space-y-4 mt-4">
+                <TabsContent value="pipeline" className="space-y-4 mt-0 h-full">
                 <Card>
                   <CardHeader>
                     <CardTitle>Pipeline Growth</CardTitle>
@@ -482,9 +577,9 @@ export const NewForecastDialog = ({
                     />
                   </CardContent>
                 </Card>
-              </TabsContent>
+                </TabsContent>
 
-              <TabsContent value="forecast" className="space-y-4 mt-4">
+                <TabsContent value="forecast" className="space-y-4 mt-0 h-full">
                 <Card>
                   <CardHeader>
                     <CardTitle>Retail</CardTitle>
@@ -589,10 +684,11 @@ export const NewForecastDialog = ({
                     />
                   </CardContent>
                 </Card>
-              </TabsContent>
+                </TabsContent>
+              </div>
             </Tabs>
 
-            <div className="flex justify-end gap-3">
+            <div className="flex justify-end gap-3 pt-4 border-t">
               <Button type="button" variant="outline" onClick={() => setOpen(false)}>
                 Cancel
               </Button>

@@ -52,10 +52,6 @@ const Forecast = () => {
             </p>
           </div>
           <NewForecastDialog
-            selectedWeekStarting={selectedWeekStarting}
-            selectedDealerId={selectedDealerId}
-            selectedYear={selectedYear}
-            selectedMonth={selectedMonth}
             onSuccess={handleForecastCreated}
           />
         </div>
