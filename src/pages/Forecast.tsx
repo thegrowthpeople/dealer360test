@@ -48,7 +48,7 @@ const Forecast = () => {
         <p className="text-muted-foreground mb-4">
           {filterLabel || "All Dealerships"}
         </p>
-        <div className="flex items-center gap-3 flex-wrap">
+        <div className="flex items-center gap-3 flex-wrap justify-between">
           <PerformanceFilters />
           <NewForecastDialog
             onSuccess={handleForecastCreated}
