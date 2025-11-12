@@ -216,7 +216,7 @@ export const NewForecastDialog = ({
       </DialogTrigger>
       <DialogContent className="max-w-6xl h-[85vh] flex flex-col">
         <DialogHeader>
-          <DialogTitle>New Forecast Entry</DialogTitle>
+          <DialogTitle className="text-2xl font-bold">NEW FORECAST</DialogTitle>
           <DialogDescription>
             Create a new forecast entry
           </DialogDescription>
@@ -288,10 +288,25 @@ export const NewForecastDialog = ({
             </div>
 
             <Tabs defaultValue="activity" className="flex-1 flex flex-col overflow-hidden">
-              <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="activity">Activity</TabsTrigger>
-                <TabsTrigger value="pipeline">Pipeline</TabsTrigger>
-                <TabsTrigger value="forecast">Forecast</TabsTrigger>
+              <TabsList className="grid w-full grid-cols-3 h-12 p-1 bg-muted">
+                <TabsTrigger 
+                  value="activity" 
+                  className="text-base font-semibold data-[state=active]:bg-background data-[state=active]:shadow-md transition-all"
+                >
+                  Activity
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="pipeline" 
+                  className="text-base font-semibold data-[state=active]:bg-background data-[state=active]:shadow-md transition-all"
+                >
+                  Pipeline
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="forecast" 
+                  className="text-base font-semibold data-[state=active]:bg-background data-[state=active]:shadow-md transition-all"
+                >
+                  Forecast
+                </TabsTrigger>
               </TabsList>
 
               <div className="flex-1 overflow-y-auto mt-4">
