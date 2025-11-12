@@ -265,7 +265,7 @@ export const ForecastTiles = () => {
         <Card className="p-0 overflow-hidden border-primary/20">
           <div className="flex flex-col md:flex-row">
             {/* Left side - Total with colored background */}
-            <div className="p-6 bg-primary/10 w-[240px]">
+            <div className="p-4 bg-primary/10 w-[150px]">
               <p className="text-xl font-bold text-foreground mb-2">Pipeline Growth</p>
               <p className="text-3xl font-bold text-foreground">{formatNumber(pipelineGrowth)}</p>
             </div>
@@ -274,7 +274,7 @@ export const ForecastTiles = () => {
             <div className="hidden md:block w-px bg-border"></div>
             
             {/* Right side - Breakdown with white background */}
-            <div className="p-6 bg-white flex items-end w-[260px]">
+            <div className="px-4 py-6 bg-white flex items-center justify-center flex-1">
               <div className="flex gap-8">
                 <div className="space-y-1 text-center">
                   <span className="text-xs text-muted-foreground block uppercase tracking-wider">Mercedes-Benz</span>
@@ -293,7 +293,7 @@ export const ForecastTiles = () => {
         <Card className="p-0 overflow-hidden border-primary/20">
           <div className="flex flex-col md:flex-row">
             {/* Left side - Total with colored background */}
-            <div className="p-6 bg-primary/10 w-[240px]">
+            <div className="p-4 bg-primary/10 w-[150px]">
               <p className="text-xl font-bold text-foreground mb-2">Pipeline Lost</p>
               <p className="text-3xl font-bold text-foreground">{formatNumber(pipelineLost)}</p>
             </div>
@@ -302,7 +302,7 @@ export const ForecastTiles = () => {
             <div className="hidden md:block w-px bg-border"></div>
             
             {/* Right side - Breakdown with white background */}
-            <div className="p-6 bg-white flex items-end w-[260px]">
+            <div className="px-4 py-6 bg-white flex items-center justify-center flex-1">
               <div className="flex gap-8">
                 <div className="space-y-1 text-center">
                   <span className="text-xs text-muted-foreground block uppercase tracking-wider">Mercedes-Benz</span>
@@ -321,7 +321,7 @@ export const ForecastTiles = () => {
         <Card className="p-0 overflow-hidden border-primary/20">
           <div className="flex flex-col md:flex-row">
             {/* Left side - Total with colored background */}
-            <div className="p-6 bg-primary/10 w-[240px]">
+            <div className="p-4 bg-primary/10 w-[150px]">
               <p className="text-xl font-bold text-foreground mb-2">Mercedes-Benz Pipeline</p>
               <p className="text-3xl font-bold text-foreground">{formatNumber(mbtPipeline)}</p>
             </div>
@@ -330,7 +330,7 @@ export const ForecastTiles = () => {
             <div className="hidden md:block w-px bg-border"></div>
             
             {/* Right side - Breakdown with white background */}
-            <div className="p-6 bg-white flex items-end w-[260px]">
+            <div className="px-4 py-6 bg-white flex items-center justify-center flex-1">
               <div className="flex gap-8">
                 <div className="space-y-1 text-center">
                   <span className="text-xs text-muted-foreground block uppercase tracking-wider">This QTR</span>
@@ -349,7 +349,7 @@ export const ForecastTiles = () => {
         <Card className="p-0 overflow-hidden border-primary/20">
           <div className="flex flex-col md:flex-row">
             {/* Left side - Total with colored background */}
-            <div className="p-6 bg-primary/10 w-[240px]">
+            <div className="p-4 bg-primary/10 w-[150px]">
               <p className="text-xl font-bold text-foreground mb-2">Freightliner Pipeline</p>
               <p className="text-3xl font-bold text-foreground">{formatNumber(ftlPipeline)}</p>
             </div>
@@ -358,7 +358,7 @@ export const ForecastTiles = () => {
             <div className="hidden md:block w-px bg-border"></div>
             
             {/* Right side - Breakdown with white background */}
-            <div className="p-6 bg-white flex items-end w-[260px]">
+            <div className="px-4 py-6 bg-white flex items-center justify-center flex-1">
               <div className="flex gap-8">
                 <div className="space-y-1 text-center">
                   <span className="text-xs text-muted-foreground block uppercase tracking-wider">This QTR</span>
