@@ -427,11 +427,11 @@ export const ForecastTiles = () => {
             </div>
           </Card>
 
-          {/* Retail */}
+          {/* Own Retail */}
           <Card className="p-0 overflow-hidden border-primary/20 shadow-md hover:shadow-lg hover:scale-[1.02] transition-all duration-300">
             <div className="flex flex-col md:flex-row">
               <div className="p-4 bg-primary/10 w-[150px]">
-                <p className="text-xl font-bold text-foreground mb-2">Retail<br />&nbsp;</p>
+                <p className="text-xl font-bold text-foreground mb-2">Own<br />Retail</p>
                 <p className="text-3xl font-bold text-foreground">{formatNumber(data["MBT Retail"] + data["FTL Retail"])}</p>
               </div>
               <div className="hidden md:block w-px bg-border"></div>
