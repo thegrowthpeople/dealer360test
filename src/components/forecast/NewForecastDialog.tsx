@@ -295,7 +295,7 @@ export const NewForecastDialog = ({
             </div>
 
             <Tabs defaultValue="activity" className="flex-1 flex flex-col overflow-visible">
-              <TabsList className="grid w-full grid-cols-6 h-12 p-1 bg-muted">
+              <TabsList className="grid w-full grid-cols-7 h-12 p-1 bg-muted">
                 <TabsTrigger 
                   value="activity" 
                   className="text-base font-semibold data-[state=active]:bg-background data-[state=active]:shadow-md transition-all"
@@ -303,7 +303,13 @@ export const NewForecastDialog = ({
                   Activity
                 </TabsTrigger>
                 <TabsTrigger 
-                  value="pipeline" 
+                  value="pipeline2" 
+                  className="text-base font-semibold data-[state=active]:bg-background data-[state=active]:shadow-md transition-all"
+                >
+                  Pipeline2
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="pipelineNew" 
                   className="text-base font-semibold data-[state=active]:bg-background data-[state=active]:shadow-md transition-all"
                 >
                   Pipeline
@@ -372,7 +378,7 @@ export const NewForecastDialog = ({
                 </Card>
                 </TabsContent>
 
-                <TabsContent value="pipeline" className="space-y-4 mt-0 h-full">
+                <TabsContent value="pipeline2" className="space-y-4 mt-0 h-full">
                 <Card>
                   <CardHeader>
                     <CardTitle>Pipeline Growth</CardTitle>
@@ -512,6 +518,342 @@ export const NewForecastDialog = ({
                     />
                   </CardContent>
                 </Card>
+                </TabsContent>
+
+                <TabsContent value="pipelineNew" className="space-y-4 mt-0 h-full overflow-visible">
+                  {/* First Row: Four Total Columns */}
+                  <div className="grid grid-cols-4 gap-6 mb-6 overflow-visible">
+                    <ForecastTotalCard
+                      title="Orders
+Received"
+                      mbTotal={
+                        (form.watch("forecastRows")?.filter(r => r.brand === "Mercedes-Benz" && (r.type === "Retail" || r.type === "Indirect Fleet" || r.type === "Direct Fleet")).reduce((sum, r) => sum + (typeof r.qty === 'string' ? parseFloat(r.qty) || 0 : r.qty || 0), 0) || 0)
+                      }
+                      ftlTotal={
+                        (form.watch("forecastRows")?.filter(r => r.brand === "Freightliner" && (r.type === "Retail" || r.type === "Indirect Fleet" || r.type === "Direct Fleet")).reduce((sum, r) => sum + (typeof r.qty === 'string' ? parseFloat(r.qty) || 0 : r.qty || 0), 0) || 0)
+                      }
+                      leftBgColor="bg-primary"
+                      rightBgColor="bg-primary/10"
+                      leftTextColor="text-white"
+                    />
+                    <ForecastTotalCard
+                      title="Own Retail"
+                      mbTotal={form.watch("forecastRows")?.filter(r => r.brand === "Mercedes-Benz" && r.type === "Retail").reduce((sum, r) => sum + (typeof r.qty === 'string' ? parseFloat(r.qty) || 0 : r.qty || 0), 0) || 0}
+                      ftlTotal={form.watch("forecastRows")?.filter(r => r.brand === "Freightliner" && r.type === "Retail").reduce((sum, r) => sum + (typeof r.qty === 'string' ? parseFloat(r.qty) || 0 : r.qty || 0), 0) || 0}
+                    />
+                    <ForecastTotalCard
+                      title="Indirect Fleet"
+                      mbTotal={form.watch("forecastRows")?.filter(r => r.brand === "Mercedes-Benz" && r.type === "Indirect Fleet").reduce((sum, r) => sum + (typeof r.qty === 'string' ? parseFloat(r.qty) || 0 : r.qty || 0), 0) || 0}
+                      ftlTotal={form.watch("forecastRows")?.filter(r => r.brand === "Freightliner" && r.type === "Indirect Fleet").reduce((sum, r) => sum + (typeof r.qty === 'string' ? parseFloat(r.qty) || 0 : r.qty || 0), 0) || 0}
+                    />
+                    <ForecastTotalCard
+                      title="Direct Fleet"
+                      mbTotal={form.watch("forecastRows")?.filter(r => r.brand === "Mercedes-Benz" && r.type === "Direct Fleet").reduce((sum, r) => sum + (typeof r.qty === 'string' ? parseFloat(r.qty) || 0 : r.qty || 0), 0) || 0}
+                      ftlTotal={form.watch("forecastRows")?.filter(r => r.brand === "Freightliner" && r.type === "Direct Fleet").reduce((sum, r) => sum + (typeof r.qty === 'string' ? parseFloat(r.qty) || 0 : r.qty || 0), 0) || 0}
+                    />
+                  </div>
+
+                  {/* Second Row: Data Entry Table */}
+                  <Card>
+                    <CardHeader>
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <CardTitle>Orders Received in last week</CardTitle>
+                        </div>
+                        <div className="flex gap-2">
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  type="button"
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => {
+                                    remove(Array.from({ length: fields.length }, (_, i) => i));
+                                    append({
+                                      qty: null,
+                                      customerName: "",
+                                      customerType: "" as const,
+                                      salesSupport: null,
+                                      demoTruck: null,
+                                      brand: null,
+                                      model: "",
+                                      type: null,
+                                      bdm: "" as const,
+                                      upside: false,
+                                      estimatedDelivery: "",
+                                    });
+                                  }}
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>Delete entire table</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <span>
+                                  <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="sm"
+                                    disabled
+                                  >
+                                    <Copy className="h-4 w-4" />
+                                  </Button>
+                                </span>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>Copy from a previous week</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        </div>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-2 max-h-[450px] overflow-y-auto pr-2 pl-4">
+                        <div className="grid grid-cols-[40px_70px_278px_100px_120px_110px_160px_280px_140px_140px_160px] gap-2 font-semibold text-xs mb-2">
+                          <div></div>
+                          <div>QTY</div>
+                          <div>Customer Name</div>
+                          <div>Type</div>
+                          <div>Sales Support $</div>
+                          <div>Demo Truck $</div>
+                          <div>Brand</div>
+                          <div>Model</div>
+                          <div>Source</div>
+                          <div>BDM</div>
+                          <div>Est. Delivery</div>
+                        </div>
+                        {fields.map((field, index) => (
+                          <div key={field.id} className="grid grid-cols-[40px_70px_278px_100px_120px_110px_160px_280px_140px_140px_160px] gap-2 focus-within:bg-primary/5 focus-within:shadow-sm rounded-sm transition-all duration-150">
+                            <div className="flex items-center justify-center">
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => remove(index)}
+                                className="h-7 w-7 p-0 hover:bg-destructive/10"
+                                title="Delete row"
+                              >
+                                <X className="h-4 w-4 text-destructive" />
+                              </Button>
+                            </div>
+                            <FormField
+                              control={form.control}
+                              name={`forecastRows.${index}.qty`}
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormControl>
+                                    <Input
+                                      type="number"
+                                      {...field}
+                                      onChange={(e) => field.onChange(parseFloat(e.target.value) || null)}
+                                      className={`h-9 text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${(!field.value || field.value <= 0) ? 'border-destructive' : ''}`}
+                                    />
+                                  </FormControl>
+                                  <FormMessage className="text-xs" />
+                                </FormItem>
+                              )}
+                            />
+                            <FormField
+                              control={form.control}
+                              name={`forecastRows.${index}.customerName`}
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormControl>
+                                    <Input
+                                      {...field}
+                                      className={`h-9 text-sm ${!field.value || field.value.trim() === '' ? 'border-destructive' : ''}`}
+                                    />
+                                  </FormControl>
+                                  <FormMessage className="text-xs" />
+                                </FormItem>
+                              )}
+                            />
+                            <FormField
+                              control={form.control}
+                              name={`forecastRows.${index}.customerType`}
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormControl>
+                                    <Select value={field.value} onValueChange={field.onChange}>
+                                      <SelectTrigger className="h-9 text-sm">
+                                        <SelectValue />
+                                      </SelectTrigger>
+                                      <SelectContent>
+                                        <SelectItem value="Existing">Existing</SelectItem>
+                                        <SelectItem value="New">New</SelectItem>
+                                      </SelectContent>
+                                    </Select>
+                                  </FormControl>
+                                </FormItem>
+                              )}
+                            />
+                            <FormField
+                              control={form.control}
+                              name={`forecastRows.${index}.salesSupport`}
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormControl>
+                                    <Input
+                                      type="number"
+                                      {...field}
+                                      onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                                      className="h-9 text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                    />
+                                  </FormControl>
+                                </FormItem>
+                              )}
+                            />
+                            <FormField
+                              control={form.control}
+                              name={`forecastRows.${index}.demoTruck`}
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormControl>
+                                    <Input
+                                      type="number"
+                                      {...field}
+                                      onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                                      className="h-9 text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                    />
+                                  </FormControl>
+                                </FormItem>
+                              )}
+                            />
+                             <FormField
+                              control={form.control}
+                              name={`forecastRows.${index}.brand`}
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormControl>
+                                    <Select value={field.value} onValueChange={field.onChange}>
+                                      <SelectTrigger className={`h-9 text-sm ${!field.value ? 'border-destructive' : ''}`}>
+                                        <SelectValue />
+                                      </SelectTrigger>
+                                      <SelectContent>
+                                        <SelectItem value="Mercedes-Benz">Mercedes-Benz</SelectItem>
+                                        <SelectItem value="Freightliner">Freightliner</SelectItem>
+                                      </SelectContent>
+                                    </Select>
+                                  </FormControl>
+                                  <FormMessage className="text-xs" />
+                                </FormItem>
+                              )}
+                            />
+                            <FormField
+                              control={form.control}
+                              name={`forecastRows.${index}.model`}
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormControl>
+                                    <Input
+                                      {...field}
+                                      className={`h-9 text-sm ${!field.value || field.value.trim() === '' ? 'border-destructive' : ''}`}
+                                    />
+                                  </FormControl>
+                                  <FormMessage className="text-xs" />
+                                </FormItem>
+                              )}
+                            />
+                             <FormField
+                              control={form.control}
+                              name={`forecastRows.${index}.type`}
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormControl>
+                                    <Select value={field.value} onValueChange={field.onChange}>
+                                      <SelectTrigger className={`h-9 text-sm ${!field.value ? 'border-destructive' : ''}`}>
+                                        <SelectValue />
+                                      </SelectTrigger>
+                                      <SelectContent>
+                                        <SelectItem value="Retail">Retail</SelectItem>
+                                        <SelectItem value="Indirect Fleet">Indirect Fleet</SelectItem>
+                                        <SelectItem value="Direct Fleet">Direct Fleet</SelectItem>
+                                      </SelectContent>
+                                    </Select>
+                                  </FormControl>
+                                  <FormMessage className="text-xs" />
+                                </FormItem>
+                              )}
+                            />
+                            <FormField
+                              control={form.control}
+                              name={`forecastRows.${index}.bdm`}
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormControl>
+                                    <Select value={field.value} onValueChange={field.onChange}>
+                                      <SelectTrigger className="h-9 text-sm">
+                                        <SelectValue />
+                                      </SelectTrigger>
+                                      <SelectContent>
+                                        <SelectItem value="Met in Person">Met in Person</SelectItem>
+                                        <SelectItem value="Relationship">Relationship</SelectItem>
+                                        <SelectItem value="Supported">Supported</SelectItem>
+                                      </SelectContent>
+                                    </Select>
+                                  </FormControl>
+                                </FormItem>
+                              )}
+                            />
+                            <FormField
+                              control={form.control}
+                              name={`forecastRows.${index}.estimatedDelivery`}
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormControl>
+                                    <Popover>
+                                      <PopoverTrigger asChild>
+                                        <Button
+                                          variant="outline"
+                                          className={cn(
+                                            "h-9 text-sm justify-start text-left font-normal w-full",
+                                            !field.value && "text-muted-foreground border-destructive"
+                                          )}
+                                        >
+                                          <CalendarIcon className="mr-2 h-4 w-4" />
+                                          {field.value ? format(new Date(field.value), "PP") : <span>Pick date</span>}
+                                        </Button>
+                                      </PopoverTrigger>
+                                      <PopoverContent className="w-auto p-0" align="start">
+                                        <Calendar
+                                          mode="single"
+                                          selected={field.value ? new Date(field.value) : undefined}
+                                          onSelect={(date) => field.onChange(date?.toISOString())}
+                                          initialFocus
+                                          className={cn("p-3 pointer-events-auto")}
+                                        />
+                                      </PopoverContent>
+                                    </Popover>
+                                  </FormControl>
+                                </FormItem>
+                              )}
+                            />
+                          </div>
+                        ))}
+                        
+                        <div className="pt-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={handleAddRow}
+                            className="gap-2"
+                          >
+                            <Plus className="h-4 w-4" />
+                            Add Order Received
+                          </Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
                 </TabsContent>
 
                 <TabsContent value="bdmVisitations" className="space-y-4 mt-0 h-full overflow-visible">
