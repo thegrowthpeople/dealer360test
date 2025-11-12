@@ -624,7 +624,7 @@ export const NewForecastDialog = ({
                   <div className="grid grid-cols-4 gap-6 mb-6 overflow-visible">
                     <ForecastTotalCard
                       title="BDM
-Visitations"
+Visits"
                       mbTotal={
                         (form.watch("forecastRows")?.filter(r => r.brand === "Mercedes-Benz" && (r.type === "Retail" || r.type === "Indirect Fleet" || r.type === "Direct Fleet")).reduce((sum, r) => sum + (typeof r.qty === 'string' ? parseFloat(r.qty) || 0 : r.qty || 0), 0) || 0)
                       }
@@ -716,7 +716,7 @@ Visitations"
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-2 max-h-[450px] overflow-y-auto pr-2 pl-4">
-                        <div className="grid grid-cols-[40px_70px_318px_100px_120px_110px_160px_280px_140px_180px_160px] gap-2 font-semibold text-xs mb-2">
+                        <div className="grid grid-cols-[40px_70px_278px_100px_120px_110px_160px_280px_140px_180px_160px] gap-2 font-semibold text-xs mb-2">
                           <div></div>
                           <div>QTY</div>
                           <div>Customer Name</div>
@@ -730,7 +730,7 @@ Visitations"
                           <div>Meeting Date</div>
                         </div>
                         {fields.map((field, index) => (
-                          <div key={field.id} className="grid grid-cols-[40px_70px_318px_100px_120px_110px_160px_280px_140px_180px_160px] gap-2 focus-within:bg-primary/5 focus-within:shadow-sm rounded-sm transition-all duration-150">
+                          <div key={field.id} className="grid grid-cols-[40px_70px_278px_100px_120px_110px_160px_280px_140px_180px_160px] gap-2 focus-within:bg-primary/5 focus-within:shadow-sm rounded-sm transition-all duration-150">
                             <div className="flex items-center justify-center">
                               <Button
                                 type="button"
@@ -1056,7 +1056,7 @@ Received"
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-2 max-h-[450px] overflow-y-auto pr-2 pl-4">
-                        <div className="grid grid-cols-[40px_70px_318px_100px_120px_110px_160px_280px_140px_140px_160px] gap-2 font-semibold text-xs mb-2">
+                        <div className="grid grid-cols-[40px_70px_278px_100px_120px_110px_160px_280px_140px_140px_160px] gap-2 font-semibold text-xs mb-2">
                           <div></div>
                           <div>QTY</div>
                           <div>Customer Name</div>
@@ -1070,7 +1070,7 @@ Received"
                           <div>Est. Delivery</div>
                         </div>
                         {fields.map((field, index) => (
-                          <div key={field.id} className="grid grid-cols-[40px_70px_318px_100px_120px_110px_160px_280px_140px_140px_160px] gap-2 focus-within:bg-primary/5 focus-within:shadow-sm rounded-sm transition-all duration-150">
+                          <div key={field.id} className="grid grid-cols-[40px_70px_278px_100px_120px_110px_160px_280px_140px_140px_160px] gap-2 focus-within:bg-primary/5 focus-within:shadow-sm rounded-sm transition-all duration-150">
                             <div className="flex items-center justify-center">
                               <Button
                                 type="button"
@@ -1393,7 +1393,7 @@ Expected"
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-2 max-h-[450px] overflow-y-auto pr-2 pl-4">
-                        <div className="grid grid-cols-[40px_70px_318px_100px_120px_110px_160px_280px_140px_140px_160px] gap-2 font-semibold text-xs mb-2">
+                        <div className="grid grid-cols-[40px_70px_278px_100px_120px_110px_160px_280px_140px_140px_160px] gap-2 font-semibold text-xs mb-2">
                           <div></div>
                           <div>QTY</div>
                           <div>Customer Name</div>
@@ -1407,7 +1407,7 @@ Expected"
                           <div>Order Date</div>
                         </div>
                         {fields.map((field, index) => (
-                          <div key={field.id} className="grid grid-cols-[40px_70px_318px_100px_120px_110px_160px_280px_140px_140px_160px] gap-2 focus-within:bg-primary/5 focus-within:shadow-sm rounded-sm transition-all duration-150">
+                          <div key={field.id} className="grid grid-cols-[40px_70px_278px_100px_120px_110px_160px_280px_140px_140px_160px] gap-2 focus-within:bg-primary/5 focus-within:shadow-sm rounded-sm transition-all duration-150">
                             <div className="flex items-center justify-center">
                               <Button
                                 type="button"
@@ -1730,7 +1730,7 @@ Total"
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-2 max-h-[450px] overflow-y-auto pr-2 pl-4">
-                        <div className="grid grid-cols-[40px_70px_318px_100px_120px_110px_160px_280px_140px_140px_80px] gap-2 font-semibold text-xs mb-2">
+                        <div className="grid grid-cols-[40px_70px_278px_100px_120px_110px_160px_280px_140px_140px_80px] gap-2 font-semibold text-xs mb-2">
                           <div></div>
                           <div>QTY</div>
                           <div>Customer Name</div>
@@ -1744,7 +1744,7 @@ Total"
                           <div>Upside</div>
                         </div>
                         {fields.map((field, index) => (
-                          <div key={field.id} className="grid grid-cols-[40px_70px_318px_100px_120px_110px_160px_280px_140px_140px_80px] gap-2 focus-within:bg-primary/5 focus-within:shadow-sm rounded-sm transition-all duration-150">
+                          <div key={field.id} className="grid grid-cols-[40px_70px_278px_100px_120px_110px_160px_280px_140px_140px_80px] gap-2 focus-within:bg-primary/5 focus-within:shadow-sm rounded-sm transition-all duration-150">
                             <div className="flex items-center justify-center">
                               <Button
                                 type="button"
