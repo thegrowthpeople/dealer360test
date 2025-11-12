@@ -306,13 +306,13 @@ export const NewForecastDialog = ({
                   value="pipeline2" 
                   className="text-base font-semibold data-[state=active]:bg-background data-[state=active]:shadow-md transition-all"
                 >
-                  Pipeline2
+                  Pipeline
                 </TabsTrigger>
                 <TabsTrigger 
                   value="pipelineNew" 
                   className="text-base font-semibold data-[state=active]:bg-background data-[state=active]:shadow-md transition-all"
                 >
-                  Pipeline
+                  Lost Opportunities
                 </TabsTrigger>
                 <TabsTrigger 
                   value="bdmVisitations" 
