@@ -77,7 +77,7 @@ const forecastSchema = z.object({
     type: z.enum(["Retail", "Indirect Fleet", "Direct Fleet"]).nullable().refine((val) => val !== null, { message: "Source is required" }),
     bdm: z.enum(["Met in Person", "Relationship", "Supported", ""]),
     upside: z.boolean(),
-    estimatedDelivery: z.string().optional(),
+    estimatedDelivery: z.string().min(1, "Est. Delivery is required"),
   })),
 });
 
@@ -189,7 +189,7 @@ export const NewForecastDialog = ({
       type: null,
       bdm: "",
       upside: false,
-      estimatedDelivery: undefined,
+      estimatedDelivery: "",
     });
   };
 
@@ -213,7 +213,7 @@ export const NewForecastDialog = ({
           New Forecast
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-[1800px] h-[90vh] flex flex-col p-12">
+      <DialogContent className="max-w-[1950px] h-[90vh] flex flex-col p-12">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold">NEW FORECAST</DialogTitle>
           <DialogDescription>
@@ -657,7 +657,7 @@ Total"
                                 type: null,
                                 bdm: "" as const,
                                 upside: false,
-                                estimatedDelivery: undefined,
+                                estimatedDelivery: "",
                               });
                             }}
                             title="Clear all table data"
@@ -877,7 +877,7 @@ Total"
                                           variant="outline"
                                           className={cn(
                                             "h-9 text-sm justify-start text-left font-normal w-full",
-                                            !field.value && "text-muted-foreground"
+                                            !field.value && "text-muted-foreground border-destructive"
                                           )}
                                         >
                                           <CalendarIcon className="mr-2 h-4 w-4" />
@@ -976,7 +976,7 @@ Total"
                                 type: null,
                                 bdm: "" as const,
                                 upside: false,
-                                estimatedDelivery: undefined,
+                                estimatedDelivery: "",
                               });
                             }}
                             title="Clear all table data"
