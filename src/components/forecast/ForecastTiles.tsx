@@ -146,7 +146,7 @@ export const ForecastTiles = () => {
           <Card className="p-0 overflow-hidden border-primary/20 flex-shrink-0 w-[500px]">
             <div className="flex flex-col md:flex-row">
               {/* Left side - Total with colored background */}
-              <div className="p-6 bg-primary/10">
+              <div className="p-6 bg-primary/10 w-[240px]">
                 <p className="text-xl font-bold text-foreground mb-2">Total Meetings</p>
                 <p className="text-3xl font-bold text-foreground">{formatNumber(totalMeetings)}</p>
               </div>
@@ -174,7 +174,7 @@ export const ForecastTiles = () => {
           <Card className="p-0 overflow-hidden border-primary/20 flex-shrink-0 w-[500px]">
             <div className="flex flex-col md:flex-row">
               {/* Left side - Total with colored background */}
-              <div className="p-6 bg-primary/10">
+              <div className="p-6 bg-primary/10 w-[240px]">
                 <p className="text-xl font-bold text-foreground mb-2">Quotes Issued</p>
                 <p className="text-3xl font-bold text-foreground">{formatNumber(totalQuotesIssued)}</p>
               </div>
@@ -202,7 +202,7 @@ export const ForecastTiles = () => {
           <Card className="p-0 overflow-hidden border-primary/20 flex-shrink-0 w-[500px]">
             <div className="flex flex-col md:flex-row">
               {/* Left side - Total with colored background */}
-              <div className="p-6 bg-primary/10">
+              <div className="p-6 bg-primary/10 w-[240px]">
                 <p className="text-xl font-bold text-foreground mb-2">Orders Received</p>
                 <p className="text-3xl font-bold text-foreground">{formatNumber(totalOrdersReceived)}</p>
               </div>
@@ -230,7 +230,7 @@ export const ForecastTiles = () => {
           <Card className="p-0 overflow-hidden border-primary/20 flex-shrink-0 w-[500px]">
             <div className="flex flex-col md:flex-row">
               {/* Left side - Total with colored background */}
-              <div className="p-6 bg-primary/10">
+              <div className="p-6 bg-primary/10 w-[240px]">
                 <p className="text-xl font-bold text-foreground mb-2">Orders Expected</p>
                 <p className="text-3xl font-bold text-foreground">{formatNumber(totalOrdersExpected)}</p>
               </div>
