@@ -31,7 +31,7 @@ interface ForecastData {
 }
 
 export const ForecastTiles = () => {
-  const { selectedBDMId, selectedGroup, selectedDealerId, selectedYear, selectedMonth, dealerships } = usePerformanceFilters();
+  const { selectedBDMId, selectedGroup, selectedDealerId, selectedYear, selectedMonth, selectedWeekStarting, dealerships } = usePerformanceFilters();
   const [data, setData] = useState<ForecastData>({
     "Conquest Meetings": 0,
     "Customer Meetings": 0,
@@ -61,7 +61,7 @@ export const ForecastTiles = () => {
     if (dealerships.length > 0) {
       fetchForecastData();
     }
-  }, [selectedBDMId, selectedGroup, selectedDealerId, selectedYear, selectedMonth, dealerships]);
+  }, [selectedBDMId, selectedGroup, selectedDealerId, selectedYear, selectedMonth, selectedWeekStarting, dealerships]);
 
   const fetchForecastData = async () => {
     try {
@@ -73,6 +73,19 @@ export const ForecastTiles = () => {
 
       if (selectedMonth) {
         query = query.eq("Month", selectedMonth);
+      }
+
+      // Filter by week starting date if selected
+      if (selectedWeekStarting) {
+        const weekStart = new Date(selectedWeekStarting);
+        const weekEnd = new Date(selectedWeekStarting);
+        weekEnd.setDate(weekEnd.getDate() + 6); // Add 6 days to get Sunday
+
+        const formatDate = (date: Date) => date.toISOString().split('T')[0];
+        
+        query = query
+          .gte("Forecast Date", formatDate(weekStart))
+          .lte("Forecast Date", formatDate(weekEnd));
       }
 
       if (selectedDealerId !== null) {
