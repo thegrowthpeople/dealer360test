@@ -705,7 +705,7 @@ export const NewForecastDialog = ({
                                       type="number"
                                       {...field}
                                       onChange={(e) => field.onChange(parseFloat(e.target.value) || null)}
-                                      className="h-9 text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none focus:border-l-4 focus:border-l-primary pl-2"
+                                      className="h-9 text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none focus-visible:border-l-[6px] focus-visible:border-l-primary pl-3"
                                     />
                                   </FormControl>
                                 </FormItem>
