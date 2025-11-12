@@ -643,63 +643,61 @@ Received"
                   {/* Second Row: Data Entry Table */}
                   <Card>
                     <CardHeader>
-                      <div>
-                        <CardTitle>Orders Received in last week</CardTitle>
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <CardTitle>Orders Received in last week</CardTitle>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              remove(Array.from({ length: fields.length }, (_, i) => i));
+                              append({
+                                qty: null,
+                                customerName: "",
+                                customerType: "" as const,
+                                salesSupport: null,
+                                demoTruck: null,
+                                brand: null,
+                                model: "",
+                                type: null,
+                                bdm: "" as const,
+                                upside: false,
+                                estimatedDelivery: "",
+                              });
+                            }}
+                            title="Clear all table data"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            title="Copy from previous week (coming soon)"
+                            disabled
+                          >
+                            <Copy className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </div>
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-2 max-h-[450px] overflow-y-auto pr-2 pl-4">
-                        <div className="grid grid-cols-[40px_70px_320px_100px_120px_110px_160px_280px_140px_140px_160px] gap-2 mb-2">
+                        <div className="grid grid-cols-[40px_70px_320px_100px_120px_110px_160px_280px_140px_140px_160px] gap-2 font-semibold text-xs mb-2">
                           <div></div>
-                          <div className="font-semibold text-xs">QTY</div>
-                          <div className="font-semibold text-xs">Customer Name</div>
-                          <div className="font-semibold text-xs">Type</div>
-                          <div className="font-semibold text-xs">Sales Support $</div>
-                          <div className="font-semibold text-xs">Demo Truck $</div>
-                          <div className="font-semibold text-xs">Brand</div>
-                          <div className="font-semibold text-xs">Model</div>
-                          <div className="font-semibold text-xs">Source</div>
-                          <div className="font-semibold text-xs">BDM</div>
-                          <div className="font-semibold text-xs flex items-center justify-between">
-                            <span>Est. Delivery</span>
-                            <div className="flex gap-2">
-                              <Button
-                                type="button"
-                                variant="outline"
-                                size="sm"
-                                onClick={() => {
-                                  remove(Array.from({ length: fields.length }, (_, i) => i));
-                                  append({
-                                    qty: null,
-                                    customerName: "",
-                                    customerType: "" as const,
-                                    salesSupport: null,
-                                    demoTruck: null,
-                                    brand: null,
-                                    model: "",
-                                    type: null,
-                                    bdm: "" as const,
-                                    upside: false,
-                                    estimatedDelivery: "",
-                                  });
-                                }}
-                                title="Clear all table data"
-                                className="h-6 w-6 p-0"
-                              >
-                                <Trash2 className="h-3 w-3" />
-                              </Button>
-                              <Button
-                                type="button"
-                                variant="outline"
-                                size="sm"
-                                title="Copy from previous week (coming soon)"
-                                disabled
-                                className="h-6 w-6 p-0"
-                              >
-                                <Copy className="h-3 w-3" />
-                              </Button>
-                            </div>
-                          </div>
+                          <div>QTY</div>
+                          <div>Customer Name</div>
+                          <div>Type</div>
+                          <div>Sales Support $</div>
+                          <div>Demo Truck $</div>
+                          <div>Brand</div>
+                          <div>Model</div>
+                          <div>Source</div>
+                          <div>BDM</div>
+                          <div>Est. Delivery</div>
                         </div>
                         {fields.map((field, index) => (
                           <div key={field.id} className="grid grid-cols-[40px_70px_320px_100px_120px_110px_160px_280px_140px_140px_160px] gap-2 focus-within:bg-primary/5 focus-within:shadow-sm rounded-sm p-1 -m-1 transition-all duration-150">
@@ -964,63 +962,61 @@ Expected"
                   {/* Second Row: Data Entry Table */}
                   <Card>
                     <CardHeader>
-                      <div>
-                        <CardTitle>Orders Expected this week</CardTitle>
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <CardTitle>Orders Expected this week</CardTitle>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              remove(Array.from({ length: fields.length }, (_, i) => i));
+                              append({
+                                qty: null,
+                                customerName: "",
+                                customerType: "" as const,
+                                salesSupport: null,
+                                demoTruck: null,
+                                brand: null,
+                                model: "",
+                                type: null,
+                                bdm: "" as const,
+                                upside: false,
+                                estimatedDelivery: "",
+                              });
+                            }}
+                            title="Clear all table data"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            title="Copy from previous week (coming soon)"
+                            disabled
+                          >
+                            <Copy className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </div>
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-2 max-h-[450px] overflow-y-auto pr-2 pl-4">
-                        <div className="grid grid-cols-[40px_70px_320px_100px_120px_110px_160px_280px_140px_140px_160px] gap-2 mb-2">
+                        <div className="grid grid-cols-[40px_70px_320px_100px_120px_110px_160px_280px_140px_140px_160px] gap-2 font-semibold text-xs mb-2">
                           <div></div>
-                          <div className="font-semibold text-xs">QTY</div>
-                          <div className="font-semibold text-xs">Customer Name</div>
-                          <div className="font-semibold text-xs">Type</div>
-                          <div className="font-semibold text-xs">Sales Support $</div>
-                          <div className="font-semibold text-xs">Demo Truck $</div>
-                          <div className="font-semibold text-xs">Brand</div>
-                          <div className="font-semibold text-xs">Model</div>
-                          <div className="font-semibold text-xs">Source</div>
-                          <div className="font-semibold text-xs">BDM</div>
-                          <div className="font-semibold text-xs flex items-center justify-between">
-                            <span>Order Date</span>
-                            <div className="flex gap-2">
-                              <Button
-                                type="button"
-                                variant="outline"
-                                size="sm"
-                                onClick={() => {
-                                  remove(Array.from({ length: fields.length }, (_, i) => i));
-                                  append({
-                                    qty: null,
-                                    customerName: "",
-                                    customerType: "" as const,
-                                    salesSupport: null,
-                                    demoTruck: null,
-                                    brand: null,
-                                    model: "",
-                                    type: null,
-                                    bdm: "" as const,
-                                    upside: false,
-                                    estimatedDelivery: "",
-                                  });
-                                }}
-                                title="Clear all table data"
-                                className="h-6 w-6 p-0"
-                              >
-                                <Trash2 className="h-3 w-3" />
-                              </Button>
-                              <Button
-                                type="button"
-                                variant="outline"
-                                size="sm"
-                                title="Copy from previous week (coming soon)"
-                                disabled
-                                className="h-6 w-6 p-0"
-                              >
-                                <Copy className="h-3 w-3" />
-                              </Button>
-                            </div>
-                          </div>
+                          <div>QTY</div>
+                          <div>Customer Name</div>
+                          <div>Type</div>
+                          <div>Sales Support $</div>
+                          <div>Demo Truck $</div>
+                          <div>Brand</div>
+                          <div>Model</div>
+                          <div>Source</div>
+                          <div>BDM</div>
+                          <div>Order Date</div>
                         </div>
                         {fields.map((field, index) => (
                           <div key={field.id} className="grid grid-cols-[40px_70px_320px_100px_120px_110px_160px_280px_140px_140px_160px] gap-2 focus-within:bg-primary/5 focus-within:shadow-sm rounded-sm p-1 -m-1 transition-all duration-150">
