@@ -276,7 +276,7 @@ export const NewForecastDialog = ({
               </div>
             </div>
 
-            <Tabs defaultValue="activity" className="flex-1 flex flex-col overflow-hidden">
+            <Tabs defaultValue="activity" className="flex-1 flex flex-col overflow-visible">
               <TabsList className="grid w-full grid-cols-3 h-12 p-1 bg-muted">
                 <TabsTrigger 
                   value="activity" 
@@ -298,8 +298,8 @@ export const NewForecastDialog = ({
                 </TabsTrigger>
               </TabsList>
 
-              <div className="flex-1 overflow-y-auto mt-4 px-2 -mx-2">
-                <TabsContent value="activity" className="space-y-4 mt-0 h-full">
+              <div className="flex-1 overflow-visible mt-4 px-2 -mx-2">
+                <TabsContent value="activity" className="space-y-4 mt-0 h-full overflow-visible">
                 <Card>
                   <CardHeader>
                     <CardTitle>Meetings</CardTitle>
@@ -583,9 +583,9 @@ export const NewForecastDialog = ({
                 </Card>
                 </TabsContent>
 
-                <TabsContent value="forecast" className="space-y-4 mt-0 h-full">
+                <TabsContent value="forecast" className="space-y-4 mt-0 h-full overflow-visible">
                   {/* First Row: Four Total Columns */}
-                  <div className="grid grid-cols-4 gap-6 mb-6 px-2 -mx-2">
+                  <div className="grid grid-cols-4 gap-6 mb-6 overflow-visible">
                     <ForecastTotalCard
                       title="Forecast
 Total"
@@ -621,7 +621,7 @@ Total"
                     <CardHeader>
                       <div className="flex items-center justify-between">
                         <div>
-                          <CardTitle>Forecast Detail</CardTitle>
+                          <CardTitle>Delivery Forecast Detail</CardTitle>
                         </div>
                         <div className="flex gap-2">
                           <Button
