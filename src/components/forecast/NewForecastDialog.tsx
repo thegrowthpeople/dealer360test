@@ -606,7 +606,7 @@ export const NewForecastDialog = ({
                   <div className="grid grid-cols-4 gap-6 mb-6 overflow-visible">
                     <ForecastTotalCard
                       title="Orders
-Last Week"
+Booked"
                       mbTotal={
                         (form.watch("forecastRows")?.filter(r => r.brand === "Mercedes-Benz" && (r.type === "Retail" || r.type === "Indirect Fleet" || r.type === "Direct Fleet")).reduce((sum, r) => sum + (typeof r.qty === 'string' ? parseFloat(r.qty) || 0 : r.qty || 0), 0) || 0)
                       }
