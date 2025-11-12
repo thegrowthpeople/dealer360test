@@ -298,7 +298,7 @@ export const NewForecastDialog = ({
                 </TabsTrigger>
               </TabsList>
 
-              <div className="flex-1 overflow-y-auto mt-4">
+              <div className="flex-1 overflow-y-auto mt-4 px-2 -mx-2">
                 <TabsContent value="activity" className="space-y-4 mt-0 h-full">
                 <Card>
                   <CardHeader>
@@ -585,7 +585,7 @@ export const NewForecastDialog = ({
 
                 <TabsContent value="forecast" className="space-y-4 mt-0 h-full">
                   {/* First Row: Four Total Columns */}
-                  <div className="grid grid-cols-4 gap-6 mb-6">
+                  <div className="grid grid-cols-4 gap-6 mb-6 px-2 -mx-2">
                     <ForecastTotalCard
                       title="Forecast
 Total"
