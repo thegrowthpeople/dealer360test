@@ -381,8 +381,7 @@ export const NewForecastDialog = ({
                 <TabsContent value="pipeline2" className="space-y-4 mt-0 h-full">
                 <Card>
                   <CardHeader>
-                    <CardTitle>Pipeline Data</CardTitle>
-                    <CardDescription>Enter pipeline information</CardDescription>
+                    <CardTitle>Pipeline Size and addition</CardTitle>
                   </CardHeader>
                   <CardContent className="grid grid-cols-3 gap-6">
                     <div className="space-y-4">
