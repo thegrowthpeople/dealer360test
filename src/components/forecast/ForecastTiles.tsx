@@ -143,93 +143,101 @@ export const ForecastTiles = () => {
         <h2 className="text-2xl font-bold text-foreground mb-4">Activity</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Tile 1: Total Meetings */}
-        <Card className="p-6">
-          <div className="flex items-start justify-between mb-4">
-            <div>
-              <p className="text-sm font-medium text-muted-foreground mb-1">Total Meetings</p>
-              <p className="text-3xl font-bold text-foreground">{formatNumber(totalMeetings)}</p>
-            </div>
-            <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
-              <Users className="w-6 h-6 text-primary" />
+        <Card className="overflow-hidden border-0 shadow-md">
+          <div className="bg-gradient-to-br from-primary to-primary/80 p-6">
+            <div className="flex items-start justify-between mb-2">
+              <div className="flex-1">
+                <p className="text-sm font-medium text-primary-foreground/90 mb-1">Total Meetings</p>
+                <p className="text-4xl font-bold text-primary-foreground">{formatNumber(totalMeetings)}</p>
+              </div>
+              <div className="w-12 h-12 rounded-lg bg-primary-foreground/20 flex items-center justify-center">
+                <Users className="w-6 h-6 text-primary-foreground" />
+              </div>
             </div>
           </div>
-          <div className="space-y-1">
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Conquest Meetings:</span>
-              <span className="font-medium text-foreground">{formatNumber(data["Conquest Meetings"])}</span>
+          <div className="bg-card p-4 space-y-2">
+            <div className="flex justify-between items-center py-2 border-b border-border/50">
+              <span className="text-sm text-muted-foreground">Conquest Meetings</span>
+              <span className="text-sm font-semibold text-foreground">{formatNumber(data["Conquest Meetings"])}</span>
             </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Customer Meetings:</span>
-              <span className="font-medium text-foreground">{formatNumber(data["Customer Meetings"])}</span>
+            <div className="flex justify-between items-center py-2">
+              <span className="text-sm text-muted-foreground">Customer Meetings</span>
+              <span className="text-sm font-semibold text-foreground">{formatNumber(data["Customer Meetings"])}</span>
             </div>
           </div>
         </Card>
 
         {/* Tile 2: Quotes Issued */}
-        <Card className="p-6">
-          <div className="flex items-start justify-between mb-4">
-            <div>
-              <p className="text-sm font-medium text-muted-foreground mb-1">Quotes Issued</p>
-              <p className="text-3xl font-bold text-foreground">{formatNumber(totalQuotesIssued)}</p>
-            </div>
-            <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
-              <Package className="w-6 h-6 text-primary" />
+        <Card className="overflow-hidden border-0 shadow-md">
+          <div className="bg-gradient-to-br from-primary to-primary/80 p-6">
+            <div className="flex items-start justify-between mb-2">
+              <div className="flex-1">
+                <p className="text-sm font-medium text-primary-foreground/90 mb-1">Quotes Issued</p>
+                <p className="text-4xl font-bold text-primary-foreground">{formatNumber(totalQuotesIssued)}</p>
+              </div>
+              <div className="w-12 h-12 rounded-lg bg-primary-foreground/20 flex items-center justify-center">
+                <Package className="w-6 h-6 text-primary-foreground" />
+              </div>
             </div>
           </div>
-          <div className="space-y-1">
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Mercedes-Benz:</span>
-              <span className="font-medium text-foreground">{formatNumber(data["MBT Quotes Issued"])}</span>
+          <div className="bg-card p-4 space-y-2">
+            <div className="flex justify-between items-center py-2 border-b border-border/50">
+              <span className="text-sm text-muted-foreground">Mercedes-Benz</span>
+              <span className="text-sm font-semibold text-foreground">{formatNumber(data["MBT Quotes Issued"])}</span>
             </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Freightliner:</span>
-              <span className="font-medium text-foreground">{formatNumber(data["FTL Quotes Issued"])}</span>
+            <div className="flex justify-between items-center py-2">
+              <span className="text-sm text-muted-foreground">Freightliner</span>
+              <span className="text-sm font-semibold text-foreground">{formatNumber(data["FTL Quotes Issued"])}</span>
             </div>
           </div>
         </Card>
 
         {/* Tile 3: Orders Received */}
-        <Card className="p-6">
-          <div className="flex items-start justify-between mb-4">
-            <div>
-              <p className="text-sm font-medium text-muted-foreground mb-1">Orders Received</p>
-              <p className="text-3xl font-bold text-foreground">{formatNumber(totalOrdersReceived)}</p>
-            </div>
-            <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
-              <Package className="w-6 h-6 text-primary" />
+        <Card className="overflow-hidden border-0 shadow-md">
+          <div className="bg-gradient-to-br from-primary to-primary/80 p-6">
+            <div className="flex items-start justify-between mb-2">
+              <div className="flex-1">
+                <p className="text-sm font-medium text-primary-foreground/90 mb-1">Orders Received</p>
+                <p className="text-4xl font-bold text-primary-foreground">{formatNumber(totalOrdersReceived)}</p>
+              </div>
+              <div className="w-12 h-12 rounded-lg bg-primary-foreground/20 flex items-center justify-center">
+                <Package className="w-6 h-6 text-primary-foreground" />
+              </div>
             </div>
           </div>
-          <div className="space-y-1">
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Mercedes-Benz:</span>
-              <span className="font-medium text-foreground">{formatNumber(data["MBT Orders Received"])}</span>
+          <div className="bg-card p-4 space-y-2">
+            <div className="flex justify-between items-center py-2 border-b border-border/50">
+              <span className="text-sm text-muted-foreground">Mercedes-Benz</span>
+              <span className="text-sm font-semibold text-foreground">{formatNumber(data["MBT Orders Received"])}</span>
             </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Freightliner:</span>
-              <span className="font-medium text-foreground">{formatNumber(data["FTL Orders Received"])}</span>
+            <div className="flex justify-between items-center py-2">
+              <span className="text-sm text-muted-foreground">Freightliner</span>
+              <span className="text-sm font-semibold text-foreground">{formatNumber(data["FTL Orders Received"])}</span>
             </div>
           </div>
         </Card>
 
         {/* Tile 4: Orders Expected */}
-        <Card className="p-6">
-          <div className="flex items-start justify-between mb-4">
-            <div>
-              <p className="text-sm font-medium text-muted-foreground mb-1">Orders Expected</p>
-              <p className="text-3xl font-bold text-foreground">{formatNumber(totalOrdersExpected)}</p>
-            </div>
-            <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
-              <TrendingUp className="w-6 h-6 text-primary" />
+        <Card className="overflow-hidden border-0 shadow-md">
+          <div className="bg-gradient-to-br from-primary to-primary/80 p-6">
+            <div className="flex items-start justify-between mb-2">
+              <div className="flex-1">
+                <p className="text-sm font-medium text-primary-foreground/90 mb-1">Orders Expected</p>
+                <p className="text-4xl font-bold text-primary-foreground">{formatNumber(totalOrdersExpected)}</p>
+              </div>
+              <div className="w-12 h-12 rounded-lg bg-primary-foreground/20 flex items-center justify-center">
+                <TrendingUp className="w-6 h-6 text-primary-foreground" />
+              </div>
             </div>
           </div>
-          <div className="space-y-1">
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Mercedes-Benz:</span>
-              <span className="font-medium text-foreground">{formatNumber(data["MBT Orders Expected NW"])}</span>
+          <div className="bg-card p-4 space-y-2">
+            <div className="flex justify-between items-center py-2 border-b border-border/50">
+              <span className="text-sm text-muted-foreground">Mercedes-Benz</span>
+              <span className="text-sm font-semibold text-foreground">{formatNumber(data["MBT Orders Expected NW"])}</span>
             </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Freightliner:</span>
-              <span className="font-medium text-foreground">{formatNumber(data["FTL Orders Expected NW"])}</span>
+            <div className="flex justify-between items-center py-2">
+              <span className="text-sm text-muted-foreground">Freightliner</span>
+              <span className="text-sm font-semibold text-foreground">{formatNumber(data["FTL Orders Expected NW"])}</span>
             </div>
           </div>
         </Card>
@@ -242,93 +250,101 @@ export const ForecastTiles = () => {
         <h2 className="text-2xl font-bold text-foreground mb-4">Pipeline</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Tile 4: Pipeline Growth */}
-        <Card className="p-6">
-          <div className="flex items-start justify-between mb-4">
-            <div>
-              <p className="text-sm font-medium text-muted-foreground mb-1">Pipeline Growth</p>
-              <p className="text-3xl font-bold text-foreground">{formatNumber(pipelineGrowth)}</p>
-            </div>
-            <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
-              <TrendingUp className="w-6 h-6 text-primary" />
+        <Card className="overflow-hidden border-0 shadow-md">
+          <div className="bg-gradient-to-br from-primary to-primary/80 p-6">
+            <div className="flex items-start justify-between mb-2">
+              <div className="flex-1">
+                <p className="text-sm font-medium text-primary-foreground/90 mb-1">Pipeline Growth</p>
+                <p className="text-4xl font-bold text-primary-foreground">{formatNumber(pipelineGrowth)}</p>
+              </div>
+              <div className="w-12 h-12 rounded-lg bg-primary-foreground/20 flex items-center justify-center">
+                <TrendingUp className="w-6 h-6 text-primary-foreground" />
+              </div>
             </div>
           </div>
-          <div className="space-y-1">
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Mercedes-Benz:</span>
-              <span className="font-medium text-foreground">{formatNumber(data["MBT Pipeline Growth"])}</span>
+          <div className="bg-card p-4 space-y-2">
+            <div className="flex justify-between items-center py-2 border-b border-border/50">
+              <span className="text-sm text-muted-foreground">Mercedes-Benz</span>
+              <span className="text-sm font-semibold text-foreground">{formatNumber(data["MBT Pipeline Growth"])}</span>
             </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Freightliner:</span>
-              <span className="font-medium text-foreground">{formatNumber(data["FTL Pipeline Growth"])}</span>
+            <div className="flex justify-between items-center py-2">
+              <span className="text-sm text-muted-foreground">Freightliner</span>
+              <span className="text-sm font-semibold text-foreground">{formatNumber(data["FTL Pipeline Growth"])}</span>
             </div>
           </div>
         </Card>
 
         {/* Tile 5: Pipeline Lost */}
-        <Card className="p-6">
-          <div className="flex items-start justify-between mb-4">
-            <div>
-              <p className="text-sm font-medium text-muted-foreground mb-1">Pipeline Lost</p>
-              <p className="text-3xl font-bold text-foreground">{formatNumber(pipelineLost)}</p>
-            </div>
-            <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
-              <TrendingDown className="w-6 h-6 text-primary" />
+        <Card className="overflow-hidden border-0 shadow-md">
+          <div className="bg-gradient-to-br from-primary to-primary/80 p-6">
+            <div className="flex items-start justify-between mb-2">
+              <div className="flex-1">
+                <p className="text-sm font-medium text-primary-foreground/90 mb-1">Pipeline Lost</p>
+                <p className="text-4xl font-bold text-primary-foreground">{formatNumber(pipelineLost)}</p>
+              </div>
+              <div className="w-12 h-12 rounded-lg bg-primary-foreground/20 flex items-center justify-center">
+                <TrendingDown className="w-6 h-6 text-primary-foreground" />
+              </div>
             </div>
           </div>
-          <div className="space-y-1">
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Mercedes-Benz:</span>
-              <span className="font-medium text-foreground">{formatNumber(data["MBT Pipeline Lost"])}</span>
+          <div className="bg-card p-4 space-y-2">
+            <div className="flex justify-between items-center py-2 border-b border-border/50">
+              <span className="text-sm text-muted-foreground">Mercedes-Benz</span>
+              <span className="text-sm font-semibold text-foreground">{formatNumber(data["MBT Pipeline Lost"])}</span>
             </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Freightliner:</span>
-              <span className="font-medium text-foreground">{formatNumber(data["FTL Pipeline Lost"])}</span>
+            <div className="flex justify-between items-center py-2">
+              <span className="text-sm text-muted-foreground">Freightliner</span>
+              <span className="text-sm font-semibold text-foreground">{formatNumber(data["FTL Pipeline Lost"])}</span>
             </div>
           </div>
         </Card>
 
         {/* Tile 6: Mercedes-Benz Pipeline */}
-        <Card className="p-6">
-          <div className="flex items-start justify-between mb-4">
-            <div>
-              <p className="text-sm font-medium text-muted-foreground mb-1">Mercedes-Benz Pipeline</p>
-              <p className="text-3xl font-bold text-foreground">{formatNumber(mbtPipeline)}</p>
-            </div>
-            <div className="w-12 h-12 rounded-lg" style={{ backgroundColor: 'rgba(14, 165, 233, 0.1)' }}>
-              <Building className="w-6 h-6 m-3" style={{ color: '#0EA5E9' }} />
+        <Card className="overflow-hidden border-0 shadow-md">
+          <div className="bg-gradient-to-br from-[#0EA5E9] to-[#0EA5E9]/80 p-6">
+            <div className="flex items-start justify-between mb-2">
+              <div className="flex-1">
+                <p className="text-sm font-medium text-white/90 mb-1">Mercedes-Benz Pipeline</p>
+                <p className="text-4xl font-bold text-white">{formatNumber(mbtPipeline)}</p>
+              </div>
+              <div className="w-12 h-12 rounded-lg bg-white/20 flex items-center justify-center">
+                <Building className="w-6 h-6 text-white" />
+              </div>
             </div>
           </div>
-          <div className="space-y-1">
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">This QTR:</span>
-              <span className="font-medium text-foreground">{formatNumber(data["MBT Pipeline Size This QTR"])}</span>
+          <div className="bg-card p-4 space-y-2">
+            <div className="flex justify-between items-center py-2 border-b border-border/50">
+              <span className="text-sm text-muted-foreground">This QTR</span>
+              <span className="text-sm font-semibold text-foreground">{formatNumber(data["MBT Pipeline Size This QTR"])}</span>
             </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Next QTR:</span>
-              <span className="font-medium text-foreground">{formatNumber(data["MBT Pipeline Size Next QTR"])}</span>
+            <div className="flex justify-between items-center py-2">
+              <span className="text-sm text-muted-foreground">Next QTR</span>
+              <span className="text-sm font-semibold text-foreground">{formatNumber(data["MBT Pipeline Size Next QTR"])}</span>
             </div>
           </div>
         </Card>
 
         {/* Tile 7: Freightliner Pipeline */}
-        <Card className="p-6">
-          <div className="flex items-start justify-between mb-4">
-            <div>
-              <p className="text-sm font-medium text-muted-foreground mb-1">Freightliner Pipeline</p>
-              <p className="text-3xl font-bold text-foreground">{formatNumber(ftlPipeline)}</p>
-            </div>
-            <div className="w-12 h-12 rounded-lg" style={{ backgroundColor: 'rgba(155, 135, 245, 0.1)' }}>
-              <Truck className="w-6 h-6 m-3" style={{ color: '#9b87f5' }} />
+        <Card className="overflow-hidden border-0 shadow-md">
+          <div className="bg-gradient-to-br from-[#9b87f5] to-[#9b87f5]/80 p-6">
+            <div className="flex items-start justify-between mb-2">
+              <div className="flex-1">
+                <p className="text-sm font-medium text-white/90 mb-1">Freightliner Pipeline</p>
+                <p className="text-4xl font-bold text-white">{formatNumber(ftlPipeline)}</p>
+              </div>
+              <div className="w-12 h-12 rounded-lg bg-white/20 flex items-center justify-center">
+                <Truck className="w-6 h-6 text-white" />
+              </div>
             </div>
           </div>
-          <div className="space-y-1">
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">This QTR:</span>
-              <span className="font-medium text-foreground">{formatNumber(data["FTL Pipeline Size This QTR"])}</span>
+          <div className="bg-card p-4 space-y-2">
+            <div className="flex justify-between items-center py-2 border-b border-border/50">
+              <span className="text-sm text-muted-foreground">This QTR</span>
+              <span className="text-sm font-semibold text-foreground">{formatNumber(data["FTL Pipeline Size This QTR"])}</span>
             </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Next QTR:</span>
-              <span className="font-medium text-foreground">{formatNumber(data["FTL Pipeline Size Next QTR"])}</span>
+            <div className="flex justify-between items-center py-2">
+              <span className="text-sm text-muted-foreground">Next QTR</span>
+              <span className="text-sm font-semibold text-foreground">{formatNumber(data["FTL Pipeline Size Next QTR"])}</span>
             </div>
           </div>
         </Card>
