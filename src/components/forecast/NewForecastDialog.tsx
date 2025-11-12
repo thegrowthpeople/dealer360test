@@ -117,28 +117,28 @@ export const NewForecastDialog = ({
   const form = useForm<ForecastFormValues>({
     resolver: zodResolver(forecastSchema),
     defaultValues: {
-      conquestMeetings: 0,
-      customerMeetings: 0,
-      mbtQuotesIssued: 0,
-      ftlQuotesIssued: 0,
-      mbtOrdersReceived: 0,
-      ftlOrdersReceived: 0,
-      mbtOrdersExpected: 0,
-      ftlOrdersExpected: 0,
-      mbtPipelineGrowth: 0,
-      ftlPipelineGrowth: 0,
-      mbtPipelineLost: 0,
-      ftlPipelineLost: 0,
-      mbtPipelineThisQtr: 0,
-      mbtPipelineNextQtr: 0,
-      ftlPipelineThisQtr: 0,
-      ftlPipelineNextQtr: 0,
+      conquestMeetings: null,
+      customerMeetings: null,
+      mbtQuotesIssued: null,
+      ftlQuotesIssued: null,
+      mbtOrdersReceived: null,
+      ftlOrdersReceived: null,
+      mbtOrdersExpected: null,
+      ftlOrdersExpected: null,
+      mbtPipelineGrowth: null,
+      ftlPipelineGrowth: null,
+      mbtPipelineLost: null,
+      ftlPipelineLost: null,
+      mbtPipelineThisQtr: null,
+      mbtPipelineNextQtr: null,
+      ftlPipelineThisQtr: null,
+      ftlPipelineNextQtr: null,
       forecastRows: Array(15).fill(null).map(() => ({ 
-        qty: 0, 
+        qty: null, 
         customerName: "", 
         customerType: "" as const, 
-        salesSupport: 0, 
-        demoTruck: 0, 
+        salesSupport: null, 
+        demoTruck: null, 
         brand: "" as const, 
         model: "", 
         type: "" as const,
@@ -236,7 +236,7 @@ export const NewForecastDialog = ({
           New Forecast
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-[90vw] h-[90vh] flex flex-col">
+      <DialogContent className="max-w-[1700px] h-[90vh] flex flex-col">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold">NEW FORECAST</DialogTitle>
           <DialogDescription>
@@ -682,7 +682,7 @@ export const NewForecastDialog = ({
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-2 max-h-[450px] overflow-y-auto pr-2">
-                        <div className="grid grid-cols-[90px_260px_100px_120px_110px_160px_280px_140px_140px_80px] gap-2 font-semibold text-xs mb-2">
+                        <div className="grid grid-cols-[90px_320px_100px_120px_110px_160px_280px_140px_140px_80px] gap-2 font-semibold text-xs mb-2">
                           <div>QTY</div>
                           <div>Customer Name</div>
                           <div>Customer</div>
@@ -695,7 +695,7 @@ export const NewForecastDialog = ({
                           <div>Upside</div>
                         </div>
                         {Array.from({ length: 15 }).map((_, index) => (
-                          <div key={index} className="grid grid-cols-[90px_260px_100px_120px_110px_160px_280px_140px_140px_80px] gap-2">
+                          <div key={index} className="grid grid-cols-[90px_320px_100px_120px_110px_160px_280px_140px_140px_80px] gap-2">
                             <FormField
                               control={form.control}
                               name={`forecastRows.${index}.qty`}
@@ -705,8 +705,8 @@ export const NewForecastDialog = ({
                                     <Input
                                       type="number"
                                       {...field}
-                                      onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
-                                      className="h-9 text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                      onChange={(e) => field.onChange(parseFloat(e.target.value) || null)}
+                                      className="h-9 text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none focus:border-l-4 focus:border-l-primary pl-2"
                                     />
                                   </FormControl>
                                 </FormItem>
