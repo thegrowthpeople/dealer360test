@@ -141,13 +141,13 @@ export const ForecastTiles = () => {
       <div>
         <h2 className="text-2xl font-bold text-foreground mb-4">Activity</h2>
         {/* Activity Metrics Row */}
-        <div className="flex gap-4 mb-4 overflow-x-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
           {/* Total Meetings */}
-          <Card className="p-0 overflow-hidden border-primary/20 flex-shrink-0 w-[500px]">
+          <Card className="p-0 overflow-hidden border-primary/20">
             <div className="flex flex-col md:flex-row">
               {/* Left side - Total with colored background */}
               <div className="p-6 bg-primary/10 w-[240px]">
-                <p className="text-xl font-bold text-foreground mb-2">Total Meetings</p>
+                <p className="text-xl font-bold text-foreground mb-2">Meetings<br />Total</p>
                 <p className="text-3xl font-bold text-foreground">{formatNumber(totalMeetings)}</p>
               </div>
               
@@ -171,11 +171,11 @@ export const ForecastTiles = () => {
           </Card>
 
           {/* Quotes Issued */}
-          <Card className="p-0 overflow-hidden border-primary/20 flex-shrink-0 w-[500px]">
+          <Card className="p-0 overflow-hidden border-primary/20">
             <div className="flex flex-col md:flex-row">
               {/* Left side - Total with colored background */}
               <div className="p-6 bg-primary/10 w-[240px]">
-                <p className="text-xl font-bold text-foreground mb-2">Quotes Issued</p>
+                <p className="text-xl font-bold text-foreground mb-2">Quotes<br />Issued</p>
                 <p className="text-3xl font-bold text-foreground">{formatNumber(totalQuotesIssued)}</p>
               </div>
               
@@ -199,11 +199,11 @@ export const ForecastTiles = () => {
            </Card>
 
           {/* Orders Received */}
-          <Card className="p-0 overflow-hidden border-primary/20 flex-shrink-0 w-[500px]">
+          <Card className="p-0 overflow-hidden border-primary/20">
             <div className="flex flex-col md:flex-row">
               {/* Left side - Total with colored background */}
               <div className="p-6 bg-primary/10 w-[240px]">
-                <p className="text-xl font-bold text-foreground mb-2">Orders Received</p>
+                <p className="text-xl font-bold text-foreground mb-2">Booked<br />Orders</p>
                 <p className="text-3xl font-bold text-foreground">{formatNumber(totalOrdersReceived)}</p>
               </div>
               
@@ -227,11 +227,11 @@ export const ForecastTiles = () => {
           </Card>
 
           {/* Orders Expected */}
-          <Card className="p-0 overflow-hidden border-primary/20 flex-shrink-0 w-[500px]">
+          <Card className="p-0 overflow-hidden border-primary/20">
             <div className="flex flex-col md:flex-row">
               {/* Left side - Total with colored background */}
               <div className="p-6 bg-primary/10 w-[240px]">
-                <p className="text-xl font-bold text-foreground mb-2">Orders Expected</p>
+                <p className="text-xl font-bold text-foreground mb-2">Expected<br />Orders</p>
                 <p className="text-3xl font-bold text-foreground">{formatNumber(totalOrdersExpected)}</p>
               </div>
               
@@ -260,9 +260,9 @@ export const ForecastTiles = () => {
 
       <div>
         <h2 className="text-2xl font-bold text-foreground mb-4">Pipeline</h2>
-        <div className="flex gap-4 mb-4 overflow-x-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
         {/* Tile 5: Pipeline Growth */}
-        <Card className="p-0 overflow-hidden border-primary/20 flex-shrink-0 w-[500px]">
+        <Card className="p-0 overflow-hidden border-primary/20">
           <div className="flex flex-col md:flex-row">
             {/* Left side - Total with colored background */}
             <div className="p-6 bg-primary/10 w-[240px]">
@@ -290,7 +290,7 @@ export const ForecastTiles = () => {
         </Card>
 
         {/* Tile 6: Pipeline Lost */}
-        <Card className="p-0 overflow-hidden border-primary/20 flex-shrink-0 w-[500px]">
+        <Card className="p-0 overflow-hidden border-primary/20">
           <div className="flex flex-col md:flex-row">
             {/* Left side - Total with colored background */}
             <div className="p-6 bg-primary/10 w-[240px]">
@@ -318,7 +318,7 @@ export const ForecastTiles = () => {
         </Card>
 
         {/* Tile 7: Mercedes-Benz Pipeline */}
-        <Card className="p-0 overflow-hidden border-primary/20 flex-shrink-0 w-[500px]">
+        <Card className="p-0 overflow-hidden border-primary/20">
           <div className="flex flex-col md:flex-row">
             {/* Left side - Total with colored background */}
             <div className="p-6 bg-primary/10 w-[240px]">
@@ -346,7 +346,7 @@ export const ForecastTiles = () => {
         </Card>
 
         {/* Tile 8: Freightliner Pipeline */}
-        <Card className="p-0 overflow-hidden border-primary/20 flex-shrink-0 w-[500px]">
+        <Card className="p-0 overflow-hidden border-primary/20">
           <div className="flex flex-col md:flex-row">
             {/* Left side - Total with colored background */}
             <div className="p-6 bg-primary/10 w-[240px]">
