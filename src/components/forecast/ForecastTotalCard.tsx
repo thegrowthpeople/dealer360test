@@ -14,7 +14,7 @@ export const ForecastTotalCard = ({ title, mbTotal, ftlTotal }: ForecastTotalCar
     <Card className="p-0 overflow-hidden border-primary/20 shadow-md hover:shadow-lg hover:scale-[1.02] transition-all duration-300">
       <div className="flex flex-col md:flex-row">
         {/* Left side - Total with colored background */}
-        <div className="p-4 bg-primary/10 w-[150px]">
+        <div className="p-4 bg-primary/10 w-[120px]">
           <p className="text-xl font-bold text-foreground mb-2">
             {titleParts.map((part, index) => (
               <span key={index}>
