@@ -34,6 +34,12 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Calendar } from "@/components/ui/calendar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -648,39 +654,57 @@ Received"
                           <CardTitle>Orders Received in last week</CardTitle>
                         </div>
                         <div className="flex gap-2">
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            onClick={() => {
-                              remove(Array.from({ length: fields.length }, (_, i) => i));
-                              append({
-                                qty: null,
-                                customerName: "",
-                                customerType: "" as const,
-                                salesSupport: null,
-                                demoTruck: null,
-                                brand: null,
-                                model: "",
-                                type: null,
-                                bdm: "" as const,
-                                upside: false,
-                                estimatedDelivery: "",
-                              });
-                            }}
-                            title="Delete entire table"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            title="Copy from a previous week"
-                            disabled
-                          >
-                            <Copy className="h-4 w-4" />
-                          </Button>
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  type="button"
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => {
+                                    remove(Array.from({ length: fields.length }, (_, i) => i));
+                                    append({
+                                      qty: null,
+                                      customerName: "",
+                                      customerType: "" as const,
+                                      salesSupport: null,
+                                      demoTruck: null,
+                                      brand: null,
+                                      model: "",
+                                      type: null,
+                                      bdm: "" as const,
+                                      upside: false,
+                                      estimatedDelivery: "",
+                                    });
+                                  }}
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>Delete entire table</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <span>
+                                  <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="sm"
+                                    disabled
+                                  >
+                                    <Copy className="h-4 w-4" />
+                                  </Button>
+                                </span>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>Copy from a previous week</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
                         </div>
                       </div>
                     </CardHeader>
@@ -967,39 +991,57 @@ Expected"
                           <CardTitle>Orders Expected this week</CardTitle>
                         </div>
                         <div className="flex gap-2">
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            onClick={() => {
-                              remove(Array.from({ length: fields.length }, (_, i) => i));
-                              append({
-                                qty: null,
-                                customerName: "",
-                                customerType: "" as const,
-                                salesSupport: null,
-                                demoTruck: null,
-                                brand: null,
-                                model: "",
-                                type: null,
-                                bdm: "" as const,
-                                upside: false,
-                                estimatedDelivery: "",
-                              });
-                            }}
-                            title="Delete entire table"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            title="Copy from a previous week"
-                            disabled
-                          >
-                            <Copy className="h-4 w-4" />
-                          </Button>
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  type="button"
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => {
+                                    remove(Array.from({ length: fields.length }, (_, i) => i));
+                                    append({
+                                      qty: null,
+                                      customerName: "",
+                                      customerType: "" as const,
+                                      salesSupport: null,
+                                      demoTruck: null,
+                                      brand: null,
+                                      model: "",
+                                      type: null,
+                                      bdm: "" as const,
+                                      upside: false,
+                                      estimatedDelivery: "",
+                                    });
+                                  }}
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>Delete entire table</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <span>
+                                  <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="sm"
+                                    disabled
+                                  >
+                                    <Copy className="h-4 w-4" />
+                                  </Button>
+                                </span>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>Copy from a previous week</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
                         </div>
                       </div>
                     </CardHeader>
@@ -1286,39 +1328,57 @@ Total"
                           <CardTitle>Delivery Forecast Detail</CardTitle>
                         </div>
                         <div className="flex gap-2">
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            onClick={() => {
-                              remove(Array.from({ length: fields.length }, (_, i) => i));
-                              append({
-                                qty: null,
-                                customerName: "",
-                                customerType: "" as const,
-                                salesSupport: null,
-                                demoTruck: null,
-                                brand: null,
-                                model: "",
-                                type: null,
-                                bdm: "" as const,
-                                upside: false,
-                                estimatedDelivery: "",
-                              });
-                            }}
-                            title="Delete entire table"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            title="Copy from a previous week"
-                            disabled
-                          >
-                            <Copy className="h-4 w-4" />
-                          </Button>
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  type="button"
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => {
+                                    remove(Array.from({ length: fields.length }, (_, i) => i));
+                                    append({
+                                      qty: null,
+                                      customerName: "",
+                                      customerType: "" as const,
+                                      salesSupport: null,
+                                      demoTruck: null,
+                                      brand: null,
+                                      model: "",
+                                      type: null,
+                                      bdm: "" as const,
+                                      upside: false,
+                                      estimatedDelivery: "",
+                                    });
+                                  }}
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>Delete entire table</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <span>
+                                  <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="sm"
+                                    disabled
+                                  >
+                                    <Copy className="h-4 w-4" />
+                                  </Button>
+                                </span>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>Copy from a previous week</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
                         </div>
                       </div>
                     </CardHeader>
