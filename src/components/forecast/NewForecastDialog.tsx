@@ -668,7 +668,7 @@ Received"
                                 estimatedDelivery: "",
                               });
                             }}
-                            title="Clear all table data"
+                            title="Delete entire table"
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
@@ -676,7 +676,7 @@ Received"
                             type="button"
                             variant="outline"
                             size="sm"
-                            title="Copy from previous week (coming soon)"
+                            title="Copy from a previous week"
                             disabled
                           >
                             <Copy className="h-4 w-4" />
@@ -987,7 +987,7 @@ Expected"
                                 estimatedDelivery: "",
                               });
                             }}
-                            title="Clear all table data"
+                            title="Delete entire table"
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
@@ -995,7 +995,7 @@ Expected"
                             type="button"
                             variant="outline"
                             size="sm"
-                            title="Copy from previous week (coming soon)"
+                            title="Copy from a previous week"
                             disabled
                           >
                             <Copy className="h-4 w-4" />
@@ -1306,7 +1306,7 @@ Total"
                                 estimatedDelivery: "",
                               });
                             }}
-                            title="Clear all table data"
+                            title="Delete entire table"
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
@@ -1314,7 +1314,7 @@ Total"
                             type="button"
                             variant="outline"
                             size="sm"
-                            title="Copy from previous week (coming soon)"
+                            title="Copy from a previous week"
                             disabled
                           >
                             <Copy className="h-4 w-4" />
