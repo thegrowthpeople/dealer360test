@@ -184,81 +184,13 @@ export const NewForecastDialog = ({
   };
 
   const onSubmit = async (values: ForecastFormValues) => {
-    if (!effectiveWeekStarting) {
-      toast({
-        title: "Error",
-        description: "Please select a week starting date",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (!effectiveDealerId) {
-      toast({
-        title: "Error",
-        description: "Please select a dealership",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    try {
-      // Calculate totals from rows
-      const forecastRows = values.forecastRows;
-      const mbtRetailTotal = forecastRows.filter(r => r.brand === "Mercedes-Benz" && r.type === "Retail").reduce((sum, row) => sum + row.qty, 0);
-      const ftlRetailTotal = forecastRows.filter(r => r.brand === "Freightliner" && r.type === "Retail").reduce((sum, row) => sum + row.qty, 0);
-      const mbtIndirectTotal = forecastRows.filter(r => r.brand === "Mercedes-Benz" && r.type === "Indirect Fleet").reduce((sum, row) => sum + row.qty, 0);
-      const ftlIndirectTotal = forecastRows.filter(r => r.brand === "Freightliner" && r.type === "Indirect Fleet").reduce((sum, row) => sum + row.qty, 0);
-      const mbtDirectTotal = forecastRows.filter(r => r.brand === "Mercedes-Benz" && r.type === "Direct Fleet").reduce((sum, row) => sum + row.qty, 0);
-      const ftlDirectTotal = forecastRows.filter(r => r.brand === "Freightliner" && r.type === "Direct Fleet").reduce((sum, row) => sum + row.qty, 0);
-
-      const { error } = await supabase.from("Forecast").insert({
-        "Dealer ID": effectiveDealerId,
-        "Forecast Date": effectiveWeekStarting,
-        "Conquest Meetings": values.conquestMeetings,
-        "Customer Meetings": values.customerMeetings,
-        "MBT Quotes Issued": values.mbtQuotesIssued,
-        "FTL Quotes Issued": values.ftlQuotesIssued,
-        "MBT Orders Received": values.mbtOrdersReceived,
-        "FTL Orders Received": values.ftlOrdersReceived,
-        "MBT Orders Expected NW": values.mbtOrdersExpected,
-        "FTL Orders Expected NW": values.ftlOrdersExpected,
-        "MBT Pipeline Growth": values.mbtPipelineGrowth,
-        "FTL Pipeline Growth": values.ftlPipelineGrowth,
-        "MBT Pipeline Lost": values.mbtPipelineLost,
-        "FTL Pipeline Lost": values.ftlPipelineLost,
-        "MBT Pipeline Size This QTR": values.mbtPipelineThisQtr,
-        "MBT Pipeline Size Next QTR": values.mbtPipelineNextQtr,
-        "FTL Pipeline Size This QTR": values.ftlPipelineThisQtr,
-        "FTL Pipeline Size Next QTR": values.ftlPipelineNextQtr,
-        "MBT Retail": mbtRetailTotal,
-        "FTL Retail": ftlRetailTotal,
-        "MBT Fleet Indirect": mbtIndirectTotal,
-        "FTL Fleet Indirect": ftlIndirectTotal,
-        "MBT Fleet Direct": mbtDirectTotal,
-        "FTL Fleet Direct": ftlDirectTotal,
-      });
-
-      if (error) throw error;
-
-      toast({
-        title: "Success",
-        description: "Forecast entry created successfully",
-      });
-
-      form.reset();
-      setOpen(false);
-      setLocalDealerId(null);
-      setLocalWeekStarting(null);
-      onSuccess();
-    } catch (error) {
-      console.error("Error creating forecast:", error);
-      toast({
-        title: "Error",
-        description: "Failed to create forecast entry",
-        variant: "destructive",
-      });
-    }
+    // Test mode: just close the modal
+    toast({
+      title: "Test Mode",
+      description: "Forecast submission - closing modal",
+    });
+    setOpen(false);
+    form.reset();
   };
 
   const canCreateForecast = selectedWeekStarting && selectedDealerId;
@@ -271,7 +203,7 @@ export const NewForecastDialog = ({
           New Forecast
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-[1800px] h-[90vh] flex flex-col p-8">
+      <DialogContent className="max-w-[1800px] h-[90vh] flex flex-col p-12">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold">NEW FORECAST</DialogTitle>
           <DialogDescription>
@@ -328,7 +260,7 @@ export const NewForecastDialog = ({
                       onValueChange={setLocalWeekStarting}
                       disabled={availableWeeks.length === 0}
                     >
-                      <SelectTrigger>
+                      <SelectTrigger className="w-48">
                         <SelectValue placeholder={availableWeeks.length === 0 ? "Select month first" : "Select week"} />
                       </SelectTrigger>
                       <SelectContent>
