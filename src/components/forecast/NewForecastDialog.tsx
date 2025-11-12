@@ -416,41 +416,6 @@ export const NewForecastDialog = ({
 
                 <Card>
                   <CardHeader>
-                    <CardTitle>Pipeline Lost</CardTitle>
-                    <CardDescription>Enter lost pipeline data</CardDescription>
-                  </CardHeader>
-                  <CardContent className="grid grid-cols-2 gap-4">
-                    <FormField
-                      control={form.control}
-                      name="mbtPipelineLost"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Mercedes-Benz Lost</FormLabel>
-                          <FormControl>
-                            <Input type="number" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="ftlPipelineLost"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Freightliner Lost</FormLabel>
-                          <FormControl>
-                            <Input type="number" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader>
                     <CardTitle>This Quarter Pipeline</CardTitle>
                     <CardDescription>Enter current quarter pipeline size</CardDescription>
                   </CardHeader>
