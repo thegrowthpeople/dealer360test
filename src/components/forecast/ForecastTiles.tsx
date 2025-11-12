@@ -140,9 +140,9 @@ export const ForecastTiles = () => {
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold text-foreground mb-4">Activity</h2>
-        {/* Total Meetings Row */}
-        <div className="mb-4 max-w-fit">
-          {/* Total Meetings - Combined Tile */}
+        {/* Activity Metrics Row */}
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 mb-4">
+          {/* Total Meetings */}
           <Card className="p-0 overflow-hidden border-primary/20">
             <div className="flex flex-col md:flex-row">
               {/* Left side - Total with colored background */}
@@ -169,94 +169,94 @@ export const ForecastTiles = () => {
               </div>
             </div>
           </Card>
+
+          {/* Quotes Issued */}
+          <Card className="p-0 overflow-hidden border-primary/20">
+            <div className="flex flex-col md:flex-row">
+              {/* Left side - Total with colored background */}
+              <div className="p-6 bg-primary/10">
+                <p className="text-xl font-bold text-foreground mb-2">Quotes Issued</p>
+                <p className="text-3xl font-bold text-foreground">{formatNumber(totalQuotesIssued)}</p>
+              </div>
+              
+              {/* Vertical separator */}
+              <div className="hidden md:block w-px bg-border"></div>
+              
+              {/* Right side - Breakdown with white background */}
+              <div className="p-6 bg-background flex items-end">
+                <div className="flex gap-8">
+                  <div className="space-y-1 text-center">
+                    <span className="text-xs text-muted-foreground block uppercase tracking-wider">Mercedes-Benz</span>
+                    <span className="text-2xl text-foreground block">{formatNumber(data["MBT Quotes Issued"])}</span>
+                  </div>
+                  <div className="space-y-1 text-center">
+                    <span className="text-xs text-muted-foreground block uppercase tracking-wider">Freightliner</span>
+                    <span className="text-2xl text-foreground block">{formatNumber(data["FTL Quotes Issued"])}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Card>
         </div>
 
-        {/* Other Activity Metrics Row */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 mb-4">
 
-        {/* Tile 2: Quotes Issued */}
-        <Card className="p-0 overflow-hidden border-primary/20">
-          <div className="flex flex-col md:flex-row">
-            {/* Left side - Total with colored background */}
-            <div className="p-6 bg-primary/10">
-              <p className="text-xl font-bold text-foreground mb-2">Quotes Issued</p>
-              <p className="text-3xl font-bold text-foreground">{formatNumber(totalQuotesIssued)}</p>
-            </div>
-            
-            {/* Vertical separator */}
-            <div className="hidden md:block w-px bg-border"></div>
-            
-            {/* Right side - Breakdown with white background */}
-            <div className="p-6 bg-background flex items-end">
-              <div className="flex gap-8">
-                <div className="space-y-1 text-center">
-                  <span className="text-xs text-muted-foreground block uppercase tracking-wider">Mercedes-Benz</span>
-                  <span className="text-2xl text-foreground block">{formatNumber(data["MBT Quotes Issued"])}</span>
-                </div>
-                <div className="space-y-1 text-center">
-                  <span className="text-xs text-muted-foreground block uppercase tracking-wider">Freightliner</span>
-                  <span className="text-2xl text-foreground block">{formatNumber(data["FTL Quotes Issued"])}</span>
+          {/* Orders Received */}
+          <Card className="p-0 overflow-hidden border-primary/20">
+            <div className="flex flex-col md:flex-row">
+              {/* Left side - Total with colored background */}
+              <div className="p-6 bg-primary/10">
+                <p className="text-xl font-bold text-foreground mb-2">Orders Received</p>
+                <p className="text-3xl font-bold text-foreground">{formatNumber(totalOrdersReceived)}</p>
+              </div>
+              
+              {/* Vertical separator */}
+              <div className="hidden md:block w-px bg-border"></div>
+              
+              {/* Right side - Breakdown with white background */}
+              <div className="p-6 bg-background flex items-end">
+                <div className="flex gap-8">
+                  <div className="space-y-1 text-center">
+                    <span className="text-xs text-muted-foreground block uppercase tracking-wider">Mercedes-Benz</span>
+                    <span className="text-2xl text-foreground block">{formatNumber(data["MBT Orders Received"])}</span>
+                  </div>
+                  <div className="space-y-1 text-center">
+                    <span className="text-xs text-muted-foreground block uppercase tracking-wider">Freightliner</span>
+                    <span className="text-2xl text-foreground block">{formatNumber(data["FTL Orders Received"])}</span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </Card>
+          </Card>
 
-        {/* Tile 3: Orders Received */}
-        <Card className="p-0 overflow-hidden border-primary/20">
-          <div className="flex flex-col md:flex-row">
-            {/* Left side - Total with colored background */}
-            <div className="p-6 bg-primary/10">
-              <p className="text-xl font-bold text-foreground mb-2">Orders Received</p>
-              <p className="text-3xl font-bold text-foreground">{formatNumber(totalOrdersReceived)}</p>
-            </div>
-            
-            {/* Vertical separator */}
-            <div className="hidden md:block w-px bg-border"></div>
-            
-            {/* Right side - Breakdown with white background */}
-            <div className="p-6 bg-background flex items-end">
-              <div className="flex gap-8">
-                <div className="space-y-1 text-center">
-                  <span className="text-xs text-muted-foreground block uppercase tracking-wider">Mercedes-Benz</span>
-                  <span className="text-2xl text-foreground block">{formatNumber(data["MBT Orders Received"])}</span>
-                </div>
-                <div className="space-y-1 text-center">
-                  <span className="text-xs text-muted-foreground block uppercase tracking-wider">Freightliner</span>
-                  <span className="text-2xl text-foreground block">{formatNumber(data["FTL Orders Received"])}</span>
+          {/* Orders Expected */}
+
+          <Card className="p-0 overflow-hidden border-primary/20">
+            <div className="flex flex-col md:flex-row">
+              {/* Left side - Total with colored background */}
+              <div className="p-6 bg-primary/10">
+                <p className="text-xl font-bold text-foreground mb-2">Orders Expected</p>
+                <p className="text-3xl font-bold text-foreground">{formatNumber(totalOrdersExpected)}</p>
+              </div>
+              
+              {/* Vertical separator */}
+              <div className="hidden md:block w-px bg-border"></div>
+              
+              {/* Right side - Breakdown with white background */}
+              <div className="p-6 bg-background flex items-end">
+                <div className="flex gap-8">
+                  <div className="space-y-1 text-center">
+                    <span className="text-xs text-muted-foreground block uppercase tracking-wider">Mercedes-Benz</span>
+                    <span className="text-2xl text-foreground block">{formatNumber(data["MBT Orders Expected NW"])}</span>
+                  </div>
+                  <div className="space-y-1 text-center">
+                    <span className="text-xs text-muted-foreground block uppercase tracking-wider">Freightliner</span>
+                    <span className="text-2xl text-foreground block">{formatNumber(data["FTL Orders Expected NW"])}</span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </Card>
-
-        {/* Tile 4: Orders Expected */}
-        <Card className="p-0 overflow-hidden border-primary/20">
-          <div className="flex flex-col md:flex-row">
-            {/* Left side - Total with colored background */}
-            <div className="p-6 bg-primary/10">
-              <p className="text-xl font-bold text-foreground mb-2">Orders Expected</p>
-              <p className="text-3xl font-bold text-foreground">{formatNumber(totalOrdersExpected)}</p>
-            </div>
-            
-            {/* Vertical separator */}
-            <div className="hidden md:block w-px bg-border"></div>
-            
-            {/* Right side - Breakdown with white background */}
-            <div className="p-6 bg-background flex items-end">
-              <div className="flex gap-8">
-                <div className="space-y-1 text-center">
-                  <span className="text-xs text-muted-foreground block uppercase tracking-wider">Mercedes-Benz</span>
-                  <span className="text-2xl text-foreground block">{formatNumber(data["MBT Orders Expected NW"])}</span>
-                </div>
-                <div className="space-y-1 text-center">
-                  <span className="text-xs text-muted-foreground block uppercase tracking-wider">Freightliner</span>
-                  <span className="text-2xl text-foreground block">{formatNumber(data["FTL Orders Expected NW"])}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </Card>
+          </Card>
         </div>
       </div>
 
