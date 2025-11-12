@@ -141,25 +141,31 @@ export const ForecastTiles = () => {
       <div>
         <h2 className="text-2xl font-bold text-foreground mb-4">Activity</h2>
         {/* Total Meetings Row */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-          {/* Tile 1a: Total Meetings - Total Only */}
-          <Card className="p-6 md:col-span-2 bg-primary/10 border-primary/20">
-            <div>
-              <p className="text-xl font-bold text-foreground mb-2">Total Meetings</p>
-              <p className="text-3xl font-bold text-foreground">{formatNumber(totalMeetings)}</p>
-            </div>
-          </Card>
-
-          {/* Tile 1b: Total Meetings - Breakdown */}
-          <Card className="p-6">
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Conquest:</span>
-                <span className="font-medium text-foreground">{formatNumber(data["Conquest Meetings"])}</span>
+        <div className="mb-4">
+          {/* Total Meetings - Combined Tile */}
+          <Card className="p-0 overflow-hidden border-primary/20">
+            <div className="flex flex-col md:flex-row">
+              {/* Left side - Total with colored background */}
+              <div className="flex-1 p-6 bg-primary/10">
+                <p className="text-xl font-bold text-foreground mb-2">Total Meetings</p>
+                <p className="text-3xl font-bold text-foreground">{formatNumber(totalMeetings)}</p>
               </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Customer:</span>
-                <span className="font-medium text-foreground">{formatNumber(data["Customer Meetings"])}</span>
+              
+              {/* Vertical separator */}
+              <div className="hidden md:block w-px bg-border"></div>
+              
+              {/* Right side - Breakdown with white background */}
+              <div className="p-6 bg-background">
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Conquest:</span>
+                    <span className="font-medium text-foreground">{formatNumber(data["Conquest Meetings"])}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Customer:</span>
+                    <span className="font-medium text-foreground">{formatNumber(data["Customer Meetings"])}</span>
+                  </div>
+                </div>
               </div>
             </div>
           </Card>
