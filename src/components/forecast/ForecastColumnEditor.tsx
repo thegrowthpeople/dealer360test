@@ -16,7 +16,10 @@ export const ForecastColumnEditor = ({
   title,
 }: ForecastColumnEditorProps) => {
   const rows = form.watch(brandFieldName) || [];
-  const total = rows.reduce((sum: number, row: any) => sum + (row.qty || 0), 0);
+  const total = rows.reduce((sum: number, row: any) => {
+    const qty = typeof row.qty === 'string' ? parseFloat(row.qty) || 0 : (row.qty || 0);
+    return sum + qty;
+  }, 0);
 
   return (
     <div className="space-y-3">
@@ -25,9 +28,9 @@ export const ForecastColumnEditor = ({
         <p className="text-2xl font-bold">{total}</p>
       </div>
 
-      <div className="space-y-2 max-h-[400px] overflow-y-auto">
+      <div className="space-y-2 max-h-[400px] overflow-y-auto pr-2">
         {Array.from({ length: 15 }).map((_, index) => (
-          <div key={index} className="grid grid-cols-[80px_1fr_1fr] gap-2">
+          <div key={index} className="grid grid-cols-[70px_1fr_1fr] gap-2">
             <FormField
               control={form.control}
               name={`${brandFieldName}.${index}.qty`}
@@ -38,6 +41,7 @@ export const ForecastColumnEditor = ({
                     <Input
                       type="number"
                       {...field}
+                      onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
                       className="h-9 text-sm"
                       placeholder="0"
                     />
@@ -55,7 +59,7 @@ export const ForecastColumnEditor = ({
                     <Input
                       {...field}
                       className="h-9 text-sm"
-                      placeholder="Customer name"
+                      placeholder="Customer"
                     />
                   </FormControl>
                 </FormItem>
