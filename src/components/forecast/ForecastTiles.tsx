@@ -143,7 +143,7 @@ export const ForecastTiles = () => {
         {/* Activity Metrics Row */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
           {/* Total Meetings */}
-          <Card className="p-0 overflow-hidden border-primary/20">
+          <Card className="p-0 overflow-hidden border-primary/20 shadow-md hover:shadow-lg transition-shadow duration-300">
             <div className="flex flex-col md:flex-row">
               {/* Left side - Total with colored background */}
               <div className="p-4 bg-primary/10 w-[150px]">
@@ -171,7 +171,7 @@ export const ForecastTiles = () => {
           </Card>
 
           {/* Quotes Issued */}
-          <Card className="p-0 overflow-hidden border-primary/20">
+          <Card className="p-0 overflow-hidden border-primary/20 shadow-md hover:shadow-lg transition-shadow duration-300">
             <div className="flex flex-col md:flex-row">
               {/* Left side - Total with colored background */}
               <div className="p-4 bg-primary/10 w-[150px]">
@@ -199,7 +199,7 @@ export const ForecastTiles = () => {
            </Card>
 
           {/* Orders Received */}
-          <Card className="p-0 overflow-hidden border-primary/20">
+          <Card className="p-0 overflow-hidden border-primary/20 shadow-md hover:shadow-lg transition-shadow duration-300">
             <div className="flex flex-col md:flex-row">
               {/* Left side - Total with colored background */}
               <div className="p-4 bg-primary/10 w-[150px]">
@@ -227,7 +227,7 @@ export const ForecastTiles = () => {
           </Card>
 
           {/* Orders Expected */}
-          <Card className="p-0 overflow-hidden border-primary/20">
+          <Card className="p-0 overflow-hidden border-primary/20 shadow-md hover:shadow-lg transition-shadow duration-300">
             <div className="flex flex-col md:flex-row">
               {/* Left side - Total with colored background */}
               <div className="p-4 bg-primary/10 w-[150px]">
@@ -262,7 +262,7 @@ export const ForecastTiles = () => {
         <h2 className="text-2xl font-bold text-foreground mb-4">Pipeline</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
         {/* Tile 5: Pipeline Growth */}
-        <Card className="p-0 overflow-hidden border-primary/20">
+        <Card className="p-0 overflow-hidden border-primary/20 shadow-md hover:shadow-lg transition-shadow duration-300">
           <div className="flex flex-col md:flex-row">
             {/* Left side - Total with colored background */}
             <div className="p-4 bg-primary/10 w-[150px]">
@@ -290,7 +290,7 @@ export const ForecastTiles = () => {
         </Card>
 
         {/* Tile 6: Pipeline Lost */}
-        <Card className="p-0 overflow-hidden border-primary/20">
+        <Card className="p-0 overflow-hidden border-primary/20 shadow-md hover:shadow-lg transition-shadow duration-300">
           <div className="flex flex-col md:flex-row">
             {/* Left side - Total with colored background */}
             <div className="p-4 bg-primary/10 w-[150px]">
@@ -318,7 +318,7 @@ export const ForecastTiles = () => {
         </Card>
 
         {/* Tile 7: This QTR Pipeline */}
-        <Card className="p-0 overflow-hidden border-primary/20">
+        <Card className="p-0 overflow-hidden border-primary/20 shadow-md hover:shadow-lg transition-shadow duration-300">
           <div className="flex flex-col md:flex-row">
             {/* Left side - Total with colored background */}
             <div className="p-4 bg-primary/10 w-[150px]">
@@ -346,7 +346,7 @@ export const ForecastTiles = () => {
         </Card>
 
         {/* Tile 8: Next QTR Pipeline */}
-        <Card className="p-0 overflow-hidden border-primary/20">
+        <Card className="p-0 overflow-hidden border-primary/20 shadow-md hover:shadow-lg transition-shadow duration-300">
           <div className="flex flex-col md:flex-row">
             {/* Left side - Total with colored background */}
             <div className="p-4 bg-primary/10 w-[150px]">
