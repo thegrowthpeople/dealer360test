@@ -164,11 +164,11 @@ export const ForecastTiles = () => {
           </div>
           <div className="space-y-1">
             <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Mercedes-Benz Orders:</span>
+              <span className="text-muted-foreground">Mercedes-Benz:</span>
               <span className="font-medium text-foreground">{formatNumber(data["MBT Orders Received"])}</span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Freightliner Orders:</span>
+              <span className="text-muted-foreground">Freightliner:</span>
               <span className="font-medium text-foreground">{formatNumber(data["FTL Orders Received"])}</span>
             </div>
           </div>
