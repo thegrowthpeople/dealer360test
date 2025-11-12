@@ -384,7 +384,7 @@ export const NewForecastDialog = ({
                     <CardTitle>Pipeline Growth</CardTitle>
                     <CardDescription>Enter pipeline growth data</CardDescription>
                   </CardHeader>
-                  <CardContent className="grid grid-cols-2 gap-4">
+                  <CardContent className="grid grid-cols-3 gap-4">
                     <FormField
                       control={form.control}
                       name="mbtPipelineGrowth"
@@ -419,7 +419,7 @@ export const NewForecastDialog = ({
                     <CardTitle>This Quarter Pipeline</CardTitle>
                     <CardDescription>Enter current quarter pipeline size</CardDescription>
                   </CardHeader>
-                  <CardContent className="grid grid-cols-2 gap-4">
+                  <CardContent className="grid grid-cols-3 gap-4">
                     <FormField
                       control={form.control}
                       name="mbtPipelineThisQtr"
@@ -454,7 +454,7 @@ export const NewForecastDialog = ({
                     <CardTitle>Next Quarter Pipeline</CardTitle>
                     <CardDescription>Enter next quarter pipeline size</CardDescription>
                   </CardHeader>
-                  <CardContent className="grid grid-cols-2 gap-4">
+                  <CardContent className="grid grid-cols-3 gap-4">
                     <FormField
                       control={form.control}
                       name="mbtPipelineNextQtr"
