@@ -203,37 +203,57 @@ export const ForecastTiles = () => {
         </Card>
 
         {/* Tile 3: Orders Received */}
-        <Card className="p-6">
-          <div className="mb-4">
-            <p className="text-xl font-bold text-foreground mb-2">Orders Received</p>
-            <p className="text-3xl font-bold text-foreground">{formatNumber(totalOrdersReceived)}</p>
-          </div>
-          <div className="space-y-1">
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Mercedes-Benz:</span>
-              <span className="font-medium text-foreground">{formatNumber(data["MBT Orders Received"])}</span>
+        <Card className="p-0 overflow-hidden border-primary/20">
+          <div className="flex flex-col md:flex-row">
+            {/* Left side - Total with colored background */}
+            <div className="p-6 bg-primary/10">
+              <p className="text-xl font-bold text-foreground mb-2">Orders Received</p>
+              <p className="text-3xl font-bold text-foreground">{formatNumber(totalOrdersReceived)}</p>
             </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Freightliner:</span>
-              <span className="font-medium text-foreground">{formatNumber(data["FTL Orders Received"])}</span>
+            
+            {/* Vertical separator */}
+            <div className="hidden md:block w-px bg-border"></div>
+            
+            {/* Right side - Breakdown with white background */}
+            <div className="p-6 bg-background flex items-end">
+              <div className="flex gap-8">
+                <div className="space-y-1 text-center">
+                  <span className="text-xs text-muted-foreground block uppercase tracking-wider">Mercedes-Benz</span>
+                  <span className="text-2xl text-foreground block">{formatNumber(data["MBT Orders Received"])}</span>
+                </div>
+                <div className="space-y-1 text-center">
+                  <span className="text-xs text-muted-foreground block uppercase tracking-wider">Freightliner</span>
+                  <span className="text-2xl text-foreground block">{formatNumber(data["FTL Orders Received"])}</span>
+                </div>
+              </div>
             </div>
           </div>
         </Card>
 
         {/* Tile 4: Orders Expected */}
-        <Card className="p-6">
-          <div className="mb-4">
-            <p className="text-xl font-bold text-foreground mb-2">Orders Expected</p>
-            <p className="text-3xl font-bold text-foreground">{formatNumber(totalOrdersExpected)}</p>
-          </div>
-          <div className="space-y-1">
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Mercedes-Benz:</span>
-              <span className="font-medium text-foreground">{formatNumber(data["MBT Orders Expected NW"])}</span>
+        <Card className="p-0 overflow-hidden border-primary/20">
+          <div className="flex flex-col md:flex-row">
+            {/* Left side - Total with colored background */}
+            <div className="p-6 bg-primary/10">
+              <p className="text-xl font-bold text-foreground mb-2">Orders Expected</p>
+              <p className="text-3xl font-bold text-foreground">{formatNumber(totalOrdersExpected)}</p>
             </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Freightliner:</span>
-              <span className="font-medium text-foreground">{formatNumber(data["FTL Orders Expected NW"])}</span>
+            
+            {/* Vertical separator */}
+            <div className="hidden md:block w-px bg-border"></div>
+            
+            {/* Right side - Breakdown with white background */}
+            <div className="p-6 bg-background flex items-end">
+              <div className="flex gap-8">
+                <div className="space-y-1 text-center">
+                  <span className="text-xs text-muted-foreground block uppercase tracking-wider">Mercedes-Benz</span>
+                  <span className="text-2xl text-foreground block">{formatNumber(data["MBT Orders Expected NW"])}</span>
+                </div>
+                <div className="space-y-1 text-center">
+                  <span className="text-xs text-muted-foreground block uppercase tracking-wider">Freightliner</span>
+                  <span className="text-2xl text-foreground block">{formatNumber(data["FTL Orders Expected NW"])}</span>
+                </div>
+              </div>
             </div>
           </div>
         </Card>
@@ -245,74 +265,114 @@ export const ForecastTiles = () => {
       <div>
         <h2 className="text-2xl font-bold text-foreground mb-4">Pipeline</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Tile 4: Pipeline Growth */}
-        <Card className="p-6">
-          <div className="mb-4">
-            <p className="text-xl font-bold text-foreground mb-2">Pipeline Growth</p>
-            <p className="text-3xl font-bold text-foreground">{formatNumber(pipelineGrowth)}</p>
-          </div>
-          <div className="space-y-1">
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Mercedes-Benz:</span>
-              <span className="font-medium text-foreground">{formatNumber(data["MBT Pipeline Growth"])}</span>
+        {/* Tile 5: Pipeline Growth */}
+        <Card className="p-0 overflow-hidden border-primary/20">
+          <div className="flex flex-col md:flex-row">
+            {/* Left side - Total with colored background */}
+            <div className="p-6 bg-primary/10">
+              <p className="text-xl font-bold text-foreground mb-2">Pipeline Growth</p>
+              <p className="text-3xl font-bold text-foreground">{formatNumber(pipelineGrowth)}</p>
             </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Freightliner:</span>
-              <span className="font-medium text-foreground">{formatNumber(data["FTL Pipeline Growth"])}</span>
-            </div>
-          </div>
-        </Card>
-
-        {/* Tile 5: Pipeline Lost */}
-        <Card className="p-6">
-          <div className="mb-4">
-            <p className="text-xl font-bold text-foreground mb-2">Pipeline Lost</p>
-            <p className="text-3xl font-bold text-foreground">{formatNumber(pipelineLost)}</p>
-          </div>
-          <div className="space-y-1">
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Mercedes-Benz:</span>
-              <span className="font-medium text-foreground">{formatNumber(data["MBT Pipeline Lost"])}</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Freightliner:</span>
-              <span className="font-medium text-foreground">{formatNumber(data["FTL Pipeline Lost"])}</span>
+            
+            {/* Vertical separator */}
+            <div className="hidden md:block w-px bg-border"></div>
+            
+            {/* Right side - Breakdown with white background */}
+            <div className="p-6 bg-background flex items-end">
+              <div className="flex gap-8">
+                <div className="space-y-1 text-center">
+                  <span className="text-xs text-muted-foreground block uppercase tracking-wider">Mercedes-Benz</span>
+                  <span className="text-2xl text-foreground block">{formatNumber(data["MBT Pipeline Growth"])}</span>
+                </div>
+                <div className="space-y-1 text-center">
+                  <span className="text-xs text-muted-foreground block uppercase tracking-wider">Freightliner</span>
+                  <span className="text-2xl text-foreground block">{formatNumber(data["FTL Pipeline Growth"])}</span>
+                </div>
+              </div>
             </div>
           </div>
         </Card>
 
-        {/* Tile 6: Mercedes-Benz Pipeline */}
-        <Card className="p-6">
-          <div className="mb-4">
-            <p className="text-xl font-bold text-foreground mb-2">Mercedes-Benz Pipeline</p>
-            <p className="text-3xl font-bold text-foreground">{formatNumber(mbtPipeline)}</p>
-          </div>
-          <div className="space-y-1">
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">This QTR:</span>
-              <span className="font-medium text-foreground">{formatNumber(data["MBT Pipeline Size This QTR"])}</span>
+        {/* Tile 6: Pipeline Lost */}
+        <Card className="p-0 overflow-hidden border-primary/20">
+          <div className="flex flex-col md:flex-row">
+            {/* Left side - Total with colored background */}
+            <div className="p-6 bg-primary/10">
+              <p className="text-xl font-bold text-foreground mb-2">Pipeline Lost</p>
+              <p className="text-3xl font-bold text-foreground">{formatNumber(pipelineLost)}</p>
             </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Next QTR:</span>
-              <span className="font-medium text-foreground">{formatNumber(data["MBT Pipeline Size Next QTR"])}</span>
+            
+            {/* Vertical separator */}
+            <div className="hidden md:block w-px bg-border"></div>
+            
+            {/* Right side - Breakdown with white background */}
+            <div className="p-6 bg-background flex items-end">
+              <div className="flex gap-8">
+                <div className="space-y-1 text-center">
+                  <span className="text-xs text-muted-foreground block uppercase tracking-wider">Mercedes-Benz</span>
+                  <span className="text-2xl text-foreground block">{formatNumber(data["MBT Pipeline Lost"])}</span>
+                </div>
+                <div className="space-y-1 text-center">
+                  <span className="text-xs text-muted-foreground block uppercase tracking-wider">Freightliner</span>
+                  <span className="text-2xl text-foreground block">{formatNumber(data["FTL Pipeline Lost"])}</span>
+                </div>
+              </div>
             </div>
           </div>
         </Card>
 
-        {/* Tile 7: Freightliner Pipeline */}
-        <Card className="p-6">
-          <div className="mb-4">
-            <p className="text-xl font-bold text-foreground mb-2">Freightliner Pipeline</p>
-            <p className="text-3xl font-bold text-foreground">{formatNumber(ftlPipeline)}</p>
-          </div>
-          <div className="space-y-1">
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">This QTR:</span>
-              <span className="font-medium text-foreground">{formatNumber(data["FTL Pipeline Size This QTR"])}</span>
+        {/* Tile 7: Mercedes-Benz Pipeline */}
+        <Card className="p-0 overflow-hidden border-primary/20">
+          <div className="flex flex-col md:flex-row">
+            {/* Left side - Total with colored background */}
+            <div className="p-6 bg-primary/10">
+              <p className="text-xl font-bold text-foreground mb-2">Mercedes-Benz Pipeline</p>
+              <p className="text-3xl font-bold text-foreground">{formatNumber(mbtPipeline)}</p>
             </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Next QTR:</span>
-              <span className="font-medium text-foreground">{formatNumber(data["FTL Pipeline Size Next QTR"])}</span>
+            
+            {/* Vertical separator */}
+            <div className="hidden md:block w-px bg-border"></div>
+            
+            {/* Right side - Breakdown with white background */}
+            <div className="p-6 bg-background flex items-end">
+              <div className="flex gap-8">
+                <div className="space-y-1 text-center">
+                  <span className="text-xs text-muted-foreground block uppercase tracking-wider">This QTR</span>
+                  <span className="text-2xl text-foreground block">{formatNumber(data["MBT Pipeline Size This QTR"])}</span>
+                </div>
+                <div className="space-y-1 text-center">
+                  <span className="text-xs text-muted-foreground block uppercase tracking-wider">Next QTR</span>
+                  <span className="text-2xl text-foreground block">{formatNumber(data["MBT Pipeline Size Next QTR"])}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        {/* Tile 8: Freightliner Pipeline */}
+        <Card className="p-0 overflow-hidden border-primary/20">
+          <div className="flex flex-col md:flex-row">
+            {/* Left side - Total with colored background */}
+            <div className="p-6 bg-primary/10">
+              <p className="text-xl font-bold text-foreground mb-2">Freightliner Pipeline</p>
+              <p className="text-3xl font-bold text-foreground">{formatNumber(ftlPipeline)}</p>
+            </div>
+            
+            {/* Vertical separator */}
+            <div className="hidden md:block w-px bg-border"></div>
+            
+            {/* Right side - Breakdown with white background */}
+            <div className="p-6 bg-background flex items-end">
+              <div className="flex gap-8">
+                <div className="space-y-1 text-center">
+                  <span className="text-xs text-muted-foreground block uppercase tracking-wider">This QTR</span>
+                  <span className="text-2xl text-foreground block">{formatNumber(data["FTL Pipeline Size This QTR"])}</span>
+                </div>
+                <div className="space-y-1 text-center">
+                  <span className="text-xs text-muted-foreground block uppercase tracking-wider">Next QTR</span>
+                  <span className="text-2xl text-foreground block">{formatNumber(data["FTL Pipeline Size Next QTR"])}</span>
+                </div>
+              </div>
             </div>
           </div>
         </Card>
