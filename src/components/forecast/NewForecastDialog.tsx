@@ -61,14 +61,14 @@ const forecastSchema = z.object({
   forecastRows: z.array(z.object({
     qty: z.coerce.number().min(0, "Must be 0 or greater"),
     customerName: z.string(),
-    customerType: z.enum(["Existing", "New"]),
+    customerType: z.enum(["Existing", "New", ""]),
     salesSupport: z.coerce.number().min(0, "Must be 0 or greater"),
     demoTruck: z.coerce.number().min(0, "Must be 0 or greater"),
-    brand: z.enum(["Mercedes-Benz", "Freightliner"]),
+    brand: z.enum(["Mercedes-Benz", "Freightliner", ""]),
     model: z.string(),
-    type: z.enum(["Retail", "Indirect Fleet", "Direct Fleet"]),
+    type: z.enum(["Retail", "Indirect Fleet", "Direct Fleet", ""]),
+    bdm: z.enum(["Met in Person", "Relationship", "Supported", ""]),
     upside: z.boolean(),
-    bdmEngaged: z.boolean(),
   })),
 });
 
@@ -136,14 +136,14 @@ export const NewForecastDialog = ({
       forecastRows: Array(15).fill(null).map(() => ({ 
         qty: 0, 
         customerName: "", 
-        customerType: "Existing" as const, 
+        customerType: "" as const, 
         salesSupport: 0, 
         demoTruck: 0, 
-        brand: "Mercedes-Benz" as const, 
+        brand: "" as const, 
         model: "", 
-        type: "Retail" as const,
+        type: "" as const,
+        bdm: "" as const,
         upside: false,
-        bdmEngaged: false,
       })),
     },
   });
@@ -653,14 +653,14 @@ export const NewForecastDialog = ({
                               const emptyRows = Array(15).fill(null).map(() => ({
                                 qty: 0,
                                 customerName: "",
-                                customerType: "Existing" as const,
+                                customerType: "" as const,
                                 salesSupport: 0,
                                 demoTruck: 0,
-                                brand: "Mercedes-Benz" as const,
+                                brand: "" as const,
                                 model: "",
-                                type: "Retail" as const,
+                                type: "" as const,
+                                bdm: "" as const,
                                 upside: false,
-                                bdmEngaged: false,
                               }));
                               form.setValue("forecastRows", emptyRows);
                             }}
@@ -833,24 +833,6 @@ export const NewForecastDialog = ({
                             <FormField
                               control={form.control}
                               name={`forecastRows.${index}.upside`}
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormControl>
-                                    <div className="flex items-center h-9">
-                                      <input
-                                        type="checkbox"
-                                        checked={field.value}
-                                        onChange={field.onChange}
-                                        className="h-4 w-4 rounded border-input"
-                                      />
-                                    </div>
-                                  </FormControl>
-                                </FormItem>
-                              )}
-                            />
-                            <FormField
-                              control={form.control}
-                              name={`forecastRows.${index}.bdmEngaged`}
                               render={({ field }) => (
                                 <FormItem>
                                   <FormControl>
