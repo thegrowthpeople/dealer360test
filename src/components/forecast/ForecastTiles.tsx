@@ -179,7 +179,33 @@ export const ForecastTiles = () => {
       <div>
         <h2 className="text-2xl font-bold text-foreground mb-4">Pipeline</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Tile 4: Mercedes-Benz Pipeline */}
+        {/* Tile 4: Pipeline Growth */}
+        <Card className="p-6">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-sm font-medium text-muted-foreground mb-1">Pipeline Growth</p>
+              <p className="text-3xl font-bold text-foreground">{formatNumber(pipelineGrowth)}</p>
+            </div>
+            <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
+              <TrendingUp className="w-6 h-6 text-primary" />
+            </div>
+          </div>
+        </Card>
+
+        {/* Tile 5: Pipeline Lost */}
+        <Card className="p-6">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-sm font-medium text-muted-foreground mb-1">Pipeline Lost</p>
+              <p className="text-3xl font-bold text-foreground">{formatNumber(pipelineLost)}</p>
+            </div>
+            <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
+              <TrendingDown className="w-6 h-6 text-primary" />
+            </div>
+          </div>
+        </Card>
+
+        {/* Tile 6: Mercedes-Benz Pipeline */}
         <Card className="p-6">
           <div className="flex items-start justify-between mb-4">
             <div>
@@ -202,7 +228,7 @@ export const ForecastTiles = () => {
           </div>
         </Card>
 
-        {/* Tile 5: Freightliner Pipeline */}
+        {/* Tile 7: Freightliner Pipeline */}
         <Card className="p-6">
           <div className="flex items-start justify-between mb-4">
             <div>
@@ -221,32 +247,6 @@ export const ForecastTiles = () => {
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Next QTR:</span>
               <span className="font-medium text-foreground">{formatNumber(data["FTL Pipeline Size Next QTR"])}</span>
-            </div>
-          </div>
-        </Card>
-
-        {/* Tile 6: Pipeline Growth */}
-        <Card className="p-6">
-          <div className="flex items-start justify-between">
-            <div>
-              <p className="text-sm font-medium text-muted-foreground mb-1">Pipeline Growth</p>
-              <p className="text-3xl font-bold text-foreground">{formatNumber(pipelineGrowth)}</p>
-            </div>
-            <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
-              <TrendingUp className="w-6 h-6 text-primary" />
-            </div>
-          </div>
-        </Card>
-
-        {/* Tile 7: Pipeline Lost */}
-        <Card className="p-6">
-          <div className="flex items-start justify-between">
-            <div>
-              <p className="text-sm font-medium text-muted-foreground mb-1">Pipeline Lost</p>
-              <p className="text-3xl font-bold text-foreground">{formatNumber(pipelineLost)}</p>
-            </div>
-            <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
-              <TrendingDown className="w-6 h-6 text-primary" />
             </div>
           </div>
         </Card>
