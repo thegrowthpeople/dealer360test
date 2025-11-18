@@ -778,7 +778,23 @@ const Index = () => {
                           <CardHeader className="pb-2 pt-8">
                             <div className="flex items-start justify-between gap-2">
                               <CardTitle className="text-sm line-clamp-2">{scorecard.opportunityName}</CardTitle>
-                              <div className="text-lg font-bold text-primary shrink-0">{scorecard.totalScore}</div>
+                              <div className="shrink-0 text-right">
+                                <div className="text-lg font-bold text-primary">{scorecard.totalScore}</div>
+                                {(() => {
+                                  const totalNegative = [
+                                    scorecard.funds,
+                                    scorecard.authority,
+                                    scorecard.interest,
+                                    scorecard.need,
+                                    scorecard.timing,
+                                  ].reduce((sum, component) => sum + component.questions.filter(q => q.state === "negative").length, 0);
+                                  return totalNegative > 0 && (
+                                    <div className="text-xs text-destructive mt-0.5">
+                                      ({totalNegative})
+                                    </div>
+                                  );
+                                })()}
+                              </div>
                             </div>
                             <p className="text-xs text-muted-foreground line-clamp-1">{scorecard.customerName}</p>
                           </CardHeader>
@@ -888,7 +904,23 @@ const Index = () => {
                         <CardHeader className="pb-3 pt-12">
                           <CardTitle className="text-xl flex items-center justify-between">
                             {scorecard.opportunityName}
-                            <div className="text-2xl font-bold text-primary">{scorecard.totalScore}/40</div>
+                            <div className="text-right">
+                              <div className="text-2xl font-bold text-primary">{scorecard.totalScore}/40</div>
+                              {(() => {
+                                const totalNegative = [
+                                  scorecard.funds,
+                                  scorecard.authority,
+                                  scorecard.interest,
+                                  scorecard.need,
+                                  scorecard.timing,
+                                ].reduce((sum, component) => sum + component.questions.filter(q => q.state === "negative").length, 0);
+                                return totalNegative > 0 && (
+                                  <div className="text-sm text-destructive mt-1">
+                                    ({totalNegative})
+                                  </div>
+                                );
+                              })()}
+                            </div>
                           </CardTitle>
                           <p className="text-sm text-muted-foreground font-medium">{scorecard.customerName}</p>
                         </CardHeader>
