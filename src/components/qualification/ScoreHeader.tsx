@@ -123,6 +123,11 @@ export const ScoreHeader = ({ scorecard }: ScoreHeaderProps) => {
                 <div className={`text-2xl font-bold ${getFaintScoreColor(fundsPositive)}`}>
                   {fundsPositive}
                 </div>
+                {fundsNegative > 0 && (
+                  <div className="text-xs text-destructive mt-1">
+                    ({fundsNegative})
+                  </div>
+                )}
               </div>
             </TooltipTrigger>
             <TooltipContent>
@@ -137,6 +142,11 @@ export const ScoreHeader = ({ scorecard }: ScoreHeaderProps) => {
                 <div className={`text-2xl font-bold ${getFaintScoreColor(authorityPositive)}`}>
                   {authorityPositive}
                 </div>
+                {authorityNegative > 0 && (
+                  <div className="text-xs text-destructive mt-1">
+                    ({authorityNegative})
+                  </div>
+                )}
               </div>
             </TooltipTrigger>
             <TooltipContent>
@@ -151,6 +161,11 @@ export const ScoreHeader = ({ scorecard }: ScoreHeaderProps) => {
                 <div className={`text-2xl font-bold ${getFaintScoreColor(interestPositive)}`}>
                   {interestPositive}
                 </div>
+                {interestNegative > 0 && (
+                  <div className="text-xs text-destructive mt-1">
+                    ({interestNegative})
+                  </div>
+                )}
               </div>
             </TooltipTrigger>
             <TooltipContent>
@@ -165,6 +180,11 @@ export const ScoreHeader = ({ scorecard }: ScoreHeaderProps) => {
                 <div className={`text-2xl font-bold ${getFaintScoreColor(needPositive)}`}>
                   {needPositive}
                 </div>
+                {needNegative > 0 && (
+                  <div className="text-xs text-destructive mt-1">
+                    ({needNegative})
+                  </div>
+                )}
               </div>
             </TooltipTrigger>
             <TooltipContent>
@@ -179,6 +199,11 @@ export const ScoreHeader = ({ scorecard }: ScoreHeaderProps) => {
                 <div className={`text-2xl font-bold ${getFaintScoreColor(timingPositive)}`}>
                   {timingPositive}
                 </div>
+                {timingNegative > 0 && (
+                  <div className="text-xs text-destructive mt-1">
+                    ({timingNegative})
+                  </div>
+                )}
               </div>
             </TooltipTrigger>
             <TooltipContent>
