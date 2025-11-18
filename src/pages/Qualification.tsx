@@ -542,31 +542,32 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-4xl xl:text-5xl font-bold text-foreground mb-4">Sales Qualification</h1>
-          <p className="text-muted-foreground">
-            Track and manage FAINT scorecards for sales opportunities
-          </p>
+    <div className="min-h-screen">
+      <div className="px-6 xl:px-12 2xl:px-16 space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-4xl xl:text-5xl font-bold text-foreground mb-4">Sales Qualification</h1>
+            <p className="text-muted-foreground">
+              Track and manage FAINT scorecards for sales opportunities
+            </p>
+          </div>
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogTrigger asChild>
+              <Button size="lg" className="gap-2">
+                <Plus className="w-5 h-5" />
+                New Scorecard
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-2xl">
+              <DialogHeader>
+                <DialogTitle>Create New Scorecard</DialogTitle>
+              </DialogHeader>
+              <ScorecardForm onSubmit={handleCreateScorecard} />
+            </DialogContent>
+          </Dialog>
         </div>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button size="lg" className="gap-2">
-              <Plus className="w-5 h-5" />
-              New Scorecard
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-2xl">
-            <DialogHeader>
-              <DialogTitle>Create New Scorecard</DialogTitle>
-            </DialogHeader>
-            <ScorecardForm onSubmit={handleCreateScorecard} />
-          </DialogContent>
-        </Dialog>
-      </div>
 
-      <Separator className="my-6" />
+        <Separator className="my-6" />
 
       <Dialog open={duplicateDialogOpen} onOpenChange={setDuplicateDialogOpen}>
         <DialogContent className="max-w-2xl">
@@ -589,7 +590,7 @@ const Index = () => {
         </DialogContent>
       </Dialog>
 
-      {!activeScorecard && !comparisonScorecards && !timelineScorecards && (
+        {!activeScorecard && !comparisonScorecards && !timelineScorecards && (
           <>
             {viewAllVersionsFor && (
               <div className="mb-6">
@@ -1125,8 +1126,9 @@ const Index = () => {
             </div>
           </div>
         )}
+      </div>
 
-        {/* Tag Rename Dialog */}
+      {/* Tag Rename Dialog */}
       <Dialog open={editingTag !== null} onOpenChange={(open) => {
         if (!open) {
           setEditingTag(null);
