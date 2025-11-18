@@ -79,6 +79,8 @@ const Index = () => {
     tags: [],
     dateFrom: undefined,
     dateTo: undefined,
+    scoreMin: undefined,
+    scoreMax: undefined,
   });
   const [sortBy, setSortBy] = useState<"date" | "score" | "salesperson" | "customer">("date");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
@@ -453,6 +455,25 @@ const Index = () => {
       }
     }
 
+    // Score range filter - calculate total score for comparison
+    if (filters.scoreMin !== undefined || filters.scoreMax !== undefined) {
+      const totalScore = [
+        scorecard.funds,
+        scorecard.authority,
+        scorecard.interest,
+        scorecard.need,
+        scorecard.timing,
+      ].reduce((sum, component) => sum + component.questions.filter((q) => q.state === "positive").length, 0);
+      
+      if (filters.scoreMin !== undefined && totalScore < filters.scoreMin) {
+        return false;
+      }
+      
+      if (filters.scoreMax !== undefined && totalScore > filters.scoreMax) {
+        return false;
+      }
+    }
+
     return true;
   });
 
@@ -736,7 +757,7 @@ const Index = () => {
             {sortedScorecards.length === 0 ? (
               <Card className="p-12 text-center">
                 <p className="text-lg text-muted-foreground mb-4">No scorecards match your filters</p>
-                <Button variant="outline" onClick={() => setFilters({ salesperson: "", version: "latest", customer: "", showArchived: false, tags: [], dateFrom: undefined, dateTo: undefined })}>
+                <Button variant="outline" onClick={() => setFilters({ salesperson: "", version: "latest", customer: "", showArchived: false, tags: [], dateFrom: undefined, dateTo: undefined, scoreMin: undefined, scoreMax: undefined })}>
                   Clear Filters
                 </Button>
               </Card>

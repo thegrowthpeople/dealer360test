@@ -26,6 +26,8 @@ export interface FilterState {
   tags: string[];
   dateFrom: Date | undefined;
   dateTo: Date | undefined;
+  scoreMin: number | undefined;
+  scoreMax: number | undefined;
 }
 
 interface ScorecardFiltersProps {
@@ -63,6 +65,8 @@ export const ScorecardFilters = ({
     filters.tags.length > 0 ? "tags" : "",
     filters.dateFrom,
     filters.dateTo,
+    filters.scoreMin !== undefined ? "scoreMin" : "",
+    filters.scoreMax !== undefined ? "scoreMax" : "",
   ].filter(Boolean).length;
 
   const handleReset = () => {
@@ -74,6 +78,8 @@ export const ScorecardFilters = ({
       tags: [],
       dateFrom: undefined,
       dateTo: undefined,
+      scoreMin: undefined,
+      scoreMax: undefined,
     });
   };
 
@@ -161,7 +167,7 @@ export const ScorecardFilters = ({
 
       {isExpanded && (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-3">
         {/* Salesperson Filter */}
         <div className="space-y-2">
           <Label htmlFor="salesperson-filter" className="text-sm font-medium">
@@ -350,6 +356,37 @@ export const ScorecardFilters = ({
                 />
               </PopoverContent>
             </Popover>
+          </div>
+        </div>
+
+        {/* Score Range Filter */}
+        <div className="space-y-2">
+          <Label className="text-sm font-medium">Score Range</Label>
+          <div className="flex gap-1">
+            <Input
+              type="number"
+              placeholder="Min"
+              min={0}
+              max={40}
+              value={filters.scoreMin ?? ""}
+              onChange={(e) => {
+                const value = e.target.value === "" ? undefined : parseInt(e.target.value);
+                onFiltersChange({ ...filters, scoreMin: value });
+              }}
+              className="h-9 text-xs"
+            />
+            <Input
+              type="number"
+              placeholder="Max"
+              min={0}
+              max={40}
+              value={filters.scoreMax ?? ""}
+              onChange={(e) => {
+                const value = e.target.value === "" ? undefined : parseInt(e.target.value);
+                onFiltersChange({ ...filters, scoreMax: value });
+              }}
+              className="h-9 text-xs"
+            />
           </div>
         </div>
       </div>
