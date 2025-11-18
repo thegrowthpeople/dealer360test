@@ -19,6 +19,7 @@ import Dealerships from "./pages/Dealerships";
 import Admin from "./pages/Admin";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
+import Qualification from "./pages/Qualification";
 
 const queryClient = new QueryClient();
 
@@ -37,6 +38,7 @@ const App = () => (
                 <Route path="/performance" element={<ProtectedRoute><SimpleLayout><Performance /></SimpleLayout></ProtectedRoute>} />
                 <Route path="/forecast" element={<ProtectedRoute><SimpleLayout><Forecast /></SimpleLayout></ProtectedRoute>} />
                 <Route path="/business-plan" element={<ProtectedRoute><SimpleLayout><BusinessPlan /></SimpleLayout></ProtectedRoute>} />
+                <Route path="/qualification" element={<ProtectedRoute><SimpleLayout><Qualification /></SimpleLayout></ProtectedRoute>} />
                 <Route path="/dealerships" element={<ProtectedRoute><SimpleLayout><Dealerships /></SimpleLayout></ProtectedRoute>} />
                 <Route path="/new-report" element={<ProtectedRoute><SimpleLayout><NewReport /></SimpleLayout></ProtectedRoute>} />
                 <Route path="/reports" element={<ProtectedRoute><SimpleLayout><Reports /></SimpleLayout></ProtectedRoute>} />

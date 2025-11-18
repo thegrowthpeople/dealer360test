@@ -1,0 +1,1180 @@
+import { useState } from "react";
+import { Plus, FileText, Calendar, GitCompare, Clock, ArrowUp, ArrowDown, Copy, Trash2, Download, Archive, CheckSquare, FileSpreadsheet, LayoutGrid, List, Star, Tag, X, Edit2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ScorecardForm } from "@/components/qualification/ScorecardForm";
+import { ScoreHeader } from "@/components/qualification/ScoreHeader";
+import { FAINTSection } from "@/components/qualification/FAINTSection";
+import { ScorecardComparison } from "@/components/qualification/ScorecardComparison";
+import { ScorecardTimeline } from "@/components/qualification/ScorecardTimeline";
+import { ScorecardFilters, FilterState } from "@/components/qualification/ScorecardFilters";
+import { StatsSummary } from "@/components/qualification/StatsSummary";
+import { Scorecard, FAINT_QUESTIONS } from "@/types/scorecard";
+import { toast } from "sonner";
+import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  ToggleGroup,
+  ToggleGroupItem,
+} from "@/components/ui/toggle-group";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+
+const createEmptyScorecard = (data: Partial<Scorecard>): Scorecard => {
+  const createEmptyQuestions = () => Array(8).fill(null).map(() => ({
+    state: "blank" as const,
+    note: "",
+  }));
+
+  return {
+    id: Date.now().toString(),
+    version: 1,
+    salesperson: data.salesperson || "",
+    customerName: data.customerName || "",
+    opportunityName: data.opportunityName || "",
+    expectedOrderDate: data.expectedOrderDate || "",
+    reviewDate: data.reviewDate || "",
+    createdAt: new Date().toISOString(),
+    funds: { questions: createEmptyQuestions() },
+    authority: { questions: createEmptyQuestions() },
+    interest: { questions: createEmptyQuestions() },
+    need: { questions: createEmptyQuestions() },
+    timing: { questions: createEmptyQuestions() },
+  };
+};
+
+const Index = () => {
+  const [scorecards, setScorecards] = useState<Scorecard[]>([]);
+  const [activeScorecard, setActiveScorecard] = useState<Scorecard | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [comparisonMode, setComparisonMode] = useState(false);
+  const [selectedForComparison, setSelectedForComparison] = useState<string[]>([]);
+  const [timelineView, setTimelineView] = useState<string | null>(null); // stores opportunityName for timeline
+  const [viewAllVersionsFor, setViewAllVersionsFor] = useState<string | null>(null); // stores "opportunityName_customerName" key
+  const [filters, setFilters] = useState<FilterState>({
+    salesperson: "",
+    version: "latest",
+    customer: "",
+    showArchived: false,
+    tags: [],
+    dateFrom: undefined,
+    dateTo: undefined,
+  });
+  const [sortBy, setSortBy] = useState<"date" | "score" | "salesperson" | "customer">("date");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
+  const [bulkSelectionMode, setBulkSelectionMode] = useState(false);
+  const [selectedForBulk, setSelectedForBulk] = useState<string[]>([]);
+  const [duplicateDialogOpen, setDuplicateDialogOpen] = useState(false);
+  const [scorecardToDuplicate, setScorecardToDuplicate] = useState<Scorecard | null>(null);
+  const [viewMode, setViewMode] = useState<"expanded" | "compact">("expanded");
+  const [editingTag, setEditingTag] = useState<string | null>(null);
+  const [newTagName, setNewTagName] = useState("");
+
+  // Tag color mapping based on keywords
+  const getTagColor = (tag: string): string => {
+    const tagLower = tag.toLowerCase();
+    
+    // Priority levels
+    if (tagLower.includes("high") || tagLower.includes("urgent") || tagLower.includes("hot")) {
+      return "destructive";
+    }
+    if (tagLower.includes("medium") || tagLower.includes("warm")) {
+      return "default";
+    }
+    if (tagLower.includes("low") || tagLower.includes("cold")) {
+      return "secondary";
+    }
+    
+    // Deal types
+    if (tagLower.includes("enterprise") || tagLower.includes("large")) {
+      return "default";
+    }
+    if (tagLower.includes("smb") || tagLower.includes("small")) {
+      return "outline";
+    }
+    
+    // Status
+    if (tagLower.includes("won") || tagLower.includes("closed") || tagLower.includes("success")) {
+      return "default";
+    }
+    if (tagLower.includes("lost") || tagLower.includes("rejected")) {
+      return "destructive";
+    }
+    
+    // Default
+    return "secondary";
+  };
+
+  const getScoreColorClass = (score: number): string => {
+    if (score < 15) {
+      return "border-red-500 bg-red-500/5";
+    }
+    if (score >= 15 && score <= 30) {
+      return "border-orange-500 bg-orange-500/5";
+    }
+    return "border-green-500 bg-green-500/5";
+  };
+
+  const handleCreateScorecard = (data: Partial<Scorecard>) => {
+    const newScorecard = createEmptyScorecard(data);
+    setScorecards([...scorecards, newScorecard]);
+    setActiveScorecard(newScorecard);
+    setIsDialogOpen(false);
+    toast.success("Scorecard created successfully!");
+  };
+
+  const handleUpdateComponent = (
+    component: keyof Pick<Scorecard, "funds" | "authority" | "interest" | "need" | "timing">,
+    index: number,
+    state: any,
+    note: string
+  ) => {
+    if (!activeScorecard) return;
+
+    const updatedScorecard = { ...activeScorecard };
+    updatedScorecard[component].questions[index] = { state, note };
+    
+    setActiveScorecard(updatedScorecard);
+    setScorecards(scorecards.map(s => s.id === updatedScorecard.id ? updatedScorecard : s));
+  };
+
+  const handleNewVersion = () => {
+    if (!activeScorecard) return;
+    
+    const newVersion: Scorecard = {
+      ...activeScorecard,
+      id: Date.now().toString(),
+      version: activeScorecard.version + 1,
+      reviewDate: new Date().toISOString().split('T')[0],
+      createdAt: new Date().toISOString(),
+    };
+    
+    setScorecards([...scorecards, newVersion]);
+    setActiveScorecard(newVersion);
+    toast.success(`Version ${newVersion.version} created!`);
+  };
+
+  const handleComparisonToggle = () => {
+    setComparisonMode(!comparisonMode);
+    setSelectedForComparison([]);
+    setActiveScorecard(null);
+    setViewAllVersionsFor(null);
+    setBulkSelectionMode(false);
+    setSelectedForBulk([]);
+  };
+
+  const handleBulkModeToggle = () => {
+    setBulkSelectionMode(!bulkSelectionMode);
+    setSelectedForBulk([]);
+    setComparisonMode(false);
+    setSelectedForComparison([]);
+  };
+
+  const handleBulkSelect = (id: string) => {
+    if (selectedForBulk.includes(id)) {
+      setSelectedForBulk(selectedForBulk.filter(sid => sid !== id));
+    } else {
+      setSelectedForBulk([...selectedForBulk, id]);
+    }
+  };
+
+  const handleBulkDelete = () => {
+    setScorecards(scorecards.filter(s => !selectedForBulk.includes(s.id)));
+    setSelectedForBulk([]);
+    setBulkSelectionMode(false);
+    toast.success(`Deleted ${selectedForBulk.length} scorecard(s)`);
+  };
+
+  const handleBulkArchive = () => {
+    setScorecards(scorecards.map(s => 
+      selectedForBulk.includes(s.id) ? { ...s, archived: true } : s
+    ));
+    setSelectedForBulk([]);
+    setBulkSelectionMode(false);
+    toast.success(`Archived ${selectedForBulk.length} scorecard(s)`);
+  };
+
+  const handleUnarchive = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setScorecards(scorecards.map(s => 
+      s.id === id ? { ...s, archived: false } : s
+    ));
+    toast.success("Scorecard unarchived");
+  };
+
+  const handleTogglePin = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setScorecards(scorecards.map(s => 
+      s.id === id ? { ...s, pinned: !s.pinned } : s
+    ));
+    const scorecard = scorecards.find(s => s.id === id);
+    toast.success(scorecard?.pinned ? "Scorecard unpinned" : "Scorecard pinned");
+  };
+
+  const handleAddTag = (id: string, tag: string) => {
+    if (!tag.trim()) return;
+    setScorecards(scorecards.map(s => 
+      s.id === id ? { ...s, tags: [...(s.tags || []), tag.trim()] } : s
+    ));
+    toast.success("Tag added");
+  };
+
+  const handleRemoveTag = (id: string, tagToRemove: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setScorecards(scorecards.map(s => 
+      s.id === id ? { ...s, tags: (s.tags || []).filter(t => t !== tagToRemove) } : s
+    ));
+    toast.success("Tag removed");
+  };
+
+  const handleRenameTag = (oldTag: string, newTag: string) => {
+    if (!newTag.trim() || oldTag === newTag) {
+      setEditingTag(null);
+      setNewTagName("");
+      return;
+    }
+
+    setScorecards(prevCards =>
+      prevCards.map(card => ({
+        ...card,
+        tags: card.tags?.map(t => t === oldTag ? newTag.trim() : t)
+      }))
+    );
+
+    setFilters(prevFilters => ({
+      ...prevFilters,
+      tags: prevFilters.tags.map(t => t === oldTag ? newTag.trim() : t)
+    }));
+
+    setEditingTag(null);
+    setNewTagName("");
+    toast.success(`Tag renamed from "${oldTag}" to "${newTag}"`);
+  };
+
+  const handleBulkExport = () => {
+    const selectedScorecards = scorecards.filter(s => selectedForBulk.includes(s.id));
+    const dataStr = JSON.stringify(selectedScorecards, null, 2);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(dataBlob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `scorecards-export-${new Date().toISOString().split('T')[0]}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+    toast.success(`Exported ${selectedForBulk.length} scorecard(s) as JSON`);
+  };
+
+  const handleBulkExportCSV = () => {
+    const selectedScorecards = scorecards.filter(s => selectedForBulk.includes(s.id));
+    
+    // CSV headers
+    const headers = [
+      "Opportunity Name",
+      "Customer Name",
+      "Salesperson",
+      "Version",
+      "Expected Order Date",
+      "Review Date",
+      "Created Date",
+      "Total Score",
+      "Funds Score",
+      "Authority Score",
+      "Interest Score",
+      "Need Score",
+      "Timing Score",
+      "Status"
+    ];
+    
+    // CSV rows
+    const rows = selectedScorecards.map(scorecard => {
+      const calculateComponentScore = (component: any) => 
+        component.questions.filter((q: any) => q.state === "positive").length;
+      
+      const totalScore = [
+        scorecard.funds,
+        scorecard.authority,
+        scorecard.interest,
+        scorecard.need,
+        scorecard.timing,
+      ].reduce((sum, component) => sum + calculateComponentScore(component), 0);
+      
+      return [
+        scorecard.opportunityName,
+        scorecard.customerName,
+        scorecard.salesperson,
+        scorecard.version,
+        scorecard.expectedOrderDate,
+        scorecard.reviewDate,
+        new Date(scorecard.createdAt).toLocaleDateString(),
+        totalScore,
+        calculateComponentScore(scorecard.funds),
+        calculateComponentScore(scorecard.authority),
+        calculateComponentScore(scorecard.interest),
+        calculateComponentScore(scorecard.need),
+        calculateComponentScore(scorecard.timing),
+        scorecard.archived ? "Archived" : "Active"
+      ].map(field => `"${field}"`).join(",");
+    });
+    
+    const csv = [headers.join(","), ...rows].join("\n");
+    const dataBlob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(dataBlob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `scorecards-export-${new Date().toISOString().split('T')[0]}.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
+    toast.success(`Exported ${selectedForBulk.length} scorecard(s) as CSV`);
+  };
+
+  const handleDuplicate = (scorecard: Scorecard) => {
+    setScorecardToDuplicate(scorecard);
+    setDuplicateDialogOpen(true);
+  };
+
+  const handleDuplicateSubmit = (data: Partial<Scorecard>) => {
+    if (!scorecardToDuplicate) return;
+    
+    const duplicated: Scorecard = {
+      ...scorecardToDuplicate,
+      id: Date.now().toString(),
+      version: 1,
+      salesperson: data.salesperson || scorecardToDuplicate.salesperson,
+      customerName: data.customerName || scorecardToDuplicate.customerName,
+      opportunityName: data.opportunityName || scorecardToDuplicate.opportunityName,
+      expectedOrderDate: data.expectedOrderDate || scorecardToDuplicate.expectedOrderDate,
+      reviewDate: data.reviewDate || new Date().toISOString().split('T')[0],
+      createdAt: new Date().toISOString(),
+      archived: false,
+    };
+    
+    setScorecards([...scorecards, duplicated]);
+    setDuplicateDialogOpen(false);
+    setScorecardToDuplicate(null);
+    toast.success("Scorecard duplicated successfully!");
+  };
+
+  const handleScorecardSelect = (id: string) => {
+    if (bulkSelectionMode) {
+      handleBulkSelect(id);
+      return;
+    }
+    
+    if (comparisonMode) {
+      if (selectedForComparison.includes(id)) {
+        setSelectedForComparison(selectedForComparison.filter(sid => sid !== id));
+      } else if (selectedForComparison.length < 2) {
+        setSelectedForComparison([...selectedForComparison, id]);
+      } else {
+        toast.error("You can only compare 2 scorecards at a time");
+      }
+    } else {
+      setActiveScorecard(scorecards.find(s => s.id === id) || null);
+    }
+  };
+
+  const comparisonScorecards = selectedForComparison.length === 2
+    ? [
+        scorecards.find(s => s.id === selectedForComparison[0])!,
+        scorecards.find(s => s.id === selectedForComparison[1])!
+      ]
+    : null;
+
+  // Get timeline scorecards (all versions of the same opportunity)
+  const timelineScorecards = timelineView
+    ? scorecards.filter(s => 
+        s.opportunityName === timelineView && 
+        s.customerName === scorecards.find(sc => sc.opportunityName === timelineView)?.customerName
+      )
+    : null;
+
+  // Apply filters to scorecards
+  let filteredScorecards = scorecards.filter((scorecard) => {
+    // Filter archived scorecards based on showArchived setting
+    if (!filters.showArchived && !bulkSelectionMode && scorecard.archived) {
+      return false;
+    }
+
+    // Salesperson filter
+    if (filters.salesperson && filters.salesperson !== "all" && scorecard.salesperson !== filters.salesperson) {
+      return false;
+    }
+
+    // Customer filter
+    if (filters.customer && filters.customer !== "all" && scorecard.customerName !== filters.customer) {
+      return false;
+    }
+
+    // Tags filter
+    if (filters.tags.length > 0) {
+      const scorecardTags = scorecard.tags || [];
+      const hasMatchingTag = filters.tags.some(filterTag => scorecardTags.includes(filterTag));
+      if (!hasMatchingTag) {
+        return false;
+      }
+    }
+
+    // Date from filter
+    if (filters.dateFrom) {
+      const scorecardDate = new Date(scorecard.createdAt);
+      if (scorecardDate < filters.dateFrom) {
+        return false;
+      }
+    }
+
+    // Date to filter
+    if (filters.dateTo) {
+      const scorecardDate = new Date(scorecard.createdAt);
+      // Set time to end of day for dateTo
+      const dateToEnd = new Date(filters.dateTo);
+      dateToEnd.setHours(23, 59, 59, 999);
+      if (scorecardDate > dateToEnd) {
+        return false;
+      }
+    }
+
+    return true;
+  });
+
+  // If viewing all versions for a specific opportunity, filter to that
+  if (viewAllVersionsFor) {
+    const [oppName, custName] = viewAllVersionsFor.split('_');
+    filteredScorecards = filteredScorecards.filter(
+      (scorecard) => scorecard.opportunityName === oppName && scorecard.customerName === custName
+    );
+  } else {
+    // Version filter - handle "latest" specially (only when not viewing all versions of specific opportunity)
+    if (filters.version === "latest") {
+      // Group by opportunity and customer, then keep only the highest version
+      const latestVersions = new Map<string, Scorecard>();
+      filteredScorecards.forEach((scorecard) => {
+        const key = `${scorecard.opportunityName}_${scorecard.customerName}`;
+        const existing = latestVersions.get(key);
+        if (!existing || scorecard.version > existing.version) {
+          latestVersions.set(key, scorecard);
+        }
+      });
+      filteredScorecards = Array.from(latestVersions.values());
+    } else if (filters.version && filters.version !== "all") {
+      // Specific version filter
+      filteredScorecards = filteredScorecards.filter(
+        (scorecard) => scorecard.version.toString() === filters.version
+      );
+    }
+  }
+
+  // Get unique values for filter options
+  const uniqueSalespeople = Array.from(new Set(scorecards.map(s => s.salesperson))).filter(Boolean);
+  const uniqueCustomers = Array.from(new Set(scorecards.map(s => s.customerName))).filter(Boolean);
+  const uniqueVersions = Array.from(new Set(scorecards.map(s => s.version)));
+  const availableTags = Array.from(new Set(scorecards.flatMap(s => s.tags || []))).sort();
+
+  // Calculate scores for sorting
+  const scorecardsWithScores = filteredScorecards.map(scorecard => ({
+    ...scorecard,
+    totalScore: [
+      scorecard.funds,
+      scorecard.authority,
+      scorecard.interest,
+      scorecard.need,
+      scorecard.timing,
+    ].reduce((sum, component) => sum + component.questions.filter((q) => q.state === "positive").length, 0)
+  }));
+
+  // Apply sorting
+  const sortedScorecards = [...scorecardsWithScores].sort((a, b) => {
+    // Always show pinned scorecards first
+    if (a.pinned && !b.pinned) return -1;
+    if (!a.pinned && b.pinned) return 1;
+    
+    let comparison = 0;
+    
+    switch (sortBy) {
+      case "date":
+        comparison = new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+        break;
+      case "score":
+        comparison = a.totalScore - b.totalScore;
+        break;
+      case "salesperson":
+        comparison = a.salesperson.localeCompare(b.salesperson);
+        break;
+      case "customer":
+        comparison = a.customerName.localeCompare(b.customerName);
+        break;
+    }
+    
+    return sortOrder === "asc" ? comparison : -comparison;
+  });
+
+  // Group scorecards by opportunity for timeline view
+  const opportunityGroups = sortedScorecards.reduce((acc, scorecard) => {
+    const key = `${scorecard.opportunityName}_${scorecard.customerName}`;
+    if (!acc[key]) {
+      acc[key] = [];
+    }
+    acc[key].push(scorecard);
+    return acc;
+  }, {} as Record<string, Scorecard[]>);
+
+  const toggleSortOrder = () => {
+    setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+  };
+
+  return (
+    <div className="min-h-screen bg-background">
+      <div className="border-b border-border bg-card">
+        <div className="container mx-auto px-4 py-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-foreground">FAINT Scorecard</h1>
+              <p className="text-muted-foreground mt-1">Sales Qualification Framework</p>
+            </div>
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              <DialogTrigger asChild>
+                <Button size="lg" className="gap-2">
+                  <Plus className="w-5 h-5" />
+                  New Scorecard
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-2xl">
+                <DialogHeader>
+                  <DialogTitle>Create New Scorecard</DialogTitle>
+                </DialogHeader>
+                <ScorecardForm onSubmit={handleCreateScorecard} />
+              </DialogContent>
+            </Dialog>
+          </div>
+        </div>
+      </div>
+
+      <Dialog open={duplicateDialogOpen} onOpenChange={setDuplicateDialogOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Duplicate Scorecard</DialogTitle>
+          </DialogHeader>
+          {scorecardToDuplicate && (
+            <ScorecardForm 
+              onSubmit={handleDuplicateSubmit}
+              submitLabel="Duplicate Scorecard"
+              initialData={{
+                salesperson: scorecardToDuplicate.salesperson,
+                customerName: scorecardToDuplicate.customerName,
+                opportunityName: `${scorecardToDuplicate.opportunityName} (Copy)`,
+                expectedOrderDate: scorecardToDuplicate.expectedOrderDate,
+                reviewDate: new Date().toISOString().split('T')[0],
+              }}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+
+      <div className="container mx-auto px-4 py-8">
+        {!activeScorecard && !comparisonScorecards && !timelineScorecards && (
+          <>
+            {viewAllVersionsFor && (
+              <div className="mb-6">
+                <div className="flex items-center gap-2">
+                  <Button 
+                    variant="outline" 
+                    onClick={() => setViewAllVersionsFor(null)}
+                  >
+                    ← Back to All
+                  </Button>
+                  <h2 className="text-xl font-semibold text-foreground">
+                    All Versions - {scorecards.find(s => `${s.opportunityName}_${s.customerName}` === viewAllVersionsFor)?.opportunityName}
+                  </h2>
+                </div>
+              </div>
+            )}
+
+            {!comparisonMode && (
+              <ScorecardFilters
+                filters={filters}
+                onFiltersChange={(newFilters) => {
+                  setFilters(newFilters);
+                  setViewAllVersionsFor(null); // Clear version view when filters change
+                }}
+                salespeople={uniqueSalespeople}
+                versions={uniqueVersions}
+                customers={uniqueCustomers}
+                availableTags={availableTags}
+                bulkSelectionMode={bulkSelectionMode}
+                comparisonMode={comparisonMode}
+                onBulkModeToggle={handleBulkModeToggle}
+                onComparisonToggle={handleComparisonToggle}
+                onTagRename={(tag) => {
+                  setEditingTag(tag);
+                  setNewTagName(tag);
+                }}
+              />
+            )}
+            
+            {!comparisonMode && sortedScorecards.length > 0 && (
+              <div className="flex items-center justify-between gap-3 mb-4 mt-4">
+                <div className="flex items-center gap-3">
+                  <span className="text-sm font-medium text-muted-foreground">Sort by:</span>
+                  <Select value={sortBy} onValueChange={(value: any) => setSortBy(value)}>
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="date">Date</SelectItem>
+                      <SelectItem value="score">Score</SelectItem>
+                      <SelectItem value="salesperson">Salesperson</SelectItem>
+                      <SelectItem value="customer">Customer Name</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Button 
+                    variant="outline" 
+                    size="icon"
+                    onClick={toggleSortOrder}
+                    className="gap-2"
+                  >
+                    {sortOrder === "asc" ? (
+                      <ArrowUp className="w-4 h-4" />
+                    ) : (
+                      <ArrowDown className="w-4 h-4" />
+                    )}
+                  </Button>
+                </div>
+                
+                <ToggleGroup type="single" value={viewMode} onValueChange={(value) => value && setViewMode(value as "expanded" | "compact")}>
+                  <ToggleGroupItem value="expanded" aria-label="Expanded view">
+                    <LayoutGrid className="h-4 w-4" />
+                  </ToggleGroupItem>
+                  <ToggleGroupItem value="compact" aria-label="Compact view">
+                    <List className="h-4 w-4" />
+                  </ToggleGroupItem>
+                </ToggleGroup>
+              </div>
+            )}
+            
+            {bulkSelectionMode && selectedForBulk.length > 0 && (
+              <div className="mb-4 p-4 bg-primary/5 border border-primary/20 rounded-lg">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm text-foreground font-semibold">
+                    {selectedForBulk.length} scorecard(s) selected
+                  </p>
+                  <div className="flex gap-2">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          className="gap-2"
+                        >
+                          <Download className="w-4 h-4" />
+                          Export
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="bg-background border border-border shadow-lg z-50">
+                        <DropdownMenuItem onClick={handleBulkExportCSV}>
+                          <FileSpreadsheet className="w-4 h-4 mr-2" />
+                          Export as CSV
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={handleBulkExport}>
+                          <FileText className="w-4 h-4 mr-2" />
+                          Export as JSON
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={handleBulkArchive}
+                      className="gap-2"
+                    >
+                      <Archive className="w-4 h-4" />
+                      Archive
+                    </Button>
+                    <Button 
+                      variant="destructive" 
+                      size="sm"
+                      onClick={handleBulkDelete}
+                      className="gap-2"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                      Delete
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {comparisonMode && selectedForComparison.length > 0 && (
+              <div className="mb-4 p-4 bg-primary/5 border border-primary/20 rounded-lg">
+                <p className="text-sm text-foreground">
+                  <span className="font-semibold">{selectedForComparison.length}</span> of 2 scorecards selected
+                  {selectedForComparison.length === 2 && (
+                    <span className="ml-2 text-primary">• Click "View Comparison" below to see changes</span>
+                  )}
+                </p>
+              </div>
+            )}
+
+            {sortedScorecards.length === 0 ? (
+              <Card className="p-12 text-center">
+                <p className="text-lg text-muted-foreground mb-4">No scorecards match your filters</p>
+                <Button variant="outline" onClick={() => setFilters({ salesperson: "", version: "latest", customer: "", showArchived: false, tags: [], dateFrom: undefined, dateTo: undefined })}>
+                  Clear Filters
+                </Button>
+              </Card>
+            ) : (
+              <>
+                <div className={viewMode === "compact" ? "grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3" : "grid grid-cols-1 md:grid-cols-2 gap-6"}>
+                  {sortedScorecards.map((scorecard) => {
+                    const isSelected = comparisonMode 
+                      ? selectedForComparison.includes(scorecard.id)
+                      : bulkSelectionMode
+                        ? selectedForBulk.includes(scorecard.id)
+                        : false;
+                    
+                    // Determine if this is the latest version for this opportunity
+                    const opportunityKey = `${scorecard.opportunityName}_${scorecard.customerName}`;
+                    const versionsForOpportunity = opportunityGroups[opportunityKey] || [];
+                    const maxVersion = Math.max(...versionsForOpportunity.map(s => s.version));
+                    const isLatestVersion = scorecard.version === maxVersion;
+                    
+                    if (viewMode === "compact") {
+                      return (
+                        <Card
+                          key={scorecard.id}
+                          className={`relative cursor-pointer hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 border ${
+                            isSelected 
+                              ? "border-primary bg-primary/5" 
+                              : "hover:border-primary/50"
+                          } ${scorecard.archived ? "opacity-60" : ""}`}
+                          onClick={() => !bulkSelectionMode && handleScorecardSelect(scorecard.id)}
+                        >
+                          {bulkSelectionMode && (
+                            <div className="absolute top-2 left-2 z-10" onClick={(e) => e.stopPropagation()}>
+                              <Checkbox
+                                checked={selectedForBulk.includes(scorecard.id)}
+                                onCheckedChange={() => handleBulkSelect(scorecard.id)}
+                              />
+                            </div>
+                          )}
+                          <CardHeader className="pb-2 pt-8">
+                            <div className="flex items-start justify-between gap-2">
+                              <CardTitle className="text-sm line-clamp-2">{scorecard.opportunityName}</CardTitle>
+                              <div className="text-lg font-bold text-primary shrink-0">{scorecard.totalScore}</div>
+                            </div>
+                            <p className="text-xs text-muted-foreground line-clamp-1">{scorecard.customerName}</p>
+                          </CardHeader>
+                          <CardContent className="pb-3">
+                            <div className="flex flex-wrap gap-1 mb-2">
+                              {scorecard.archived && (
+                                <Badge variant="secondary" className="text-xs h-5">Archived</Badge>
+                              )}
+                              <Badge 
+                                variant={isLatestVersion ? "default" : "secondary"}
+                                className={`text-xs h-5 ${isLatestVersion ? "bg-green-600" : ""}`}
+                              >
+                                v{scorecard.version}
+                              </Badge>
+                            </div>
+                            <p className="text-xs text-muted-foreground truncate">{scorecard.salesperson}</p>
+                          </CardContent>
+                        </Card>
+                      );
+                    }
+                    
+                    return (
+                      <Card
+                        key={scorecard.id}
+                        className={`relative cursor-pointer hover:shadow-xl hover:-translate-y-1 transition-all duration-200 border-2 ${
+                          isSelected 
+                            ? "border-primary bg-primary/5" 
+                            : scorecard.pinned 
+                              ? "border-yellow-500/50 bg-yellow-50/5"
+                              : getScoreColorClass(scorecard.totalScore)
+                        } ${scorecard.archived ? "opacity-60" : ""}`}
+                        onClick={() => !bulkSelectionMode && handleScorecardSelect(scorecard.id)}
+                      >
+                        {bulkSelectionMode && (
+                          <div className="absolute top-3 left-3 z-10" onClick={(e) => e.stopPropagation()}>
+                            <Checkbox
+                              checked={selectedForBulk.includes(scorecard.id)}
+                              onCheckedChange={() => handleBulkSelect(scorecard.id)}
+                            />
+                          </div>
+                        )}
+                        <div className="absolute top-3 right-3 flex gap-2">
+                          {!bulkSelectionMode && !comparisonMode && (
+                            <>
+                              <Popover>
+                                <PopoverTrigger asChild>
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-8 w-8"
+                                    onClick={(e) => e.stopPropagation()}
+                                  >
+                                    <Tag className="h-4 w-4" />
+                                  </Button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-56 bg-background border border-border shadow-lg z-50" align="start">
+                                  <div className="space-y-2">
+                                    <Label className="text-sm font-medium">New Tag</Label>
+                                    <Input
+                                      placeholder="Enter tag name..."
+                                      onKeyDown={(e) => {
+                                        if (e.key === 'Enter') {
+                                          handleAddTag(scorecard.id, e.currentTarget.value);
+                                          e.currentTarget.value = '';
+                                        }
+                                      }}
+                                    />
+                                  </div>
+                                </PopoverContent>
+                              </Popover>
+                              {!scorecard.archived && (
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-8 w-8"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleDuplicate(scorecard);
+                                  }}
+                                >
+                                  <Copy className="h-4 w-4" />
+                                </Button>
+                              )}
+                            </>
+                          )}
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
+                            onClick={(e) => handleTogglePin(scorecard.id, e)}
+                          >
+                            <Star className={`h-4 w-4 ${scorecard.pinned ? "fill-yellow-500 text-yellow-500" : ""}`} />
+                          </Button>
+                          {scorecard.archived && (
+                            <Badge variant="secondary">Archived</Badge>
+                          )}
+                          <Badge 
+                            variant={isLatestVersion ? "default" : "secondary"}
+                            className={isLatestVersion ? "bg-green-600 hover:bg-green-700" : ""}
+                          >
+                            v{scorecard.version}{isLatestVersion ? " - Latest" : ""}
+                          </Badge>
+                          {isSelected && !bulkSelectionMode && (
+                            <Badge className="bg-primary">Selected</Badge>
+                          )}
+                        </div>
+                        <CardHeader className="pb-3 pt-12">
+                          <CardTitle className="text-xl flex items-center justify-between">
+                            {scorecard.opportunityName}
+                            <div className="text-2xl font-bold text-primary">{scorecard.totalScore}/40</div>
+                          </CardTitle>
+                          <p className="text-sm text-muted-foreground font-medium">{scorecard.customerName}</p>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="space-y-2">
+                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                              <Calendar className="w-4 h-4" />
+                              <span className="font-medium">Expected:</span> {scorecard.expectedOrderDate}
+                            </div>
+                            <div className="text-sm text-muted-foreground">
+                              <span className="font-medium">Sales Person:</span> {scorecard.salesperson}
+                            </div>
+                            <div className="text-xs text-muted-foreground pt-2 border-t border-border">
+                              <span>Created: {new Date(scorecard.createdAt).toLocaleDateString()}</span>
+                            </div>
+                            
+                            {/* Tags Section */}
+                            <div className="pt-2 border-t border-border">
+                              <div className="flex flex-wrap gap-1">
+                                {(scorecard.tags || []).map((tag) => (
+                                  <Badge
+                                    key={tag}
+                                    variant={getTagColor(tag) as any}
+                                    className="text-xs gap-1"
+                                  >
+                                    <Tag className="w-3 h-3" />
+                                    {tag}
+                                    <button
+                                      onClick={(e) => handleRemoveTag(scorecard.id, tag, e)}
+                                      className="ml-1 hover:text-destructive"
+                                    >
+                                      <X className="w-3 h-3" />
+                                    </button>
+                                  </Badge>
+                                ))}
+                              </div>
+                            </div>
+                            
+                            {!comparisonMode && !bulkSelectionMode && scorecard.archived && (
+                              <div className="pt-2 flex gap-2">
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  className="flex-1 gap-2"
+                                  onClick={(e) => handleUnarchive(scorecard.id, e)}
+                                >
+                                  <Archive className="w-4 h-4" />
+                                  Unarchive
+                                </Button>
+                              </div>
+                            )}
+                            
+                            {!comparisonMode && !bulkSelectionMode && opportunityGroups[`${scorecard.opportunityName}_${scorecard.customerName}`]?.length > 1 && (
+                              <div className="pt-2 flex gap-2">
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  className="flex-1 gap-2"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setViewAllVersionsFor(`${scorecard.opportunityName}_${scorecard.customerName}`);
+                                  }}
+                                >
+                                  <FileText className="w-4 h-4" />
+                                  All Versions ({opportunityGroups[`${scorecard.opportunityName}_${scorecard.customerName}`].length})
+                                </Button>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  className="flex-1 gap-2"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setTimelineView(scorecard.opportunityName);
+                                    setActiveScorecard(null);
+                                  }}
+                                >
+                                  <Clock className="w-4 h-4" />
+                                  Timeline
+                                </Button>
+                              </div>
+                            )}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
+                </div>
+                
+                {comparisonMode && selectedForComparison.length === 2 && (
+                  <div className="mt-6 flex justify-center">
+                    <Button 
+                      size="lg" 
+                      onClick={() => {
+                        setComparisonMode(false);
+                      }}
+                      className="gap-2"
+                    >
+                      <GitCompare className="w-5 h-5" />
+                      View Comparison
+                    </Button>
+                  </div>
+                )}
+              </>
+            )}
+          </>
+        )}
+
+        {comparisonScorecards && !comparisonMode && (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-bold text-foreground">Scorecard Comparison</h2>
+              <Button 
+                variant="outline" 
+                onClick={() => {
+                  setSelectedForComparison([]);
+                }}
+              >
+                ← Back to List
+              </Button>
+            </div>
+            <ScorecardComparison 
+              oldScorecard={comparisonScorecards[0]} 
+              newScorecard={comparisonScorecards[1]} 
+            />
+          </div>
+        )}
+
+        {timelineScorecards && timelineScorecards.length > 0 && (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-bold text-foreground">Timeline View</h2>
+                <p className="text-muted-foreground mt-1">Track score evolution across versions</p>
+              </div>
+              <Button 
+                variant="outline" 
+                onClick={() => {
+                  setTimelineView(null);
+                }}
+              >
+                ← Back to List
+              </Button>
+            </div>
+            <ScorecardTimeline scorecards={timelineScorecards} opportunityName={timelineView} />
+          </div>
+        )}
+
+        {activeScorecard && (
+          <div className="space-y-6">
+            <div className="bg-card rounded-xl border border-border p-6 shadow-sm">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="flex items-center gap-4">
+                  <Button variant="outline" onClick={() => setActiveScorecard(null)} size="sm">
+                    ← Back
+                  </Button>
+                  <div>
+                    <h2 className="text-2xl font-bold text-foreground">{activeScorecard.opportunityName}</h2>
+                    <p className="text-muted-foreground mt-1">
+                      {activeScorecard.customerName} • {activeScorecard.salesperson}
+                    </p>
+                    <div className="flex gap-4 text-sm text-muted-foreground mt-2">
+                      <span>Expected: {activeScorecard.expectedOrderDate}</span>
+                      <span>•</span>
+                      <span>Review: {activeScorecard.reviewDate}</span>
+                      <span>•</span>
+                      <span>v{activeScorecard.version}</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex gap-2 md:self-start">
+                  {opportunityGroups[`${activeScorecard.opportunityName}_${activeScorecard.customerName}`]?.length > 1 && (
+                    <Button 
+                      onClick={() => {
+                        setTimelineView(activeScorecard.opportunityName);
+                        setActiveScorecard(null);
+                      }} 
+                      variant="outline" 
+                      size="sm" 
+                      className="gap-2"
+                    >
+                      <Clock className="w-4 h-4" />
+                      Timeline
+                    </Button>
+                  )}
+                  <Button onClick={handleNewVersion} variant="outline" size="sm" className="gap-2">
+                    <Plus className="w-4 h-4" />
+                    New Version
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            <ScoreHeader scorecard={activeScorecard} />
+
+            <div className="space-y-6">
+              <FAINTSection
+                title="Funds"
+                color="bg-primary"
+                component={activeScorecard.funds}
+                questions={FAINT_QUESTIONS.funds}
+                onUpdate={(index, state, note) => handleUpdateComponent("funds", index, state, note)}
+              />
+              
+              <FAINTSection
+                title="Authority"
+                color="bg-accent"
+                component={activeScorecard.authority}
+                questions={FAINT_QUESTIONS.authority}
+                onUpdate={(index, state, note) => handleUpdateComponent("authority", index, state, note)}
+              />
+              
+              <FAINTSection
+                title="Interest"
+                color="bg-success"
+                component={activeScorecard.interest}
+                questions={FAINT_QUESTIONS.interest}
+                onUpdate={(index, state, note) => handleUpdateComponent("interest", index, state, note)}
+              />
+              
+              <FAINTSection
+                title="Need"
+                color="bg-warning"
+                component={activeScorecard.need}
+                questions={FAINT_QUESTIONS.need}
+                onUpdate={(index, state, note) => handleUpdateComponent("need", index, state, note)}
+              />
+              
+              <FAINTSection
+                title="Timing"
+                color="bg-destructive"
+                component={activeScorecard.timing}
+                questions={FAINT_QUESTIONS.timing}
+                onUpdate={(index, state, note) => handleUpdateComponent("timing", index, state, note)}
+              />
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Tag Rename Dialog */}
+      <Dialog open={editingTag !== null} onOpenChange={(open) => {
+        if (!open) {
+          setEditingTag(null);
+          setNewTagName("");
+        }
+      }}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Rename Tag</DialogTitle>
+            <DialogDescription>
+              This will rename the tag across all scorecards.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <label className="text-sm font-medium">Current name</label>
+              <div className="mt-1 p-2 bg-muted rounded-md text-sm">{editingTag}</div>
+            </div>
+            <div>
+              <label className="text-sm font-medium">New name</label>
+              <Input
+                value={newTagName}
+                onChange={(e) => setNewTagName(e.target.value)}
+                placeholder="Enter new tag name"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && editingTag) {
+                    handleRenameTag(editingTag, newTagName);
+                  }
+                }}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => {
+              setEditingTag(null);
+              setNewTagName("");
+            }}>
+              Cancel
+            </Button>
+            <Button onClick={() => editingTag && handleRenameTag(editingTag, newTagName)}>
+              Rename
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+};
+
+export default Index;
