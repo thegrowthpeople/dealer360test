@@ -546,10 +546,10 @@ const Index = () => {
       <div className="px-6 xl:px-12 2xl:px-16 space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-4xl xl:text-5xl font-bold text-foreground mb-4">Sales Qualification</h1>
-            <p className="text-muted-foreground">
-              Track and manage FAINT scorecards for sales opportunities
-            </p>
+          <h1 className="text-4xl xl:text-5xl font-bold text-foreground mb-4">Qualification Scorecards</h1>
+          <p className="text-muted-foreground">
+            Track and manage qualification and activity for sales opportunities
+          </p>
           </div>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
