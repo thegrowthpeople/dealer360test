@@ -20,14 +20,14 @@ export const FAINTSection = ({ title, color, component, questions, onUpdate }: F
   const negativeCount = component.questions.filter((q) => q.state === "negative").length;
   const notesCount = component.questions.filter((q) => q.note && q.note.trim().length > 0).length;
   
-  // Determine color based on scores
+  // Determine color based on positive question count
   const getStatusColor = () => {
-    if (positiveCount > negativeCount) {
-      return "bg-success"; // Green - more positives
-    } else if (negativeCount > positiveCount) {
-      return "bg-destructive"; // Red - more negatives
+    if (positiveCount >= 6) {
+      return "bg-success"; // Green - 6 to 8 questions with +
+    } else if (positiveCount >= 4) {
+      return "bg-warning"; // Amber - 4 to 5 questions with +
     } else {
-      return "bg-warning"; // Amber - tied or both zero
+      return "bg-destructive"; // Red - 0 to 3 questions with +
     }
   };
   
