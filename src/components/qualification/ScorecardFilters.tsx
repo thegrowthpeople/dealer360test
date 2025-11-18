@@ -161,7 +161,7 @@ export const ScorecardFilters = ({
 
       {isExpanded && (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2">
         {/* Salesperson Filter */}
         <div className="space-y-2">
           <Label htmlFor="salesperson-filter" className="text-sm font-medium">
