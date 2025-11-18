@@ -789,8 +789,8 @@ const Index = () => {
                                     scorecard.timing,
                                   ].reduce((sum, component) => sum + component.questions.filter(q => q.state === "negative").length, 0);
                                   return totalNegative > 0 && (
-                                    <div className="text-[10px] text-destructive mt-0.5 flex items-center gap-0.5 justify-end">
-                                      🚩 {totalNegative}
+                                    <div className="text-[10px] text-destructive mt-0.5">
+                                      -{totalNegative}
                                     </div>
                                   );
                                 })()}
@@ -915,8 +915,8 @@ const Index = () => {
                                   scorecard.timing,
                                 ].reduce((sum, component) => sum + component.questions.filter(q => q.state === "negative").length, 0);
                                 return totalNegative > 0 && (
-                                  <div className="text-xs text-destructive mt-1 flex items-center gap-1 justify-end">
-                                    🚩 {totalNegative}
+                                  <div className="text-xs text-destructive mt-1">
+                                    -{totalNegative}
                                   </div>
                                 );
                               })()}
