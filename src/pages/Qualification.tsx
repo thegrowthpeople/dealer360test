@@ -13,6 +13,7 @@ import { StatsSummary } from "@/components/qualification/StatsSummary";
 import { Scorecard, FAINT_QUESTIONS } from "@/types/scorecard";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -541,31 +542,31 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="border-b border-border bg-card">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-foreground">FAINT Scorecard</h1>
-              <p className="text-muted-foreground mt-1">Sales Qualification Framework</p>
-            </div>
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <DialogTrigger asChild>
-                <Button size="lg" className="gap-2">
-                  <Plus className="w-5 h-5" />
-                  New Scorecard
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-2xl">
-                <DialogHeader>
-                  <DialogTitle>Create New Scorecard</DialogTitle>
-                </DialogHeader>
-                <ScorecardForm onSubmit={handleCreateScorecard} />
-              </DialogContent>
-            </Dialog>
-          </div>
+    <div className="min-h-screen space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-4xl xl:text-5xl font-bold text-foreground mb-4">Sales Qualification</h1>
+          <p className="text-muted-foreground">
+            Track and manage FAINT scorecards for sales opportunities
+          </p>
         </div>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogTrigger asChild>
+            <Button size="lg" className="gap-2">
+              <Plus className="w-5 h-5" />
+              New Scorecard
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>Create New Scorecard</DialogTitle>
+            </DialogHeader>
+            <ScorecardForm onSubmit={handleCreateScorecard} />
+          </DialogContent>
+        </Dialog>
       </div>
+
+      <Separator className="my-6" />
 
       <Dialog open={duplicateDialogOpen} onOpenChange={setDuplicateDialogOpen}>
         <DialogContent className="max-w-2xl">
@@ -588,8 +589,7 @@ const Index = () => {
         </DialogContent>
       </Dialog>
 
-      <div className="container mx-auto px-4 py-8">
-        {!activeScorecard && !comparisonScorecards && !timelineScorecards && (
+      {!activeScorecard && !comparisonScorecards && !timelineScorecards && (
           <>
             {viewAllVersionsFor && (
               <div className="mb-6">
@@ -1125,9 +1125,8 @@ const Index = () => {
             </div>
           </div>
         )}
-      </div>
 
-      {/* Tag Rename Dialog */}
+        {/* Tag Rename Dialog */}
       <Dialog open={editingTag !== null} onOpenChange={(open) => {
         if (!open) {
           setEditingTag(null);
