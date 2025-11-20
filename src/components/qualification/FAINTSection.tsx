@@ -1,5 +1,3 @@
-import { useState } from "react";
-import { ChevronDown, Plus, Minus } from "lucide-react";
 import { FAINTComponent, QuestionState } from "@/types/scorecard";
 import { QuestionItem } from "@/components/qualification/QuestionItem";
 import { cn } from "@/lib/utils";
@@ -14,7 +12,6 @@ interface FAINTSectionProps {
 }
 
 export const FAINTSection = ({ title, color, component, questions, onUpdate }: FAINTSectionProps) => {
-  const [isOpen, setIsOpen] = useState(false);
   const positiveCount = component.questions.filter((q) => q.state === "positive").length;
   const negativeCount = component.questions.filter((q) => q.state === "negative").length;
   const notesCount = component.questions.filter((q) => q.note && q.note.trim().length > 0).length;
@@ -30,32 +27,14 @@ export const FAINTSection = ({ title, color, component, questions, onUpdate }: F
     }
   };
 
-  const handleToggle = () => {
-    // Debug to ensure clicks are firing in the live environment
-    console.log("FAINTSection toggle", { title, isOpen: !isOpen });
-    setIsOpen((prev) => !prev);
-  };
-
   return (
     <div className="bg-card rounded-xl border border-border shadow-sm transition-shadow duration-300 hover:shadow-lg">
-      {/* Header acting as a button */}
-      <div
-        role="button"
-        tabIndex={0}
-        onClick={handleToggle}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
-            handleToggle();
-          }
-        }}
-        className="flex items-center justify-between px-6 py-4 hover:bg-muted/40 transition-all duration-300 rounded-t-xl w-full cursor-pointer select-none"
-        aria-expanded={isOpen}
-      >
+      {/* Static header (no collapse for now to guarantee questions are visible) */}
+      <div className="flex items-center justify-between px-6 py-4 border-b border-border/60">
         <div className="flex items-center gap-3">
           <div
             className={cn(
-              "w-12 h-12 rounded-lg flex items-center justify-center shadow-sm transition-transform duration-300 hover:scale-110",
+              "w-12 h-12 rounded-lg flex items-center justify-center shadow-sm",
               getStatusColor()
             )}
           >
@@ -74,41 +53,32 @@ export const FAINTSection = ({ title, color, component, questions, onUpdate }: F
           <div className="flex items-center gap-2">
             <Badge
               variant="outline"
-              className="bg-success/10 border-success/30 text-success hover:bg-success/20 flex items-center gap-1 px-2 py-1"
+              className="bg-success/10 border-success/30 text-success flex items-center gap-1 px-2 py-1"
             >
-              <Plus className="w-3 h-3" />
-              <span className="font-semibold">{positiveCount}</span>
+              <span className="font-semibold">+{positiveCount}</span>
             </Badge>
             <Badge
               variant="outline"
-              className="bg-destructive/10 border-destructive/30 text-destructive hover:bg-destructive/20 flex items-center gap-1 px-2 py-1"
+              className="bg-destructive/10 border-destructive/30 text-destructive flex items-center gap-1 px-2 py-1"
             >
-              <Minus className="w-3 h-3" />
-              <span className="font-semibold">{negativeCount}</span>
+              <span className="font-semibold">-{negativeCount}</span>
             </Badge>
           </div>
-          <ChevronDown
-            className={cn(
-              "w-5 h-5 text-muted-foreground transition-transform duration-200",
-              isOpen && "transform rotate-180"
-            )}
-          />
         </div>
       </div>
 
-      {isOpen && (
-        <div className="px-6 pb-6 pt-2 grid grid-cols-1 md:grid-cols-2 gap-3 border-t border-border animate-accordion-down">
-          {questions.map((question, index) => (
-            <QuestionItem
-              key={index}
-              question={question}
-              data={component.questions[index]}
-              onStateChange={(state) => onUpdate(index, state, component.questions[index].note)}
-              onNoteChange={(note) => onUpdate(index, component.questions[index].state, note)}
-            />
-          ))}
-        </div>
-      )}
+      {/* Always-visible questions to restore core functionality */}
+      <div className="px-6 pb-6 pt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
+        {questions.map((question, index) => (
+          <QuestionItem
+            key={index}
+            question={question}
+            data={component.questions[index]}
+            onStateChange={(state) => onUpdate(index, state, component.questions[index].note)}
+            onNoteChange={(note) => onUpdate(index, component.questions[index].state, note)}
+          />
+        ))}
+      </div>
     </div>
   );
 };
