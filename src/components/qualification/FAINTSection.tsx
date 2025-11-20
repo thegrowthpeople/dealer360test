@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ChevronDown, Plus, Minus } from "lucide-react";
 import { FAINTComponent, QuestionState } from "@/types/scorecard";
 import { QuestionItem } from "@/components/qualification/QuestionItem";
@@ -12,6 +12,7 @@ interface FAINTSectionProps {
   component: FAINTComponent;
   questions: string[];
   onUpdate: (index: number, state: QuestionState, note: string) => void;
+  forceExpanded?: boolean;
 }
 
 export const FAINTSection = ({ 
@@ -19,9 +20,16 @@ export const FAINTSection = ({
   color, 
   component, 
   questions, 
-  onUpdate 
+  onUpdate,
+  forceExpanded,
 }: FAINTSectionProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  
+  useEffect(() => {
+    if (typeof forceExpanded === "boolean") {
+      setIsExpanded(forceExpanded);
+    }
+  }, [forceExpanded]);
   
   const positiveCount = component.questions.filter((q) => q.state === "positive").length;
   const negativeCount = component.questions.filter((q) => q.state === "negative").length;
@@ -93,7 +101,7 @@ export const FAINTSection = ({
           </button>
         </CollapsibleTrigger>
 
-        <CollapsibleContent className="data-[state=open]:animate-accordion-down data-[state=closed]:animate-accordion-up">
+        <CollapsibleContent className="overflow-hidden data-[state=open]:animate-accordion-down data-[state=closed]:animate-accordion-up">
           <div className="px-6 pb-6 pt-2 grid grid-cols-1 md:grid-cols-2 gap-3 border-t border-border">
             {questions.map((question, index) => (
               <QuestionItem
