@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Plus, FileText, Calendar, GitCompare, Clock, ArrowUp, ArrowDown, Copy, Trash2, Download, Archive, CheckSquare, FileSpreadsheet, LayoutGrid, List, Star, Tag, X, Edit2 } from "lucide-react";
+import { Plus, FileText, Calendar, GitCompare, Clock, ArrowUp, ArrowDown, Copy, Trash2, Download, Archive, CheckSquare, FileSpreadsheet, LayoutGrid, List, Star, Tag, X, Edit2, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
@@ -159,6 +159,19 @@ const Index = () => {
   const [viewMode, setViewMode] = useState<"tiles" | "table">("tiles");
   const [editingTag, setEditingTag] = useState<string | null>(null);
   const [newTagName, setNewTagName] = useState("");
+  const [visibleColumns, setVisibleColumns] = useState({
+    opportunity: true,
+    customer: true,
+    accountManager: true,
+    framework: true,
+    score: true,
+    version: true,
+    expectedDate: true,
+  });
+
+  const toggleColumnVisibility = (column: keyof typeof visibleColumns) => {
+    setVisibleColumns(prev => ({ ...prev, [column]: !prev[column] }));
+  };
 
   // Tag color mapping based on keywords
   const getTagColor = (tag: string): string => {
@@ -850,14 +863,105 @@ const Index = () => {
                   </Button>
                 </div>
                 
-                <ToggleGroup type="single" value={viewMode} onValueChange={(value) => value && setViewMode(value as "tiles" | "table")}>
-                  <ToggleGroupItem value="tiles" aria-label="Tile view">
-                    <LayoutGrid className="h-4 w-4" />
-                  </ToggleGroupItem>
-                  <ToggleGroupItem value="table" aria-label="Table view">
-                    <List className="h-4 w-4" />
-                  </ToggleGroupItem>
-                </ToggleGroup>
+                <div className="flex items-center gap-2">
+                  <ToggleGroup type="single" value={viewMode} onValueChange={(value) => value && setViewMode(value as "tiles" | "table")}>
+                    <ToggleGroupItem value="tiles" aria-label="Tile view">
+                      <LayoutGrid className="h-4 w-4" />
+                    </ToggleGroupItem>
+                    <ToggleGroupItem value="table" aria-label="Table view">
+                      <List className="h-4 w-4" />
+                    </ToggleGroupItem>
+                  </ToggleGroup>
+                  
+                  {viewMode === "table" && (
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button variant="outline" size="icon">
+                          <Settings className="h-4 w-4" />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-64" align="end">
+                        <div className="space-y-4">
+                          <div>
+                            <h4 className="font-semibold mb-3">Show Columns</h4>
+                            <div className="space-y-2">
+                              <div className="flex items-center space-x-2">
+                                <Checkbox
+                                  id="col-opportunity"
+                                  checked={visibleColumns.opportunity}
+                                  onCheckedChange={() => toggleColumnVisibility("opportunity")}
+                                />
+                                <label htmlFor="col-opportunity" className="text-sm cursor-pointer">
+                                  Opportunity
+                                </label>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                <Checkbox
+                                  id="col-customer"
+                                  checked={visibleColumns.customer}
+                                  onCheckedChange={() => toggleColumnVisibility("customer")}
+                                />
+                                <label htmlFor="col-customer" className="text-sm cursor-pointer">
+                                  Customer
+                                </label>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                <Checkbox
+                                  id="col-accountManager"
+                                  checked={visibleColumns.accountManager}
+                                  onCheckedChange={() => toggleColumnVisibility("accountManager")}
+                                />
+                                <label htmlFor="col-accountManager" className="text-sm cursor-pointer">
+                                  Account Manager
+                                </label>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                <Checkbox
+                                  id="col-framework"
+                                  checked={visibleColumns.framework}
+                                  onCheckedChange={() => toggleColumnVisibility("framework")}
+                                />
+                                <label htmlFor="col-framework" className="text-sm cursor-pointer">
+                                  Framework
+                                </label>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                <Checkbox
+                                  id="col-score"
+                                  checked={visibleColumns.score}
+                                  onCheckedChange={() => toggleColumnVisibility("score")}
+                                />
+                                <label htmlFor="col-score" className="text-sm cursor-pointer">
+                                  Score
+                                </label>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                <Checkbox
+                                  id="col-version"
+                                  checked={visibleColumns.version}
+                                  onCheckedChange={() => toggleColumnVisibility("version")}
+                                />
+                                <label htmlFor="col-version" className="text-sm cursor-pointer">
+                                  Version
+                                </label>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                <Checkbox
+                                  id="col-expectedDate"
+                                  checked={visibleColumns.expectedDate}
+                                  onCheckedChange={() => toggleColumnVisibility("expectedDate")}
+                                />
+                                <label htmlFor="col-expectedDate" className="text-sm cursor-pointer">
+                                  Expected Date
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </PopoverContent>
+                    </Popover>
+                  )}
+                </div>
               </div>
             )}
             
@@ -1078,83 +1182,97 @@ const Index = () => {
                     <table className="w-full">
                       <thead className="bg-muted/50">
                         <tr className="border-b">
-                          <th 
-                            className="text-left p-3 font-semibold cursor-pointer hover:bg-muted transition-colors select-none"
-                            onClick={() => handleColumnSort("opportunity")}
-                          >
-                            <div className="flex items-center gap-2">
-                              Opportunity
-                              {sortBy === "opportunity" && (
-                                sortOrder === "asc" ? <ArrowUp className="w-4 h-4" /> : <ArrowDown className="w-4 h-4" />
-                              )}
-                            </div>
-                          </th>
-                          <th 
-                            className="text-left p-3 font-semibold cursor-pointer hover:bg-muted transition-colors select-none"
-                            onClick={() => handleColumnSort("customer")}
-                          >
-                            <div className="flex items-center gap-2">
-                              Customer
-                              {sortBy === "customer" && (
-                                sortOrder === "asc" ? <ArrowUp className="w-4 h-4" /> : <ArrowDown className="w-4 h-4" />
-                              )}
-                            </div>
-                          </th>
-                          <th 
-                            className="text-left p-3 font-semibold cursor-pointer hover:bg-muted transition-colors select-none"
-                            onClick={() => handleColumnSort("accountManager")}
-                          >
-                            <div className="flex items-center gap-2">
-                              Account Manager
-                              {sortBy === "accountManager" && (
-                                sortOrder === "asc" ? <ArrowUp className="w-4 h-4" /> : <ArrowDown className="w-4 h-4" />
-                              )}
-                            </div>
-                          </th>
-                          <th 
-                            className="text-left p-3 font-semibold cursor-pointer hover:bg-muted transition-colors select-none"
-                            onClick={() => handleColumnSort("framework")}
-                          >
-                            <div className="flex items-center gap-2">
-                              Framework
-                              {sortBy === "framework" && (
-                                sortOrder === "asc" ? <ArrowUp className="w-4 h-4" /> : <ArrowDown className="w-4 h-4" />
-                              )}
-                            </div>
-                          </th>
-                          <th 
-                            className="text-left p-3 font-semibold cursor-pointer hover:bg-muted transition-colors select-none"
-                            onClick={() => handleColumnSort("score")}
-                          >
-                            <div className="flex items-center gap-2">
-                              Score
-                              {sortBy === "score" && (
-                                sortOrder === "asc" ? <ArrowUp className="w-4 h-4" /> : <ArrowDown className="w-4 h-4" />
-                              )}
-                            </div>
-                          </th>
-                          <th 
-                            className="text-left p-3 font-semibold cursor-pointer hover:bg-muted transition-colors select-none"
-                            onClick={() => handleColumnSort("version")}
-                          >
-                            <div className="flex items-center gap-2">
-                              Version
-                              {sortBy === "version" && (
-                                sortOrder === "asc" ? <ArrowUp className="w-4 h-4" /> : <ArrowDown className="w-4 h-4" />
-                              )}
-                            </div>
-                          </th>
-                          <th 
-                            className="text-left p-3 font-semibold cursor-pointer hover:bg-muted transition-colors select-none"
-                            onClick={() => handleColumnSort("date")}
-                          >
-                            <div className="flex items-center gap-2">
-                              Expected Date
-                              {sortBy === "date" && (
-                                sortOrder === "asc" ? <ArrowUp className="w-4 h-4" /> : <ArrowDown className="w-4 h-4" />
-                              )}
-                            </div>
-                          </th>
+                          {visibleColumns.opportunity && (
+                            <th 
+                              className="text-left p-3 font-semibold cursor-pointer hover:bg-muted transition-colors select-none"
+                              onClick={() => handleColumnSort("opportunity")}
+                            >
+                              <div className="flex items-center gap-2">
+                                Opportunity
+                                {sortBy === "opportunity" && (
+                                  sortOrder === "asc" ? <ArrowUp className="w-4 h-4" /> : <ArrowDown className="w-4 h-4" />
+                                )}
+                              </div>
+                            </th>
+                          )}
+                          {visibleColumns.customer && (
+                            <th 
+                              className="text-left p-3 font-semibold cursor-pointer hover:bg-muted transition-colors select-none"
+                              onClick={() => handleColumnSort("customer")}
+                            >
+                              <div className="flex items-center gap-2">
+                                Customer
+                                {sortBy === "customer" && (
+                                  sortOrder === "asc" ? <ArrowUp className="w-4 h-4" /> : <ArrowDown className="w-4 h-4" />
+                                )}
+                              </div>
+                            </th>
+                          )}
+                          {visibleColumns.accountManager && (
+                            <th 
+                              className="text-left p-3 font-semibold cursor-pointer hover:bg-muted transition-colors select-none"
+                              onClick={() => handleColumnSort("accountManager")}
+                            >
+                              <div className="flex items-center gap-2">
+                                Account Manager
+                                {sortBy === "accountManager" && (
+                                  sortOrder === "asc" ? <ArrowUp className="w-4 h-4" /> : <ArrowDown className="w-4 h-4" />
+                                )}
+                              </div>
+                            </th>
+                          )}
+                          {visibleColumns.framework && (
+                            <th 
+                              className="text-left p-3 font-semibold cursor-pointer hover:bg-muted transition-colors select-none"
+                              onClick={() => handleColumnSort("framework")}
+                            >
+                              <div className="flex items-center gap-2">
+                                Framework
+                                {sortBy === "framework" && (
+                                  sortOrder === "asc" ? <ArrowUp className="w-4 h-4" /> : <ArrowDown className="w-4 h-4" />
+                                )}
+                              </div>
+                            </th>
+                          )}
+                          {visibleColumns.score && (
+                            <th 
+                              className="text-left p-3 font-semibold cursor-pointer hover:bg-muted transition-colors select-none"
+                              onClick={() => handleColumnSort("score")}
+                            >
+                              <div className="flex items-center gap-2">
+                                Score
+                                {sortBy === "score" && (
+                                  sortOrder === "asc" ? <ArrowUp className="w-4 h-4" /> : <ArrowDown className="w-4 h-4" />
+                                )}
+                              </div>
+                            </th>
+                          )}
+                          {visibleColumns.version && (
+                            <th 
+                              className="text-left p-3 font-semibold cursor-pointer hover:bg-muted transition-colors select-none"
+                              onClick={() => handleColumnSort("version")}
+                            >
+                              <div className="flex items-center gap-2">
+                                Version
+                                {sortBy === "version" && (
+                                  sortOrder === "asc" ? <ArrowUp className="w-4 h-4" /> : <ArrowDown className="w-4 h-4" />
+                                )}
+                              </div>
+                            </th>
+                          )}
+                          {visibleColumns.expectedDate && (
+                            <th 
+                              className="text-left p-3 font-semibold cursor-pointer hover:bg-muted transition-colors select-none"
+                              onClick={() => handleColumnSort("date")}
+                            >
+                              <div className="flex items-center gap-2">
+                                Expected Date
+                                {sortBy === "date" && (
+                                  sortOrder === "asc" ? <ArrowUp className="w-4 h-4" /> : <ArrowDown className="w-4 h-4" />
+                                )}
+                              </div>
+                            </th>
+                          )}
                           <th className="text-left p-3 font-semibold">Actions</th>
                         </tr>
                       </thead>
@@ -1173,52 +1291,66 @@ const Index = () => {
                               }`}
                               onClick={() => handleScorecardSelect(scorecard.id)}
                             >
-                              <td className="p-3">
-                                <div className="flex items-center gap-2">
-                                  {scorecard.pinned && <Star className="w-4 h-4 fill-yellow-500 text-yellow-500" />}
-                                  {scorecard.opportunityName}
-                                </div>
-                              </td>
-                              <td className="p-3">{scorecard.customerName}</td>
-                              <td className="p-3">{scorecard.accountManager}</td>
-                              <td className="p-3">
-                                <Badge 
-                                  variant="outline"
-                                  className="bg-primary/10 border-primary/30 text-primary text-xs"
-                                >
-                                  {getFrameworkName(scorecard.frameworkId)}
-                                </Badge>
-                              </td>
-                              <td className="p-3">
-                                <div className="flex items-center gap-2">
-                                  <span className="font-semibold">{scorecard.totalScore}/40</span>
-                                  {(() => {
-                                    const totalNegative = [
-                                      scorecard.funds,
-                                      scorecard.authority,
-                                      scorecard.interest,
-                                      scorecard.need,
-                                      scorecard.timing,
-                                    ].reduce((sum, component) => sum + component.questions.filter(q => q.state === "negative").length, 0);
-                                    return totalNegative > 0 && (
-                                      <span className="text-xs text-destructive">
-                                        -{totalNegative}
-                                      </span>
-                                    );
-                                  })()}
-                                </div>
-                              </td>
-                              <td className="p-3">
-                                <Badge 
-                                  variant={isLatestVersion ? "default" : "secondary"}
-                                  className={isLatestVersion ? "bg-green-600 hover:bg-green-700" : ""}
-                                >
-                                  v{scorecard.version}{isLatestVersion ? " - Latest" : ""}
-                                </Badge>
-                              </td>
-                              <td className="p-3 text-sm text-muted-foreground">
-                                {scorecard.expectedOrderDate}
-                              </td>
+                              {visibleColumns.opportunity && (
+                                <td className="p-3">
+                                  <div className="flex items-center gap-2">
+                                    {scorecard.pinned && <Star className="w-4 h-4 fill-yellow-500 text-yellow-500" />}
+                                    {scorecard.opportunityName}
+                                  </div>
+                                </td>
+                              )}
+                              {visibleColumns.customer && (
+                                <td className="p-3">{scorecard.customerName}</td>
+                              )}
+                              {visibleColumns.accountManager && (
+                                <td className="p-3">{scorecard.accountManager}</td>
+                              )}
+                              {visibleColumns.framework && (
+                                <td className="p-3">
+                                  <Badge 
+                                    variant="outline"
+                                    className="bg-primary/10 border-primary/30 text-primary text-xs"
+                                  >
+                                    {getFrameworkName(scorecard.frameworkId)}
+                                  </Badge>
+                                </td>
+                              )}
+                              {visibleColumns.score && (
+                                <td className="p-3">
+                                  <div className="flex items-center gap-2">
+                                    <span className="font-semibold">{scorecard.totalScore}/40</span>
+                                    {(() => {
+                                      const totalNegative = [
+                                        scorecard.funds,
+                                        scorecard.authority,
+                                        scorecard.interest,
+                                        scorecard.need,
+                                        scorecard.timing,
+                                      ].reduce((sum, component) => sum + component.questions.filter(q => q.state === "negative").length, 0);
+                                      return totalNegative > 0 && (
+                                        <span className="text-xs text-destructive">
+                                          -{totalNegative}
+                                        </span>
+                                      );
+                                    })()}
+                                  </div>
+                                </td>
+                              )}
+                              {visibleColumns.version && (
+                                <td className="p-3">
+                                  <Badge 
+                                    variant={isLatestVersion ? "default" : "secondary"}
+                                    className={isLatestVersion ? "bg-green-600 hover:bg-green-700" : ""}
+                                  >
+                                    v{scorecard.version}{isLatestVersion ? " - Latest" : ""}
+                                  </Badge>
+                                </td>
+                              )}
+                              {visibleColumns.expectedDate && (
+                                <td className="p-3 text-sm text-muted-foreground">
+                                  {scorecard.expectedOrderDate}
+                                </td>
+                              )}
                               <td className="p-3">
                                 <div className="flex items-center gap-1">
                                   <Button
