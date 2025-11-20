@@ -962,6 +962,20 @@ const Index = () => {
                         
                         {/* Action Buttons - Top Right */}
                         <div className="absolute top-4 right-4 flex gap-1.5 z-10">
+                          {/* Pin Button - Always Visible When Pinned */}
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className={`h-7 w-7 transition-all duration-200 hover:scale-110 ${
+                              scorecard.pinned 
+                                ? "bg-yellow-500 hover:bg-yellow-600 text-white opacity-100" 
+                                : "bg-background/80 backdrop-blur-sm hover:bg-accent hover:text-accent-foreground opacity-0 group-hover:opacity-100"
+                            }`}
+                            onClick={(e) => handleTogglePin(scorecard.id, e)}
+                          >
+                            <Star className={`h-3.5 w-3.5 transition-all ${scorecard.pinned ? "fill-white" : ""}`} />
+                          </Button>
+
                           {/* Other Action Buttons - Show on Hover */}
                           <div className="flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                           {!scorecard.archived && (
@@ -1087,20 +1101,6 @@ const Index = () => {
                                   </span>
                                 )}
                               </div>
-                              
-                              {/* Pin Button - Bottom Right */}
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className={`h-6 w-6 transition-all duration-200 hover:scale-110 ${
-                                  scorecard.pinned 
-                                    ? "bg-yellow-500 hover:bg-yellow-600 text-white" 
-                                    : "bg-background/80 hover:bg-accent hover:text-accent-foreground"
-                                }`}
-                                onClick={(e) => handleTogglePin(scorecard.id, e)}
-                              >
-                                <Star className={`h-3.5 w-3.5 transition-all ${scorecard.pinned ? "fill-white" : ""}`} />
-                              </Button>
                             </div>
                           </div>
 
