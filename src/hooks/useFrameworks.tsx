@@ -2,15 +2,20 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { QualificationFramework } from '@/types/qualificationScorecard';
 
-export function useFrameworks() {
+export function useFrameworks(includeInactive: boolean = false) {
   const { data: frameworks = [], isLoading, error } = useQuery({
-    queryKey: ['qualification-frameworks'],
+    queryKey: ['qualification-frameworks', includeInactive],
     queryFn: async () => {
-      const { data, error } = await supabase
+      let query = supabase
         .from('QualificationFrameworks')
         .select('*')
-        .eq('active', true)
         .order('display_order', { ascending: true });
+
+      if (!includeInactive) {
+        query = query.eq('active', true);
+      }
+
+      const { data, error } = await query;
 
       if (error) throw error;
       return data as QualificationFramework[];

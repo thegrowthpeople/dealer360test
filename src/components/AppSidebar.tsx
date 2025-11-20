@@ -1,4 +1,4 @@
-import { Home, TrendingUp, Search, BarChart, PlusCircle, FileText, Truck, Settings, ClipboardCheck } from "lucide-react";
+import { Home, TrendingUp, Search, BarChart, PlusCircle, FileText, Truck, Settings, ClipboardCheck, Layers } from "lucide-react";
 import { useLocation, Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -86,6 +86,23 @@ export function AppSidebar() {
                     <Link to="/dealerships">
                       <Truck className="w-4 h-4" />
                       <span>Dealerships</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+                
+                <SidebarMenuItem>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={location.pathname === '/frameworks'}
+                    tooltip="Frameworks"
+                    className={cn(
+                      "transition-all",
+                      location.pathname === '/frameworks' && "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground"
+                    )}
+                  >
+                    <Link to="/frameworks">
+                      <Layers className="w-4 h-4" />
+                      <span>Frameworks</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

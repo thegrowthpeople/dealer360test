@@ -1,4 +1,4 @@
-import { Home, TrendingUp, Search, Target, ChevronLeft, ChevronRight, Truck, Settings, ClipboardCheck } from "lucide-react";
+import { Home, TrendingUp, Search, Target, ChevronLeft, ChevronRight, Truck, Settings, ClipboardCheck, Layers } from "lucide-react";
 import { useLocation, Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -104,6 +104,24 @@ export function SimpleSidebar({ isCollapsed, onToggle }: SimpleSidebarProps) {
                   isCollapsed ? "opacity-0 w-0 overflow-hidden" : "opacity-100"
                 )}>
                   Dealerships
+                </span>
+              </Link>
+              
+              <Link
+                to="/frameworks"
+                className={cn(
+                  "flex items-center rounded-md transition-all duration-200",
+                  "hover:bg-accent hover:text-accent-foreground",
+                  location.pathname === '/frameworks' && "bg-primary text-primary-foreground hover:bg-primary/90",
+                  isCollapsed ? "justify-center px-3 py-2.5" : "gap-3 px-3 py-2.5"
+                )}
+              >
+                <Layers className="h-5 w-5 shrink-0" />
+                <span className={cn(
+                  "text-sm font-medium whitespace-nowrap transition-opacity duration-300",
+                  isCollapsed ? "opacity-0 w-0 overflow-hidden" : "opacity-100"
+                )}>
+                  Frameworks
                 </span>
               </Link>
               

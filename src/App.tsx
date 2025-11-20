@@ -20,6 +20,7 @@ import Admin from "./pages/Admin";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 import Qualification from "./pages/Qualification";
+import FrameworkManagement from "./pages/FrameworkManagement";
 
 const queryClient = new QueryClient();
 
@@ -44,6 +45,7 @@ const App = () => (
                 <Route path="/reports" element={<ProtectedRoute><SimpleLayout><Reports /></SimpleLayout></ProtectedRoute>} />
                 <Route path="/reports/:id" element={<ProtectedRoute><SimpleLayout><ReportDetail /></SimpleLayout></ProtectedRoute>} />
                 <Route path="/admin" element={<ProtectedRoute requiredRole="admin"><SimpleLayout><Admin /></SimpleLayout></ProtectedRoute>} />
+                <Route path="/frameworks" element={<ProtectedRoute requiredRole="admin"><SimpleLayout><FrameworkManagement /></SimpleLayout></ProtectedRoute>} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
