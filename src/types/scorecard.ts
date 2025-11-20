@@ -12,7 +12,7 @@ export interface FAINTComponent {
 export interface Scorecard {
   id: string;
   version: number;
-  salesperson: string;
+  accountManager: string;
   customerName: string;
   opportunityName: string;
   expectedOrderDate: string;

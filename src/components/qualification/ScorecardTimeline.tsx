@@ -47,7 +47,7 @@ export const ScorecardTimeline = ({ scorecards, opportunityName }: ScorecardTime
               <div className="flex items-center gap-4 text-sm text-muted-foreground">
                 <div className="flex items-center gap-1">
                   <User className="w-4 h-4" />
-                  <span>{scorecard.salesperson}</span>
+                  <span>{scorecard.accountManager}</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <Calendar className="w-4 h-4" />

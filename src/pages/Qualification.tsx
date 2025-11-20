@@ -49,10 +49,10 @@ const createEmptyScorecard = (data: Partial<Scorecard>): Scorecard => {
   }));
 
   return {
-    id: Date.now().toString(),
-    version: 1,
-    salesperson: data.salesperson || "",
-    customerName: data.customerName || "",
+      id: Date.now().toString(),
+      version: 1,
+      accountManager: data.accountManager || "",
+      customerName: data.customerName || "",
     opportunityName: data.opportunityName || "",
     expectedOrderDate: data.expectedOrderDate || "",
     reviewDate: data.reviewDate || "",
@@ -88,7 +88,7 @@ const Index = () => {
     accountManager: null,
     customer: null,
   });
-  const [sortBy, setSortBy] = useState<"date" | "score" | "salesperson" | "customer">("date");
+  const [sortBy, setSortBy] = useState<"date" | "score" | "accountManager" | "customer">("date");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [bulkSelectionMode, setBulkSelectionMode] = useState(false);
   const [selectedForBulk, setSelectedForBulk] = useState<string[]>([]);
@@ -444,7 +444,7 @@ const Index = () => {
       return [
         scorecard.opportunityName,
         scorecard.customerName,
-        scorecard.salesperson,
+        scorecard.accountManager,
         scorecard.version,
         scorecard.expectedOrderDate,
         scorecard.reviewDate,
@@ -482,7 +482,7 @@ const Index = () => {
       ...scorecardToDuplicate,
       id: Date.now().toString(),
       version: 1,
-      salesperson: data.salesperson || scorecardToDuplicate.salesperson,
+      accountManager: data.accountManager || scorecardToDuplicate.accountManager,
       customerName: data.customerName || scorecardToDuplicate.customerName,
       opportunityName: data.opportunityName || scorecardToDuplicate.opportunityName,
       expectedOrderDate: data.expectedOrderDate || scorecardToDuplicate.expectedOrderDate,
@@ -542,7 +542,7 @@ const Index = () => {
     }
 
     // Account Manager filter
-    if (filters.accountManager && scorecard.salesperson !== filters.accountManager) {
+    if (filters.accountManager && scorecard.accountManager !== filters.accountManager) {
       return false;
     }
 
@@ -612,7 +612,7 @@ const Index = () => {
   // Get unique values for filter options
   const uniqueVersions = Array.from(new Set(scorecards.map(s => s.version)));
   const availableTags = Array.from(new Set(scorecards.flatMap(s => s.tags || []))).sort();
-  const uniqueAccountManagers = Array.from(new Set(scorecards.map(s => s.salesperson).filter(Boolean))).sort();
+  const uniqueAccountManagers = Array.from(new Set(scorecards.map(s => s.accountManager).filter(Boolean))).sort();
   const uniqueCustomers = Array.from(new Set(scorecards.map(s => s.customerName).filter(Boolean))).sort();
 
   // Calculate scores for sorting
@@ -642,8 +642,8 @@ const Index = () => {
       case "score":
         comparison = a.totalScore - b.totalScore;
         break;
-      case "salesperson":
-        comparison = a.salesperson.localeCompare(b.salesperson);
+      case "accountManager":
+        comparison = a.accountManager.localeCompare(b.accountManager);
         break;
       case "customer":
         comparison = a.customerName.localeCompare(b.customerName);
@@ -705,7 +705,7 @@ const Index = () => {
               onSubmit={handleDuplicateSubmit}
               submitLabel="Duplicate Scorecard"
               initialData={{
-                salesperson: scorecardToDuplicate.salesperson,
+                accountManager: scorecardToDuplicate.accountManager,
                 customerName: scorecardToDuplicate.customerName,
                 opportunityName: `${scorecardToDuplicate.opportunityName} (Copy)`,
                 expectedOrderDate: scorecardToDuplicate.expectedOrderDate,
@@ -767,7 +767,7 @@ const Index = () => {
                     <SelectContent>
                       <SelectItem value="date">Date</SelectItem>
                       <SelectItem value="score">Score</SelectItem>
-                      <SelectItem value="salesperson">Account Manager</SelectItem>
+                      <SelectItem value="accountManager">Account Manager</SelectItem>
                       <SelectItem value="customer">Customer Name</SelectItem>
                     </SelectContent>
                   </Select>
@@ -936,7 +936,7 @@ const Index = () => {
                                 v{scorecard.version}
                               </Badge>
                             </div>
-                            <p className="text-xs text-muted-foreground truncate">{scorecard.salesperson}</p>
+                            <p className="text-xs text-muted-foreground truncate">{scorecard.accountManager}</p>
                           </CardContent>
                         </Card>
                       );
@@ -1057,7 +1057,7 @@ const Index = () => {
                               <span className="font-medium">Expected:</span> {scorecard.expectedOrderDate}
                             </div>
                             <div className="text-sm text-muted-foreground">
-                              <span className="font-medium">Account Manager:</span> {scorecard.salesperson}
+                              <span className="font-medium">Account Manager:</span> {scorecard.accountManager}
                             </div>
                             <div className="text-xs text-muted-foreground pt-2 border-t border-border">
                               <span>Created: {new Date(scorecard.createdAt).toLocaleDateString()}</span>
@@ -1207,7 +1207,7 @@ const Index = () => {
                     )}
                   </h2>
                   <p className="text-muted-foreground mt-1">
-                    {activeScorecard.customerName} • {activeScorecard.salesperson}
+                    {activeScorecard.customerName} • {activeScorecard.accountManager}
                   </p>
                   <div className="flex gap-4 text-sm text-muted-foreground mt-2">
                     <span>Expected: {activeScorecard.expectedOrderDate}</span>
