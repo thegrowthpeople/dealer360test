@@ -669,8 +669,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen">
-      <div className="px-6 xl:px-12 2xl:px-16 space-y-6">
+    <div className="min-h-screen space-y-6">
         <div className="flex items-center justify-between">
           <div>
           <h1 className="text-4xl xl:text-5xl font-bold text-foreground mb-4">
@@ -1315,7 +1314,6 @@ const Index = () => {
             </div>
           </div>
         )}
-      </div>
 
       {/* Tag Rename Dialog */}
       <Dialog open={editingTag !== null} onOpenChange={(open) => {
