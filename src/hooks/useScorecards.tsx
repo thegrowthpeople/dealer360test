@@ -212,6 +212,7 @@ export function useScorecards() {
           expected_order_date: scorecard.expected_order_date,
           review_date: new Date().toISOString().split('T')[0],
           bdm_id: scorecard.bdm_id,
+          framework_id: scorecard.framework_id,
           funds: scorecard.funds,
           authority: scorecard.authority,
           interest: scorecard.interest,
