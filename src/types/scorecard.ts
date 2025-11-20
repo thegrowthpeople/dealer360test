@@ -21,6 +21,7 @@ export interface Scorecard {
   archived?: boolean;
   pinned?: boolean;
   tags?: string[];
+  frameworkId?: string;
   funds: FAINTComponent;
   authority: FAINTComponent;
   interest: FAINTComponent;

@@ -84,6 +84,7 @@ const convertToScorecard = (db: DatabaseScorecard): Scorecard => ({
   archived: db.archived,
   pinned: db.pinned,
   tags: db.tags,
+  frameworkId: db.framework_id,
   funds: db.funds,
   authority: db.authority,
   interest: db.interest,
@@ -119,7 +120,14 @@ const Index = () => {
     duplicateScorecard: duplicateScorecardMutation,
     togglePin 
   } = useScorecards();
-  const { defaultFramework, isLoading: isLoadingFrameworks } = useFrameworks();
+  const { frameworks, defaultFramework, isLoading: isLoadingFrameworks } = useFrameworks();
+  
+  // Helper to get framework name by ID
+  const getFrameworkName = (frameworkId?: string) => {
+    if (!frameworkId) return "Unknown";
+    const framework = frameworks.find(f => f.id === frameworkId);
+    return framework?.name || "Unknown";
+  };
   
   // Convert database scorecards to UI format
   const scorecards = dbScorecards?.map(convertToScorecard) || [];
@@ -916,6 +924,12 @@ const Index = () => {
                             <Badge variant="secondary">Archived</Badge>
                           )}
                           <Badge 
+                            variant="outline"
+                            className="bg-primary/10 border-primary/30 text-primary"
+                          >
+                            {getFrameworkName(scorecard.frameworkId)}
+                          </Badge>
+                          <Badge 
                             variant={isLatestVersion ? "default" : "secondary"}
                             className={isLatestVersion ? "bg-green-600 hover:bg-green-700" : ""}
                           >
@@ -953,6 +967,15 @@ const Index = () => {
                             </div>
                             <div className="text-sm text-muted-foreground">
                               <span className="font-medium">Account Manager:</span> {scorecard.accountManager}
+                            </div>
+                            <div className="text-sm text-muted-foreground">
+                              <span className="font-medium">Framework:</span> 
+                              <Badge 
+                                variant="outline"
+                                className="ml-2 bg-primary/10 border-primary/30 text-primary text-xs"
+                              >
+                                {getFrameworkName(scorecard.frameworkId)}
+                              </Badge>
                             </div>
                             <div className="text-xs text-muted-foreground pt-2 border-t border-border">
                               <span>Created: {new Date(scorecard.createdAt).toLocaleDateString()}</span>
@@ -1094,6 +1117,13 @@ const Index = () => {
                     <span>Expected: {activeScorecard.expectedOrderDate}</span>
                     <span>•</span>
                     <span>Review: {activeScorecard.reviewDate}</span>
+                    <span>•</span>
+                    <Badge 
+                      variant="outline"
+                      className="bg-primary/10 border-primary/30 text-primary text-xs"
+                    >
+                      {getFrameworkName(activeScorecard.frameworkId)}
+                    </Badge>
                     <span>•</span>
                     <span className="flex items-center gap-2">
                       v{activeScorecard.version}
