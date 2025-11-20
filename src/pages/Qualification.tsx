@@ -195,6 +195,15 @@ const Index = () => {
     return "border-green-500 bg-green-500/5";
   };
 
+  // Get confidence color based on score percentage (same logic as ConfidenceIndicator)
+  const getConfidenceColor = (score: number): string => {
+    const percentage = (score / 40) * 100;
+    if (percentage >= 75) return "text-green-500";
+    if (percentage >= 50) return "text-emerald-500";
+    if (percentage >= 30) return "text-amber-500";
+    return "text-red-500";
+  };
+
   const handleCreateScorecard = async (data: Partial<Scorecard> & { frameworkId?: string }) => {
     const frameworkId = data.frameworkId || defaultFramework?.id;
     
@@ -1037,7 +1046,7 @@ const Index = () => {
                                   strokeWidth="6"
                                   fill="none"
                                   strokeDasharray={`${(scorecard.totalScore / 40) * 213.628} 213.628`}
-                                  className="text-primary transition-all duration-500 group-hover:text-accent"
+                                  className={`${getConfidenceColor(scorecard.totalScore)} transition-all duration-500`}
                                   strokeLinecap="round"
                                 />
                               </svg>
