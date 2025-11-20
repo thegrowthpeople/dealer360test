@@ -156,7 +156,7 @@ const Index = () => {
   
   const [duplicateDialogOpen, setDuplicateDialogOpen] = useState(false);
   const [scorecardToDuplicate, setScorecardToDuplicate] = useState<Scorecard | null>(null);
-  const [viewMode, setViewMode] = useState<"expanded" | "compact">("expanded");
+  const [viewMode, setViewMode] = useState<"tiles" | "table">("tiles");
   const [editingTag, setEditingTag] = useState<string | null>(null);
   const [newTagName, setNewTagName] = useState("");
 
@@ -830,11 +830,11 @@ const Index = () => {
                   </Button>
                 </div>
                 
-                <ToggleGroup type="single" value={viewMode} onValueChange={(value) => value && setViewMode(value as "expanded" | "compact")}>
-                  <ToggleGroupItem value="expanded" aria-label="Expanded view">
+                <ToggleGroup type="single" value={viewMode} onValueChange={(value) => value && setViewMode(value as "tiles" | "table")}>
+                  <ToggleGroupItem value="tiles" aria-label="Tile view">
                     <LayoutGrid className="h-4 w-4" />
                   </ToggleGroupItem>
-                  <ToggleGroupItem value="compact" aria-label="Compact view">
+                  <ToggleGroupItem value="table" aria-label="Table view">
                     <List className="h-4 w-4" />
                   </ToggleGroupItem>
                 </ToggleGroup>
@@ -851,25 +851,22 @@ const Index = () => {
               </Card>
             ) : (
               <>
-                <div className={viewMode === "compact" ? "grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3" : "grid grid-cols-1 md:grid-cols-2 gap-6"}>
-                  {sortedScorecards.map((scorecard) => {
-                    
-                    
-                    // Determine if this is the latest version for this opportunity
+                {viewMode === "tiles" ? (
+                  <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                    {sortedScorecards.map((scorecard) => {
                     const opportunityKey = `${scorecard.opportunityName}_${scorecard.customerName}`;
                     const versionsForOpportunity = opportunityGroups[opportunityKey] || [];
                     const maxVersion = Math.max(...versionsForOpportunity.map(s => s.version));
                     const isLatestVersion = scorecard.version === maxVersion;
                     
-                    if (viewMode === "compact") {
-                      return (
-                        <Card
-                          key={scorecard.id}
-                          className={`relative cursor-pointer hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 border ${
-                            "hover:border-primary/50"
-                          } ${scorecard.archived ? "opacity-60" : ""}`}
-                          onClick={() => handleScorecardSelect(scorecard.id)}
-                        >
+                    return (
+                      <Card
+                        key={scorecard.id}
+                        className={`relative cursor-pointer hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 border ${
+                          "hover:border-primary/50"
+                        } ${scorecard.archived ? "opacity-60" : ""}`}
+                        onClick={() => handleScorecardSelect(scorecard.id)}
+                      >
                         <div className="absolute top-3 right-3 flex gap-2">
                           <>
                             <Popover>
@@ -1053,23 +1050,118 @@ const Index = () => {
                         </CardContent>
                       </Card>
                     );
-                    } else {
-                      return (
-                        <Card
-                          key={scorecard.id}
-                          className={`relative hover:shadow-md hover:scale-[1.01] transition-all duration-200 cursor-pointer ${
-                            scorecard.archived 
-                              ? "border-yellow-500/50 bg-yellow-50/5"
-                              : getScoreColorClass(scorecard.totalScore)
-                        } ${scorecard.archived ? "opacity-60" : ""}`}
-                          onClick={() => handleScorecardSelect(scorecard.id)}
-                        >
-                          {/* Expanded view content - keeping existing structure */}
-                        </Card>
-                      );
-                    }
                   })}
                 </div>
+                ) : (
+                  /* Table View */
+                  <div className="border rounded-lg">
+                    <table className="w-full">
+                      <thead className="bg-muted/50">
+                        <tr className="border-b">
+                          <th className="text-left p-3 font-semibold">Opportunity</th>
+                          <th className="text-left p-3 font-semibold">Customer</th>
+                          <th className="text-left p-3 font-semibold">Account Manager</th>
+                          <th className="text-left p-3 font-semibold">Framework</th>
+                          <th className="text-left p-3 font-semibold">Score</th>
+                          <th className="text-left p-3 font-semibold">Version</th>
+                          <th className="text-left p-3 font-semibold">Expected Date</th>
+                          <th className="text-left p-3 font-semibold">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {sortedScorecards.map((scorecard) => {
+                          const opportunityKey = `${scorecard.opportunityName}_${scorecard.customerName}`;
+                          const versionsForOpportunity = opportunityGroups[opportunityKey] || [];
+                          const maxVersion = Math.max(...versionsForOpportunity.map(s => s.version));
+                          const isLatestVersion = scorecard.version === maxVersion;
+                          
+                          return (
+                            <tr
+                              key={scorecard.id}
+                              className={`border-b hover:bg-muted/30 cursor-pointer transition-colors ${
+                                scorecard.archived ? "opacity-60" : ""
+                              }`}
+                              onClick={() => handleScorecardSelect(scorecard.id)}
+                            >
+                              <td className="p-3">
+                                <div className="flex items-center gap-2">
+                                  {scorecard.pinned && <Star className="w-4 h-4 fill-yellow-500 text-yellow-500" />}
+                                  {scorecard.opportunityName}
+                                </div>
+                              </td>
+                              <td className="p-3">{scorecard.customerName}</td>
+                              <td className="p-3">{scorecard.accountManager}</td>
+                              <td className="p-3">
+                                <Badge 
+                                  variant="outline"
+                                  className="bg-primary/10 border-primary/30 text-primary text-xs"
+                                >
+                                  {getFrameworkName(scorecard.frameworkId)}
+                                </Badge>
+                              </td>
+                              <td className="p-3">
+                                <div className="flex items-center gap-2">
+                                  <span className="font-semibold">{scorecard.totalScore}/40</span>
+                                  {(() => {
+                                    const totalNegative = [
+                                      scorecard.funds,
+                                      scorecard.authority,
+                                      scorecard.interest,
+                                      scorecard.need,
+                                      scorecard.timing,
+                                    ].reduce((sum, component) => sum + component.questions.filter(q => q.state === "negative").length, 0);
+                                    return totalNegative > 0 && (
+                                      <span className="text-xs text-destructive">
+                                        -{totalNegative}
+                                      </span>
+                                    );
+                                  })()}
+                                </div>
+                              </td>
+                              <td className="p-3">
+                                <Badge 
+                                  variant={isLatestVersion ? "default" : "secondary"}
+                                  className={isLatestVersion ? "bg-green-600 hover:bg-green-700" : ""}
+                                >
+                                  v{scorecard.version}{isLatestVersion ? " - Latest" : ""}
+                                </Badge>
+                              </td>
+                              <td className="p-3 text-sm text-muted-foreground">
+                                {scorecard.expectedOrderDate}
+                              </td>
+                              <td className="p-3">
+                                <div className="flex items-center gap-1">
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-8 w-8"
+                                    onClick={(e) => handleTogglePin(scorecard.id, e)}
+                                  >
+                                    <Star className={`h-4 w-4 ${scorecard.pinned ? "fill-yellow-500 text-yellow-500" : ""}`} />
+                                  </Button>
+                                  {!scorecard.archived && (
+                                    <Button
+                                      variant="ghost"
+                                      size="icon"
+                                      className="h-8 w-8"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleDuplicate(scorecard);
+                                      }}
+                                    >
+                                      <Copy className="h-4 w-4" />
+                                    </Button>
+                                  )}
+                                </div>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+                
                 
               </>
             )}
