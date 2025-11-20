@@ -330,7 +330,20 @@ const Index = () => {
             ...convertToDatabase(newVersion, bdmId, defaultFramework.id),
           });
           
+          // Keep the new version open and set it as the current scorecard
+          setActiveScorecard(newVersion);
+          setOriginalScorecard(JSON.parse(JSON.stringify(newVersion)));
+          setShowUnsavedDialog(false);
+          setHasCreatedVersionForEdit(false);
+          
           toast.success(`Version ${newVersion.version} created and saved!`);
+          
+          // If there was a pending navigation, execute it
+          if (pendingNavigation) {
+            navigate(pendingNavigation);
+            setPendingNavigation(null);
+          }
+          return;
         } else {
           // User chose not to create new version, do nothing
           setShowUnsavedDialog(false);
@@ -342,16 +355,18 @@ const Index = () => {
           id: activeScorecard.id,
           ...convertToDatabase(activeScorecard, bdmId, defaultFramework.id),
         });
+        
+        // Update the original scorecard to reflect saved state
+        setOriginalScorecard(JSON.parse(JSON.stringify(activeScorecard)));
+        setShowUnsavedDialog(false);
+        
         toast.success("Changes saved successfully!");
-      }
-      
-      setShowUnsavedDialog(false);
-      setActiveScorecard(null);
-      setOriginalScorecard(null);
-      setHasCreatedVersionForEdit(false);
-      if (pendingNavigation) {
-        navigate(pendingNavigation);
-        setPendingNavigation(null);
+        
+        // If there was a pending navigation, execute it
+        if (pendingNavigation) {
+          navigate(pendingNavigation);
+          setPendingNavigation(null);
+        }
       }
     } catch (error) {
       console.error('Failed to save changes:', error);
