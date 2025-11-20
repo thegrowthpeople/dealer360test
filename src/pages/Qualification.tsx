@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Plus, FileText, Calendar, GitCompare, Clock, ArrowUp, ArrowDown, Copy, Trash2, Download, Archive, CheckSquare, FileSpreadsheet, LayoutGrid, List, Star, Tag, X, Edit2, Settings } from "lucide-react";
+import { Plus, FileText, Calendar, GitCompare, Clock, ArrowUp, ArrowDown, Copy, Trash2, Download, Archive, CheckSquare, FileSpreadsheet, LayoutGrid, List, Star, X, Edit2, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
@@ -86,7 +86,6 @@ const convertToScorecard = (db: DatabaseScorecard): Scorecard => ({
   updatedAt: db.updated_at,
   archived: db.archived,
   pinned: db.pinned,
-  tags: db.tags,
   frameworkId: db.framework_id,
   funds: db.funds,
   authority: db.authority,
@@ -109,7 +108,6 @@ const convertToDatabase = (scorecard: Scorecard, bdmId: number | null, framework
   interest: scorecard.interest,
   need: scorecard.need,
   timing: scorecard.timing,
-  tags: scorecard.tags || [],
 });
 
 const Index = () => {
@@ -149,7 +147,6 @@ const Index = () => {
     showArchived: false,
     showOnlyPinned: false,
     showOnlyOverdue: false,
-    tags: [],
     dateFrom: undefined,
     dateTo: undefined,
     accountManager: null,
@@ -165,8 +162,6 @@ const Index = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [scorecardToDelete, setScorecardToDelete] = useState<Scorecard | null>(null);
   const [viewMode, setViewMode] = useState<"tiles" | "table">("tiles");
-  const [editingTag, setEditingTag] = useState<string | null>(null);
-  const [newTagName, setNewTagName] = useState("");
   const [visibleColumns, setVisibleColumns] = useState({
     opportunity: true,
     customer: true,
@@ -188,41 +183,6 @@ const Index = () => {
     const modifiedDate = new Date(updatedAt);
     const hoursDiff = (now.getTime() - modifiedDate.getTime()) / (1000 * 60 * 60);
     return hoursDiff <= 48;
-  };
-
-  // Tag color mapping based on keywords
-  const getTagColor = (tag: string): string => {
-    const tagLower = tag.toLowerCase();
-    
-    // Priority levels
-    if (tagLower.includes("high") || tagLower.includes("urgent") || tagLower.includes("hot")) {
-      return "destructive";
-    }
-    if (tagLower.includes("medium") || tagLower.includes("warm")) {
-      return "default";
-    }
-    if (tagLower.includes("low") || tagLower.includes("cold")) {
-      return "secondary";
-    }
-    
-    // Deal types
-    if (tagLower.includes("enterprise") || tagLower.includes("large")) {
-      return "default";
-    }
-    if (tagLower.includes("smb") || tagLower.includes("small")) {
-      return "outline";
-    }
-    
-    // Status
-    if (tagLower.includes("won") || tagLower.includes("closed") || tagLower.includes("success")) {
-      return "default";
-    }
-    if (tagLower.includes("lost") || tagLower.includes("rejected")) {
-      return "destructive";
-    }
-    
-    // Default
-    return "secondary";
   };
 
   const getScoreColorClass = (score: number): string => {
@@ -519,73 +479,6 @@ const Index = () => {
     }
   };
 
-  const handleAddTag = async (id: string, tag: string) => {
-    if (!tag.trim()) return;
-    const scorecard = scorecards.find(s => s.id === id);
-    if (!scorecard) return;
-    
-    try {
-      await updateScorecardMutation({
-        id,
-        tags: [...(scorecard.tags || []), tag.trim()],
-      });
-      toast.success("Tag added");
-    } catch (error) {
-      console.error('Failed to add tag:', error);
-      toast.error("Failed to add tag");
-    }
-  };
-
-  const handleRemoveTag = async (id: string, tagToRemove: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    const scorecard = scorecards.find(s => s.id === id);
-    if (!scorecard) return;
-    
-    try {
-      await updateScorecardMutation({
-        id,
-        tags: (scorecard.tags || []).filter(t => t !== tagToRemove),
-      });
-      toast.success("Tag removed");
-    } catch (error) {
-      console.error('Failed to remove tag:', error);
-      toast.error("Failed to remove tag");
-    }
-  };
-
-  const handleRenameTag = async (oldTag: string, newTag: string) => {
-    if (!newTag.trim() || oldTag === newTag) {
-      setEditingTag(null);
-      setNewTagName("");
-      return;
-    }
-
-    try {
-      // Update all scorecards that have this tag
-      const updatePromises = scorecards
-        .filter(card => card.tags?.includes(oldTag))
-        .map(card => updateScorecardMutation({
-          id: card.id,
-          tags: card.tags?.map(t => t === oldTag ? newTag.trim() : t)
-        }));
-      
-      await Promise.all(updatePromises);
-
-      setFilters(prevFilters => ({
-        ...prevFilters,
-        tags: prevFilters.tags.map(t => t === oldTag ? newTag.trim() : t)
-      }));
-
-      setEditingTag(null);
-      setNewTagName("");
-      toast.success(`Tag renamed from "${oldTag}" to "${newTag}"`);
-    } catch (error) {
-      console.error('Failed to rename tag:', error);
-      toast.error("Failed to rename tag");
-    }
-  };
-
-
   const handleDuplicate = (scorecard: Scorecard) => {
     setScorecardToDuplicate(scorecard);
     setDuplicateDialogOpen(true);
@@ -705,15 +598,6 @@ const Index = () => {
       }
 
       if (modifiedDate < cutoffDate) {
-        return false;
-      }
-    }
-
-    // Tags filter
-    if (filters.tags.length > 0) {
-      const scorecardTags = scorecard.tags || [];
-      const hasMatchingTag = filters.tags.some(filterTag => scorecardTags.includes(filterTag));
-      if (!hasMatchingTag) {
         return false;
       }
     }
@@ -988,13 +872,8 @@ const Index = () => {
                   setViewAllVersionsFor(null); // Clear version view when filters change
                 }}
                 versions={uniqueVersions}
-                availableTags={availableTags}
                 accountManagers={uniqueAccountManagers}
                 customers={uniqueCustomers}
-                onTagRename={(tag) => {
-                  setEditingTag(tag);
-                  setNewTagName(tag);
-                }}
               />
             )}
             
@@ -1045,7 +924,7 @@ const Index = () => {
             {sortedScorecards.length === 0 ? (
               <Card className="p-12 text-center">
                 <p className="text-lg text-muted-foreground mb-4">No scorecards match your filters</p>
-                <Button variant="outline" onClick={() => setFilters({ version: "latest", showArchived: false, showOnlyPinned: false, showOnlyOverdue: false, tags: [], dateFrom: undefined, dateTo: undefined, accountManager: null, customer: null, modifiedRange: null })}>
+                <Button variant="outline" onClick={() => setFilters({ version: "latest", showArchived: false, showOnlyPinned: false, showOnlyOverdue: false, dateFrom: undefined, dateTo: undefined, accountManager: null, customer: null, modifiedRange: null })}>
                   Clear Filters
                 </Button>
               </Card>
@@ -1085,32 +964,6 @@ const Index = () => {
                         <div className="absolute top-4 right-4 flex gap-1.5 z-10">
                           {/* Other Action Buttons - Show on Hover */}
                           <div className="flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-7 w-7 bg-background/80 backdrop-blur-sm hover:bg-accent hover:text-accent-foreground transition-all duration-200 hover:scale-110"
-                                onClick={(e) => e.stopPropagation()}
-                              >
-                                <Tag className="h-3.5 w-3.5" />
-                              </Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-56 bg-background border border-border shadow-lg z-50" align="start">
-                              <div className="space-y-2">
-                                <Label className="text-sm font-medium">New Tag</Label>
-                                <Input
-                                  placeholder="Enter tag name..."
-                                  onKeyDown={(e) => {
-                                    if (e.key === 'Enter') {
-                                      handleAddTag(scorecard.id, e.currentTarget.value);
-                                      e.currentTarget.value = '';
-                                    }
-                                  }}
-                                />
-                              </div>
-                            </PopoverContent>
-                          </Popover>
                           {!scorecard.archived && (
                             <>
                               <Button
@@ -1269,21 +1122,6 @@ const Index = () => {
                               v{scorecard.version}{isLatestVersion ? " • Latest" : ""}
                             </Badge>
                           </div>
-                          
-                          {/* Tags Section */}
-                          {scorecard.tags && scorecard.tags.length > 0 && (
-                            <div className="flex flex-wrap gap-1.5 mt-3">
-                              {scorecard.tags.map((tag, index) => (
-                                <Badge
-                                  key={index}
-                                  variant={getTagColor(tag) as any}
-                                  className="text-xs px-2 py-0"
-                                >
-                                  {tag}
-                                </Badge>
-                              ))}
-                            </div>
-                          )}
                         </CardContent>
                       </Card>
                     );
@@ -1717,53 +1555,6 @@ const Index = () => {
             </div>
           </div>
         )}
-
-      {/* Tag Rename Dialog */}
-      <Dialog open={editingTag !== null} onOpenChange={(open) => {
-        if (!open) {
-          setEditingTag(null);
-          setNewTagName("");
-        }
-      }}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Rename Tag</DialogTitle>
-            <DialogDescription>
-              This will rename the tag across all scorecards.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <label className="text-sm font-medium">Current name</label>
-              <div className="mt-1 p-2 bg-muted rounded-md text-sm">{editingTag}</div>
-            </div>
-            <div>
-              <label className="text-sm font-medium">New name</label>
-              <Input
-                value={newTagName}
-                onChange={(e) => setNewTagName(e.target.value)}
-                placeholder="Enter new tag name"
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && editingTag) {
-                    handleRenameTag(editingTag, newTagName);
-                  }
-                }}
-              />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => {
-              setEditingTag(null);
-              setNewTagName("");
-            }}>
-              Cancel
-            </Button>
-            <Button onClick={() => editingTag && handleRenameTag(editingTag, newTagName)}>
-              Rename
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
 
       {/* Unsaved Changes Dialog */}
       <AlertDialog open={showUnsavedDialog} onOpenChange={(open) => {

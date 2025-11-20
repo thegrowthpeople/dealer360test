@@ -30,7 +30,6 @@ export interface FilterState {
   showArchived: boolean;
   showOnlyPinned: boolean;
   showOnlyOverdue: boolean;
-  tags: string[];
   dateFrom: Date | undefined;
   dateTo: Date | undefined;
   accountManager: string | null;
@@ -42,20 +41,16 @@ interface ScorecardFiltersProps {
   filters: FilterState;
   onFiltersChange: (filters: FilterState) => void;
   versions: number[];
-  availableTags: string[];
   accountManagers: string[];
   customers: string[];
-  onTagRename?: (oldTag: string) => void;
 }
 
 export const ScorecardFilters = ({
   filters,
   onFiltersChange,
   versions,
-  availableTags,
   accountManagers,
   customers,
-  onTagRename,
 }: ScorecardFiltersProps) => {
   const {
     selectedBDMId,
@@ -83,7 +78,6 @@ export const ScorecardFilters = ({
       showArchived: false,
       showOnlyPinned: false,
       showOnlyOverdue: false,
-      tags: [],
       dateFrom: undefined,
       dateTo: undefined,
       accountManager: null,
@@ -99,19 +93,11 @@ export const ScorecardFilters = ({
     filters.version !== "latest" ||
     filters.showOnlyPinned ||
     filters.showOnlyOverdue ||
-    filters.tags.length > 0 ||
     filters.dateFrom !== undefined ||
     filters.dateTo !== undefined ||
     filters.accountManager !== null ||
     filters.customer !== null ||
     filters.modifiedRange !== null;
-
-  const handleTagToggle = (tag: string) => {
-    const newTags = filters.tags.includes(tag)
-      ? filters.tags.filter(t => t !== tag)
-      : [...filters.tags, tag];
-    onFiltersChange({ ...filters, tags: newTags });
-  };
 
   // Get BDMs associated with selected dealership or group
   const filteredBDMs = React.useMemo(() => {
@@ -474,47 +460,6 @@ export const ScorecardFilters = ({
           ))}
         </SelectContent>
       </Select>
-
-      {/* Tags Filter */}
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="outline" className="w-[150px] justify-between h-9 text-sm">
-            <span className="text-sm">
-              {filters.tags.length > 0 ? `${filters.tags.length} tags` : "All tags"}
-            </span>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-56 bg-background border border-border shadow-lg z-50">
-          {availableTags.length === 0 ? (
-            <div className="px-2 py-1.5 text-sm text-muted-foreground">No tags available</div>
-          ) : (
-            availableTags.map((tag) => (
-              <div key={tag} className="flex items-center justify-between px-2 py-1.5 hover:bg-accent rounded-sm">
-                <DropdownMenuCheckboxItem
-                  checked={filters.tags.includes(tag)}
-                  onCheckedChange={() => handleTagToggle(tag)}
-                  className="flex-1 cursor-pointer px-0"
-                >
-                  {tag}
-                </DropdownMenuCheckboxItem>
-                {onTagRename && (
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-6 w-6 ml-2"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onTagRename(tag);
-                    }}
-                  >
-                    <Edit2 className="h-3 w-3" />
-                  </Button>
-                )}
-              </div>
-            ))
-          )}
-        </DropdownMenuContent>
-      </DropdownMenu>
 
       {/* Date Range Filter */}
       <div className="flex gap-1">
