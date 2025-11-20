@@ -208,10 +208,10 @@ const Index = () => {
   // Get confidence color based on score percentage (same logic as ConfidenceIndicator)
   const getConfidenceColor = (score: number): string => {
     const percentage = (score / 40) * 100;
-    if (percentage >= 75) return "text-green-600";
-    if (percentage >= 50) return "text-emerald-600";
-    if (percentage >= 30) return "text-amber-600";
-    return "text-red-600";
+    if (percentage >= 75) return "text-green-500";
+    if (percentage >= 50) return "text-emerald-500";
+    if (percentage >= 30) return "text-amber-500";
+    return "text-red-500";
   };
 
   const handleCreateScorecard = async (data: Partial<Scorecard> & { frameworkId?: string }) => {
