@@ -71,6 +71,7 @@ const Index = () => {
   const [originalScorecard, setOriginalScorecard] = useState<Scorecard | null>(null);
   const [showUnsavedDialog, setShowUnsavedDialog] = useState(false);
   const [pendingNavigation, setPendingNavigation] = useState<string | null>(null);
+  const [hasCreatedVersionForEdit, setHasCreatedVersionForEdit] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -147,6 +148,7 @@ const Index = () => {
     setScorecards([...scorecards, newScorecard]);
     setActiveScorecard(newScorecard);
     setOriginalScorecard(JSON.parse(JSON.stringify(newScorecard)));
+    setHasCreatedVersionForEdit(true); // New scorecard, already a "new version"
     setIsDialogOpen(false);
     toast.success("Scorecard created successfully!");
   };
@@ -159,6 +161,29 @@ const Index = () => {
   ) => {
     if (!activeScorecard) return;
 
+    // If this is the first edit on an existing scorecard, create a new version
+    if (!hasCreatedVersionForEdit) {
+      const newVersion: Scorecard = {
+        ...activeScorecard,
+        id: Date.now().toString(),
+        version: activeScorecard.version + 1,
+        reviewDate: new Date().toISOString().split('T')[0],
+        createdAt: new Date().toISOString(),
+      };
+      
+      // Apply the change to the new version
+      newVersion[component].questions[index] = { state, note };
+      
+      // Add new version to scorecards and set it as active
+      setScorecards([...scorecards, newVersion]);
+      setActiveScorecard(newVersion);
+      setOriginalScorecard(JSON.parse(JSON.stringify(newVersion)));
+      setHasCreatedVersionForEdit(true);
+      toast.success(`Version ${newVersion.version} created from changes!`);
+      return;
+    }
+
+    // Otherwise, update the current (already versioned) scorecard
     const updatedScorecard = { ...activeScorecard };
     updatedScorecard[component].questions[index] = { state, note };
     
@@ -180,6 +205,7 @@ const Index = () => {
     setScorecards([...scorecards, newVersion]);
     setActiveScorecard(newVersion);
     setOriginalScorecard(JSON.parse(JSON.stringify(newVersion)));
+    setHasCreatedVersionForEdit(true); // Manual version creation, can now edit this version
     toast.success(`Version ${newVersion.version} created!`);
   };
 
@@ -194,6 +220,7 @@ const Index = () => {
     } else {
       setActiveScorecard(null);
       setOriginalScorecard(null);
+      setHasCreatedVersionForEdit(false);
     }
   };
 
@@ -202,6 +229,7 @@ const Index = () => {
     setShowUnsavedDialog(false);
     setActiveScorecard(null);
     setOriginalScorecard(null);
+    setHasCreatedVersionForEdit(false);
     if (pendingNavigation) {
       navigate(pendingNavigation);
       setPendingNavigation(null);
@@ -210,13 +238,17 @@ const Index = () => {
   };
 
   const handleDiscardAndClose = () => {
-    if (originalScorecard) {
+    if (originalScorecard && hasCreatedVersionForEdit) {
+      // Remove the auto-created version if user discards
+      setScorecards(scorecards.filter(s => s.id !== activeScorecard?.id));
+    } else if (originalScorecard) {
       // Revert changes in the scorecards array
       setScorecards(scorecards.map(s => s.id === originalScorecard.id ? originalScorecard : s));
     }
     setShowUnsavedDialog(false);
     setActiveScorecard(null);
     setOriginalScorecard(null);
+    setHasCreatedVersionForEdit(false);
     if (pendingNavigation) {
       navigate(pendingNavigation);
       setPendingNavigation(null);
@@ -271,6 +303,7 @@ const Index = () => {
     setViewAllVersionsFor(null);
     setBulkSelectionMode(false);
     setSelectedForBulk([]);
+    setHasCreatedVersionForEdit(false);
   };
 
   const handleBulkModeToggle = () => {
@@ -482,6 +515,7 @@ const Index = () => {
       const scorecard = scorecards.find(s => s.id === id) || null;
       setActiveScorecard(scorecard);
       setOriginalScorecard(scorecard ? JSON.parse(JSON.stringify(scorecard)) : null);
+      setHasCreatedVersionForEdit(false); // Reset flag when opening a scorecard
     }
   };
 
@@ -1087,6 +1121,7 @@ const Index = () => {
                                     e.stopPropagation();
                                     setTimelineView(scorecard.opportunityName);
                                     setActiveScorecard(null);
+                                    setHasCreatedVersionForEdit(false);
                                   }}
                                 >
                                   <Clock className="w-4 h-4" />
@@ -1202,6 +1237,7 @@ const Index = () => {
                         setTimelineView(activeScorecard.opportunityName);
                         setActiveScorecard(null);
                         setOriginalScorecard(null);
+                        setHasCreatedVersionForEdit(false);
                       }} 
                       variant="outline" 
                       size="sm" 
