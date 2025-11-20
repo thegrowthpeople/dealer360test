@@ -76,7 +76,7 @@ export const ScoreHeader = ({ scorecard }: ScoreHeaderProps) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       {/* Positives - Green Flags */}
-      <div className="bg-gradient-to-br from-success/5 to-success/10 rounded-xl border-2 border-success/30 p-6 shadow-lg">
+      <div className="bg-gradient-to-br from-success/5 to-success/10 rounded-xl border-2 border-success/30 p-6 shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-[1.01] animate-fade-in">
         <div className="flex items-center gap-4 mb-6">
           <div className="relative inline-flex items-center justify-center flex-shrink-0">
             <svg className="w-24 h-24 transform -rotate-90">
@@ -118,7 +118,7 @@ export const ScoreHeader = ({ scorecard }: ScoreHeaderProps) => {
         <div className="grid grid-cols-5 gap-3">
           <Tooltip>
             <TooltipTrigger asChild>
-              <div className={`rounded-lg p-3 text-center border ${getFaintBoxClasses(fundsPositive)} cursor-help`}>
+              <div className={`rounded-lg p-3 text-center border ${getFaintBoxClasses(fundsPositive)} cursor-help transition-all duration-300 hover:scale-105 hover:shadow-md`}>
                 <div className="text-xs font-medium text-muted-foreground mb-1 uppercase tracking-wide">Funds</div>
                 <div className={`text-2xl font-bold ${getFaintScoreColor(fundsPositive)}`}>
                   {fundsPositive}
@@ -132,7 +132,7 @@ export const ScoreHeader = ({ scorecard }: ScoreHeaderProps) => {
           
           <Tooltip>
             <TooltipTrigger asChild>
-              <div className={`rounded-lg p-3 text-center border ${getFaintBoxClasses(authorityPositive)} cursor-help`}>
+              <div className={`rounded-lg p-3 text-center border ${getFaintBoxClasses(authorityPositive)} cursor-help transition-all duration-300 hover:scale-105 hover:shadow-md`}>
                 <div className="text-xs font-medium text-muted-foreground mb-1 uppercase tracking-wide">Authority</div>
                 <div className={`text-2xl font-bold ${getFaintScoreColor(authorityPositive)}`}>
                   {authorityPositive}
@@ -146,7 +146,7 @@ export const ScoreHeader = ({ scorecard }: ScoreHeaderProps) => {
           
           <Tooltip>
             <TooltipTrigger asChild>
-              <div className={`rounded-lg p-3 text-center border ${getFaintBoxClasses(interestPositive)} cursor-help`}>
+              <div className={`rounded-lg p-3 text-center border ${getFaintBoxClasses(interestPositive)} cursor-help transition-all duration-300 hover:scale-105 hover:shadow-md`}>
                 <div className="text-xs font-medium text-muted-foreground mb-1 uppercase tracking-wide">Interest</div>
                 <div className={`text-2xl font-bold ${getFaintScoreColor(interestPositive)}`}>
                   {interestPositive}
@@ -160,7 +160,7 @@ export const ScoreHeader = ({ scorecard }: ScoreHeaderProps) => {
           
           <Tooltip>
             <TooltipTrigger asChild>
-              <div className={`rounded-lg p-3 text-center border ${getFaintBoxClasses(needPositive)} cursor-help`}>
+              <div className={`rounded-lg p-3 text-center border ${getFaintBoxClasses(needPositive)} cursor-help transition-all duration-300 hover:scale-105 hover:shadow-md`}>
                 <div className="text-xs font-medium text-muted-foreground mb-1 uppercase tracking-wide">Need</div>
                 <div className={`text-2xl font-bold ${getFaintScoreColor(needPositive)}`}>
                   {needPositive}
@@ -174,7 +174,7 @@ export const ScoreHeader = ({ scorecard }: ScoreHeaderProps) => {
           
           <Tooltip>
             <TooltipTrigger asChild>
-              <div className={`rounded-lg p-3 text-center border ${getFaintBoxClasses(timingPositive)} cursor-help`}>
+              <div className={`rounded-lg p-3 text-center border ${getFaintBoxClasses(timingPositive)} cursor-help transition-all duration-300 hover:scale-105 hover:shadow-md`}>
                 <div className="text-xs font-medium text-muted-foreground mb-1 uppercase tracking-wide">Timing</div>
                 <div className={`text-2xl font-bold ${getFaintScoreColor(timingPositive)}`}>
                   {timingPositive}
@@ -189,7 +189,7 @@ export const ScoreHeader = ({ scorecard }: ScoreHeaderProps) => {
       </div>
 
       {/* Negatives - Red Flags */}
-      <div className="bg-gradient-to-br from-destructive/5 to-destructive/10 rounded-xl border-2 border-destructive/30 p-6 shadow-lg">
+      <div className="bg-gradient-to-br from-destructive/5 to-destructive/10 rounded-xl border-2 border-destructive/30 p-6 shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-[1.01] animate-fade-in" style={{ animationDelay: '150ms' }}>
         <div className="flex items-center gap-4 mb-6">
           <div className="relative inline-flex items-center justify-center flex-shrink-0">
             <svg className="w-24 h-24 transform -rotate-90">
@@ -229,35 +229,35 @@ export const ScoreHeader = ({ scorecard }: ScoreHeaderProps) => {
         </div>
         
         <div className="grid grid-cols-5 gap-3">
-          <div className="bg-card/50 rounded-lg p-3 text-center border border-destructive/20">
+          <div className="bg-card/50 rounded-lg p-3 text-center border border-destructive/20 transition-all duration-300 hover:scale-105 hover:shadow-md hover:bg-card">
             <div className="text-xs font-medium text-muted-foreground mb-1 uppercase tracking-wide">Funds</div>
             <div className="text-2xl font-bold text-destructive">
               {fundsNegative}
             </div>
           </div>
           
-          <div className="bg-card/50 rounded-lg p-3 text-center border border-destructive/20">
+          <div className="bg-card/50 rounded-lg p-3 text-center border border-destructive/20 transition-all duration-300 hover:scale-105 hover:shadow-md hover:bg-card">
             <div className="text-xs font-medium text-muted-foreground mb-1 uppercase tracking-wide">Authority</div>
             <div className="text-2xl font-bold text-destructive">
               {authorityNegative}
             </div>
           </div>
           
-          <div className="bg-card/50 rounded-lg p-3 text-center border border-destructive/20">
+          <div className="bg-card/50 rounded-lg p-3 text-center border border-destructive/20 transition-all duration-300 hover:scale-105 hover:shadow-md hover:bg-card">
             <div className="text-xs font-medium text-muted-foreground mb-1 uppercase tracking-wide">Interest</div>
             <div className="text-2xl font-bold text-destructive">
               {interestNegative}
             </div>
           </div>
           
-          <div className="bg-card/50 rounded-lg p-3 text-center border border-destructive/20">
+          <div className="bg-card/50 rounded-lg p-3 text-center border border-destructive/20 transition-all duration-300 hover:scale-105 hover:shadow-md hover:bg-card">
             <div className="text-xs font-medium text-muted-foreground mb-1 uppercase tracking-wide">Need</div>
             <div className="text-2xl font-bold text-destructive">
               {needNegative}
             </div>
           </div>
           
-          <div className="bg-card/50 rounded-lg p-3 text-center border border-destructive/20">
+          <div className="bg-card/50 rounded-lg p-3 text-center border border-destructive/20 transition-all duration-300 hover:scale-105 hover:shadow-md hover:bg-card">
             <div className="text-xs font-medium text-muted-foreground mb-1 uppercase tracking-wide">Timing</div>
             <div className="text-2xl font-bold text-destructive">
               {timingNegative}

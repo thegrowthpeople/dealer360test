@@ -86,7 +86,7 @@ export const ConfidenceIndicator = ({ scorecard }: ConfidenceIndicatorProps) => 
   const confidence = getConfidenceLevel();
 
   return (
-    <Card className={`${confidence.lightBg} border-2 ${confidence.borderColor} p-6 min-w-[320px]`}>
+    <Card className={`${confidence.lightBg} border-2 ${confidence.borderColor} p-6 min-w-[320px] transition-all duration-300 hover:shadow-lg`}>
       <div className="space-y-4">
         {/* Header */}
         <div className="flex items-center justify-between">
