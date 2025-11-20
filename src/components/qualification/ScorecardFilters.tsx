@@ -42,10 +42,6 @@ interface ScorecardFiltersProps {
   availableTags: string[];
   accountManagers: string[];
   customers: string[];
-  bulkSelectionMode?: boolean;
-  comparisonMode?: boolean;
-  onBulkModeToggle?: () => void;
-  onComparisonToggle?: () => void;
   onTagRename?: (oldTag: string) => void;
 }
 
@@ -56,10 +52,6 @@ export const ScorecardFilters = ({
   availableTags,
   accountManagers,
   customers,
-  bulkSelectionMode = false,
-  comparisonMode = false,
-  onBulkModeToggle,
-  onComparisonToggle,
   onTagRename,
 }: ScorecardFiltersProps) => {
   const {
@@ -579,29 +571,6 @@ export const ScorecardFilters = ({
         </Label>
       </div>
 
-      {/* Bulk and Comparison Mode Buttons */}
-      {onBulkModeToggle && onComparisonToggle && (
-        <div className="flex gap-2">
-          <Button 
-            variant={bulkSelectionMode ? "default" : "outline"}
-            onClick={onBulkModeToggle}
-            size="sm"
-            className="gap-2"
-          >
-            <CheckSquare className="w-4 h-4" />
-            {bulkSelectionMode ? "Cancel" : "Bulk"}
-          </Button>
-          <Button 
-            variant={comparisonMode ? "default" : "outline"} 
-            onClick={onComparisonToggle}
-            size="sm"
-            className="gap-2"
-          >
-            <GitCompare className="w-4 h-4" />
-            {comparisonMode ? "Cancel" : "Compare"}
-          </Button>
-        </div>
-      )}
 
       {/* Clear Filters Button */}
       {hasActiveFilters && (
