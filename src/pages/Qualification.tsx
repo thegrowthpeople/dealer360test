@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useBlocker } from "react-router-dom";
 import { Plus, FileText, Calendar, GitCompare, Clock, ArrowUp, ArrowDown, Copy, Trash2, Download, Archive, CheckSquare, FileSpreadsheet, LayoutGrid, List, Star, Tag, X, Edit2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription, DialogFooter } from "@/components/ui/dialog";
@@ -69,6 +70,7 @@ const Index = () => {
   const [activeScorecard, setActiveScorecard] = useState<Scorecard | null>(null);
   const [originalScorecard, setOriginalScorecard] = useState<Scorecard | null>(null);
   const [showUnsavedDialog, setShowUnsavedDialog] = useState(false);
+  const [pendingNavigation, setPendingNavigation] = useState<(() => void) | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [comparisonMode, setComparisonMode] = useState(false);
   const [selectedForComparison, setSelectedForComparison] = useState<string[]>([]);
@@ -198,6 +200,10 @@ const Index = () => {
     setShowUnsavedDialog(false);
     setActiveScorecard(null);
     setOriginalScorecard(null);
+    if (pendingNavigation) {
+      pendingNavigation();
+      setPendingNavigation(null);
+    }
     toast.success("Changes saved successfully!");
   };
 
@@ -209,7 +215,26 @@ const Index = () => {
     setShowUnsavedDialog(false);
     setActiveScorecard(null);
     setOriginalScorecard(null);
+    if (pendingNavigation) {
+      pendingNavigation();
+      setPendingNavigation(null);
+    }
   };
+
+  // Block navigation when there are unsaved changes
+  const blocker = useBlocker(
+    ({ currentLocation, nextLocation }) =>
+      activeScorecard !== null &&
+      hasUnsavedChanges() &&
+      currentLocation.pathname !== nextLocation.pathname
+  );
+
+  useEffect(() => {
+    if (blocker.state === "blocked") {
+      setPendingNavigation(() => () => blocker.proceed?.());
+      setShowUnsavedDialog(true);
+    }
+  }, [blocker]);
 
 
   const handleComparisonToggle = () => {
@@ -1127,7 +1152,20 @@ const Index = () => {
                     <span>•</span>
                     <span>Review: {activeScorecard.reviewDate}</span>
                     <span>•</span>
-                    <span>v{activeScorecard.version}</span>
+                    <span className="flex items-center gap-2">
+                      v{activeScorecard.version}
+                      {(() => {
+                        const opportunityKey = `${activeScorecard.opportunityName}_${activeScorecard.customerName}`;
+                        const versionsForOpportunity = opportunityGroups[opportunityKey] || [];
+                        const maxVersion = Math.max(...versionsForOpportunity.map(s => s.version));
+                        const isLatestVersion = activeScorecard.version === maxVersion;
+                        return isLatestVersion && (
+                          <Badge variant="secondary" className="text-xs px-1.5 py-0">
+                            Latest
+                          </Badge>
+                        );
+                      })()}
+                    </span>
                   </div>
                 </div>
                 <div className="flex flex-col gap-2 md:self-start">
