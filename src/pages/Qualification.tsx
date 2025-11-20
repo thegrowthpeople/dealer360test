@@ -12,6 +12,7 @@ import { ScorecardComparison } from "@/components/qualification/ScorecardCompari
 import { ScorecardTimeline } from "@/components/qualification/ScorecardTimeline";
 import { ScorecardFilters, FilterState } from "@/components/qualification/ScorecardFilters";
 import { StatsSummary } from "@/components/qualification/StatsSummary";
+import { ConfidenceIndicator } from "@/components/qualification/ConfidenceIndicator";
 import { Scorecard, FAINT_QUESTIONS } from "@/types/scorecard";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
@@ -1198,8 +1199,8 @@ const Index = () => {
         {activeScorecard && (
           <div className="space-y-6">
             <div className="bg-card rounded-xl border border-border p-6 shadow-sm">
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div>
+              <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-6">
+                <div className="flex-1">
                   <h2 className="text-2xl font-bold text-foreground flex items-center gap-2">
                     {activeScorecard.opportunityName}
                     {hasUnsavedChanges() && (
@@ -1230,7 +1231,11 @@ const Index = () => {
                     </span>
                   </div>
                 </div>
-                <div className="flex flex-col gap-2 md:self-start">
+
+                {/* Confidence Indicator */}
+                <ConfidenceIndicator scorecard={activeScorecard} />
+
+                <div className="flex flex-col gap-2 lg:self-start">
                   {opportunityGroups[`${activeScorecard.opportunityName}_${activeScorecard.customerName}`]?.length > 1 && (
                     <Button 
                       onClick={() => {
