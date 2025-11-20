@@ -144,6 +144,7 @@ const Index = () => {
   const [filters, setFilters] = useState<FilterState>({
     version: "latest",
     showArchived: false,
+    showOnlyPinned: false,
     tags: [],
     dateFrom: undefined,
     dateTo: undefined,
@@ -156,6 +157,8 @@ const Index = () => {
   
   const [duplicateDialogOpen, setDuplicateDialogOpen] = useState(false);
   const [scorecardToDuplicate, setScorecardToDuplicate] = useState<Scorecard | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [scorecardToDelete, setScorecardToDelete] = useState<Scorecard | null>(null);
   const [viewMode, setViewMode] = useState<"tiles" | "table">("tiles");
   const [editingTag, setEditingTag] = useState<string | null>(null);
   const [newTagName, setNewTagName] = useState("");
@@ -445,6 +448,34 @@ const Index = () => {
     }
   };
 
+  const handleDeleteScorecard = (scorecard: Scorecard, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setScorecardToDelete(scorecard);
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDeleteScorecard = async () => {
+    if (!scorecardToDelete) return;
+    
+    try {
+      // Find all versions of this scorecard (same opportunity and customer)
+      const versionsToDelete = scorecards.filter(
+        s => s.opportunityName === scorecardToDelete.opportunityName && 
+             s.customerName === scorecardToDelete.customerName
+      );
+      
+      // Delete all versions
+      await Promise.all(versionsToDelete.map(s => deleteScorecard(s.id)));
+      
+      toast.success(`Deleted ${versionsToDelete.length} version${versionsToDelete.length > 1 ? 's' : ''} of scorecard`);
+      setDeleteDialogOpen(false);
+      setScorecardToDelete(null);
+    } catch (error) {
+      console.error('Failed to delete scorecard:', error);
+      toast.error("Failed to delete scorecard");
+    }
+  };
+
   const handleAddTag = async (id: string, tag: string) => {
     if (!tag.trim()) return;
     const scorecard = scorecards.find(s => s.id === id);
@@ -589,6 +620,11 @@ const Index = () => {
   let filteredScorecards = scorecards.filter((scorecard) => {
     // Filter archived scorecards based on showArchived setting
     if (!filters.showArchived && scorecard.archived) {
+      return false;
+    }
+
+    // Show only pinned filter
+    if (filters.showOnlyPinned && !scorecard.pinned) {
       return false;
     }
 
@@ -826,6 +862,32 @@ const Index = () => {
         </DialogContent>
       </Dialog>
 
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Scorecard</AlertDialogTitle>
+            <AlertDialogDescription>
+              {scorecardToDelete && (
+                <>
+                  Are you sure you want to delete all versions of <strong>{scorecardToDelete.opportunityName}</strong> for <strong>{scorecardToDelete.customerName}</strong>?
+                  <br /><br />
+                  This will permanently delete all {scorecards.filter(
+                    s => s.opportunityName === scorecardToDelete.opportunityName && 
+                         s.customerName === scorecardToDelete.customerName
+                  ).length} version(s) of this scorecard. This action cannot be undone.
+                </>
+              )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDeleteScorecard} className="bg-destructive hover:bg-destructive/90">
+              Delete All Versions
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
         {!activeScorecard && !timelineScorecards && (
           <>
             {viewAllVersionsFor && (
@@ -997,7 +1059,7 @@ const Index = () => {
             {sortedScorecards.length === 0 ? (
               <Card className="p-12 text-center">
                 <p className="text-lg text-muted-foreground mb-4">No scorecards match your filters</p>
-                <Button variant="outline" onClick={() => setFilters({ version: "latest", showArchived: false, tags: [], dateFrom: undefined, dateTo: undefined, accountManager: null, customer: null })}>
+                <Button variant="outline" onClick={() => setFilters({ version: "latest", showArchived: false, showOnlyPinned: false, tags: [], dateFrom: undefined, dateTo: undefined, accountManager: null, customer: null })}>
                   Clear Filters
                 </Button>
               </Card>
@@ -1037,7 +1099,7 @@ const Index = () => {
                             size="icon"
                             className={`h-7 w-7 backdrop-blur-sm transition-all duration-200 hover:scale-110 ${
                               scorecard.pinned 
-                                ? "bg-yellow-500 hover:bg-yellow-600 text-white animate-pulse" 
+                                ? "bg-yellow-500 hover:bg-yellow-600 text-white" 
                                 : "bg-background/80 hover:bg-background"
                             }`}
                             onClick={(e) => handleTogglePin(scorecard.id, e)}
@@ -1074,17 +1136,27 @@ const Index = () => {
                             </PopoverContent>
                           </Popover>
                           {!scorecard.archived && (
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-7 w-7 bg-background/80 backdrop-blur-sm hover:bg-background transition-all duration-200 hover:scale-110"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleDuplicate(scorecard);
-                              }}
-                            >
-                              <Copy className="h-3.5 w-3.5" />
-                            </Button>
+                            <>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-7 w-7 bg-background/80 backdrop-blur-sm hover:bg-background transition-all duration-200 hover:scale-110"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleDuplicate(scorecard);
+                                }}
+                              >
+                                <Copy className="h-3.5 w-3.5" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-7 w-7 bg-background/80 backdrop-blur-sm hover:bg-destructive hover:text-destructive-foreground transition-all duration-200 hover:scale-110"
+                                onClick={(e) => handleDeleteScorecard(scorecard, e)}
+                              >
+                                <Trash2 className="h-3.5 w-3.5" />
+                              </Button>
+                            </>
                           )}
                         </div>
                         </div>
@@ -1384,17 +1456,27 @@ const Index = () => {
                                     <Star className={`h-4 w-4 ${scorecard.pinned ? "fill-yellow-500 text-yellow-500" : ""}`} />
                                   </Button>
                                   {!scorecard.archived && (
-                                    <Button
-                                      variant="ghost"
-                                      size="icon"
-                                      className="h-8 w-8"
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleDuplicate(scorecard);
-                                      }}
-                                    >
-                                      <Copy className="h-4 w-4" />
-                                    </Button>
+                                    <>
+                                      <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="h-8 w-8"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          handleDuplicate(scorecard);
+                                        }}
+                                      >
+                                        <Copy className="h-4 w-4" />
+                                      </Button>
+                                      <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="h-8 w-8 hover:text-destructive"
+                                        onClick={(e) => handleDeleteScorecard(scorecard, e)}
+                                      >
+                                        <Trash2 className="h-4 w-4" />
+                                      </Button>
+                                    </>
                                   )}
                                 </div>
                               </td>

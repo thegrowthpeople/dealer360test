@@ -28,6 +28,7 @@ import { Label } from "@/components/ui/label";
 export interface FilterState {
   version: string;
   showArchived: boolean;
+  showOnlyPinned: boolean;
   tags: string[];
   dateFrom: Date | undefined;
   dateTo: Date | undefined;
@@ -78,6 +79,7 @@ export const ScorecardFilters = ({
     onFiltersChange({
       version: "latest",
       showArchived: false,
+      showOnlyPinned: false,
       tags: [],
       dateFrom: undefined,
       dateTo: undefined,
@@ -91,6 +93,7 @@ export const ScorecardFilters = ({
     selectedGroup !== null || 
     selectedDealerId !== null ||
     filters.version !== "latest" ||
+    filters.showOnlyPinned ||
     filters.tags.length > 0 ||
     filters.dateFrom !== undefined ||
     filters.dateTo !== undefined ||
@@ -568,6 +571,20 @@ export const ScorecardFilters = ({
         />
         <Label htmlFor="show-archived" className="text-sm font-medium cursor-pointer whitespace-nowrap">
           Show archived
+        </Label>
+      </div>
+
+      {/* Show Only Pinned Switch */}
+      <div className="flex items-center space-x-2">
+        <Switch
+          id="show-only-pinned"
+          checked={filters.showOnlyPinned}
+          onCheckedChange={(checked) =>
+            onFiltersChange({ ...filters, showOnlyPinned: checked })
+          }
+        />
+        <Label htmlFor="show-only-pinned" className="text-sm font-medium cursor-pointer whitespace-nowrap">
+          Show only pinned
         </Label>
       </div>
 
