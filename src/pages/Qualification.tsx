@@ -1151,7 +1151,7 @@ const Index = () => {
                         </div>
                         </div>
 
-                        <CardContent className="p-6 pt-12 flex flex-col h-full">
+                        <CardContent className="p-6 pt-4 flex flex-col h-full">
                           {/* Score Circle - Prominent */}
                           <div className="flex items-start justify-between mb-4">
                             <div className="flex-1 pr-4">
