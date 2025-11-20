@@ -1,4 +1,5 @@
 import { useMemo, useEffect } from "react";
+import * as React from "react";
 import { usePerformanceFilters } from "@/contexts/PerformanceFiltersContext";
 
 interface PerformanceFiltersProps {
@@ -20,13 +21,13 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
+  CommandSeparator,
 } from "@/components/ui/command";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { startOfMonth, endOfMonth, eachDayOfInterval, isMonday, format } from "date-fns";
 
@@ -339,7 +340,7 @@ export const PerformanceFilters = ({ showWeekFilter = true }: PerformanceFilters
                   const isLastInRegion = currentRegion !== nextRegion && (currentRegion === "Metro" || currentRegion === "Regional" || currentRegion === "Independent");
                   
                   return (
-                    <div key={dealer["Dealer ID"]}>
+                    <React.Fragment key={dealer["Dealer ID"]}>
                       <CommandItem
                         value={dealer.Dealership || ""}
                         onSelect={() => {
@@ -356,9 +357,9 @@ export const PerformanceFilters = ({ showWeekFilter = true }: PerformanceFilters
                         {dealer.Dealership}
                       </CommandItem>
                       {isLastInRegion && (
-                        <Separator className="my-1 w-[240px]" />
+                        <CommandSeparator className="my-1" />
                       )}
-                    </div>
+                    </React.Fragment>
                   );
                 })}
               </CommandGroup>
