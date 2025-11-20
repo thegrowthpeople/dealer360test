@@ -25,6 +25,7 @@ import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { format } from "date-fns";
 import {
   Select,
   SelectContent,
@@ -63,6 +64,7 @@ const createEmptyScorecard = (data: Partial<Scorecard>): Scorecard => {
     expectedOrderDate: data.expectedOrderDate || "",
     reviewDate: data.reviewDate || "",
     createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
     funds: { questions: createEmptyQuestions() },
     authority: { questions: createEmptyQuestions() },
     interest: { questions: createEmptyQuestions() },
@@ -81,6 +83,7 @@ const convertToScorecard = (db: DatabaseScorecard): Scorecard => ({
   expectedOrderDate: db.expected_order_date || "",
   reviewDate: db.review_date,
   createdAt: db.created_at,
+  updatedAt: db.updated_at,
   archived: db.archived,
   pinned: db.pinned,
   tags: db.tags,
@@ -151,7 +154,7 @@ const Index = () => {
     accountManager: null,
     customer: null,
   });
-  const [sortBy, setSortBy] = useState<"date" | "score" | "accountManager" | "customer" | "opportunity" | "framework" | "version">("date");
+  const [sortBy, setSortBy] = useState<"date" | "score" | "accountManager" | "customer" | "opportunity" | "framework" | "version" | "lastModified">("date");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   
   
@@ -170,6 +173,7 @@ const Index = () => {
     score: true,
     version: true,
     expectedDate: true,
+    lastModified: true,
   });
 
   const toggleColumnVisibility = (column: keyof typeof visibleColumns) => {
@@ -726,6 +730,9 @@ const Index = () => {
       case "date":
         comparison = new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
         break;
+      case "lastModified":
+        comparison = new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime();
+        break;
       case "score":
         comparison = a.totalScore - b.totalScore;
         break;
@@ -934,6 +941,7 @@ const Index = () => {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="date">Date</SelectItem>
+                      <SelectItem value="lastModified">Last Modified</SelectItem>
                       <SelectItem value="score">Score</SelectItem>
                       <SelectItem value="accountManager">Account Manager</SelectItem>
                       <SelectItem value="customer">Customer Name</SelectItem>
@@ -1043,6 +1051,16 @@ const Index = () => {
                                 />
                                 <label htmlFor="col-expectedDate" className="text-sm cursor-pointer">
                                   Expected Date
+                                </label>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                <Checkbox
+                                  id="col-lastModified"
+                                  checked={visibleColumns.lastModified}
+                                  onCheckedChange={() => toggleColumnVisibility("lastModified")}
+                                />
+                                <label htmlFor="col-lastModified" className="text-sm cursor-pointer">
+                                  Last Modified
                                 </label>
                               </div>
                             </div>
@@ -1230,6 +1248,11 @@ const Index = () => {
                             <div className="flex items-center gap-2 text-sm text-muted-foreground">
                               <span className="font-medium">{scorecard.accountManager}</span>
                             </div>
+                            
+                            <div className="flex items-center gap-2 text-xs text-muted-foreground/70">
+                              <Clock className="w-3.5 h-3.5" />
+                              <span>Modified {format(new Date(scorecard.updatedAt), "MMM d, yyyy")}</span>
+                            </div>
                           </div>
 
                           {/* Badges Section */}
@@ -1367,6 +1390,19 @@ const Index = () => {
                               </div>
                             </th>
                           )}
+                          {visibleColumns.lastModified && (
+                            <th 
+                              className="text-left p-3 font-semibold cursor-pointer hover:bg-muted transition-colors select-none"
+                              onClick={() => handleColumnSort("lastModified")}
+                            >
+                              <div className="flex items-center gap-2">
+                                Last Modified
+                                {sortBy === "lastModified" && (
+                                  sortOrder === "asc" ? <ArrowUp className="w-4 h-4" /> : <ArrowDown className="w-4 h-4" />
+                                )}
+                              </div>
+                            </th>
+                          )}
                           <th className="text-left p-3 font-semibold">Actions</th>
                         </tr>
                       </thead>
@@ -1443,6 +1479,11 @@ const Index = () => {
                               {visibleColumns.expectedDate && (
                                 <td className="p-3 text-sm text-muted-foreground">
                                   {scorecard.expectedOrderDate}
+                                </td>
+                              )}
+                              {visibleColumns.lastModified && (
+                                <td className="p-3 text-sm text-muted-foreground">
+                                  {format(new Date(scorecard.updatedAt), "MMM d, yyyy h:mm a")}
                                 </td>
                               )}
                               <td className="p-3">
@@ -1537,6 +1578,11 @@ const Index = () => {
                     <span>Expected: {activeScorecard.expectedOrderDate}</span>
                     <span>•</span>
                     <span>Review: {activeScorecard.reviewDate}</span>
+                    <span>•</span>
+                    <span className="flex items-center gap-1">
+                      <Clock className="w-3.5 h-3.5" />
+                      Modified: {format(new Date(activeScorecard.updatedAt), "MMM d, yyyy h:mm a")}
+                    </span>
                     <span>•</span>
                     <Badge 
                       variant="outline"
