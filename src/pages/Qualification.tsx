@@ -571,7 +571,7 @@ const Index = () => {
   };
 
   const handleCreateNewVersionFromOld = async () => {
-    if (!pendingOldVersionScorecard || !defaultFramework) return;
+    if (!pendingOldVersionScorecard) return;
     
     try {
       // Create a new version
@@ -589,8 +589,16 @@ const Index = () => {
         reviewDate: new Date().toISOString().split('T')[0],
       };
       
+      // Use the old scorecard's framework_id to maintain consistency
+      const frameworkId = pendingOldVersionScorecard.frameworkId || defaultFramework?.id;
+      
+      if (!frameworkId) {
+        toast.error("No framework available");
+        return;
+      }
+      
       const newDbScorecard = await createScorecardMutation(
-        convertToDatabase(newScorecard, bdmId, defaultFramework.id)
+        convertToDatabase(newScorecard, bdmId, frameworkId)
       );
       
       setOldVersionDialogOpen(false);
