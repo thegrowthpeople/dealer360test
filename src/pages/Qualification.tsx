@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Plus, FileText, Calendar, GitCompare, Clock, ArrowUp, ArrowDown, Copy, Trash2, Download, Archive, CheckSquare, FileSpreadsheet, LayoutGrid, List, Star, X, Edit2, Settings } from "lucide-react";
+import { Plus, FileText, Calendar, GitCompare, Clock, ArrowUp, ArrowDown, Copy, Trash2, Download, Archive, CheckSquare, FileSpreadsheet, LayoutGrid, List, Star, X, Edit2, Settings, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
@@ -13,13 +13,14 @@ import { ScorecardTimeline } from "@/components/qualification/ScorecardTimeline"
 import { ScorecardFilters, FilterState } from "@/components/qualification/ScorecardFilters";
 import { StatsSummary } from "@/components/qualification/StatsSummary";
 import { ConfidenceIndicator } from "@/components/qualification/ConfidenceIndicator";
+import { ScorecardSkeleton } from "@/components/qualification/ScorecardSkeleton";
+import { TableSkeleton } from "@/components/qualification/TableSkeleton";
 import { Scorecard, QuestionState } from "@/types/scorecard";
 import { DatabaseScorecard } from "@/types/qualificationScorecard";
 import { toast } from "sonner";
 import { useScorecards } from "@/hooks/useScorecards";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFrameworks } from "@/hooks/useFrameworks";
-import { Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -772,8 +773,38 @@ const Index = () => {
   // Loading and framework checks
   if (isLoading || isLoadingFrameworks) {
     return (
-      <div className="h-screen flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <div className="min-h-screen space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-4xl xl:text-5xl font-bold text-foreground mb-4">
+              Qualification Scorecards
+            </h1>
+            <p className="text-muted-foreground text-sm md:text-base">
+              Indication of confidence to win based on activity and findings.
+            </p>
+          </div>
+        </div>
+
+        <div className="space-y-6 animate-fade-in">
+          {viewMode === "tiles" ? (
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3">
+              {Array.from({ length: 8 }).map((_, index) => (
+                <div
+                  key={index}
+                  style={{
+                    animation: `fade-in 0.3s ease-out ${index * 0.05}s both`,
+                  }}
+                >
+                  <ScorecardSkeleton />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="animate-fade-in">
+              <TableSkeleton />
+            </div>
+          )}
+        </div>
       </div>
     );
   }
