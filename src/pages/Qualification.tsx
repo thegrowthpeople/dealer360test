@@ -994,9 +994,9 @@ const Index = () => {
                     return (
                       <Card
                         key={scorecard.id}
-                        className={`relative cursor-pointer hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 border ${
-                          "hover:border-primary/50"
-                        } ${scorecard.archived ? "opacity-60" : ""}`}
+                        className={`relative cursor-pointer group transition-all duration-300 border ${
+                          "hover:border-primary/60 hover:shadow-xl hover:shadow-primary/10"
+                        } ${scorecard.archived ? "opacity-60" : ""} hover:-translate-y-1 hover:scale-[1.02]`}
                         onClick={() => handleScorecardSelect(scorecard.id)}
                       >
                         <div className="absolute top-3 right-3 flex gap-2">
@@ -1006,7 +1006,7 @@ const Index = () => {
                                   <Button
                                     variant="ghost"
                                     size="icon"
-                                    className="h-8 w-8"
+                                    className="h-8 w-8 transition-all duration-200 hover:scale-110 hover:bg-primary/10"
                                     onClick={(e) => e.stopPropagation()}
                                   >
                                     <Tag className="h-4 w-4" />
@@ -1031,7 +1031,7 @@ const Index = () => {
                                 <Button
                                   variant="ghost"
                                   size="icon"
-                                  className="h-8 w-8"
+                                  className="h-8 w-8 transition-all duration-200 hover:scale-110 hover:bg-primary/10"
                                   onClick={(e) => {
                                     e.stopPropagation();
                                     handleDuplicate(scorecard);
@@ -1046,7 +1046,7 @@ const Index = () => {
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="h-8 w-8"
+                            className="h-8 w-8 transition-all duration-200 hover:scale-110 hover:bg-primary/10"
                             onClick={(e) => handleTogglePin(scorecard.id, e)}
                           >
                             <Star className={`h-4 w-4 ${scorecard.pinned ? "fill-yellow-500 text-yellow-500" : ""}`} />
@@ -1056,22 +1056,22 @@ const Index = () => {
                           )}
                           <Badge 
                             variant="outline"
-                            className="bg-primary/10 border-primary/30 text-primary"
+                            className="bg-primary/10 border-primary/30 text-primary transition-all duration-200 group-hover:bg-primary/20 group-hover:border-primary/50"
                           >
                             {getFrameworkName(scorecard.frameworkId)}
                           </Badge>
                           <Badge 
                             variant={isLatestVersion ? "default" : "secondary"}
-                            className={isLatestVersion ? "bg-green-600 hover:bg-green-700" : ""}
+                            className={`transition-all duration-200 ${isLatestVersion ? "bg-green-600 group-hover:bg-green-700" : "group-hover:bg-muted"}`}
                           >
                             v{scorecard.version}{isLatestVersion ? " - Latest" : ""}
                           </Badge>
                         </div>
                         <CardHeader className="pb-3 pt-12">
-                          <CardTitle className="text-xl flex items-center justify-between">
+                          <CardTitle className="text-xl flex items-center justify-between transition-colors duration-200 group-hover:text-primary/90">
                             {scorecard.opportunityName}
                             <div className="text-right">
-                              <div className="text-2xl font-bold text-primary">{scorecard.totalScore}/40</div>
+                              <div className="text-2xl font-bold text-primary transition-all duration-200 group-hover:scale-110">{scorecard.totalScore}/40</div>
                               {(() => {
                                 const totalNegative = [
                                   scorecard.funds,
