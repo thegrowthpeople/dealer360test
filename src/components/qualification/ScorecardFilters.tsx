@@ -290,25 +290,34 @@ export const ScorecardFilters = ({
                   />
                   All Dealer Groups
                 </CommandItem>
-                {filteredDealerGroups.map((group) => (
-                  <CommandItem
-                    key={group}
-                    value={group}
-                    onSelect={() => {
-                      setSelectedGroup(group);
-                      setSelectedDealerId(null);
-                      setGroupSearchOpen(false);
-                    }}
-                  >
-                    <Check
-                      className={cn(
-                        "mr-2 h-4 w-4",
-                        selectedGroup === group ? "opacity-100" : "opacity-0"
-                      )}
-                    />
-                    {group}
-                  </CommandItem>
-                ))}
+                {filteredDealerGroups.map((group, index) => {
+                  const currentRegion = dealerships.find(d => d["Dealer Group"] === group)?.Region;
+                  const nextGroup = filteredDealerGroups[index + 1];
+                  const nextRegion = nextGroup ? dealerships.find(d => d["Dealer Group"] === nextGroup)?.Region : undefined;
+                  const isLastInRegion = currentRegion && currentRegion !== nextRegion && (currentRegion === "Metro" || currentRegion === "Regional" || currentRegion === "Independent");
+
+                  return (
+                    <React.Fragment key={group}>
+                      <CommandItem
+                        value={group}
+                        onSelect={() => {
+                          setSelectedGroup(group);
+                          setSelectedDealerId(null);
+                          setGroupSearchOpen(false);
+                        }}
+                      >
+                        <Check
+                          className={cn(
+                            "mr-2 h-4 w-4",
+                            selectedGroup === group ? "opacity-100" : "opacity-0"
+                          )}
+                        />
+                        {group}
+                      </CommandItem>
+                      {isLastInRegion && <CommandSeparator className="my-1" />}
+                    </React.Fragment>
+                  );
+                })}
               </CommandGroup>
             </CommandList>
           </Command>
