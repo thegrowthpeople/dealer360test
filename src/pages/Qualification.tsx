@@ -786,13 +786,17 @@ const Index = () => {
     );
   }
 
-  // Get questions from framework dynamically
+  // Get questions from framework dynamically - use active scorecard's framework or default
+  const activeFramework = activeScorecard 
+    ? frameworks.find(f => f.id === activeScorecard.frameworkId) || defaultFramework
+    : defaultFramework;
+
   const frameworkQuestions = {
-    funds: defaultFramework.structure.categories.find(c => c.name === 'funds')?.questions || [],
-    authority: defaultFramework.structure.categories.find(c => c.name === 'authority')?.questions || [],
-    interest: defaultFramework.structure.categories.find(c => c.name === 'interest')?.questions || [],
-    need: defaultFramework.structure.categories.find(c => c.name === 'need')?.questions || [],
-    timing: defaultFramework.structure.categories.find(c => c.name === 'timing')?.questions || [],
+    funds: activeFramework.structure.categories.find(c => c.name === 'funds')?.questions || [],
+    authority: activeFramework.structure.categories.find(c => c.name === 'authority')?.questions || [],
+    interest: activeFramework.structure.categories.find(c => c.name === 'interest')?.questions || [],
+    need: activeFramework.structure.categories.find(c => c.name === 'need')?.questions || [],
+    timing: activeFramework.structure.categories.find(c => c.name === 'timing')?.questions || [],
   };
 
   return (
@@ -1547,7 +1551,7 @@ const Index = () => {
 
             <div className="space-y-6">
               <FAINTSection
-                title="Funds"
+                title={activeFramework.structure.categories.find(c => c.name === 'funds')?.displayName || "Funds"}
                 color="bg-primary"
                 component={activeScorecard.funds}
                 questions={frameworkQuestions.funds}
@@ -1555,7 +1559,7 @@ const Index = () => {
               />
               
               <FAINTSection
-                title="Authority"
+                title={activeFramework.structure.categories.find(c => c.name === 'authority')?.displayName || "Authority"}
                 color="bg-accent"
                 component={activeScorecard.authority}
                 questions={frameworkQuestions.authority}
@@ -1563,7 +1567,7 @@ const Index = () => {
               />
               
               <FAINTSection
-                title="Interest"
+                title={activeFramework.structure.categories.find(c => c.name === 'interest')?.displayName || "Interest"}
                 color="bg-success"
                 component={activeScorecard.interest}
                 questions={frameworkQuestions.interest}
@@ -1571,7 +1575,7 @@ const Index = () => {
               />
               
               <FAINTSection
-                title="Need"
+                title={activeFramework.structure.categories.find(c => c.name === 'need')?.displayName || "Need"}
                 color="bg-warning"
                 component={activeScorecard.need}
                 questions={frameworkQuestions.need}
@@ -1579,7 +1583,7 @@ const Index = () => {
               />
               
               <FAINTSection
-                title="Timing"
+                title={activeFramework.structure.categories.find(c => c.name === 'timing')?.displayName || "Timing"}
                 color="bg-destructive"
                 component={activeScorecard.timing}
                 questions={frameworkQuestions.timing}
