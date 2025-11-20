@@ -1029,20 +1029,24 @@ const Index = () => {
                              }}
                         />
                         
-                        {/* Pin Button - Bottom Right Corner */}
-                        <div className="absolute bottom-4 left-4 z-10">
+                        {/* Action Buttons - Top Right */}
+                        <div className="absolute top-4 right-4 flex gap-1.5 z-10">
+                          {/* Pin Button - Always Visible */}
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="h-7 w-7 bg-background/80 backdrop-blur-sm hover:bg-background transition-all duration-200 hover:scale-110"
+                            className={`h-7 w-7 backdrop-blur-sm transition-all duration-200 hover:scale-110 ${
+                              scorecard.pinned 
+                                ? "bg-yellow-500 hover:bg-yellow-600 text-white" 
+                                : "bg-background/80 hover:bg-background"
+                            }`}
                             onClick={(e) => handleTogglePin(scorecard.id, e)}
                           >
-                            <Star className={`h-3.5 w-3.5 transition-all ${scorecard.pinned ? "fill-yellow-500 text-yellow-500 scale-125" : ""}`} />
+                            <Star className={`h-3.5 w-3.5 transition-all ${scorecard.pinned ? "fill-white" : ""}`} />
                           </Button>
-                        </div>
-                        
-                        {/* Action Buttons - Top Right */}
-                        <div className="absolute top-4 right-4 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
+                          
+                          {/* Other Action Buttons - Show on Hover */}
+                          <div className="flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                           <Popover>
                             <PopoverTrigger asChild>
                               <Button
@@ -1082,6 +1086,7 @@ const Index = () => {
                               <Copy className="h-3.5 w-3.5" />
                             </Button>
                           )}
+                        </div>
                         </div>
 
                         <CardContent className="p-6 pt-4">
