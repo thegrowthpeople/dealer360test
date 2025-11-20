@@ -2,21 +2,25 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Scorecard } from "@/types/scorecard";
+import { useFrameworks } from "@/hooks/useFrameworks";
 
 interface ScorecardFormProps {
-  onSubmit: (data: Partial<Scorecard>) => void;
+  onSubmit: (data: Partial<Scorecard> & { frameworkId?: string }) => void;
   initialData?: Partial<Scorecard>;
   submitLabel?: string;
 }
 
 export const ScorecardForm = ({ onSubmit, initialData, submitLabel = "Create Scorecard" }: ScorecardFormProps) => {
+  const { frameworks, defaultFramework, isLoading } = useFrameworks();
   const [formData, setFormData] = useState({
     accountManager: initialData?.accountManager || "",
     customerName: initialData?.customerName || "",
     opportunityName: initialData?.opportunityName || "",
     expectedOrderDate: initialData?.expectedOrderDate || "",
     reviewDate: initialData?.reviewDate || new Date().toISOString().split('T')[0],
+    frameworkId: defaultFramework?.id || "",
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -58,6 +62,26 @@ export const ScorecardForm = ({ onSubmit, initialData, submitLabel = "Create Sco
             required
             className="mt-1"
           />
+        </div>
+        
+        <div>
+          <Label htmlFor="framework">Qualification Framework *</Label>
+          <Select
+            value={formData.frameworkId}
+            onValueChange={(value) => setFormData({ ...formData, frameworkId: value })}
+            disabled={isLoading}
+          >
+            <SelectTrigger className="mt-1 bg-background z-50">
+              <SelectValue placeholder="Select framework..." />
+            </SelectTrigger>
+            <SelectContent className="bg-popover z-50">
+              {frameworks.map((framework) => (
+                <SelectItem key={framework.id} value={framework.id}>
+                  {framework.name} - {framework.description}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
         
         <div>

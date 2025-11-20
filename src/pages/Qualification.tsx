@@ -197,9 +197,11 @@ const Index = () => {
     return "border-green-500 bg-green-500/5";
   };
 
-  const handleCreateScorecard = async (data: Partial<Scorecard>) => {
-    if (!defaultFramework) {
-      toast.error("No qualification framework available");
+  const handleCreateScorecard = async (data: Partial<Scorecard> & { frameworkId?: string }) => {
+    const frameworkId = data.frameworkId || defaultFramework?.id;
+    
+    if (!frameworkId) {
+      toast.error("Please select a qualification framework");
       return;
     }
     
@@ -207,7 +209,7 @@ const Index = () => {
     setIsDialogOpen(false);
     
     try {
-      const created = await createScorecardMutation(convertToDatabase(newScorecard, bdmId, defaultFramework.id));
+      const created = await createScorecardMutation(convertToDatabase(newScorecard, bdmId, frameworkId));
       const converted = convertToScorecard(created);
       setActiveScorecard(converted);
       setOriginalScorecard(JSON.parse(JSON.stringify(converted)));
