@@ -250,37 +250,7 @@ const Index = () => {
   ) => {
     if (!activeScorecard) return;
 
-    // If this is the first edit on an existing scorecard, create a new version
-    if (!hasCreatedVersionForEdit) {
-      try {
-        const dbScorecard = dbScorecards.find(s => s.id === activeScorecard.id);
-        if (!dbScorecard) return;
-        
-        const created = await duplicateScorecardMutation(dbScorecard);
-        const newVersion = convertToScorecard(created);
-        
-        // Apply the change to the new version
-        newVersion[component].questions[index] = { state, note };
-        
-        setActiveScorecard(newVersion);
-        setOriginalScorecard(JSON.parse(JSON.stringify(newVersion)));
-        setHasCreatedVersionForEdit(true);
-        
-        // Update in database
-        await updateScorecardMutation({
-          id: newVersion.id,
-          [component]: newVersion[component],
-        });
-        
-        toast.success(`Version ${newVersion.version} created from changes!`);
-      } catch (error) {
-        console.error('Failed to create new version:', error);
-        toast.error("Failed to create new version");
-      }
-      return;
-    }
-
-    // Otherwise, update the current (already versioned) scorecard
+    // Just update locally without creating a new version
     const updatedScorecard = { ...activeScorecard };
     updatedScorecard[component].questions[index] = { state, note };
     
@@ -326,11 +296,54 @@ const Index = () => {
     if (!activeScorecard || !defaultFramework) return;
     
     try {
-      // Save current changes to database
-      await updateScorecardMutation({
-        id: activeScorecard.id,
-        ...convertToDatabase(activeScorecard, bdmId, defaultFramework.id),
-      });
+      // Check if this is an old version being edited
+      const opportunityKey = `${activeScorecard.opportunityName}_${activeScorecard.customerName}`;
+      const versionsForOpportunity = scorecards.filter(
+        s => `${s.opportunityName}_${s.customerName}` === opportunityKey
+      );
+      const maxVersion = Math.max(...versionsForOpportunity.map(s => s.version));
+      const isLatestVersion = activeScorecard.version === maxVersion;
+      
+      if (!isLatestVersion) {
+        // Ask user if they want to create a new version
+        const shouldCreateNewVersion = window.confirm(
+          `You are editing version ${activeScorecard.version}, but version ${maxVersion} is the latest. Would you like to create a new version ${maxVersion + 1} with these changes?`
+        );
+        
+        if (shouldCreateNewVersion) {
+          const dbScorecard = dbScorecards.find(s => s.id === activeScorecard.id);
+          if (!dbScorecard) return;
+          
+          const created = await duplicateScorecardMutation(dbScorecard);
+          const newVersion = convertToScorecard(created);
+          
+          // Apply all changes to the new version
+          newVersion.funds = activeScorecard.funds;
+          newVersion.authority = activeScorecard.authority;
+          newVersion.interest = activeScorecard.interest;
+          newVersion.need = activeScorecard.need;
+          newVersion.timing = activeScorecard.timing;
+          
+          // Save the new version with changes
+          await updateScorecardMutation({
+            id: newVersion.id,
+            ...convertToDatabase(newVersion, bdmId, defaultFramework.id),
+          });
+          
+          toast.success(`Version ${newVersion.version} created and saved!`);
+        } else {
+          // User chose not to create new version, do nothing
+          setShowUnsavedDialog(false);
+          return;
+        }
+      } else {
+        // Latest version - just save changes
+        await updateScorecardMutation({
+          id: activeScorecard.id,
+          ...convertToDatabase(activeScorecard, bdmId, defaultFramework.id),
+        });
+        toast.success("Changes saved successfully!");
+      }
       
       setShowUnsavedDialog(false);
       setActiveScorecard(null);
@@ -340,22 +353,13 @@ const Index = () => {
         navigate(pendingNavigation);
         setPendingNavigation(null);
       }
-      toast.success("Changes saved successfully!");
     } catch (error) {
       console.error('Failed to save changes:', error);
       toast.error("Failed to save changes");
     }
   };
 
-  const handleDiscardAndClose = async () => {
-    if (originalScorecard && hasCreatedVersionForEdit && activeScorecard) {
-      // Remove the auto-created version if user discards
-      try {
-        await deleteScorecard(activeScorecard.id);
-      } catch (error) {
-        console.error('Failed to delete auto-created version:', error);
-      }
-    }
+  const handleDiscardAndClose = () => {
     setShowUnsavedDialog(false);
     setActiveScorecard(null);
     setOriginalScorecard(null);
