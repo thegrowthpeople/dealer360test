@@ -1014,87 +1014,116 @@ const Index = () => {
                     return (
                       <Card
                         key={scorecard.id}
-                        className={`relative cursor-pointer group transition-all duration-300 border overflow-hidden ${
-                          "hover:border-primary/60 hover:shadow-xl hover:shadow-primary/10"
-                        } ${scorecard.archived ? "opacity-60" : ""} hover:-translate-y-1 hover:scale-[1.02] animate-fade-in`}
+                        className={`relative cursor-pointer group transition-all duration-300 border-2 overflow-hidden ${
+                          "hover:border-primary hover:shadow-2xl hover:shadow-primary/20"
+                        } ${scorecard.archived ? "opacity-60" : ""} hover:-translate-y-2 animate-fade-in bg-gradient-to-br from-background to-muted/20`}
                         onClick={(e) => {
                           handleRippleEffect(e);
                           handleScorecardSelect(scorecard.id);
                         }}
                       >
-                        <div className="absolute top-3 right-3 flex gap-2">
-                          <>
-                            <Popover>
-                                <PopoverTrigger asChild>
-                                  <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="h-8 w-8 transition-all duration-200 hover:scale-110 hover:bg-primary/10"
-                                    onClick={(e) => e.stopPropagation()}
-                                  >
-                                    <Tag className="h-4 w-4" />
-                                  </Button>
-                                </PopoverTrigger>
-                                <PopoverContent className="w-56 bg-background border border-border shadow-lg z-50" align="start">
-                                  <div className="space-y-2">
-                                    <Label className="text-sm font-medium">New Tag</Label>
-                                    <Input
-                                      placeholder="Enter tag name..."
-                                      onKeyDown={(e) => {
-                                        if (e.key === 'Enter') {
-                                          handleAddTag(scorecard.id, e.currentTarget.value);
-                                          e.currentTarget.value = '';
-                                        }
-                                      }}
-                                    />
-                                  </div>
-                                </PopoverContent>
-                              </Popover>
-                              {!scorecard.archived && (
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  className="h-8 w-8 transition-all duration-200 hover:scale-110 hover:bg-primary/10"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleDuplicate(scorecard);
+                        {/* Gradient Header Bar */}
+                        <div className="h-2 w-full bg-gradient-to-r from-primary via-accent to-primary bg-[length:200%_100%] group-hover:animate-[shimmer_2s_linear_infinite]" 
+                             style={{
+                               animation: 'shimmer 3s linear infinite'
+                             }}
+                        />
+                        
+                        {/* Action Buttons - Top Right */}
+                        <div className="absolute top-4 right-4 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-7 w-7 bg-background/80 backdrop-blur-sm hover:bg-background transition-all duration-200 hover:scale-110"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <Tag className="h-3.5 w-3.5" />
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-56 bg-background border border-border shadow-lg z-50" align="start">
+                              <div className="space-y-2">
+                                <Label className="text-sm font-medium">New Tag</Label>
+                                <Input
+                                  placeholder="Enter tag name..."
+                                  onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                      handleAddTag(scorecard.id, e.currentTarget.value);
+                                      e.currentTarget.value = '';
+                                    }
                                   }}
-                                >
-                                  <Copy className="h-4 w-4" />
-                                </Button>
-                              )}
-                            </>
-                          </div>
-                          <div className="absolute top-3 right-3 flex gap-2">
+                                />
+                              </div>
+                            </PopoverContent>
+                          </Popover>
+                          {!scorecard.archived && (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-7 w-7 bg-background/80 backdrop-blur-sm hover:bg-background transition-all duration-200 hover:scale-110"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDuplicate(scorecard);
+                              }}
+                            >
+                              <Copy className="h-3.5 w-3.5" />
+                            </Button>
+                          )}
+                        </div>
+                        
+                        {/* Pin Button - Top Left */}
+                        <div className="absolute top-4 left-4 z-10">
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="h-8 w-8 transition-all duration-200 hover:scale-110 hover:bg-primary/10"
+                            className="h-7 w-7 bg-background/80 backdrop-blur-sm hover:bg-background transition-all duration-200 hover:scale-110"
                             onClick={(e) => handleTogglePin(scorecard.id, e)}
                           >
-                            <Star className={`h-4 w-4 ${scorecard.pinned ? "fill-yellow-500 text-yellow-500" : ""}`} />
+                            <Star className={`h-3.5 w-3.5 transition-all ${scorecard.pinned ? "fill-yellow-500 text-yellow-500 scale-125" : ""}`} />
                           </Button>
-                          {scorecard.archived && (
-                            <Badge variant="secondary">Archived</Badge>
-                          )}
-                          <Badge 
-                            variant="outline"
-                            className="bg-primary/10 border-primary/30 text-primary transition-all duration-200 group-hover:bg-primary/20 group-hover:border-primary/50"
-                          >
-                            {getFrameworkName(scorecard.frameworkId)}
-                          </Badge>
-                          <Badge 
-                            variant={isLatestVersion ? "default" : "secondary"}
-                            className={`transition-all duration-200 ${isLatestVersion ? "bg-green-600 group-hover:bg-green-700" : "group-hover:bg-muted"}`}
-                          >
-                            v{scorecard.version}{isLatestVersion ? " - Latest" : ""}
-                          </Badge>
                         </div>
-                        <CardHeader className="pb-3 pt-12">
-                          <CardTitle className="text-xl flex items-center justify-between transition-colors duration-200 group-hover:text-primary/90">
-                            {scorecard.opportunityName}
-                            <div className="text-right">
-                              <div className="text-2xl font-bold text-primary transition-all duration-200 group-hover:scale-110">{scorecard.totalScore}/40</div>
+
+                        <CardContent className="p-6 pt-4">
+                          {/* Score Circle - Prominent */}
+                          <div className="flex items-start justify-between mb-4">
+                            <div className="flex-1 pr-4">
+                              <h3 className="text-xl font-bold text-foreground mb-1 line-clamp-2 group-hover:text-primary transition-colors">
+                                {scorecard.opportunityName}
+                              </h3>
+                              <p className="text-base font-semibold text-primary/80">
+                                {scorecard.customerName}
+                              </p>
+                            </div>
+                            
+                            {/* Circular Score Indicator */}
+                            <div className="relative flex-shrink-0">
+                              <svg className="w-20 h-20 transform -rotate-90">
+                                <circle
+                                  cx="40"
+                                  cy="40"
+                                  r="34"
+                                  stroke="currentColor"
+                                  strokeWidth="6"
+                                  fill="none"
+                                  className="text-muted"
+                                />
+                                <circle
+                                  cx="40"
+                                  cy="40"
+                                  r="34"
+                                  stroke="currentColor"
+                                  strokeWidth="6"
+                                  fill="none"
+                                  strokeDasharray={`${(scorecard.totalScore / 40) * 213.628} 213.628`}
+                                  className="text-primary transition-all duration-500 group-hover:text-accent"
+                                  strokeLinecap="round"
+                                />
+                              </svg>
+                              <div className="absolute inset-0 flex flex-col items-center justify-center">
+                                <span className="text-2xl font-bold text-foreground">{scorecard.totalScore}</span>
+                                <span className="text-xs text-muted-foreground font-medium">/40</span>
+                              </div>
                               {(() => {
                                 const totalNegative = [
                                   scorecard.funds,
@@ -1104,100 +1133,66 @@ const Index = () => {
                                   scorecard.timing,
                                 ].reduce((sum, component) => sum + component.questions.filter(q => q.state === "negative").length, 0);
                                 return totalNegative > 0 && (
-                                  <div className="text-xs text-destructive mt-1">
-                                    -{totalNegative}
+                                  <div className="absolute -bottom-1 -right-1 bg-destructive text-destructive-foreground text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center shadow-lg">
+                                    {totalNegative}
                                   </div>
                                 );
                               })()}
                             </div>
-                          </CardTitle>
-                          <p className="text-sm text-muted-foreground font-medium">{scorecard.customerName}</p>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="space-y-2">
-                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                              <Calendar className="w-4 h-4" />
-                              {scorecard.expectedOrderDate}
-                            </div>
-                            <div className="text-sm text-muted-foreground">
-                              {scorecard.accountManager}
-                            </div>
-                            <div className="text-xs text-muted-foreground pt-2 border-t border-border">
-                              <span>Created: {new Date(scorecard.createdAt).toLocaleDateString()}</span>
-                            </div>
-                            
-                            {/* Tags Section */}
-                            <div className="pt-2 border-t border-border">
-                              <div className="flex flex-wrap gap-1">
-                                {(scorecard.tags || []).map((tag) => (
-                                  <Badge
-                                    key={tag}
-                                    variant={getTagColor(tag) as any}
-                                    className="text-xs gap-1"
-                                  >
-                                    <Tag className="w-3 h-3" />
-                                    {tag}
-                                    <button
-                                      onClick={(e) => handleRemoveTag(scorecard.id, tag, e)}
-                                      className="ml-1 hover:text-destructive"
-                                    >
-                                      <X className="w-3 h-3" />
-                                    </button>
-                                  </Badge>
-                                ))}
-                              </div>
-                            </div>
-                            
-                            {scorecard.archived && (
-                              <div className="pt-2 flex gap-2">
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  className="flex-1 gap-2"
-                                  onClick={(e) => handleUnarchive(scorecard.id, e)}
-                                >
-                                  <Archive className="w-4 h-4" />
-                                  Unarchive
-                                </Button>
-                              </div>
-                            )}
-                            
-                            {opportunityGroups[`${scorecard.opportunityName}_${scorecard.customerName}`]?.length > 1 && (
-                              <div className="pt-2 flex gap-2">
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  className="flex-1 gap-2"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    setViewAllVersionsFor(`${scorecard.opportunityName}_${scorecard.customerName}`);
-                                  }}
-                                >
-                                  <FileText className="w-4 h-4" />
-                                  All Versions ({opportunityGroups[`${scorecard.opportunityName}_${scorecard.customerName}`].length})
-                                </Button>
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  className="flex-1 gap-2"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    setTimelineView(scorecard.opportunityName);
-                                    setActiveScorecard(null);
-                                    setHasCreatedVersionForEdit(false);
-                                  }}
-                                >
-                                  <Clock className="w-4 h-4" />
-                                  Timeline
-                                </Button>
-                              </div>
-                            )}
                           </div>
+
+                          {/* Info Section */}
+                          <div className="space-y-3 pt-4 border-t border-border/50">
+                            <div className="flex items-center gap-2 text-sm">
+                              <div className="flex items-center gap-2 text-muted-foreground flex-1">
+                                <Calendar className="w-4 h-4 text-primary/60" />
+                                <span className="font-medium">{scorecard.expectedOrderDate}</span>
+                              </div>
+                            </div>
+                            
+                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                              <span className="font-medium">{scorecard.accountManager}</span>
+                            </div>
+                          </div>
+
+                          {/* Badges Section */}
+                          <div className="flex flex-wrap gap-1.5 mt-4 pt-3 border-t border-border/50">
+                            {scorecard.archived && (
+                              <Badge variant="secondary" className="text-xs">Archived</Badge>
+                            )}
+                            <Badge 
+                              variant="outline"
+                              className="bg-primary/5 border-primary/30 text-primary text-xs"
+                            >
+                              {getFrameworkName(scorecard.frameworkId)}
+                            </Badge>
+                            <Badge 
+                              variant={isLatestVersion ? "default" : "secondary"}
+                              className={`text-xs ${isLatestVersion ? "bg-green-600" : ""}`}
+                            >
+                              v{scorecard.version}{isLatestVersion ? " • Latest" : ""}
+                            </Badge>
+                          </div>
+                          
+                          {/* Tags Section */}
+                          {scorecard.tags && scorecard.tags.length > 0 && (
+                            <div className="flex flex-wrap gap-1.5 mt-3">
+                              {scorecard.tags.map((tag, index) => (
+                                <Badge
+                                  key={index}
+                                  variant={getTagColor(tag) as any}
+                                  className="text-xs px-2 py-0"
+                                >
+                                  {tag}
+                                </Badge>
+                              ))}
+                            </div>
+                          )}
                         </CardContent>
                       </Card>
                     );
-                  })}
-                </div>
+                    })}
+                  </div>
                 ) : (
                   /* Table View */
                   <div className="border rounded-lg overflow-hidden">

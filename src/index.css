@@ -148,6 +148,15 @@ All colors MUST be HSL.
     animation: ripple 0.6s linear;
     pointer-events: none;
   }
+
+  @keyframes shimmer {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
+  }
 }
 
 /* Print styles - hide navigation elements and optimize for PDF export */
