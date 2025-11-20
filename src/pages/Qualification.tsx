@@ -264,7 +264,7 @@ const Index = () => {
     const now = new Date();
     const daysUntil = differenceInDays(closeDate, now);
     const formattedDate = format(closeDate, "EEE d MMM");
-    return `${formattedDate} (${daysUntil}d)`;
+    return `${formattedDate} - ${daysUntil}d`;
   };
 
   const getDaysColorClass = (dateStr: string): string => {
@@ -273,9 +273,18 @@ const Index = () => {
     const now = new Date();
     const daysUntil = differenceInDays(closeDate, now);
     
+    if (daysUntil < 0) return "text-red-600 dark:text-red-400 font-semibold";
     if (daysUntil > 30) return "text-green-600 dark:text-green-400";
     if (daysUntil >= 15) return "text-amber-600 dark:text-amber-400";
     return "text-red-600 dark:text-red-400";
+  };
+
+  const isOverdue = (dateStr: string): boolean => {
+    if (!dateStr) return false;
+    const closeDate = new Date(dateStr);
+    const now = new Date();
+    const daysUntil = differenceInDays(closeDate, now);
+    return daysUntil < 0;
   };
 
   const handleUpdateComponent = async (
@@ -1296,6 +1305,11 @@ const Index = () => {
                                 <span className={`font-medium ${getDaysColorClass(scorecard.expectedOrderDate)}`}>
                                   {formatCloseDateWithDays(scorecard.expectedOrderDate)}
                                 </span>
+                                {isOverdue(scorecard.expectedOrderDate) && (
+                                  <Badge variant="destructive" className="text-xs ml-1">
+                                    OVERDUE
+                                  </Badge>
+                                )}
                               </div>
                             </div>
                             
@@ -1541,9 +1555,16 @@ const Index = () => {
                               )}
                               {visibleColumns.expectedDate && (
                                 <td className="p-3 text-sm">
-                                  <span className={getDaysColorClass(scorecard.expectedOrderDate)}>
-                                    {formatCloseDateWithDays(scorecard.expectedOrderDate)}
-                                  </span>
+                                  <div className="flex items-center gap-2">
+                                    <span className={getDaysColorClass(scorecard.expectedOrderDate)}>
+                                      {formatCloseDateWithDays(scorecard.expectedOrderDate)}
+                                    </span>
+                                    {isOverdue(scorecard.expectedOrderDate) && (
+                                      <Badge variant="destructive" className="text-xs">
+                                        OVERDUE
+                                      </Badge>
+                                    )}
+                                  </div>
                                 </td>
                               )}
                               {visibleColumns.lastModified && (
@@ -1652,8 +1673,13 @@ const Index = () => {
                     {activeScorecard.customerName} • {activeScorecard.accountManager}
                   </p>
                   <div className="flex gap-4 text-sm text-muted-foreground mt-2">
-                    <span>
+                    <span className="flex items-center gap-2">
                       Expected: <span className={getDaysColorClass(activeScorecard.expectedOrderDate)}>{formatCloseDateWithDays(activeScorecard.expectedOrderDate)}</span>
+                      {isOverdue(activeScorecard.expectedOrderDate) && (
+                        <Badge variant="destructive" className="text-xs">
+                          OVERDUE
+                        </Badge>
+                      )}
                     </span>
                     <span>•</span>
                     <span>Review: {activeScorecard.reviewDate}</span>
