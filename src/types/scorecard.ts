@@ -18,6 +18,7 @@ export interface Scorecard {
   expectedOrderDate: string;
   reviewDate: string;
   createdAt: string;
+  updatedAt: string;
   archived?: boolean;
   pinned?: boolean;
   tags?: string[];
