@@ -77,6 +77,8 @@ const Index = () => {
     tags: [],
     dateFrom: undefined,
     dateTo: undefined,
+    accountManager: null,
+    customer: null,
   });
   const [sortBy, setSortBy] = useState<"date" | "score" | "salesperson" | "customer">("date");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
@@ -413,6 +415,16 @@ const Index = () => {
       return false;
     }
 
+    // Account Manager filter
+    if (filters.accountManager && scorecard.salesperson !== filters.accountManager) {
+      return false;
+    }
+
+    // Customer filter
+    if (filters.customer && scorecard.customerName !== filters.customer) {
+      return false;
+    }
+
     // Tags filter
     if (filters.tags.length > 0) {
       const scorecardTags = scorecard.tags || [];
@@ -474,6 +486,8 @@ const Index = () => {
   // Get unique values for filter options
   const uniqueVersions = Array.from(new Set(scorecards.map(s => s.version)));
   const availableTags = Array.from(new Set(scorecards.flatMap(s => s.tags || []))).sort();
+  const uniqueAccountManagers = Array.from(new Set(scorecards.map(s => s.salesperson).filter(Boolean))).sort();
+  const uniqueCustomers = Array.from(new Set(scorecards.map(s => s.customerName).filter(Boolean))).sort();
 
   // Calculate scores for sorting
   const scorecardsWithScores = filteredScorecards.map(scorecard => ({
@@ -603,6 +617,8 @@ const Index = () => {
                 }}
                 versions={uniqueVersions}
                 availableTags={availableTags}
+                accountManagers={uniqueAccountManagers}
+                customers={uniqueCustomers}
                 bulkSelectionMode={bulkSelectionMode}
                 comparisonMode={comparisonMode}
                 onBulkModeToggle={handleBulkModeToggle}
@@ -720,7 +736,7 @@ const Index = () => {
             {sortedScorecards.length === 0 ? (
               <Card className="p-12 text-center">
                 <p className="text-lg text-muted-foreground mb-4">No scorecards match your filters</p>
-                <Button variant="outline" onClick={() => setFilters({ version: "latest", showArchived: false, tags: [], dateFrom: undefined, dateTo: undefined })}>
+                <Button variant="outline" onClick={() => setFilters({ version: "latest", showArchived: false, tags: [], dateFrom: undefined, dateTo: undefined, accountManager: null, customer: null })}>
                   Clear Filters
                 </Button>
               </Card>
