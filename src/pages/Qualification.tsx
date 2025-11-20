@@ -150,7 +150,7 @@ const Index = () => {
     accountManager: null,
     customer: null,
   });
-  const [sortBy, setSortBy] = useState<"date" | "score" | "accountManager" | "customer">("date");
+  const [sortBy, setSortBy] = useState<"date" | "score" | "accountManager" | "customer" | "opportunity" | "framework" | "version">("date");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   
   
@@ -658,6 +658,15 @@ const Index = () => {
       case "customer":
         comparison = a.customerName.localeCompare(b.customerName);
         break;
+      case "opportunity":
+        comparison = a.opportunityName.localeCompare(b.opportunityName);
+        break;
+      case "framework":
+        comparison = getFrameworkName(a.frameworkId).localeCompare(getFrameworkName(b.frameworkId));
+        break;
+      case "version":
+        comparison = a.version - b.version;
+        break;
     }
     
     return sortOrder === "asc" ? comparison : -comparison;
@@ -675,6 +684,17 @@ const Index = () => {
 
   const toggleSortOrder = () => {
     setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+  };
+
+  const handleColumnSort = (column: typeof sortBy) => {
+    if (sortBy === column) {
+      // Toggle sort order if clicking the same column
+      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+    } else {
+      // Set new column and default to descending
+      setSortBy(column);
+      setSortOrder("desc");
+    }
   };
 
   // Loading and framework checks
@@ -1054,17 +1074,87 @@ const Index = () => {
                 </div>
                 ) : (
                   /* Table View */
-                  <div className="border rounded-lg">
+                  <div className="border rounded-lg overflow-hidden">
                     <table className="w-full">
                       <thead className="bg-muted/50">
                         <tr className="border-b">
-                          <th className="text-left p-3 font-semibold">Opportunity</th>
-                          <th className="text-left p-3 font-semibold">Customer</th>
-                          <th className="text-left p-3 font-semibold">Account Manager</th>
-                          <th className="text-left p-3 font-semibold">Framework</th>
-                          <th className="text-left p-3 font-semibold">Score</th>
-                          <th className="text-left p-3 font-semibold">Version</th>
-                          <th className="text-left p-3 font-semibold">Expected Date</th>
+                          <th 
+                            className="text-left p-3 font-semibold cursor-pointer hover:bg-muted transition-colors select-none"
+                            onClick={() => handleColumnSort("opportunity")}
+                          >
+                            <div className="flex items-center gap-2">
+                              Opportunity
+                              {sortBy === "opportunity" && (
+                                sortOrder === "asc" ? <ArrowUp className="w-4 h-4" /> : <ArrowDown className="w-4 h-4" />
+                              )}
+                            </div>
+                          </th>
+                          <th 
+                            className="text-left p-3 font-semibold cursor-pointer hover:bg-muted transition-colors select-none"
+                            onClick={() => handleColumnSort("customer")}
+                          >
+                            <div className="flex items-center gap-2">
+                              Customer
+                              {sortBy === "customer" && (
+                                sortOrder === "asc" ? <ArrowUp className="w-4 h-4" /> : <ArrowDown className="w-4 h-4" />
+                              )}
+                            </div>
+                          </th>
+                          <th 
+                            className="text-left p-3 font-semibold cursor-pointer hover:bg-muted transition-colors select-none"
+                            onClick={() => handleColumnSort("accountManager")}
+                          >
+                            <div className="flex items-center gap-2">
+                              Account Manager
+                              {sortBy === "accountManager" && (
+                                sortOrder === "asc" ? <ArrowUp className="w-4 h-4" /> : <ArrowDown className="w-4 h-4" />
+                              )}
+                            </div>
+                          </th>
+                          <th 
+                            className="text-left p-3 font-semibold cursor-pointer hover:bg-muted transition-colors select-none"
+                            onClick={() => handleColumnSort("framework")}
+                          >
+                            <div className="flex items-center gap-2">
+                              Framework
+                              {sortBy === "framework" && (
+                                sortOrder === "asc" ? <ArrowUp className="w-4 h-4" /> : <ArrowDown className="w-4 h-4" />
+                              )}
+                            </div>
+                          </th>
+                          <th 
+                            className="text-left p-3 font-semibold cursor-pointer hover:bg-muted transition-colors select-none"
+                            onClick={() => handleColumnSort("score")}
+                          >
+                            <div className="flex items-center gap-2">
+                              Score
+                              {sortBy === "score" && (
+                                sortOrder === "asc" ? <ArrowUp className="w-4 h-4" /> : <ArrowDown className="w-4 h-4" />
+                              )}
+                            </div>
+                          </th>
+                          <th 
+                            className="text-left p-3 font-semibold cursor-pointer hover:bg-muted transition-colors select-none"
+                            onClick={() => handleColumnSort("version")}
+                          >
+                            <div className="flex items-center gap-2">
+                              Version
+                              {sortBy === "version" && (
+                                sortOrder === "asc" ? <ArrowUp className="w-4 h-4" /> : <ArrowDown className="w-4 h-4" />
+                              )}
+                            </div>
+                          </th>
+                          <th 
+                            className="text-left p-3 font-semibold cursor-pointer hover:bg-muted transition-colors select-none"
+                            onClick={() => handleColumnSort("date")}
+                          >
+                            <div className="flex items-center gap-2">
+                              Expected Date
+                              {sortBy === "date" && (
+                                sortOrder === "asc" ? <ArrowUp className="w-4 h-4" /> : <ArrowDown className="w-4 h-4" />
+                              )}
+                            </div>
+                          </th>
                           <th className="text-left p-3 font-semibold">Actions</th>
                         </tr>
                       </thead>
