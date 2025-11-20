@@ -84,7 +84,7 @@ export const ConfidenceIndicator = ({ scorecard }: ConfidenceIndicatorProps) => 
         </div>
 
         {/* Progress Bar */}
-        <div className="relative h-8 bg-muted/30 rounded-full overflow-hidden">
+        <div className="relative h-8 bg-muted rounded-full overflow-hidden border border-border">
           <div 
             className={`h-full ${confidence.bgColor} transition-all duration-500 ease-out flex items-center justify-end pr-3`}
             style={{ width: `${confidencePercentage}%` }}
@@ -98,7 +98,7 @@ export const ConfidenceIndicator = ({ scorecard }: ConfidenceIndicatorProps) => 
         </div>
 
         {/* Breakdown */}
-        <div className="flex gap-4 pt-2 border-t border-border/50">
+        <div className="flex justify-between items-center pt-2 border-t border-border/50">
           <div className="flex items-center gap-2 text-sm">
             <TrendingUp className="w-4 h-4 text-green-600" />
             <span className="font-bold text-foreground">{positives}</span>
