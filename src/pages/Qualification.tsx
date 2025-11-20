@@ -72,15 +72,11 @@ const Index = () => {
   const [timelineView, setTimelineView] = useState<string | null>(null); // stores opportunityName for timeline
   const [viewAllVersionsFor, setViewAllVersionsFor] = useState<string | null>(null); // stores "opportunityName_customerName" key
   const [filters, setFilters] = useState<FilterState>({
-    salesperson: "",
     version: "latest",
-    customer: "",
     showArchived: false,
     tags: [],
     dateFrom: undefined,
     dateTo: undefined,
-    scoreMin: undefined,
-    scoreMax: undefined,
   });
   const [sortBy, setSortBy] = useState<"date" | "score" | "salesperson" | "customer">("date");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
@@ -417,16 +413,6 @@ const Index = () => {
       return false;
     }
 
-    // Salesperson filter
-    if (filters.salesperson && filters.salesperson !== "all" && scorecard.salesperson !== filters.salesperson) {
-      return false;
-    }
-
-    // Customer filter
-    if (filters.customer && filters.customer !== "all" && scorecard.customerName !== filters.customer) {
-      return false;
-    }
-
     // Tags filter
     if (filters.tags.length > 0) {
       const scorecardTags = scorecard.tags || [];
@@ -451,25 +437,6 @@ const Index = () => {
       const dateToEnd = new Date(filters.dateTo);
       dateToEnd.setHours(23, 59, 59, 999);
       if (scorecardDate > dateToEnd) {
-        return false;
-      }
-    }
-
-    // Score range filter - calculate total score for comparison
-    if (filters.scoreMin !== undefined || filters.scoreMax !== undefined) {
-      const totalScore = [
-        scorecard.funds,
-        scorecard.authority,
-        scorecard.interest,
-        scorecard.need,
-        scorecard.timing,
-      ].reduce((sum, component) => sum + component.questions.filter((q) => q.state === "positive").length, 0);
-      
-      if (filters.scoreMin !== undefined && totalScore < filters.scoreMin) {
-        return false;
-      }
-      
-      if (filters.scoreMax !== undefined && totalScore > filters.scoreMax) {
         return false;
       }
     }
@@ -505,8 +472,6 @@ const Index = () => {
   }
 
   // Get unique values for filter options
-  const uniqueSalespeople = Array.from(new Set(scorecards.map(s => s.salesperson))).filter(Boolean);
-  const uniqueCustomers = Array.from(new Set(scorecards.map(s => s.customerName))).filter(Boolean);
   const uniqueVersions = Array.from(new Set(scorecards.map(s => s.version)));
   const availableTags = Array.from(new Set(scorecards.flatMap(s => s.tags || []))).sort();
 
@@ -629,16 +594,14 @@ const Index = () => {
               </div>
             )}
 
-            {!comparisonMode && (
+            {!comparisonMode && !timelineView && !viewAllVersionsFor && (
               <ScorecardFilters
                 filters={filters}
                 onFiltersChange={(newFilters) => {
                   setFilters(newFilters);
                   setViewAllVersionsFor(null); // Clear version view when filters change
                 }}
-                salespeople={uniqueSalespeople}
                 versions={uniqueVersions}
-                customers={uniqueCustomers}
                 availableTags={availableTags}
                 bulkSelectionMode={bulkSelectionMode}
                 comparisonMode={comparisonMode}
@@ -757,7 +720,7 @@ const Index = () => {
             {sortedScorecards.length === 0 ? (
               <Card className="p-12 text-center">
                 <p className="text-lg text-muted-foreground mb-4">No scorecards match your filters</p>
-                <Button variant="outline" onClick={() => setFilters({ salesperson: "", version: "latest", customer: "", showArchived: false, tags: [], dateFrom: undefined, dateTo: undefined, scoreMin: undefined, scoreMax: undefined })}>
+                <Button variant="outline" onClick={() => setFilters({ version: "latest", showArchived: false, tags: [], dateFrom: undefined, dateTo: undefined })}>
                   Clear Filters
                 </Button>
               </Card>
