@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Plus, FileText, Calendar, GitCompare, Clock, ArrowUp, ArrowDown, Copy, Trash2, Download, Archive, CheckSquare, FileSpreadsheet, LayoutGrid, List, Star, Tag, X, Edit2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScorecardForm } from "@/components/qualification/ScorecardForm";
 import { ScoreHeader } from "@/components/qualification/ScoreHeader";
@@ -66,6 +67,8 @@ const createEmptyScorecard = (data: Partial<Scorecard>): Scorecard => {
 const Index = () => {
   const [scorecards, setScorecards] = useState<Scorecard[]>([]);
   const [activeScorecard, setActiveScorecard] = useState<Scorecard | null>(null);
+  const [originalScorecard, setOriginalScorecard] = useState<Scorecard | null>(null);
+  const [showUnsavedDialog, setShowUnsavedDialog] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [comparisonMode, setComparisonMode] = useState(false);
   const [selectedForComparison, setSelectedForComparison] = useState<string[]>([]);
@@ -139,6 +142,7 @@ const Index = () => {
     const newScorecard = createEmptyScorecard(data);
     setScorecards([...scorecards, newScorecard]);
     setActiveScorecard(newScorecard);
+    setOriginalScorecard(JSON.parse(JSON.stringify(newScorecard)));
     setIsDialogOpen(false);
     toast.success("Scorecard created successfully!");
   };
@@ -171,8 +175,42 @@ const Index = () => {
     
     setScorecards([...scorecards, newVersion]);
     setActiveScorecard(newVersion);
+    setOriginalScorecard(JSON.parse(JSON.stringify(newVersion)));
     toast.success(`Version ${newVersion.version} created!`);
   };
+
+  const hasUnsavedChanges = () => {
+    if (!activeScorecard || !originalScorecard) return false;
+    return JSON.stringify(activeScorecard) !== JSON.stringify(originalScorecard);
+  };
+
+  const handleBackClick = () => {
+    if (hasUnsavedChanges()) {
+      setShowUnsavedDialog(true);
+    } else {
+      setActiveScorecard(null);
+      setOriginalScorecard(null);
+    }
+  };
+
+  const handleSaveAndClose = () => {
+    // Changes are already saved automatically via handleUpdateComponent
+    setShowUnsavedDialog(false);
+    setActiveScorecard(null);
+    setOriginalScorecard(null);
+    toast.success("Changes saved successfully!");
+  };
+
+  const handleDiscardAndClose = () => {
+    if (originalScorecard) {
+      // Revert changes in the scorecards array
+      setScorecards(scorecards.map(s => s.id === originalScorecard.id ? originalScorecard : s));
+    }
+    setShowUnsavedDialog(false);
+    setActiveScorecard(null);
+    setOriginalScorecard(null);
+  };
+
 
   const handleComparisonToggle = () => {
     setComparisonMode(!comparisonMode);
@@ -389,7 +427,9 @@ const Index = () => {
         toast.error("You can only compare 2 scorecards at a time");
       }
     } else {
-      setActiveScorecard(scorecards.find(s => s.id === id) || null);
+      const scorecard = scorecards.find(s => s.id === id) || null;
+      setActiveScorecard(scorecard);
+      setOriginalScorecard(scorecard ? JSON.parse(JSON.stringify(scorecard)) : null);
     }
   };
 
@@ -1072,30 +1112,26 @@ const Index = () => {
           <div className="space-y-6">
             <div className="bg-card rounded-xl border border-border p-6 shadow-sm">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div className="flex items-center gap-4">
-                  <Button variant="outline" onClick={() => setActiveScorecard(null)} size="sm">
-                    ← Back
-                  </Button>
-                  <div>
-                    <h2 className="text-2xl font-bold text-foreground">{activeScorecard.opportunityName}</h2>
-                    <p className="text-muted-foreground mt-1">
-                      {activeScorecard.customerName} • {activeScorecard.salesperson}
-                    </p>
-                    <div className="flex gap-4 text-sm text-muted-foreground mt-2">
-                      <span>Expected: {activeScorecard.expectedOrderDate}</span>
-                      <span>•</span>
-                      <span>Review: {activeScorecard.reviewDate}</span>
-                      <span>•</span>
-                      <span>v{activeScorecard.version}</span>
-                    </div>
+                <div>
+                  <h2 className="text-2xl font-bold text-foreground">{activeScorecard.opportunityName}</h2>
+                  <p className="text-muted-foreground mt-1">
+                    {activeScorecard.customerName} • {activeScorecard.salesperson}
+                  </p>
+                  <div className="flex gap-4 text-sm text-muted-foreground mt-2">
+                    <span>Expected: {activeScorecard.expectedOrderDate}</span>
+                    <span>•</span>
+                    <span>Review: {activeScorecard.reviewDate}</span>
+                    <span>•</span>
+                    <span>v{activeScorecard.version}</span>
                   </div>
                 </div>
-                <div className="flex gap-2 md:self-start">
+                <div className="flex flex-col gap-2 md:self-start">
                   {opportunityGroups[`${activeScorecard.opportunityName}_${activeScorecard.customerName}`]?.length > 1 && (
                     <Button 
                       onClick={() => {
                         setTimelineView(activeScorecard.opportunityName);
                         setActiveScorecard(null);
+                        setOriginalScorecard(null);
                       }} 
                       variant="outline" 
                       size="sm" 
@@ -1108,6 +1144,9 @@ const Index = () => {
                   <Button onClick={handleNewVersion} variant="outline" size="sm" className="gap-2">
                     <Plus className="w-4 h-4" />
                     New Version
+                  </Button>
+                  <Button variant="outline" onClick={handleBackClick} size="sm">
+                    ← Back
                   </Button>
                 </div>
               </div>
@@ -1206,6 +1245,26 @@ const Index = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Unsaved Changes Dialog */}
+      <AlertDialog open={showUnsavedDialog} onOpenChange={setShowUnsavedDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Unsaved Changes</AlertDialogTitle>
+            <AlertDialogDescription>
+              You have unsaved changes. Would you like to save them before leaving?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={handleDiscardAndClose}>
+              Don't Save
+            </AlertDialogCancel>
+            <AlertDialogAction onClick={handleSaveAndClose}>
+              Save Changes
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
