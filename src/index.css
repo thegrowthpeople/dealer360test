@@ -157,6 +157,17 @@ All colors MUST be HSL.
       background-position: -200% 0;
     }
   }
+
+  .shimmer {
+    background: linear-gradient(
+      90deg,
+      transparent,
+      hsl(var(--primary) / 0.08),
+      transparent
+    );
+    background-size: 1000px 100%;
+    animation: shimmer 2s infinite linear;
+  }
 }
 
 /* Print styles - hide navigation elements and optimize for PDF export */
