@@ -1206,7 +1206,13 @@ const Index = () => {
             <div className="bg-card rounded-xl border border-border p-6 shadow-sm">
               <div className="flex flex-col lg:flex-row lg:items-start gap-6">
                 {/* Confidence Indicator - Left Side */}
-                <ConfidenceIndicator scorecard={activeScorecard} />
+                <ConfidenceIndicator 
+                  scorecard={activeScorecard} 
+                  scorecardVersions={scorecards.filter(
+                    sc => sc.opportunityName === activeScorecard.opportunityName && 
+                          sc.customerName === activeScorecard.customerName
+                  )}
+                />
 
                 {/* Scorecard Details - Middle */}
                 <div className="flex-1">
