@@ -8,7 +8,7 @@ interface StatsSummaryProps {
 
 export const StatsSummary = ({ scorecards }: StatsSummaryProps) => {
   const totalScorecards = scorecards.length;
-  const uniqueSalespeople = new Set(scorecards.map(s => s.salesperson)).size;
+  const uniqueSalespeople = new Set(scorecards.map(s => s.accountManager)).size;
   const uniqueCustomers = new Set(scorecards.map(s => s.customerName)).size;
   
   const avgScore = scorecards.length > 0 

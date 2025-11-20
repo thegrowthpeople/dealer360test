@@ -12,7 +12,7 @@ interface ScorecardFormProps {
 
 export const ScorecardForm = ({ onSubmit, initialData, submitLabel = "Create Scorecard" }: ScorecardFormProps) => {
   const [formData, setFormData] = useState({
-    salesperson: initialData?.salesperson || "",
+    accountManager: initialData?.accountManager || "",
     customerName: initialData?.customerName || "",
     opportunityName: initialData?.opportunityName || "",
     expectedOrderDate: initialData?.expectedOrderDate || "",
@@ -28,11 +28,11 @@ export const ScorecardForm = ({ onSubmit, initialData, submitLabel = "Create Sco
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <Label htmlFor="salesperson">Account Manager *</Label>
+          <Label htmlFor="accountManager">Account Manager *</Label>
           <Input
-            id="salesperson"
-            value={formData.salesperson}
-            onChange={(e) => setFormData({ ...formData, salesperson: e.target.value })}
+            id="accountManager"
+            value={formData.accountManager}
+            onChange={(e) => setFormData({ ...formData, accountManager: e.target.value })}
             required
             className="mt-1"
           />
