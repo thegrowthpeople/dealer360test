@@ -991,7 +991,7 @@ const Index = () => {
                         }}
                       >
                         {/* Confidence Color Bar */}
-                        <div className={`h-1.5 w-full ${getConfidenceBgColor(scorecard.totalScore)} transition-all duration-300 group-hover:shadow-lg group-hover:brightness-110`} />
+                        <div className={`h-1.5 w-full ${getConfidenceBgColor(scorecard.totalScore)} transition-all duration-300 group-hover:h-2.5 group-hover:shadow-lg group-hover:brightness-110`} />
                         
                         {/* Action Buttons - Top Right */}
                         <div className="absolute top-4 right-4 flex gap-1.5 z-10">
