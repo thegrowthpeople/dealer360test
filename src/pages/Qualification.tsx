@@ -970,7 +970,7 @@ const Index = () => {
                       <Card
                         key={scorecard.id}
                         className={`relative cursor-pointer group transition-all duration-300 border-2 overflow-hidden ${
-                          "hover:border-primary hover:shadow-2xl hover:shadow-primary/20"
+                          "hover:border-foreground/80 hover:shadow-2xl hover:shadow-foreground/10"
                         } ${scorecard.archived ? "opacity-60" : ""} hover:-translate-y-2 animate-fade-in bg-gradient-to-br from-background to-muted/20`}
                         style={{
                           animationDelay: `${index * 50}ms`,
