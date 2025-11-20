@@ -267,6 +267,17 @@ const Index = () => {
     return `${formattedDate} (${daysUntil} days)`;
   };
 
+  const getDaysColorClass = (dateStr: string): string => {
+    if (!dateStr) return "";
+    const closeDate = new Date(dateStr);
+    const now = new Date();
+    const daysUntil = differenceInDays(closeDate, now);
+    
+    if (daysUntil > 30) return "text-green-600 dark:text-green-400";
+    if (daysUntil >= 15) return "text-amber-600 dark:text-amber-400";
+    return "text-red-600 dark:text-red-400";
+  };
+
   const handleUpdateComponent = async (
     component: keyof Pick<Scorecard, "funds" | "authority" | "interest" | "need" | "timing">,
     index: number,
@@ -1282,7 +1293,9 @@ const Index = () => {
                             <div className="flex items-center gap-2 text-sm">
                               <div className="flex items-center gap-2 text-muted-foreground flex-1">
                                 <Calendar className="w-4 h-4 text-primary/60" />
-                                <span className="font-medium">{formatCloseDateWithDays(scorecard.expectedOrderDate)}</span>
+                                <span className={`font-medium ${getDaysColorClass(scorecard.expectedOrderDate)}`}>
+                                  {formatCloseDateWithDays(scorecard.expectedOrderDate)}
+                                </span>
                               </div>
                             </div>
                             
@@ -1527,8 +1540,10 @@ const Index = () => {
                                 </td>
                               )}
                               {visibleColumns.expectedDate && (
-                                <td className="p-3 text-sm text-muted-foreground">
-                                  {formatCloseDateWithDays(scorecard.expectedOrderDate)}
+                                <td className="p-3 text-sm">
+                                  <span className={getDaysColorClass(scorecard.expectedOrderDate)}>
+                                    {formatCloseDateWithDays(scorecard.expectedOrderDate)}
+                                  </span>
                                 </td>
                               )}
                               {visibleColumns.lastModified && (
@@ -1637,7 +1652,9 @@ const Index = () => {
                     {activeScorecard.customerName} • {activeScorecard.accountManager}
                   </p>
                   <div className="flex gap-4 text-sm text-muted-foreground mt-2">
-                    <span>Expected: {formatCloseDateWithDays(activeScorecard.expectedOrderDate)}</span>
+                    <span>
+                      Expected: <span className={getDaysColorClass(activeScorecard.expectedOrderDate)}>{formatCloseDateWithDays(activeScorecard.expectedOrderDate)}</span>
+                    </span>
                     <span>•</span>
                     <span>Review: {activeScorecard.reviewDate}</span>
                     <span>•</span>
