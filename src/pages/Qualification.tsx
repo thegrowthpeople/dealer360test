@@ -1137,7 +1137,7 @@ const Index = () => {
                         </div>
                         </div>
 
-                        <CardContent className="p-6 pt-4 flex flex-col h-full">
+                        <CardContent className="p-4 pt-3 flex flex-col h-full">
                           {/* Score Circle - Prominent */}
                           <div className="flex items-start justify-between mb-4">
                             <div className="flex-1 pr-4">
@@ -1196,10 +1196,10 @@ const Index = () => {
                           </div>
 
                           {/* Spacer to push footer to bottom */}
-                          <div className="flex-grow min-h-[20px]"></div>
+                          <div className="flex-grow min-h-[8px]"></div>
 
                           {/* Info Section - Footer (fixed position) */}
-                          <div className="space-y-3 pt-4 border-t border-border/50 mt-auto">
+                          <div className="space-y-2 pt-3 border-t border-border/50 mt-auto">
                             <div className="flex items-center justify-between text-sm h-[20px]">
                               <span className={`font-medium ${getDaysColorClass(scorecard.expectedOrderDate)}`}>
                                 {formatCloseDateWithDays(scorecard.expectedOrderDate).date}
