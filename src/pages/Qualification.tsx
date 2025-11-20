@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { ScorecardForm } from "@/components/qualification/ScorecardForm";
 import { ScoreHeader } from "@/components/qualification/ScoreHeader";
 import { FAINTSection } from "@/components/qualification/FAINTSection";
@@ -1156,31 +1155,13 @@ const Index = () => {
                           {/* Score Circle - Prominent */}
                           <div className="flex items-start justify-between mb-4">
                             <div className="flex-1 pr-4">
-                              <TooltipProvider>
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <p className="text-base font-semibold text-primary/80 line-clamp-2 h-[48px] mb-2 cursor-help">
-                                      {scorecard.customerName}
-                                    </p>
-                                  </TooltipTrigger>
-                                  <TooltipContent className="max-w-xs">
-                                    <p>{scorecard.customerName}</p>
-                                  </TooltipContent>
-                                </Tooltip>
-                              </TooltipProvider>
+                              <p className="text-base font-semibold text-primary/80 line-clamp-2 h-[48px] mb-2">
+                                {scorecard.customerName}
+                              </p>
                               
-                              <TooltipProvider>
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <h3 className="text-xl font-bold text-foreground line-clamp-2 h-[56px] group-hover:text-primary transition-colors cursor-help">
-                                      {scorecard.opportunityName}
-                                    </h3>
-                                  </TooltipTrigger>
-                                  <TooltipContent className="max-w-xs">
-                                    <p>{scorecard.opportunityName}</p>
-                                  </TooltipContent>
-                                </Tooltip>
-                              </TooltipProvider>
+                              <h3 className="text-xl font-bold text-foreground line-clamp-2 h-[56px] group-hover:text-primary transition-colors">
+                                {scorecard.opportunityName}
+                              </h3>
                             </div>
                             
                             {/* Circular Score Indicator */}
