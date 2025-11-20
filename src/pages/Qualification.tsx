@@ -13,6 +13,7 @@ import { ScorecardTimeline } from "@/components/qualification/ScorecardTimeline"
 import { ScorecardFilters, FilterState } from "@/components/qualification/ScorecardFilters";
 import { StatsSummary } from "@/components/qualification/StatsSummary";
 import { ConfidenceIndicator } from "@/components/qualification/ConfidenceIndicator";
+import { ConfidenceTrendChart } from "@/components/qualification/ConfidenceTrendChart";
 import { Scorecard, FAINT_QUESTIONS } from "@/types/scorecard";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
@@ -762,6 +763,13 @@ const Index = () => {
               />
             )}
             
+            {/* Confidence Trend Chart */}
+            {!comparisonMode && !timelineView && !viewAllVersionsFor && sortedScorecards.length > 0 && (
+              <div className="mb-6">
+                <ConfidenceTrendChart scorecards={scorecards} />
+              </div>
+            )}
+            
             {!comparisonMode && sortedScorecards.length > 0 && (
               <div className="flex items-center justify-between gap-3 mb-4 mt-4">
                 <div className="flex items-center gap-3">
@@ -1206,13 +1214,7 @@ const Index = () => {
             <div className="bg-card rounded-xl border border-border p-6 shadow-sm">
               <div className="flex flex-col lg:flex-row lg:items-start gap-6">
                 {/* Confidence Indicator - Left Side */}
-                <ConfidenceIndicator 
-                  scorecard={activeScorecard} 
-                  scorecardVersions={scorecards.filter(
-                    sc => sc.opportunityName === activeScorecard.opportunityName && 
-                          sc.customerName === activeScorecard.customerName
-                  )}
-                />
+                <ConfidenceIndicator scorecard={activeScorecard} />
 
                 {/* Scorecard Details - Middle */}
                 <div className="flex-1">

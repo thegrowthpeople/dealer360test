@@ -1,27 +1,14 @@
 import { Scorecard } from "@/types/scorecard";
 import { TrendingUp, TrendingDown, AlertTriangle } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useEffect, useState } from "react";
-import { LineChart, Line, ResponsiveContainer } from "recharts";
 
 interface ConfidenceIndicatorProps {
   scorecard: Scorecard;
-  scorecardVersions?: Scorecard[]; // Historical versions for trend analysis
 }
 
-export const ConfidenceIndicator = ({ scorecard, scorecardVersions = [] }: ConfidenceIndicatorProps) => {
+export const ConfidenceIndicator = ({ scorecard }: ConfidenceIndicatorProps) => {
   const [animatedPercentage, setAnimatedPercentage] = useState(0);
-
-  // Calculate confidence percentage for any scorecard
-  const calculateConfidencePercentage = (sc: Scorecard) => {
-    let positives = 0;
-    ["funds", "authority", "interest", "need", "timing"].forEach((key) => {
-      const component = sc[key as keyof Pick<Scorecard, "funds" | "authority" | "interest" | "need" | "timing">];
-      positives += component.questions.filter(q => q.state === "positive").length;
-    });
-    return (positives / 40) * 100;
-  };
 
   // Calculate positives and negatives by category
   const calculateCategoryStats = () => {
@@ -54,24 +41,7 @@ export const ConfidenceIndicator = ({ scorecard, scorecardVersions = [] }: Confi
   });
 
   // Calculate confidence percentage (positives out of 40)
-  const confidencePercentage = calculateConfidencePercentage(scorecard);
-
-  // Prepare trend data for sparkline
-  const trendData = scorecardVersions.length > 0 
-    ? scorecardVersions
-        .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
-        .slice(-10) // Last 10 versions
-        .map((sc, idx) => ({
-          version: sc.version,
-          confidence: calculateConfidencePercentage(sc)
-        }))
-    : [];
-
-  // Calculate trend direction
-  const firstConfidence = trendData.length > 0 ? trendData[0].confidence : confidencePercentage;
-  const confidenceChange = confidencePercentage - firstConfidence;
-  const trendDirection = confidenceChange > 5 ? "up" : confidenceChange < -5 ? "down" : "stable";
-  const trendColor = trendDirection === "up" ? "#10b981" : trendDirection === "down" ? "#ef4444" : "#6b7280";
+  const confidencePercentage = (positives / 40) * 100;
 
   // Animate progress bar on mount
   useEffect(() => {
@@ -133,71 +103,15 @@ export const ConfidenceIndicator = ({ scorecard, scorecardVersions = [] }: Confi
           )}
         </div>
 
-        {/* Big Percentage with Trend Tooltip */}
-        {trendData.length > 1 ? (
-          <TooltipProvider delayDuration={200}>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div className="flex items-baseline gap-2 cursor-help">
-                  <span className={`text-5xl font-bold ${confidence.color} leading-none`}>
-                    {Math.round(confidencePercentage)}%
-                  </span>
-                  <span className={`text-lg font-semibold ${confidence.color}`}>
-                    {confidence.label}
-                  </span>
-                </div>
-              </TooltipTrigger>
-              <TooltipContent side="right" className="w-64 p-4 z-[100]" sideOffset={10}>
-                <div className="space-y-3">
-                  <div className="space-y-1">
-                    <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                      Confidence Trend
-                    </div>
-                    <div className="text-lg font-bold" style={{ color: trendColor }}>
-                      {Math.round(confidencePercentage)}%
-                    </div>
-                  </div>
-
-                  {/* Sparkline Chart */}
-                  <div className="h-12 w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={trendData}>
-                        <Line 
-                          type="monotone" 
-                          dataKey="confidence" 
-                          stroke={trendColor}
-                          strokeWidth={2}
-                          dot={false}
-                        />
-                      </LineChart>
-                    </ResponsiveContainer>
-                  </div>
-
-                  {/* Trend Summary */}
-                  <div className="flex items-center justify-between pt-2 border-t text-sm">
-                    <span className="text-muted-foreground">
-                      v{trendData[0].version} → v{scorecard.version}
-                    </span>
-                    <div className="flex items-center gap-1 font-semibold" style={{ color: trendColor }}>
-                      {trendDirection === "up" && <TrendingUp className="w-4 h-4" />}
-                      {trendDirection === "down" && <TrendingDown className="w-4 h-4" />}
-                      {confidenceChange > 0 ? "+" : ""}{Math.round(confidenceChange)}%
-                    </div>
-                  </div>
-                </div>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        ) : (
-          <div className="flex items-baseline gap-2">
-            <span className={`text-5xl font-bold ${confidence.color} leading-none`}>
-              {Math.round(confidencePercentage)}%
-            </span>
-            <span className={`text-lg font-semibold ${confidence.color}`}>
-              {confidence.label}
-            </span>
-          </div>
-        )}
+        {/* Big Percentage */}
+        <div className="flex items-baseline gap-2">
+          <span className={`text-5xl font-bold ${confidence.color} leading-none`}>
+            {Math.round(confidencePercentage)}%
+          </span>
+          <span className={`text-lg font-semibold ${confidence.color}`}>
+            {confidence.label}
+          </span>
+        </div>
 
         {/* Progress Bar */}
         <div className="relative h-8 bg-muted rounded-full overflow-hidden border border-border">
