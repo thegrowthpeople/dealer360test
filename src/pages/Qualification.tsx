@@ -162,6 +162,7 @@ const Index = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [scorecardToDelete, setScorecardToDelete] = useState<Scorecard | null>(null);
   const [viewMode, setViewMode] = useState<"tiles" | "table">("tiles");
+  const [animateTiles, setAnimateTiles] = useState(false);
   const [visibleColumns, setVisibleColumns] = useState({
     opportunity: true,
     customer: true,
@@ -176,6 +177,15 @@ const Index = () => {
   const toggleColumnVisibility = (column: keyof typeof visibleColumns) => {
     setVisibleColumns(prev => ({ ...prev, [column]: !prev[column] }));
   };
+
+  // Animate tiles on mount and when view mode changes
+  useEffect(() => {
+    setAnimateTiles(false);
+    const timer = setTimeout(() => {
+      setAnimateTiles(true);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [viewMode]); // Re-trigger when view mode changes
 
   // Helper to check if scorecard was recently modified (within 48 hours)
   const isRecentlyModified = (updatedAt: string): boolean => {
@@ -1045,8 +1055,8 @@ const Index = () => {
                                   stroke="currentColor"
                                   strokeWidth="6"
                                   fill="none"
-                                  strokeDasharray={`${(scorecard.totalScore / 40) * 213.628} 213.628`}
-                                  className={`${getConfidenceColor(scorecard.totalScore)} transition-all duration-500`}
+                                  strokeDasharray={animateTiles ? `${(scorecard.totalScore / 40) * 213.628} 213.628` : "0 213.628"}
+                                  className={`${getConfidenceColor(scorecard.totalScore)} transition-all duration-1000 ease-out`}
                                   strokeLinecap="round"
                                 />
                               </svg>
