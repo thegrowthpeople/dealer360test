@@ -1083,20 +1083,6 @@ const Index = () => {
                         
                         {/* Action Buttons - Top Right */}
                         <div className="absolute top-4 right-4 flex gap-1.5 z-10">
-                          {/* Pin Button - Always Visible */}
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className={`h-7 w-7 backdrop-blur-sm transition-all duration-200 hover:scale-110 ${
-                              scorecard.pinned 
-                                ? "bg-yellow-500 hover:bg-yellow-600 text-white" 
-                                : "bg-background/80 hover:bg-background"
-                            }`}
-                            onClick={(e) => handleTogglePin(scorecard.id, e)}
-                          >
-                            <Star className={`h-3.5 w-3.5 transition-all ${scorecard.pinned ? "fill-white" : ""}`} />
-                          </Button>
-                          
                           {/* Other Action Buttons - Show on Hover */}
                           <div className="flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                           <Popover>
@@ -1234,18 +1220,34 @@ const Index = () => {
                               <span className="font-medium">{scorecard.accountManager}</span>
                             </div>
                             
-                            <div className="flex items-center gap-2 text-xs text-muted-foreground/70 h-[20px]">
-                              <Clock className="w-3.5 h-3.5" />
-                              <span>Modified {format(new Date(scorecard.updatedAt), "MMM d")}</span>
-                              {isRecentlyModified(scorecard.updatedAt) && (
-                                <span 
-                                  className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30"
-                                  title="Modified within last 48 hours"
-                                >
-                                  <div className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
-                                  <span className="text-[10px] font-medium uppercase tracking-wider">New</span>
-                                </span>
-                              )}
+                            <div className="flex items-center justify-between gap-2 text-xs text-muted-foreground/70 h-[20px]">
+                              <div className="flex items-center gap-2">
+                                <Clock className="w-3.5 h-3.5" />
+                                <span>Modified {format(new Date(scorecard.updatedAt), "MMM d")}</span>
+                                {isRecentlyModified(scorecard.updatedAt) && (
+                                  <span 
+                                    className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30"
+                                    title="Modified within last 48 hours"
+                                  >
+                                    <div className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+                                    <span className="text-[10px] font-medium uppercase tracking-wider">New</span>
+                                  </span>
+                                )}
+                              </div>
+                              
+                              {/* Pin Button - Bottom Right */}
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className={`h-6 w-6 transition-all duration-200 hover:scale-110 ${
+                                  scorecard.pinned 
+                                    ? "bg-yellow-500 hover:bg-yellow-600 text-white" 
+                                    : "bg-background/80 hover:bg-accent hover:text-accent-foreground"
+                                }`}
+                                onClick={(e) => handleTogglePin(scorecard.id, e)}
+                              >
+                                <Star className={`h-3.5 w-3.5 transition-all ${scorecard.pinned ? "fill-white" : ""}`} />
+                              </Button>
                             </div>
                           </div>
 
