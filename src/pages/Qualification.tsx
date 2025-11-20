@@ -214,6 +214,15 @@ const Index = () => {
     return "text-red-500";
   };
 
+  // Get confidence background color for tile bar
+  const getConfidenceBgColor = (score: number): string => {
+    const percentage = (score / 40) * 100;
+    if (percentage >= 75) return "bg-green-500";
+    if (percentage >= 50) return "bg-emerald-500";
+    if (percentage >= 30) return "bg-amber-500";
+    return "bg-red-500";
+  };
+
   const handleCreateScorecard = async (data: Partial<Scorecard> & { frameworkId?: string }) => {
     const frameworkId = data.frameworkId || defaultFramework?.id;
     
@@ -972,12 +981,8 @@ const Index = () => {
                           handleScorecardSelect(scorecard.id);
                         }}
                       >
-                        {/* Gradient Header Bar */}
-                        <div className="h-2 w-full bg-gradient-to-r from-primary via-accent to-primary bg-[length:200%_100%] group-hover:animate-[shimmer_2s_linear_infinite]" 
-                             style={{
-                               animation: 'shimmer 3s linear infinite'
-                             }}
-                        />
+                        {/* Confidence Color Bar */}
+                        <div className={`h-1.5 w-full ${getConfidenceBgColor(scorecard.totalScore)}`} />
                         
                         {/* Action Buttons - Top Right */}
                         <div className="absolute top-4 right-4 flex gap-1.5 z-10">
