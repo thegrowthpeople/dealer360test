@@ -1037,7 +1037,7 @@ const Index = () => {
                             size="icon"
                             className={`h-7 w-7 backdrop-blur-sm transition-all duration-200 hover:scale-110 ${
                               scorecard.pinned 
-                                ? "bg-yellow-500 hover:bg-yellow-600 text-white" 
+                                ? "bg-yellow-500 hover:bg-yellow-600 text-white animate-pulse" 
                                 : "bg-background/80 hover:bg-background"
                             }`}
                             onClick={(e) => handleTogglePin(scorecard.id, e)}
