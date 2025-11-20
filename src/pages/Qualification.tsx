@@ -13,7 +13,6 @@ import { ScorecardTimeline } from "@/components/qualification/ScorecardTimeline"
 import { ScorecardFilters, FilterState } from "@/components/qualification/ScorecardFilters";
 import { StatsSummary } from "@/components/qualification/StatsSummary";
 import { ConfidenceIndicator } from "@/components/qualification/ConfidenceIndicator";
-import { ConfidenceTrendChart } from "@/components/qualification/ConfidenceTrendChart";
 import { Scorecard, FAINT_QUESTIONS } from "@/types/scorecard";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
@@ -761,13 +760,6 @@ const Index = () => {
                   setNewTagName(tag);
                 }}
               />
-            )}
-            
-            {/* Confidence Trend Chart */}
-            {!comparisonMode && !timelineView && !viewAllVersionsFor && sortedScorecards.length > 0 && (
-              <div className="mb-6">
-                <ConfidenceTrendChart scorecards={scorecards} />
-              </div>
             )}
             
             {!comparisonMode && sortedScorecards.length > 0 && (
