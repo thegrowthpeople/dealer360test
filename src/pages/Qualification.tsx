@@ -1094,19 +1094,10 @@ const Index = () => {
                           <div className="space-y-2">
                             <div className="flex items-center gap-2 text-sm text-muted-foreground">
                               <Calendar className="w-4 h-4" />
-                              <span className="font-medium">Expected:</span> {scorecard.expectedOrderDate}
+                              {scorecard.expectedOrderDate}
                             </div>
                             <div className="text-sm text-muted-foreground">
-                              <span className="font-medium">Account Manager:</span> {scorecard.accountManager}
-                            </div>
-                            <div className="text-sm text-muted-foreground">
-                              <span className="font-medium">Framework:</span> 
-                              <Badge 
-                                variant="outline"
-                                className="ml-2 bg-primary/10 border-primary/30 text-primary text-xs"
-                              >
-                                {getFrameworkName(scorecard.frameworkId)}
-                              </Badge>
+                              {scorecard.accountManager}
                             </div>
                             <div className="text-xs text-muted-foreground pt-2 border-t border-border">
                               <span>Created: {new Date(scorecard.createdAt).toLocaleDateString()}</span>
