@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/command";
 import { usePerformanceFilters } from "@/contexts/PerformanceFiltersContext";
 import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
 
 export interface FilterState {
   version: string;
@@ -174,10 +175,19 @@ export const ScorecardFilters = ({
       filtered = filtered.filter((d) => d["Dealer Group"] === selectedGroup);
     }
     
+    // Sort by region first, then by dealership name
+    const REGION_ORDER = ["Metro", "Regional", "Independent", "NZ", "Internal"];
     return filtered.sort((a, b) => {
-      const dealershipA = a.Dealership || "";
-      const dealershipB = b.Dealership || "";
-      return dealershipA.localeCompare(dealershipB);
+      const regionA = a.Region || "";
+      const regionB = b.Region || "";
+      const indexA = REGION_ORDER.indexOf(regionA);
+      const indexB = REGION_ORDER.indexOf(regionB);
+      const regionCompare = (indexA === -1 ? 999 : indexA) - (indexB === -1 ? 999 : indexB);
+      
+      if (regionCompare !== 0) return regionCompare;
+      
+      // Within same region, sort alphabetically by dealership name
+      return (a.Dealership || "").localeCompare(b.Dealership || "");
     });
   }, [dealerships, selectedBDMId, selectedGroup, bdms]);
 
@@ -341,24 +351,35 @@ export const ScorecardFilters = ({
                   />
                   All Dealerships
                 </CommandItem>
-                {filteredDealerships.map((dealership) => (
-                  <CommandItem
-                    key={dealership["Dealer ID"]}
-                    value={dealership.Dealership}
-                    onSelect={() => {
-                      setSelectedDealerId(dealership["Dealer ID"]);
-                      setDealershipSearchOpen(false);
-                    }}
-                  >
-                    <Check
-                      className={cn(
-                        "mr-2 h-4 w-4",
-                        selectedDealerId === dealership["Dealer ID"] ? "opacity-100" : "opacity-0"
+                {filteredDealerships.map((dealership, index) => {
+                  const currentRegion = dealership.Region;
+                  const nextDealership = filteredDealerships[index + 1];
+                  const nextRegion = nextDealership?.Region;
+                  const isLastInRegion = currentRegion !== nextRegion && (currentRegion === "Metro" || currentRegion === "Regional" || currentRegion === "Independent");
+                  
+                  return (
+                    <div key={dealership["Dealer ID"]}>
+                      <CommandItem
+                        value={dealership.Dealership}
+                        onSelect={() => {
+                          setSelectedDealerId(dealership["Dealer ID"]);
+                          setDealershipSearchOpen(false);
+                        }}
+                      >
+                        <Check
+                          className={cn(
+                            "mr-2 h-4 w-4",
+                            selectedDealerId === dealership["Dealer ID"] ? "opacity-100" : "opacity-0"
+                          )}
+                        />
+                        {dealership.Dealership}
+                      </CommandItem>
+                      {isLastInRegion && (
+                        <Separator className="my-1 w-[240px]" />
                       )}
-                    />
-                    {dealership.Dealership}
-                  </CommandItem>
-                ))}
+                    </div>
+                  );
+                })}
               </CommandGroup>
             </CommandList>
           </Command>

@@ -26,6 +26,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { startOfMonth, endOfMonth, eachDayOfInterval, isMonday, format } from "date-fns";
 
@@ -130,7 +131,20 @@ export const PerformanceFilters = ({ showWeekFilter = true }: PerformanceFilters
       filtered = filtered.filter((d) => d["Dealer Group"] === selectedGroup);
     }
 
-    return filtered;
+    // Sort by region first, then by dealership name
+    const REGION_ORDER = ["Metro", "Regional", "Independent", "NZ", "Internal"];
+    return filtered.sort((a, b) => {
+      const regionA = a.Region || "";
+      const regionB = b.Region || "";
+      const indexA = REGION_ORDER.indexOf(regionA);
+      const indexB = REGION_ORDER.indexOf(regionB);
+      const regionCompare = (indexA === -1 ? 999 : indexA) - (indexB === -1 ? 999 : indexB);
+      
+      if (regionCompare !== 0) return regionCompare;
+      
+      // Within same region, sort alphabetically by dealership name
+      return (a.Dealership || "").localeCompare(b.Dealership || "");
+    });
   }, [dealerships, selectedBDMId, selectedGroup, bdms]);
 
   // Calculate Mondays in the selected month
@@ -318,24 +332,35 @@ export const PerformanceFilters = ({ showWeekFilter = true }: PerformanceFilters
                   />
                   All Dealerships
                 </CommandItem>
-                {filteredDealerships.map((dealer) => (
-                  <CommandItem
-                    key={dealer["Dealer ID"]}
-                    value={dealer.Dealership || ""}
-                    onSelect={() => {
-                      setSelectedDealerId(dealer["Dealer ID"]);
-                      setDealershipSearchOpen(false);
-                    }}
-                  >
-                    <Check
-                      className={cn(
-                        "mr-2 h-4 w-4",
-                        selectedDealerId === dealer["Dealer ID"] ? "opacity-100" : "opacity-0"
+                {filteredDealerships.map((dealer, index) => {
+                  const currentRegion = dealer.Region;
+                  const nextDealer = filteredDealerships[index + 1];
+                  const nextRegion = nextDealer?.Region;
+                  const isLastInRegion = currentRegion !== nextRegion && (currentRegion === "Metro" || currentRegion === "Regional" || currentRegion === "Independent");
+                  
+                  return (
+                    <div key={dealer["Dealer ID"]}>
+                      <CommandItem
+                        value={dealer.Dealership || ""}
+                        onSelect={() => {
+                          setSelectedDealerId(dealer["Dealer ID"]);
+                          setDealershipSearchOpen(false);
+                        }}
+                      >
+                        <Check
+                          className={cn(
+                            "mr-2 h-4 w-4",
+                            selectedDealerId === dealer["Dealer ID"] ? "opacity-100" : "opacity-0"
+                          )}
+                        />
+                        {dealer.Dealership}
+                      </CommandItem>
+                      {isLastInRegion && (
+                        <Separator className="my-1 w-[240px]" />
                       )}
-                    />
-                    {dealer.Dealership}
-                  </CommandItem>
-                ))}
+                    </div>
+                  );
+                })}
               </CommandGroup>
             </CommandList>
           </Command>
