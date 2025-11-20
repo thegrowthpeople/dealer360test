@@ -13,11 +13,12 @@ import { ScorecardTimeline } from "@/components/qualification/ScorecardTimeline"
 import { ScorecardFilters, FilterState } from "@/components/qualification/ScorecardFilters";
 import { StatsSummary } from "@/components/qualification/StatsSummary";
 import { ConfidenceIndicator } from "@/components/qualification/ConfidenceIndicator";
-import { Scorecard, FAINT_QUESTIONS } from "@/types/scorecard";
+import { Scorecard, QuestionState } from "@/types/scorecard";
 import { DatabaseScorecard } from "@/types/qualificationScorecard";
 import { toast } from "sonner";
 import { useScorecards } from "@/hooks/useScorecards";
 import { useAuth } from "@/contexts/AuthContext";
+import { useFrameworks } from "@/hooks/useFrameworks";
 import { Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -91,13 +92,14 @@ const convertToScorecard = (db: DatabaseScorecard): Scorecard => ({
 });
 
 // Helper to convert Scorecard to database format
-const convertToDatabase = (scorecard: Scorecard, bdmId: number | null) => ({
+const convertToDatabase = (scorecard: Scorecard, bdmId: number | null, frameworkId: string) => ({
   account_manager: scorecard.accountManager,
   customer_name: scorecard.customerName,
   opportunity_name: scorecard.opportunityName,
   expected_order_date: scorecard.expectedOrderDate || null,
   review_date: scorecard.reviewDate,
   bdm_id: bdmId,
+  framework_id: frameworkId,
   funds: scorecard.funds,
   authority: scorecard.authority,
   interest: scorecard.interest,
@@ -117,6 +119,7 @@ const Index = () => {
     duplicateScorecard: duplicateScorecardMutation,
     togglePin 
   } = useScorecards();
+  const { defaultFramework, isLoading: isLoadingFrameworks } = useFrameworks();
   
   // Convert database scorecards to UI format
   const scorecards = dbScorecards?.map(convertToScorecard) || [];
@@ -195,11 +198,16 @@ const Index = () => {
   };
 
   const handleCreateScorecard = async (data: Partial<Scorecard>) => {
+    if (!defaultFramework) {
+      toast.error("No qualification framework available");
+      return;
+    }
+    
     const newScorecard = createEmptyScorecard(data);
     setIsDialogOpen(false);
     
     try {
-      const created = await createScorecardMutation(convertToDatabase(newScorecard, bdmId));
+      const created = await createScorecardMutation(convertToDatabase(newScorecard, bdmId, defaultFramework.id));
       const converted = convertToScorecard(created);
       setActiveScorecard(converted);
       setOriginalScorecard(JSON.parse(JSON.stringify(converted)));
@@ -292,13 +300,13 @@ const Index = () => {
   };
 
   const handleSaveAndClose = async () => {
-    if (!activeScorecard) return;
+    if (!activeScorecard || !defaultFramework) return;
     
     try {
       // Save current changes to database
       await updateScorecardMutation({
         id: activeScorecard.id,
-        ...convertToDatabase(activeScorecard, bdmId),
+        ...convertToDatabase(activeScorecard, bdmId, defaultFramework.id),
       });
       
       setShowUnsavedDialog(false);
@@ -657,6 +665,32 @@ const Index = () => {
 
   const toggleSortOrder = () => {
     setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+  };
+
+  // Loading and framework checks
+  if (isLoading || isLoadingFrameworks) {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (!defaultFramework) {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <p className="text-muted-foreground">No qualification framework available</p>
+      </div>
+    );
+  }
+
+  // Get questions from framework dynamically
+  const frameworkQuestions = {
+    funds: defaultFramework.structure.categories.find(c => c.name === 'funds')?.questions || [],
+    authority: defaultFramework.structure.categories.find(c => c.name === 'authority')?.questions || [],
+    interest: defaultFramework.structure.categories.find(c => c.name === 'interest')?.questions || [],
+    need: defaultFramework.structure.categories.find(c => c.name === 'need')?.questions || [],
+    timing: defaultFramework.structure.categories.find(c => c.name === 'timing')?.questions || [],
   };
 
   return (
@@ -1112,7 +1146,7 @@ const Index = () => {
                 title="Funds"
                 color="bg-primary"
                 component={activeScorecard.funds}
-                questions={FAINT_QUESTIONS.funds}
+                questions={frameworkQuestions.funds}
                 onUpdate={(index, state, note) => handleUpdateComponent("funds", index, state, note)}
               />
               
@@ -1120,7 +1154,7 @@ const Index = () => {
                 title="Authority"
                 color="bg-accent"
                 component={activeScorecard.authority}
-                questions={FAINT_QUESTIONS.authority}
+                questions={frameworkQuestions.authority}
                 onUpdate={(index, state, note) => handleUpdateComponent("authority", index, state, note)}
               />
               
@@ -1128,7 +1162,7 @@ const Index = () => {
                 title="Interest"
                 color="bg-success"
                 component={activeScorecard.interest}
-                questions={FAINT_QUESTIONS.interest}
+                questions={frameworkQuestions.interest}
                 onUpdate={(index, state, note) => handleUpdateComponent("interest", index, state, note)}
               />
               
@@ -1136,7 +1170,7 @@ const Index = () => {
                 title="Need"
                 color="bg-warning"
                 component={activeScorecard.need}
-                questions={FAINT_QUESTIONS.need}
+                questions={frameworkQuestions.need}
                 onUpdate={(index, state, note) => handleUpdateComponent("need", index, state, note)}
               />
               
@@ -1144,7 +1178,7 @@ const Index = () => {
                 title="Timing"
                 color="bg-destructive"
                 component={activeScorecard.timing}
-                questions={FAINT_QUESTIONS.timing}
+                questions={frameworkQuestions.timing}
                 onUpdate={(index, state, note) => handleUpdateComponent("timing", index, state, note)}
               />
             </div>

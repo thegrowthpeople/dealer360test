@@ -9,6 +9,28 @@ export interface FAINTComponent {
   questions: QuestionData[];
 }
 
+export interface FrameworkCategory {
+  name: string;
+  displayName: string;
+  color: string;
+  questions: string[];
+}
+
+export interface FrameworkStructure {
+  categories: FrameworkCategory[];
+}
+
+export interface QualificationFramework {
+  id: string;
+  name: string;
+  description: string;
+  active: boolean;
+  display_order: number;
+  structure: FrameworkStructure;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface DatabaseScorecard {
   id: string;
   version: number;
@@ -24,6 +46,7 @@ export interface DatabaseScorecard {
   pinned: boolean;
   tags: string[];
   bdm_id: number | null;
+  framework_id: string;
   funds: FAINTComponent;
   authority: FAINTComponent;
   interest: FAINTComponent;
@@ -38,6 +61,7 @@ export interface CreateScorecardInput {
   expected_order_date?: string;
   review_date: string;
   bdm_id: number | null;
+  framework_id: string;
   funds: FAINTComponent;
   authority: FAINTComponent;
   interest: FAINTComponent;
