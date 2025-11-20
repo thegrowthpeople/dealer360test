@@ -556,6 +556,26 @@ const Index = () => {
     setHasCreatedVersionForEdit(false); // Reset flag when opening a scorecard
   };
 
+  const handleRippleEffect = (e: React.MouseEvent<HTMLDivElement>) => {
+    const card = e.currentTarget;
+    const ripple = document.createElement('span');
+    const rect = card.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    const x = e.clientX - rect.left - size / 2;
+    const y = e.clientY - rect.top - size / 2;
+
+    ripple.style.width = ripple.style.height = `${size}px`;
+    ripple.style.left = `${x}px`;
+    ripple.style.top = `${y}px`;
+    ripple.classList.add('ripple');
+
+    card.appendChild(ripple);
+
+    setTimeout(() => {
+      ripple.remove();
+    }, 600);
+  };
+
 
   // Get timeline scorecards (all versions of the same opportunity)
   const timelineScorecards = timelineView
@@ -994,10 +1014,13 @@ const Index = () => {
                     return (
                       <Card
                         key={scorecard.id}
-                        className={`relative cursor-pointer group transition-all duration-300 border ${
+                        className={`relative cursor-pointer group transition-all duration-300 border overflow-hidden ${
                           "hover:border-primary/60 hover:shadow-xl hover:shadow-primary/10"
-                        } ${scorecard.archived ? "opacity-60" : ""} hover:-translate-y-1 hover:scale-[1.02]`}
-                        onClick={() => handleScorecardSelect(scorecard.id)}
+                        } ${scorecard.archived ? "opacity-60" : ""} hover:-translate-y-1 hover:scale-[1.02] animate-fade-in`}
+                        onClick={(e) => {
+                          handleRippleEffect(e);
+                          handleScorecardSelect(scorecard.id);
+                        }}
                       >
                         <div className="absolute top-3 right-3 flex gap-2">
                           <>
