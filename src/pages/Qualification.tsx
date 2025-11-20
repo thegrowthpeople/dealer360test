@@ -163,6 +163,7 @@ const Index = () => {
   const [scorecardToDelete, setScorecardToDelete] = useState<Scorecard | null>(null);
   const [viewMode, setViewMode] = useState<"tiles" | "table">("tiles");
   const [animateTiles, setAnimateTiles] = useState(false);
+  const [sectionsExpandAll, setSectionsExpandAll] = useState<"all" | "none">("none");
   const [visibleColumns, setVisibleColumns] = useState({
     opportunity: true,
     customer: true,
@@ -1556,8 +1557,9 @@ const Index = () => {
                 component={activeScorecard.funds}
                 questions={frameworkQuestions.funds}
                 onUpdate={(index, state, note) => handleUpdateComponent("funds", index, state, note)}
+                forceExpanded={sectionsExpandAll === "all"}
               />
-              
+
               <FAINTSection
                 title={activeFramework.structure.categories.find(c => c.name === 'authority')?.displayName || "Authority"}
                 color="bg-accent"
