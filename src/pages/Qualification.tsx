@@ -673,9 +673,14 @@ const Index = () => {
       <div className="px-6 xl:px-12 2xl:px-16 space-y-6">
         <div className="flex items-center justify-between">
           <div>
-          <h1 className="text-4xl xl:text-5xl font-bold text-foreground mb-4">Qualification Scorecards</h1>
+          <h1 className="text-4xl xl:text-5xl font-bold text-foreground mb-4">
+            {activeScorecard ? "Qualification Scorecard" : "Qualification Scorecards"}
+          </h1>
           <p className="text-muted-foreground">
-            Track and manage qualification and activity for sales opportunities
+            {activeScorecard 
+              ? "Indication of confidence to win based on activity and findings."
+              : "Track and manage qualification and activity for sales opportunities"
+            }
           </p>
           </div>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -1199,7 +1204,11 @@ const Index = () => {
         {activeScorecard && (
           <div className="space-y-6">
             <div className="bg-card rounded-xl border border-border p-6 shadow-sm">
-              <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-6">
+              <div className="flex flex-col lg:flex-row lg:items-start gap-6">
+                {/* Confidence Indicator - Left Side */}
+                <ConfidenceIndicator scorecard={activeScorecard} />
+
+                {/* Scorecard Details - Middle */}
                 <div className="flex-1">
                   <h2 className="text-2xl font-bold text-foreground flex items-center gap-2">
                     {activeScorecard.opportunityName}
@@ -1232,9 +1241,7 @@ const Index = () => {
                   </div>
                 </div>
 
-                {/* Confidence Indicator */}
-                <ConfidenceIndicator scorecard={activeScorecard} />
-
+                {/* Action Buttons - Right Side */}
                 <div className="flex flex-col gap-2 lg:self-start">
                   {opportunityGroups[`${activeScorecard.opportunityName}_${activeScorecard.customerName}`]?.length > 1 && (
                     <Button 
