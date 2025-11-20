@@ -14,7 +14,11 @@ import { ScorecardFilters, FilterState } from "@/components/qualification/Scorec
 import { StatsSummary } from "@/components/qualification/StatsSummary";
 import { ConfidenceIndicator } from "@/components/qualification/ConfidenceIndicator";
 import { Scorecard, FAINT_QUESTIONS } from "@/types/scorecard";
+import { DatabaseScorecard } from "@/types/qualificationScorecard";
 import { toast } from "sonner";
+import { useScorecards } from "@/hooks/useScorecards";
+import { useAuth } from "@/contexts/AuthContext";
+import { Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -66,8 +70,56 @@ const createEmptyScorecard = (data: Partial<Scorecard>): Scorecard => {
   };
 };
 
+// Helper to convert DatabaseScorecard to Scorecard format  
+const convertToScorecard = (db: DatabaseScorecard): Scorecard => ({
+  id: db.id,
+  version: db.version,
+  accountManager: db.account_manager,
+  customerName: db.customer_name,
+  opportunityName: db.opportunity_name,
+  expectedOrderDate: db.expected_order_date || "",
+  reviewDate: db.review_date,
+  createdAt: db.created_at,
+  archived: db.archived,
+  pinned: db.pinned,
+  tags: db.tags,
+  funds: db.funds,
+  authority: db.authority,
+  interest: db.interest,
+  need: db.need,
+  timing: db.timing,
+});
+
+// Helper to convert Scorecard to database format
+const convertToDatabase = (scorecard: Scorecard, bdmId: number | null) => ({
+  account_manager: scorecard.accountManager,
+  customer_name: scorecard.customerName,
+  opportunity_name: scorecard.opportunityName,
+  expected_order_date: scorecard.expectedOrderDate || null,
+  review_date: scorecard.reviewDate,
+  bdm_id: bdmId,
+  funds: scorecard.funds,
+  authority: scorecard.authority,
+  interest: scorecard.interest,
+  need: scorecard.need,
+  timing: scorecard.timing,
+  tags: scorecard.tags || [],
+});
+
 const Index = () => {
-  const [scorecards, setScorecards] = useState<Scorecard[]>([]);
+  const { bdmId } = useAuth();
+  const { 
+    scorecards: dbScorecards, 
+    isLoading, 
+    createScorecard: createScorecardMutation, 
+    updateScorecard: updateScorecardMutation, 
+    deleteScorecard,
+    duplicateScorecard: duplicateScorecardMutation,
+    togglePin 
+  } = useScorecards();
+  
+  // Convert database scorecards to UI format
+  const scorecards = dbScorecards?.map(convertToScorecard) || [];
   const [activeScorecard, setActiveScorecard] = useState<Scorecard | null>(null);
   const [originalScorecard, setOriginalScorecard] = useState<Scorecard | null>(null);
   const [showUnsavedDialog, setShowUnsavedDialog] = useState(false);
@@ -142,17 +194,24 @@ const Index = () => {
     return "border-green-500 bg-green-500/5";
   };
 
-  const handleCreateScorecard = (data: Partial<Scorecard>) => {
+  const handleCreateScorecard = async (data: Partial<Scorecard>) => {
     const newScorecard = createEmptyScorecard(data);
-    setScorecards([...scorecards, newScorecard]);
-    setActiveScorecard(newScorecard);
-    setOriginalScorecard(JSON.parse(JSON.stringify(newScorecard)));
-    setHasCreatedVersionForEdit(true); // New scorecard, already a "new version"
     setIsDialogOpen(false);
-    toast.success("Scorecard created successfully!");
+    
+    try {
+      const created = await createScorecardMutation(convertToDatabase(newScorecard, bdmId));
+      const converted = convertToScorecard(created);
+      setActiveScorecard(converted);
+      setOriginalScorecard(JSON.parse(JSON.stringify(converted)));
+      setHasCreatedVersionForEdit(true);
+      toast.success("Scorecard created successfully!");
+    } catch (error) {
+      console.error('Failed to create scorecard:', error);
+      toast.error("Failed to create scorecard");
+    }
   };
 
-  const handleUpdateComponent = (
+  const handleUpdateComponent = async (
     component: keyof Pick<Scorecard, "funds" | "authority" | "interest" | "need" | "timing">,
     index: number,
     state: any,
@@ -162,23 +221,31 @@ const Index = () => {
 
     // If this is the first edit on an existing scorecard, create a new version
     if (!hasCreatedVersionForEdit) {
-      const newVersion: Scorecard = {
-        ...activeScorecard,
-        id: Date.now().toString(),
-        version: activeScorecard.version + 1,
-        reviewDate: new Date().toISOString().split('T')[0],
-        createdAt: new Date().toISOString(),
-      };
-      
-      // Apply the change to the new version
-      newVersion[component].questions[index] = { state, note };
-      
-      // Add new version to scorecards and set it as active
-      setScorecards([...scorecards, newVersion]);
-      setActiveScorecard(newVersion);
-      setOriginalScorecard(JSON.parse(JSON.stringify(newVersion)));
-      setHasCreatedVersionForEdit(true);
-      toast.success(`Version ${newVersion.version} created from changes!`);
+      try {
+        const dbScorecard = dbScorecards.find(s => s.id === activeScorecard.id);
+        if (!dbScorecard) return;
+        
+        const created = await duplicateScorecardMutation(dbScorecard);
+        const newVersion = convertToScorecard(created);
+        
+        // Apply the change to the new version
+        newVersion[component].questions[index] = { state, note };
+        
+        setActiveScorecard(newVersion);
+        setOriginalScorecard(JSON.parse(JSON.stringify(newVersion)));
+        setHasCreatedVersionForEdit(true);
+        
+        // Update in database
+        await updateScorecardMutation({
+          id: newVersion.id,
+          [component]: newVersion[component],
+        });
+        
+        toast.success(`Version ${newVersion.version} created from changes!`);
+      } catch (error) {
+        console.error('Failed to create new version:', error);
+        toast.error("Failed to create new version");
+      }
       return;
     }
 
@@ -187,25 +254,26 @@ const Index = () => {
     updatedScorecard[component].questions[index] = { state, note };
     
     setActiveScorecard(updatedScorecard);
-    setScorecards(scorecards.map(s => s.id === updatedScorecard.id ? updatedScorecard : s));
   };
 
-  const handleNewVersion = () => {
+  const handleNewVersion = async () => {
     if (!activeScorecard) return;
     
-    const newVersion: Scorecard = {
-      ...activeScorecard,
-      id: Date.now().toString(),
-      version: activeScorecard.version + 1,
-      reviewDate: new Date().toISOString().split('T')[0],
-      createdAt: new Date().toISOString(),
-    };
-    
-    setScorecards([...scorecards, newVersion]);
-    setActiveScorecard(newVersion);
-    setOriginalScorecard(JSON.parse(JSON.stringify(newVersion)));
-    setHasCreatedVersionForEdit(true); // Manual version creation, can now edit this version
-    toast.success(`Version ${newVersion.version} created!`);
+    try {
+      const dbScorecard = dbScorecards.find(s => s.id === activeScorecard.id);
+      if (!dbScorecard) return;
+      
+      const created = await duplicateScorecardMutation(dbScorecard);
+      const newVersion = convertToScorecard(created);
+      
+      setActiveScorecard(newVersion);
+      setOriginalScorecard(JSON.parse(JSON.stringify(newVersion)));
+      setHasCreatedVersionForEdit(true);
+      toast.success(`Version ${newVersion.version} created!`);
+    } catch (error) {
+      console.error('Failed to create new version:', error);
+      toast.error("Failed to create new version");
+    }
   };
 
   const hasUnsavedChanges = () => {
@@ -223,26 +291,39 @@ const Index = () => {
     }
   };
 
-  const handleSaveAndClose = () => {
-    // Changes are already saved automatically via handleUpdateComponent
-    setShowUnsavedDialog(false);
-    setActiveScorecard(null);
-    setOriginalScorecard(null);
-    setHasCreatedVersionForEdit(false);
-    if (pendingNavigation) {
-      navigate(pendingNavigation);
-      setPendingNavigation(null);
+  const handleSaveAndClose = async () => {
+    if (!activeScorecard) return;
+    
+    try {
+      // Save current changes to database
+      await updateScorecardMutation({
+        id: activeScorecard.id,
+        ...convertToDatabase(activeScorecard, bdmId),
+      });
+      
+      setShowUnsavedDialog(false);
+      setActiveScorecard(null);
+      setOriginalScorecard(null);
+      setHasCreatedVersionForEdit(false);
+      if (pendingNavigation) {
+        navigate(pendingNavigation);
+        setPendingNavigation(null);
+      }
+      toast.success("Changes saved successfully!");
+    } catch (error) {
+      console.error('Failed to save changes:', error);
+      toast.error("Failed to save changes");
     }
-    toast.success("Changes saved successfully!");
   };
 
-  const handleDiscardAndClose = () => {
-    if (originalScorecard && hasCreatedVersionForEdit) {
+  const handleDiscardAndClose = async () => {
+    if (originalScorecard && hasCreatedVersionForEdit && activeScorecard) {
       // Remove the auto-created version if user discards
-      setScorecards(scorecards.filter(s => s.id !== activeScorecard?.id));
-    } else if (originalScorecard) {
-      // Revert changes in the scorecards array
-      setScorecards(scorecards.map(s => s.id === originalScorecard.id ? originalScorecard : s));
+      try {
+        await deleteScorecard(activeScorecard.id);
+      } catch (error) {
+        console.error('Failed to delete auto-created version:', error);
+      }
     }
     setShowUnsavedDialog(false);
     setActiveScorecard(null);
@@ -297,61 +378,98 @@ const Index = () => {
 
 
 
-  const handleUnarchive = (id: string, e: React.MouseEvent) => {
+  const handleUnarchive = async (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    setScorecards(scorecards.map(s => 
-      s.id === id ? { ...s, archived: false } : s
-    ));
-    toast.success("Scorecard unarchived");
+    try {
+      await updateScorecardMutation({
+        id,
+        archived: false,
+      });
+      toast.success("Scorecard unarchived");
+    } catch (error) {
+      console.error('Failed to unarchive:', error);
+      toast.error("Failed to unarchive scorecard");
+    }
   };
 
-  const handleTogglePin = (id: string, e: React.MouseEvent) => {
+  const handleTogglePin = async (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    setScorecards(scorecards.map(s => 
-      s.id === id ? { ...s, pinned: !s.pinned } : s
-    ));
     const scorecard = scorecards.find(s => s.id === id);
-    toast.success(scorecard?.pinned ? "Scorecard unpinned" : "Scorecard pinned");
+    if (!scorecard) return;
+    
+    try {
+      await togglePin({ id, pinned: !scorecard.pinned });
+      toast.success(scorecard.pinned ? "Scorecard unpinned" : "Scorecard pinned");
+    } catch (error) {
+      console.error('Failed to toggle pin:', error);
+      toast.error("Failed to update pin status");
+    }
   };
 
-  const handleAddTag = (id: string, tag: string) => {
+  const handleAddTag = async (id: string, tag: string) => {
     if (!tag.trim()) return;
-    setScorecards(scorecards.map(s => 
-      s.id === id ? { ...s, tags: [...(s.tags || []), tag.trim()] } : s
-    ));
-    toast.success("Tag added");
+    const scorecard = scorecards.find(s => s.id === id);
+    if (!scorecard) return;
+    
+    try {
+      await updateScorecardMutation({
+        id,
+        tags: [...(scorecard.tags || []), tag.trim()],
+      });
+      toast.success("Tag added");
+    } catch (error) {
+      console.error('Failed to add tag:', error);
+      toast.error("Failed to add tag");
+    }
   };
 
-  const handleRemoveTag = (id: string, tagToRemove: string, e: React.MouseEvent) => {
+  const handleRemoveTag = async (id: string, tagToRemove: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    setScorecards(scorecards.map(s => 
-      s.id === id ? { ...s, tags: (s.tags || []).filter(t => t !== tagToRemove) } : s
-    ));
-    toast.success("Tag removed");
+    const scorecard = scorecards.find(s => s.id === id);
+    if (!scorecard) return;
+    
+    try {
+      await updateScorecardMutation({
+        id,
+        tags: (scorecard.tags || []).filter(t => t !== tagToRemove),
+      });
+      toast.success("Tag removed");
+    } catch (error) {
+      console.error('Failed to remove tag:', error);
+      toast.error("Failed to remove tag");
+    }
   };
 
-  const handleRenameTag = (oldTag: string, newTag: string) => {
+  const handleRenameTag = async (oldTag: string, newTag: string) => {
     if (!newTag.trim() || oldTag === newTag) {
       setEditingTag(null);
       setNewTagName("");
       return;
     }
 
-    setScorecards(prevCards =>
-      prevCards.map(card => ({
-        ...card,
-        tags: card.tags?.map(t => t === oldTag ? newTag.trim() : t)
-      }))
-    );
+    try {
+      // Update all scorecards that have this tag
+      const updatePromises = scorecards
+        .filter(card => card.tags?.includes(oldTag))
+        .map(card => updateScorecardMutation({
+          id: card.id,
+          tags: card.tags?.map(t => t === oldTag ? newTag.trim() : t)
+        }));
+      
+      await Promise.all(updatePromises);
 
-    setFilters(prevFilters => ({
-      ...prevFilters,
-      tags: prevFilters.tags.map(t => t === oldTag ? newTag.trim() : t)
-    }));
+      setFilters(prevFilters => ({
+        ...prevFilters,
+        tags: prevFilters.tags.map(t => t === oldTag ? newTag.trim() : t)
+      }));
 
-    setEditingTag(null);
-    setNewTagName("");
-    toast.success(`Tag renamed from "${oldTag}" to "${newTag}"`);
+      setEditingTag(null);
+      setNewTagName("");
+      toast.success(`Tag renamed from "${oldTag}" to "${newTag}"`);
+    } catch (error) {
+      console.error('Failed to rename tag:', error);
+      toast.error("Failed to rename tag");
+    }
   };
 
 
@@ -360,26 +478,36 @@ const Index = () => {
     setDuplicateDialogOpen(true);
   };
 
-  const handleDuplicateSubmit = (data: Partial<Scorecard>) => {
+  const handleDuplicateSubmit = async (data: Partial<Scorecard>) => {
     if (!scorecardToDuplicate) return;
     
-    const duplicated: Scorecard = {
-      ...scorecardToDuplicate,
-      id: Date.now().toString(),
-      version: 1,
-      accountManager: data.accountManager || scorecardToDuplicate.accountManager,
-      customerName: data.customerName || scorecardToDuplicate.customerName,
-      opportunityName: data.opportunityName || scorecardToDuplicate.opportunityName,
-      expectedOrderDate: data.expectedOrderDate || scorecardToDuplicate.expectedOrderDate,
-      reviewDate: data.reviewDate || new Date().toISOString().split('T')[0],
-      createdAt: new Date().toISOString(),
-      archived: false,
-    };
-    
-    setScorecards([...scorecards, duplicated]);
-    setDuplicateDialogOpen(false);
-    setScorecardToDuplicate(null);
-    toast.success("Scorecard duplicated successfully!");
+    try {
+      const dbScorecard = dbScorecards.find(s => s.id === scorecardToDuplicate.id);
+      if (!dbScorecard) return;
+      
+      const created = await duplicateScorecardMutation(dbScorecard);
+      const converted = convertToScorecard(created);
+      
+      // Update with custom data if provided
+      if (data.accountManager || data.customerName || data.opportunityName || 
+          data.expectedOrderDate || data.reviewDate) {
+        await updateScorecardMutation({
+          id: converted.id,
+          account_manager: data.accountManager || converted.accountManager,
+          customer_name: data.customerName || converted.customerName,
+          opportunity_name: data.opportunityName || converted.opportunityName,
+          expected_order_date: data.expectedOrderDate || converted.expectedOrderDate || null,
+          review_date: data.reviewDate || converted.reviewDate,
+        });
+      }
+      
+      setDuplicateDialogOpen(false);
+      setScorecardToDuplicate(null);
+      toast.success("Scorecard duplicated successfully!");
+    } catch (error) {
+      console.error('Failed to duplicate scorecard:', error);
+      toast.error("Failed to duplicate scorecard");
+    }
   };
 
   const handleScorecardSelect = (id: string) => {
@@ -562,6 +690,13 @@ const Index = () => {
         </div>
 
         <Separator className="my-6" />
+
+      {isLoading ? (
+        <div className="flex items-center justify-center py-12">
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        </div>
+      ) : (
+        <>
 
       <Dialog open={duplicateDialogOpen} onOpenChange={setDuplicateDialogOpen}>
         <DialogContent className="max-w-2xl">
@@ -1087,6 +1222,8 @@ const Index = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+        </>
+      )}
     </div>
   );
 };
