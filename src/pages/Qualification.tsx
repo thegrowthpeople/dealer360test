@@ -389,20 +389,30 @@ const Index = () => {
       const target = e.target as HTMLElement;
       const link = target.closest('a[href]');
       
-      if (link && activeScorecard && hasUnsavedChanges()) {
+      if (link && activeScorecard) {
         const href = link.getAttribute('href');
-        if (href && !href.startsWith('#') && href !== location.pathname) {
+        if (href && !href.startsWith('#')) {
           e.preventDefault();
           e.stopPropagation();
-          setPendingNavigation(href);
-          setShowUnsavedDialog(true);
+          
+          // If there are unsaved changes, show dialog
+          if (hasUnsavedChanges()) {
+            setPendingNavigation(href);
+            setShowUnsavedDialog(true);
+          } else {
+            // No unsaved changes - just close scorecard and navigate
+            setActiveScorecard(null);
+            setOriginalScorecard(null);
+            setHasCreatedVersionForEdit(false);
+            navigate(href);
+          }
         }
       }
     };
 
     document.addEventListener('click', handleClick, true);
     return () => document.removeEventListener('click', handleClick, true);
-  }, [activeScorecard, originalScorecard, location]);
+  }, [activeScorecard, originalScorecard, location, navigate]);
 
 
 
