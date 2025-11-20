@@ -1061,7 +1061,7 @@ const Index = () => {
                                 />
                               </svg>
                               <div className="absolute inset-0 flex flex-col items-center justify-center">
-                                <span className="text-2xl font-bold text-foreground">{scorecard.totalScore}</span>
+                                <span className={`text-2xl font-bold ${getConfidenceColor(scorecard.totalScore)}`}>{scorecard.totalScore}</span>
                                 <span className="text-xs text-muted-foreground font-medium">/40</span>
                               </div>
                               {(() => {
