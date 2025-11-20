@@ -259,13 +259,13 @@ const Index = () => {
     }
   };
 
-  const formatCloseDateWithDays = (dateStr: string): string => {
-    if (!dateStr) return "";
+  const formatCloseDateWithDays = (dateStr: string): { date: string; days: string } => {
+    if (!dateStr) return { date: "", days: "" };
     const closeDate = new Date(dateStr);
     const now = new Date();
     const daysUntil = differenceInDays(closeDate, now);
     const formattedDate = format(closeDate, "EEE d MMM");
-    return `${formattedDate} - ${daysUntil}d`;
+    return { date: formattedDate, days: `${daysUntil}d` };
   };
 
   const getDaysColorClass = (dateStr: string): string => {
@@ -1214,16 +1214,19 @@ const Index = () => {
 
                           {/* Info Section - Footer (fixed position) */}
                           <div className="space-y-3 pt-4 border-t border-border/50 mt-auto">
-                            <div className="flex items-center gap-2 text-sm h-[20px]">
-                              <div className="flex items-center gap-2 text-muted-foreground flex-1">
-                                <span className={`font-medium ${getDaysColorClass(scorecard.expectedOrderDate)}`}>
-                                  {formatCloseDateWithDays(scorecard.expectedOrderDate)}
-                                </span>
+                            <div className="flex items-center justify-between text-sm h-[20px]">
+                              <span className={`font-medium ${getDaysColorClass(scorecard.expectedOrderDate)}`}>
+                                {formatCloseDateWithDays(scorecard.expectedOrderDate).date}
+                              </span>
+                              <div className="flex items-center gap-2">
                                 {isOverdue(scorecard.expectedOrderDate) && (
-                                  <Badge variant="destructive" className="text-xs ml-1">
+                                  <Badge variant="destructive" className="text-xs">
                                     OVERDUE
                                   </Badge>
                                 )}
+                                <span className={`font-medium ${getDaysColorClass(scorecard.expectedOrderDate)}`}>
+                                  {formatCloseDateWithDays(scorecard.expectedOrderDate).days}
+                                </span>
                               </div>
                             </div>
                             
@@ -1469,15 +1472,20 @@ const Index = () => {
                               )}
                               {visibleColumns.expectedDate && (
                                 <td className="p-3 text-sm">
-                                  <div className="flex items-center gap-2">
+                                  <div className="flex items-center justify-between gap-2">
                                     <span className={getDaysColorClass(scorecard.expectedOrderDate)}>
-                                      {formatCloseDateWithDays(scorecard.expectedOrderDate)}
+                                      {formatCloseDateWithDays(scorecard.expectedOrderDate).date}
                                     </span>
-                                    {isOverdue(scorecard.expectedOrderDate) && (
-                                      <Badge variant="destructive" className="text-xs">
-                                        OVERDUE
-                                      </Badge>
-                                    )}
+                                    <div className="flex items-center gap-2">
+                                      {isOverdue(scorecard.expectedOrderDate) && (
+                                        <Badge variant="destructive" className="text-xs">
+                                          OVERDUE
+                                        </Badge>
+                                      )}
+                                      <span className={getDaysColorClass(scorecard.expectedOrderDate)}>
+                                        {formatCloseDateWithDays(scorecard.expectedOrderDate).days}
+                                      </span>
+                                    </div>
                                   </div>
                                 </td>
                               )}
@@ -1588,7 +1596,13 @@ const Index = () => {
                   </p>
                   <div className="flex gap-4 text-sm text-muted-foreground mt-2">
                     <span className="flex items-center gap-2">
-                      Expected: <span className={getDaysColorClass(activeScorecard.expectedOrderDate)}>{formatCloseDateWithDays(activeScorecard.expectedOrderDate)}</span>
+                      Expected: 
+                      <span className={getDaysColorClass(activeScorecard.expectedOrderDate)}>
+                        {formatCloseDateWithDays(activeScorecard.expectedOrderDate).date}
+                      </span>
+                      <span className={getDaysColorClass(activeScorecard.expectedOrderDate)}>
+                        {formatCloseDateWithDays(activeScorecard.expectedOrderDate).days}
+                      </span>
                       {isOverdue(activeScorecard.expectedOrderDate) && (
                         <Badge variant="destructive" className="text-xs">
                           OVERDUE
