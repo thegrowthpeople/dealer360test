@@ -25,7 +25,7 @@ import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { format } from "date-fns";
+import { format, differenceInDays } from "date-fns";
 import {
   Select,
   SelectContent,
@@ -256,6 +256,15 @@ const Index = () => {
       console.error('Failed to create scorecard:', error);
       toast.error("Failed to create scorecard");
     }
+  };
+
+  const formatCloseDateWithDays = (dateStr: string): string => {
+    if (!dateStr) return "";
+    const closeDate = new Date(dateStr);
+    const now = new Date();
+    const daysUntil = differenceInDays(closeDate, now);
+    const formattedDate = format(closeDate, "EEE d MMM yy");
+    return `${formattedDate} (${daysUntil} days)`;
   };
 
   const handleUpdateComponent = async (
@@ -1273,7 +1282,7 @@ const Index = () => {
                             <div className="flex items-center gap-2 text-sm">
                               <div className="flex items-center gap-2 text-muted-foreground flex-1">
                                 <Calendar className="w-4 h-4 text-primary/60" />
-                                <span className="font-medium">{scorecard.expectedOrderDate}</span>
+                                <span className="font-medium">{formatCloseDateWithDays(scorecard.expectedOrderDate)}</span>
                               </div>
                             </div>
                             
@@ -1519,7 +1528,7 @@ const Index = () => {
                               )}
                               {visibleColumns.expectedDate && (
                                 <td className="p-3 text-sm text-muted-foreground">
-                                  {scorecard.expectedOrderDate}
+                                  {formatCloseDateWithDays(scorecard.expectedOrderDate)}
                                 </td>
                               )}
                               {visibleColumns.lastModified && (
@@ -1628,7 +1637,7 @@ const Index = () => {
                     {activeScorecard.customerName} • {activeScorecard.accountManager}
                   </p>
                   <div className="flex gap-4 text-sm text-muted-foreground mt-2">
-                    <span>Expected: {activeScorecard.expectedOrderDate}</span>
+                    <span>Expected: {formatCloseDateWithDays(activeScorecard.expectedOrderDate)}</span>
                     <span>•</span>
                     <span>Review: {activeScorecard.reviewDate}</span>
                     <span>•</span>
