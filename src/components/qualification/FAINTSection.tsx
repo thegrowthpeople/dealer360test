@@ -12,10 +12,9 @@ interface FAINTSectionProps {
   component: FAINTComponent;
   questions: string[];
   onUpdate: (index: number, state: QuestionState, note: string) => void;
-  disabled?: boolean;
 }
 
-export const FAINTSection = ({ title, color, component, questions, onUpdate, disabled = false }: FAINTSectionProps) => {
+export const FAINTSection = ({ title, color, component, questions, onUpdate }: FAINTSectionProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const positiveCount = component.questions.filter((q) => q.state === "positive").length;
   const negativeCount = component.questions.filter((q) => q.state === "negative").length;
@@ -80,7 +79,6 @@ export const FAINTSection = ({ title, color, component, questions, onUpdate, dis
                 data={component.questions[index]}
                 onStateChange={(state) => onUpdate(index, state, component.questions[index].note)}
                 onNoteChange={(note) => onUpdate(index, component.questions[index].state, note)}
-                disabled={disabled}
               />
             ))}
           </div>

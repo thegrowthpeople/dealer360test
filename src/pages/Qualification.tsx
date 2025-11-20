@@ -168,9 +168,6 @@ const Index = () => {
     version: true,
     expectedDate: true,
   });
-  const [oldVersionDialogOpen, setOldVersionDialogOpen] = useState(false);
-  const [pendingOldVersionScorecard, setPendingOldVersionScorecard] = useState<Scorecard | null>(null);
-  const [isReadOnly, setIsReadOnly] = useState(false);
 
   const toggleColumnVisibility = (column: keyof typeof visibleColumns) => {
     setVisibleColumns(prev => ({ ...prev, [column]: !prev[column] }));
@@ -311,18 +308,17 @@ const Index = () => {
   };
 
   const hasUnsavedChanges = () => {
-    if (!activeScorecard || !originalScorecard || isReadOnly) return false;
+    if (!activeScorecard || !originalScorecard) return false;
     return JSON.stringify(activeScorecard) !== JSON.stringify(originalScorecard);
   };
 
   const handleBackClick = () => {
-    if (hasUnsavedChanges() && !isReadOnly) {
+    if (hasUnsavedChanges()) {
       setShowUnsavedDialog(true);
     } else {
       setActiveScorecard(null);
       setOriginalScorecard(null);
       setHasCreatedVersionForEdit(false);
-      setIsReadOnly(false);
     }
   };
 
@@ -547,83 +543,9 @@ const Index = () => {
 
   const handleScorecardSelect = (id: string) => {
     const scorecard = scorecards.find(s => s.id === id) || null;
-    if (!scorecard) return;
-    
-    // Check if this is the latest version
-    const opportunityKey = `${scorecard.opportunityName}_${scorecard.customerName}`;
-    const versionsForOpportunity = scorecards.filter(
-      s => `${s.opportunityName}_${s.customerName}` === opportunityKey
-    );
-    const maxVersion = Math.max(...versionsForOpportunity.map(s => s.version));
-    const isLatestVersion = scorecard.version === maxVersion;
-    
-    if (!isLatestVersion) {
-      // Show dialog for old version
-      setPendingOldVersionScorecard(scorecard);
-      setOldVersionDialogOpen(true);
-    } else {
-      // Open normally for latest version
-      setActiveScorecard(scorecard);
-      setOriginalScorecard(JSON.parse(JSON.stringify(scorecard)));
-      setHasCreatedVersionForEdit(false);
-      setIsReadOnly(false);
-    }
-  };
-
-  const handleCreateNewVersionFromOld = async () => {
-    if (!pendingOldVersionScorecard) return;
-    
-    try {
-      // Create a new version
-      const opportunityKey = `${pendingOldVersionScorecard.opportunityName}_${pendingOldVersionScorecard.customerName}`;
-      const versionsForOpportunity = scorecards.filter(
-        s => `${s.opportunityName}_${s.customerName}` === opportunityKey
-      );
-      const maxVersion = Math.max(...versionsForOpportunity.map(s => s.version));
-      
-      const newScorecard: Scorecard = {
-        ...pendingOldVersionScorecard,
-        id: Date.now().toString(),
-        version: maxVersion + 1,
-        createdAt: new Date().toISOString(),
-        reviewDate: new Date().toISOString().split('T')[0],
-      };
-      
-      // Use the old scorecard's framework_id to maintain consistency
-      const frameworkId = pendingOldVersionScorecard.frameworkId || defaultFramework?.id;
-      
-      if (!frameworkId) {
-        toast.error("No framework available");
-        return;
-      }
-      
-      const newDbScorecard = await createScorecardMutation(
-        convertToDatabase(newScorecard, bdmId, frameworkId)
-      );
-      
-      setOldVersionDialogOpen(false);
-      setPendingOldVersionScorecard(null);
-      setActiveScorecard(convertToScorecard(newDbScorecard));
-      setOriginalScorecard(convertToScorecard(newDbScorecard));
-      setHasCreatedVersionForEdit(false);
-      setIsReadOnly(false);
-      toast.success(`Created version ${maxVersion + 1}`);
-    } catch (error) {
-      console.error('Failed to create new version:', error);
-      toast.error("Failed to create new version");
-    }
-  };
-
-  const handleViewOldVersionReadOnly = () => {
-    if (!pendingOldVersionScorecard) return;
-    
-    setActiveScorecard(pendingOldVersionScorecard);
-    setOriginalScorecard(JSON.parse(JSON.stringify(pendingOldVersionScorecard)));
-    setHasCreatedVersionForEdit(false);
-    setIsReadOnly(true);
-    setOldVersionDialogOpen(false);
-    setPendingOldVersionScorecard(null);
-    toast.info("Viewing in read-only mode");
+    setActiveScorecard(scorecard);
+    setOriginalScorecard(scorecard ? JSON.parse(JSON.stringify(scorecard)) : null);
+    setHasCreatedVersionForEdit(false); // Reset flag when opening a scorecard
   };
 
 
@@ -1554,12 +1476,10 @@ const Index = () => {
                       Timeline
                     </Button>
                   )}
-                  {!isReadOnly && (
-                    <Button onClick={handleNewVersion} variant="outline" size="sm" className="gap-2">
-                      <Plus className="w-4 h-4" />
-                      New Version
-                    </Button>
-                  )}
+                  <Button onClick={handleNewVersion} variant="outline" size="sm" className="gap-2">
+                    <Plus className="w-4 h-4" />
+                    New Version
+                  </Button>
                   <Button variant="outline" onClick={handleBackClick} size="sm">
                     Close
                   </Button>
@@ -1570,27 +1490,12 @@ const Index = () => {
             <ScoreHeader scorecard={activeScorecard} />
 
             <div className="space-y-6">
-              {isReadOnly && (
-                <div className="bg-warning/10 border border-warning/30 rounded-lg p-4 flex items-center gap-3">
-                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-warning/20 flex items-center justify-center">
-                    <FileText className="w-5 h-5 text-warning" />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-foreground">Read-Only Mode</p>
-                    <p className="text-sm text-muted-foreground">
-                      You're viewing an older version. Changes cannot be saved to previous versions.
-                    </p>
-                  </div>
-                </div>
-              )}
-              
               <FAINTSection
                 title="Funds"
                 color="bg-primary"
                 component={activeScorecard.funds}
                 questions={frameworkQuestions.funds}
                 onUpdate={(index, state, note) => handleUpdateComponent("funds", index, state, note)}
-                disabled={isReadOnly}
               />
               
               <FAINTSection
@@ -1599,7 +1504,6 @@ const Index = () => {
                 component={activeScorecard.authority}
                 questions={frameworkQuestions.authority}
                 onUpdate={(index, state, note) => handleUpdateComponent("authority", index, state, note)}
-                disabled={isReadOnly}
               />
               
               <FAINTSection
@@ -1608,7 +1512,6 @@ const Index = () => {
                 component={activeScorecard.interest}
                 questions={frameworkQuestions.interest}
                 onUpdate={(index, state, note) => handleUpdateComponent("interest", index, state, note)}
-                disabled={isReadOnly}
               />
               
               <FAINTSection
@@ -1617,7 +1520,6 @@ const Index = () => {
                 component={activeScorecard.need}
                 questions={frameworkQuestions.need}
                 onUpdate={(index, state, note) => handleUpdateComponent("need", index, state, note)}
-                disabled={isReadOnly}
               />
               
               <FAINTSection
@@ -1626,7 +1528,6 @@ const Index = () => {
                 component={activeScorecard.timing}
                 questions={frameworkQuestions.timing}
                 onUpdate={(index, state, note) => handleUpdateComponent("timing", index, state, note)}
-                disabled={isReadOnly}
               />
             </div>
           </div>
@@ -1678,34 +1579,6 @@ const Index = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-
-      {/* Old Version Warning Dialog */}
-      <AlertDialog open={oldVersionDialogOpen} onOpenChange={setOldVersionDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Previous Version - Read Only</AlertDialogTitle>
-            <AlertDialogDescription>
-              You're trying to view an older version of this scorecard. Previous versions are locked and cannot be edited.
-              <br /><br />
-              Would you like to create a new version based on this one, or view it in read-only mode?
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter className="flex-col sm:flex-row gap-2">
-            <AlertDialogCancel onClick={() => {
-              setOldVersionDialogOpen(false);
-              setPendingOldVersionScorecard(null);
-            }}>
-              Cancel
-            </AlertDialogCancel>
-            <Button variant="outline" onClick={handleViewOldVersionReadOnly}>
-              View Read-Only
-            </Button>
-            <AlertDialogAction onClick={handleCreateNewVersionFromOld}>
-              Create New Version
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
 
       {/* Unsaved Changes Dialog */}
       <AlertDialog open={showUnsavedDialog} onOpenChange={(open) => {
