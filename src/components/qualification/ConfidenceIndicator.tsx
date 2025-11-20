@@ -61,7 +61,7 @@ export const ConfidenceIndicator = ({ scorecard }: ConfidenceIndicatorProps) => 
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
-            Confidence Score
+            Confidence
           </div>
           {negatives > 0 && (
             <div className="flex items-center gap-1.5 px-2.5 py-1 bg-red-100 rounded-full">
@@ -111,11 +111,6 @@ export const ConfidenceIndicator = ({ scorecard }: ConfidenceIndicatorProps) => 
               <span className="text-muted-foreground">negative</span>
             </div>
           )}
-          <div className="flex items-center gap-2 text-sm ml-auto">
-            <span className="text-muted-foreground">of</span>
-            <span className="font-bold text-foreground">40</span>
-            <span className="text-muted-foreground">total</span>
-          </div>
         </div>
       </div>
     </Card>
