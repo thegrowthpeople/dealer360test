@@ -717,20 +717,22 @@ const Index = () => {
             }
           </p>
           </div>
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger asChild>
-              <Button size="lg" className="gap-2">
-                <Plus className="w-5 h-5" />
-                New Scorecard
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-2xl">
-              <DialogHeader>
-                <DialogTitle>Create New Scorecard</DialogTitle>
-              </DialogHeader>
-              <ScorecardForm onSubmit={handleCreateScorecard} />
-            </DialogContent>
-          </Dialog>
+          {!activeScorecard && (
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              <DialogTrigger asChild>
+                <Button size="lg" className="gap-2">
+                  <Plus className="w-5 h-5" />
+                  New Scorecard
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-2xl">
+                <DialogHeader>
+                  <DialogTitle>Create New Scorecard</DialogTitle>
+                </DialogHeader>
+                <ScorecardForm onSubmit={handleCreateScorecard} />
+              </DialogContent>
+            </Dialog>
+          )}
         </div>
 
         <Separator className="my-6" />
