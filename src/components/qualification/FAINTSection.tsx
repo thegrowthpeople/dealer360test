@@ -33,11 +33,11 @@ export const FAINTSection = ({ title, color, component, questions, onUpdate }: F
   
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen}>
-      <div className="bg-card rounded-xl border border-border shadow-sm hover:shadow-md transition-shadow duration-200">
+      <div className="bg-card rounded-xl border border-border shadow-sm hover:shadow-lg transition-all duration-300 hover:scale-[1.01]">
         <CollapsibleTrigger className="w-full">
-          <div className="flex items-center justify-between px-6 py-4 hover:bg-muted/30 transition-colors rounded-t-xl">
+          <div className="flex items-center justify-between px-6 py-4 hover:bg-muted/40 transition-all duration-300 rounded-t-xl">
             <div className="flex items-center gap-3">
-              <div className={`w-12 h-12 rounded-lg ${getStatusColor()} flex items-center justify-center shadow-sm transition-colors duration-300`}>
+              <div className={`w-12 h-12 rounded-lg ${getStatusColor()} flex items-center justify-center shadow-sm transition-all duration-300 hover:scale-110`}>
                 <span className="text-2xl font-bold text-white">{title[0]}</span>
               </div>
               <div className="text-left">
