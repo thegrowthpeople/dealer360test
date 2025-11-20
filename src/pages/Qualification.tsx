@@ -223,6 +223,12 @@ const Index = () => {
     }
   };
 
+  const handleCancelDialog = () => {
+    // Just close the dialog and stay on the current screen
+    setShowUnsavedDialog(false);
+    setPendingNavigation(null);
+  };
+
   // Warn when closing browser tab/window with unsaved changes
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
@@ -1311,7 +1317,9 @@ const Index = () => {
       </Dialog>
 
       {/* Unsaved Changes Dialog */}
-      <AlertDialog open={showUnsavedDialog} onOpenChange={setShowUnsavedDialog}>
+      <AlertDialog open={showUnsavedDialog} onOpenChange={(open) => {
+        if (!open) handleCancelDialog();
+      }}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Unsaved Changes</AlertDialogTitle>
@@ -1319,10 +1327,13 @@ const Index = () => {
               You have unsaved changes. Would you like to save them before leaving?
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel onClick={handleDiscardAndClose}>
-              Don't Save
+          <AlertDialogFooter className="flex-col sm:flex-row gap-2">
+            <AlertDialogCancel onClick={handleCancelDialog}>
+              Cancel
             </AlertDialogCancel>
+            <Button variant="outline" onClick={handleDiscardAndClose}>
+              Don't Save
+            </Button>
             <AlertDialogAction onClick={handleSaveAndClose}>
               Save Changes
             </AlertDialogAction>
