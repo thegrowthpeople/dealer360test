@@ -148,6 +148,7 @@ const Index = () => {
     version: "latest",
     showArchived: false,
     showOnlyPinned: false,
+    showOnlyOverdue: false,
     tags: [],
     dateFrom: undefined,
     dateTo: undefined,
@@ -670,6 +671,11 @@ const Index = () => {
       return false;
     }
 
+    // Show only overdue filter
+    if (filters.showOnlyOverdue && !isOverdue(scorecard.expectedOrderDate)) {
+      return false;
+    }
+
     // Account Manager filter
     if (filters.accountManager && scorecard.accountManager !== filters.accountManager) {
       return false;
@@ -1039,7 +1045,7 @@ const Index = () => {
             {sortedScorecards.length === 0 ? (
               <Card className="p-12 text-center">
                 <p className="text-lg text-muted-foreground mb-4">No scorecards match your filters</p>
-                <Button variant="outline" onClick={() => setFilters({ version: "latest", showArchived: false, showOnlyPinned: false, tags: [], dateFrom: undefined, dateTo: undefined, accountManager: null, customer: null, modifiedRange: null })}>
+                <Button variant="outline" onClick={() => setFilters({ version: "latest", showArchived: false, showOnlyPinned: false, showOnlyOverdue: false, tags: [], dateFrom: undefined, dateTo: undefined, accountManager: null, customer: null, modifiedRange: null })}>
                   Clear Filters
                 </Button>
               </Card>
@@ -1202,7 +1208,6 @@ const Index = () => {
                           <div className="space-y-3 pt-4 border-t border-border/50">
                             <div className="flex items-center gap-2 text-sm">
                               <div className="flex items-center gap-2 text-muted-foreground flex-1">
-                                <Calendar className="w-4 h-4 text-primary/60" />
                                 <span className={`font-medium ${getDaysColorClass(scorecard.expectedOrderDate)}`}>
                                   {formatCloseDateWithDays(scorecard.expectedOrderDate)}
                                 </span>

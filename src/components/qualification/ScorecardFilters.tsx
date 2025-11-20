@@ -29,6 +29,7 @@ export interface FilterState {
   version: string;
   showArchived: boolean;
   showOnlyPinned: boolean;
+  showOnlyOverdue: boolean;
   tags: string[];
   dateFrom: Date | undefined;
   dateTo: Date | undefined;
@@ -81,6 +82,7 @@ export const ScorecardFilters = ({
       version: "latest",
       showArchived: false,
       showOnlyPinned: false,
+      showOnlyOverdue: false,
       tags: [],
       dateFrom: undefined,
       dateTo: undefined,
@@ -96,6 +98,7 @@ export const ScorecardFilters = ({
     selectedDealerId !== null ||
     filters.version !== "latest" ||
     filters.showOnlyPinned ||
+    filters.showOnlyOverdue ||
     filters.tags.length > 0 ||
     filters.dateFrom !== undefined ||
     filters.dateTo !== undefined ||
@@ -606,6 +609,20 @@ export const ScorecardFilters = ({
         />
         <Label htmlFor="show-only-pinned" className="text-sm font-medium cursor-pointer whitespace-nowrap">
           Show only pinned
+        </Label>
+      </div>
+
+      {/* Show Only Overdue Switch */}
+      <div className="flex items-center space-x-2">
+        <Switch
+          id="show-only-overdue"
+          checked={filters.showOnlyOverdue}
+          onCheckedChange={(checked) =>
+            onFiltersChange({ ...filters, showOnlyOverdue: checked })
+          }
+        />
+        <Label htmlFor="show-only-overdue" className="text-sm font-medium cursor-pointer whitespace-nowrap">
+          Show only overdue
         </Label>
       </div>
 
