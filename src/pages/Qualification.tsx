@@ -1147,14 +1147,14 @@ const Index = () => {
                         </div>
                         </div>
 
-                        <CardContent className="p-6 pt-4">
+                        <CardContent className="p-6 pt-4 flex flex-col h-full">
                           {/* Score Circle - Prominent */}
                           <div className="flex items-start justify-between mb-4">
                             <div className="flex-1 pr-4">
-                              <h3 className="text-xl font-bold text-foreground mb-1 line-clamp-2 group-hover:text-primary transition-colors">
+                              <h3 className="text-xl font-bold text-foreground mb-2 line-clamp-2 h-[56px] group-hover:text-primary transition-colors">
                                 {scorecard.opportunityName}
                               </h3>
-                              <p className="text-base font-semibold text-primary/80">
+                              <p className="text-base font-semibold text-primary/80 line-clamp-2 h-[48px]">
                                 {scorecard.customerName}
                               </p>
                             </div>
@@ -1204,9 +1204,12 @@ const Index = () => {
                             </div>
                           </div>
 
-                          {/* Info Section */}
-                          <div className="space-y-3 pt-4 border-t border-border/50">
-                            <div className="flex items-center gap-2 text-sm">
+                          {/* Spacer to push footer to bottom */}
+                          <div className="flex-grow min-h-[20px]"></div>
+
+                          {/* Info Section - Footer (fixed position) */}
+                          <div className="space-y-3 pt-4 border-t border-border/50 mt-auto">
+                            <div className="flex items-center gap-2 text-sm h-[20px]">
                               <div className="flex items-center gap-2 text-muted-foreground flex-1">
                                 <span className={`font-medium ${getDaysColorClass(scorecard.expectedOrderDate)}`}>
                                   {formatCloseDateWithDays(scorecard.expectedOrderDate)}
@@ -1219,11 +1222,11 @@ const Index = () => {
                               </div>
                             </div>
                             
-                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <div className="flex items-center gap-2 text-sm text-muted-foreground h-[20px]">
                               <span className="font-medium">{scorecard.accountManager}</span>
                             </div>
                             
-                            <div className="flex items-center gap-2 text-xs text-muted-foreground/70">
+                            <div className="flex items-center gap-2 text-xs text-muted-foreground/70 h-[20px]">
                               <Clock className="w-3.5 h-3.5" />
                               <span>Modified {format(new Date(scorecard.updatedAt), "MMM d")}</span>
                               {isRecentlyModified(scorecard.updatedAt) && (
@@ -1239,7 +1242,7 @@ const Index = () => {
                           </div>
 
                           {/* Badges Section */}
-                          <div className="flex flex-wrap gap-1.5 mt-4 pt-3 border-t border-border/50">
+                          <div className="flex flex-wrap gap-1.5 mt-4 pt-3 border-t border-border/50 min-h-[32px]">
                             {scorecard.archived && (
                               <Badge variant="secondary" className="text-xs">Archived</Badge>
                             )}
