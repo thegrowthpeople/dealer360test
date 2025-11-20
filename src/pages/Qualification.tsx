@@ -223,6 +223,15 @@ const Index = () => {
     return "bg-red-500";
   };
 
+  // Get confidence border and shadow colors for hover
+  const getConfidenceHoverClasses = (score: number): string => {
+    const percentage = (score / 40) * 100;
+    if (percentage >= 75) return "hover:border-green-500 hover:shadow-green-500/20";
+    if (percentage >= 50) return "hover:border-emerald-500 hover:shadow-emerald-500/20";
+    if (percentage >= 30) return "hover:border-amber-500 hover:shadow-amber-500/20";
+    return "hover:border-red-500 hover:shadow-red-500/20";
+  };
+
   const handleCreateScorecard = async (data: Partial<Scorecard> & { frameworkId?: string }) => {
     const frameworkId = data.frameworkId || defaultFramework?.id;
     
@@ -969,8 +978,8 @@ const Index = () => {
                     return (
                       <Card
                         key={scorecard.id}
-                        className={`relative cursor-pointer group transition-all duration-300 border-2 overflow-hidden ${
-                          "hover:border-foreground/80 hover:shadow-2xl hover:shadow-foreground/10"
+                        className={`relative cursor-pointer group transition-all duration-300 border-2 overflow-hidden hover:shadow-2xl ${
+                          getConfidenceHoverClasses(scorecard.totalScore)
                         } ${scorecard.archived ? "opacity-60" : ""} hover:-translate-y-2 animate-fade-in bg-gradient-to-br from-background to-muted/20`}
                         style={{
                           animationDelay: `${index * 50}ms`,
