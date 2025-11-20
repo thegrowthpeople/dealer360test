@@ -1164,7 +1164,7 @@ const Index = () => {
                               <Button
                                 variant="ghost"
                                 size="icon"
-                                className="h-7 w-7 bg-background/80 backdrop-blur-sm hover:bg-background transition-all duration-200 hover:scale-110"
+                                className="h-7 w-7 bg-background/80 backdrop-blur-sm hover:bg-accent hover:text-accent-foreground transition-all duration-200 hover:scale-110"
                                 onClick={(e) => e.stopPropagation()}
                               >
                                 <Tag className="h-3.5 w-3.5" />
@@ -1190,7 +1190,7 @@ const Index = () => {
                               <Button
                                 variant="ghost"
                                 size="icon"
-                                className="h-7 w-7 bg-background/80 backdrop-blur-sm hover:bg-background transition-all duration-200 hover:scale-110"
+                                className="h-7 w-7 bg-background/80 backdrop-blur-sm hover:bg-accent hover:text-accent-foreground transition-all duration-200 hover:scale-110"
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   handleDuplicate(scorecard);
@@ -1284,6 +1284,15 @@ const Index = () => {
                             <div className="flex items-center gap-2 text-xs text-muted-foreground/70">
                               <Clock className="w-3.5 h-3.5" />
                               <span>Modified {format(new Date(scorecard.updatedAt), "MMM d, yyyy")}</span>
+                              {isRecentlyModified(scorecard.updatedAt) && (
+                                <span 
+                                  className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30"
+                                  title="Modified within last 48 hours"
+                                >
+                                  <div className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+                                  <span className="text-[10px] font-medium uppercase tracking-wider">New</span>
+                                </span>
+                              )}
                             </div>
                           </div>
 
@@ -1291,14 +1300,6 @@ const Index = () => {
                           <div className="flex flex-wrap gap-1.5 mt-4 pt-3 border-t border-border/50">
                             {scorecard.archived && (
                               <Badge variant="secondary" className="text-xs">Archived</Badge>
-                            )}
-                            {isRecentlyModified(scorecard.updatedAt) && (
-                              <Badge 
-                                variant="default"
-                                className="text-xs bg-amber-500 hover:bg-amber-600 text-white animate-fade-in"
-                              >
-                                Recently Modified
-                              </Badge>
                             )}
                             <Badge 
                               variant="outline"
