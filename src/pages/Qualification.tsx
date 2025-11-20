@@ -263,8 +263,8 @@ const Index = () => {
     const closeDate = new Date(dateStr);
     const now = new Date();
     const daysUntil = differenceInDays(closeDate, now);
-    const formattedDate = format(closeDate, "EEE d MMM yy");
-    return `${formattedDate} (${daysUntil} days)`;
+    const formattedDate = format(closeDate, "EEE d MMM");
+    return `${formattedDate} (${daysUntil}d)`;
   };
 
   const getDaysColorClass = (dateStr: string): string => {
@@ -1305,7 +1305,7 @@ const Index = () => {
                             
                             <div className="flex items-center gap-2 text-xs text-muted-foreground/70">
                               <Clock className="w-3.5 h-3.5" />
-                              <span>Modified {format(new Date(scorecard.updatedAt), "MMM d, yyyy")}</span>
+                              <span>Modified {format(new Date(scorecard.updatedAt), "MMM d")}</span>
                               {isRecentlyModified(scorecard.updatedAt) && (
                                 <span 
                                   className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30"
@@ -1547,10 +1547,10 @@ const Index = () => {
                                 </td>
                               )}
                               {visibleColumns.lastModified && (
-                                <td className="p-3">
+                                 <td className="p-3">
                                   <div className="flex items-center gap-2">
                                     <span className="text-sm text-muted-foreground">
-                                      {format(new Date(scorecard.updatedAt), "MMM d, yyyy h:mm a")}
+                                      {format(new Date(scorecard.updatedAt), "MMM d")}
                                     </span>
                                     {isRecentlyModified(scorecard.updatedAt) && (
                                       <Badge 
