@@ -105,7 +105,7 @@ export const ConfidenceIndicator = ({ scorecard }: ConfidenceIndicatorProps) => 
         </div>
 
         {/* Big Percentage with Tooltip */}
-        <TooltipProvider>
+        <TooltipProvider delayDuration={200}>
           <Tooltip>
             <TooltipTrigger asChild>
               <div className="flex items-baseline gap-2 cursor-help">
@@ -117,7 +117,7 @@ export const ConfidenceIndicator = ({ scorecard }: ConfidenceIndicatorProps) => 
                 </span>
               </div>
             </TooltipTrigger>
-            <TooltipContent side="right" className="w-64 p-4">
+            <TooltipContent side="right" className="w-64 p-4 z-[100]" sideOffset={10}>
               <div className="space-y-3">
                 <div className="font-semibold text-sm border-b pb-2">FAINT Breakdown</div>
                 {Object.entries(categoryStats).map(([category, stats]) => (
