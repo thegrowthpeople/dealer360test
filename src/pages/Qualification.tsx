@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useBlocker } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Plus, FileText, Calendar, GitCompare, Clock, ArrowUp, ArrowDown, Copy, Trash2, Download, Archive, CheckSquare, FileSpreadsheet, LayoutGrid, List, Star, Tag, X, Edit2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription, DialogFooter } from "@/components/ui/dialog";
@@ -70,7 +70,9 @@ const Index = () => {
   const [activeScorecard, setActiveScorecard] = useState<Scorecard | null>(null);
   const [originalScorecard, setOriginalScorecard] = useState<Scorecard | null>(null);
   const [showUnsavedDialog, setShowUnsavedDialog] = useState(false);
-  const [pendingNavigation, setPendingNavigation] = useState<(() => void) | null>(null);
+  const [pendingNavigation, setPendingNavigation] = useState<string | null>(null);
+  const location = useLocation();
+  const navigate = useNavigate();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [comparisonMode, setComparisonMode] = useState(false);
   const [selectedForComparison, setSelectedForComparison] = useState<string[]>([]);
@@ -201,7 +203,7 @@ const Index = () => {
     setActiveScorecard(null);
     setOriginalScorecard(null);
     if (pendingNavigation) {
-      pendingNavigation();
+      navigate(pendingNavigation);
       setPendingNavigation(null);
     }
     toast.success("Changes saved successfully!");
@@ -216,25 +218,44 @@ const Index = () => {
     setActiveScorecard(null);
     setOriginalScorecard(null);
     if (pendingNavigation) {
-      pendingNavigation();
+      navigate(pendingNavigation);
       setPendingNavigation(null);
     }
   };
 
-  // Block navigation when there are unsaved changes
-  const blocker = useBlocker(
-    ({ currentLocation, nextLocation }) =>
-      activeScorecard !== null &&
-      hasUnsavedChanges() &&
-      currentLocation.pathname !== nextLocation.pathname
-  );
-
+  // Warn when closing browser tab/window with unsaved changes
   useEffect(() => {
-    if (blocker.state === "blocked") {
-      setPendingNavigation(() => () => blocker.proceed?.());
-      setShowUnsavedDialog(true);
-    }
-  }, [blocker]);
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (activeScorecard && hasUnsavedChanges()) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [activeScorecard, originalScorecard]);
+
+  // Intercept navigation within the app using click handler on sidebar
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      const link = target.closest('a[href]');
+      
+      if (link && activeScorecard && hasUnsavedChanges()) {
+        const href = link.getAttribute('href');
+        if (href && !href.startsWith('#') && href !== location.pathname) {
+          e.preventDefault();
+          e.stopPropagation();
+          setPendingNavigation(href);
+          setShowUnsavedDialog(true);
+        }
+      }
+    };
+
+    document.addEventListener('click', handleClick, true);
+    return () => document.removeEventListener('click', handleClick, true);
+  }, [activeScorecard, originalScorecard, location]);
 
 
   const handleComparisonToggle = () => {
