@@ -1,7 +1,6 @@
 import { Scorecard } from "@/types/scorecard";
 import { TrendingUp, TrendingDown, AlertTriangle } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useEffect, useState } from "react";
 
 interface ConfidenceIndicatorProps {
@@ -104,46 +103,15 @@ export const ConfidenceIndicator = ({ scorecard }: ConfidenceIndicatorProps) => 
           )}
         </div>
 
-        {/* Big Percentage with Tooltip */}
-        <TooltipProvider delayDuration={200}>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div className="flex items-baseline gap-2 cursor-help">
-                <span className={`text-5xl font-bold ${confidence.color} leading-none`}>
-                  {Math.round(confidencePercentage)}%
-                </span>
-                <span className={`text-lg font-semibold ${confidence.color}`}>
-                  {confidence.label}
-                </span>
-              </div>
-            </TooltipTrigger>
-            <TooltipContent side="right" className="w-64 p-4 z-[100]" sideOffset={10}>
-              <div className="space-y-3">
-                <div className="font-semibold text-sm border-b pb-2">FAINT Breakdown</div>
-                {Object.entries(categoryStats).map(([category, stats]) => (
-                  <div key={category} className="space-y-1">
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="font-medium capitalize">{category}</span>
-                      <span className="text-muted-foreground">{stats.positive + stats.negative}/8</span>
-                    </div>
-                    <div className="flex gap-2 text-xs">
-                      <div className="flex items-center gap-1 text-green-600">
-                        <TrendingUp className="w-3 h-3" />
-                        <span>{stats.positive}</span>
-                      </div>
-                      {stats.negative > 0 && (
-                        <div className="flex items-center gap-1 text-red-600">
-                          <TrendingDown className="w-3 h-3" />
-                          <span>{stats.negative}</span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+        {/* Big Percentage */}
+        <div className="flex items-baseline gap-2">
+          <span className={`text-5xl font-bold ${confidence.color} leading-none`}>
+            {Math.round(confidencePercentage)}%
+          </span>
+          <span className={`text-lg font-semibold ${confidence.color}`}>
+            {confidence.label}
+          </span>
+        </div>
 
         {/* Progress Bar */}
         <div className="relative h-8 bg-muted rounded-full overflow-hidden border border-border">
