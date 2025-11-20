@@ -414,7 +414,7 @@ const Index = () => {
     const headers = [
       "Opportunity Name",
       "Customer Name",
-      "Salesperson",
+      "Account Manager",
       "Version",
       "Expected Order Date",
       "Review Date",
@@ -767,7 +767,7 @@ const Index = () => {
                     <SelectContent>
                       <SelectItem value="date">Date</SelectItem>
                       <SelectItem value="score">Score</SelectItem>
-                      <SelectItem value="salesperson">Salesperson</SelectItem>
+                      <SelectItem value="salesperson">Account Manager</SelectItem>
                       <SelectItem value="customer">Customer Name</SelectItem>
                     </SelectContent>
                   </Select>
@@ -1057,7 +1057,7 @@ const Index = () => {
                               <span className="font-medium">Expected:</span> {scorecard.expectedOrderDate}
                             </div>
                             <div className="text-sm text-muted-foreground">
-                              <span className="font-medium">Sales Person:</span> {scorecard.salesperson}
+                              <span className="font-medium">Account Manager:</span> {scorecard.salesperson}
                             </div>
                             <div className="text-xs text-muted-foreground pt-2 border-t border-border">
                               <span>Created: {new Date(scorecard.createdAt).toLocaleDateString()}</span>
