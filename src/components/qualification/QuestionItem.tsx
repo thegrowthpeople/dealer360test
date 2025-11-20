@@ -11,9 +11,10 @@ interface QuestionItemProps {
   data: QuestionData;
   onStateChange: (state: QuestionState) => void;
   onNoteChange: (note: string) => void;
+  disabled?: boolean;
 }
 
-export const QuestionItem = ({ question, data, onStateChange, onNoteChange }: QuestionItemProps) => {
+export const QuestionItem = ({ question, data, onStateChange, onNoteChange, disabled = false }: QuestionItemProps) => {
   const [isNotesOpen, setIsNotesOpen] = useState(false);
   const [noteText, setNoteText] = useState(data.note);
   
@@ -25,12 +26,16 @@ export const QuestionItem = ({ question, data, onStateChange, onNoteChange }: Qu
   };
 
   const handleClick = () => {
-    onStateChange(getNextState(data.state));
+    if (!disabled) {
+      onStateChange(getNextState(data.state));
+    }
   };
 
   const handleNoteSave = () => {
-    onNoteChange(noteText);
-    setIsNotesOpen(false);
+    if (!disabled) {
+      onNoteChange(noteText);
+      setIsNotesOpen(false);
+    }
   };
 
   const hasNotes = data.note && data.note.trim().length > 0;
@@ -39,9 +44,11 @@ export const QuestionItem = ({ question, data, onStateChange, onNoteChange }: Qu
     <div className="flex items-center gap-2">
       <button
         onClick={handleClick}
+        disabled={disabled}
         className={cn(
           "flex-1 text-left flex items-center gap-4 px-4 py-3 rounded-lg border-2 transition-all duration-200",
-          "hover:shadow-md hover:-translate-y-0.5",
+          !disabled && "hover:shadow-md hover:-translate-y-0.5",
+          disabled && "cursor-not-allowed opacity-60",
           data.state === "blank" && "border-border bg-card hover:border-muted-foreground/30",
           data.state === "unknown" && "border-warning bg-warning/5 hover:border-warning hover:bg-warning/10",
           data.state === "positive" && "border-success bg-success/5 hover:border-success hover:bg-success/10",
@@ -65,11 +72,12 @@ export const QuestionItem = ({ question, data, onStateChange, onNoteChange }: Qu
         <span className="flex-1 text-sm font-medium text-foreground">{question}</span>
       </button>
 
-      <Dialog open={isNotesOpen} onOpenChange={setIsNotesOpen}>
+      <Dialog open={isNotesOpen} onOpenChange={disabled ? undefined : setIsNotesOpen}>
         <DialogTrigger asChild>
           <Button
             variant="outline"
             size="icon"
+            disabled={disabled}
             className={cn(
               "flex-shrink-0 relative",
               hasNotes && "border-primary bg-primary/10 hover:bg-primary/20"
@@ -92,12 +100,13 @@ export const QuestionItem = ({ question, data, onStateChange, onNoteChange }: Qu
               onChange={(e) => setNoteText(e.target.value)}
               placeholder="Add your notes here..."
               className="min-h-[150px]"
+              disabled={disabled}
             />
             <div className="flex justify-end gap-2">
               <Button variant="outline" onClick={() => setIsNotesOpen(false)}>
                 Cancel
               </Button>
-              <Button onClick={handleNoteSave}>
+              <Button onClick={handleNoteSave} disabled={disabled}>
                 Save Notes
               </Button>
             </div>
