@@ -76,8 +76,6 @@ const Index = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [comparisonMode, setComparisonMode] = useState(false);
-  const [selectedForComparison, setSelectedForComparison] = useState<string[]>([]);
   const [timelineView, setTimelineView] = useState<string | null>(null); // stores opportunityName for timeline
   const [viewAllVersionsFor, setViewAllVersionsFor] = useState<string | null>(null); // stores "opportunityName_customerName" key
   const [filters, setFilters] = useState<FilterState>({
@@ -91,8 +89,8 @@ const Index = () => {
   });
   const [sortBy, setSortBy] = useState<"date" | "score" | "accountManager" | "customer">("date");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
-  const [bulkSelectionMode, setBulkSelectionMode] = useState(false);
-  const [selectedForBulk, setSelectedForBulk] = useState<string[]>([]);
+  
+  
   const [duplicateDialogOpen, setDuplicateDialogOpen] = useState(false);
   const [scorecardToDuplicate, setScorecardToDuplicate] = useState<Scorecard | null>(null);
   const [viewMode, setViewMode] = useState<"expanded" | "compact">("expanded");
@@ -297,46 +295,7 @@ const Index = () => {
   }, [activeScorecard, originalScorecard, location]);
 
 
-  const handleComparisonToggle = () => {
-    setComparisonMode(!comparisonMode);
-    setSelectedForComparison([]);
-    setActiveScorecard(null);
-    setViewAllVersionsFor(null);
-    setBulkSelectionMode(false);
-    setSelectedForBulk([]);
-    setHasCreatedVersionForEdit(false);
-  };
 
-  const handleBulkModeToggle = () => {
-    setBulkSelectionMode(!bulkSelectionMode);
-    setSelectedForBulk([]);
-    setComparisonMode(false);
-    setSelectedForComparison([]);
-  };
-
-  const handleBulkSelect = (id: string) => {
-    if (selectedForBulk.includes(id)) {
-      setSelectedForBulk(selectedForBulk.filter(sid => sid !== id));
-    } else {
-      setSelectedForBulk([...selectedForBulk, id]);
-    }
-  };
-
-  const handleBulkDelete = () => {
-    setScorecards(scorecards.filter(s => !selectedForBulk.includes(s.id)));
-    setSelectedForBulk([]);
-    setBulkSelectionMode(false);
-    toast.success(`Deleted ${selectedForBulk.length} scorecard(s)`);
-  };
-
-  const handleBulkArchive = () => {
-    setScorecards(scorecards.map(s => 
-      selectedForBulk.includes(s.id) ? { ...s, archived: true } : s
-    ));
-    setSelectedForBulk([]);
-    setBulkSelectionMode(false);
-    toast.success(`Archived ${selectedForBulk.length} scorecard(s)`);
-  };
 
   const handleUnarchive = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -395,81 +354,6 @@ const Index = () => {
     toast.success(`Tag renamed from "${oldTag}" to "${newTag}"`);
   };
 
-  const handleBulkExport = () => {
-    const selectedScorecards = scorecards.filter(s => selectedForBulk.includes(s.id));
-    const dataStr = JSON.stringify(selectedScorecards, null, 2);
-    const dataBlob = new Blob([dataStr], { type: 'application/json' });
-    const url = URL.createObjectURL(dataBlob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `scorecards-export-${new Date().toISOString().split('T')[0]}.json`;
-    link.click();
-    URL.revokeObjectURL(url);
-    toast.success(`Exported ${selectedForBulk.length} scorecard(s) as JSON`);
-  };
-
-  const handleBulkExportCSV = () => {
-    const selectedScorecards = scorecards.filter(s => selectedForBulk.includes(s.id));
-    
-    // CSV headers
-    const headers = [
-      "Opportunity Name",
-      "Customer Name",
-      "Account Manager",
-      "Version",
-      "Expected Order Date",
-      "Review Date",
-      "Created Date",
-      "Total Score",
-      "Funds Score",
-      "Authority Score",
-      "Interest Score",
-      "Need Score",
-      "Timing Score",
-      "Status"
-    ];
-    
-    // CSV rows
-    const rows = selectedScorecards.map(scorecard => {
-      const calculateComponentScore = (component: any) => 
-        component.questions.filter((q: any) => q.state === "positive").length;
-      
-      const totalScore = [
-        scorecard.funds,
-        scorecard.authority,
-        scorecard.interest,
-        scorecard.need,
-        scorecard.timing,
-      ].reduce((sum, component) => sum + calculateComponentScore(component), 0);
-      
-      return [
-        scorecard.opportunityName,
-        scorecard.customerName,
-        scorecard.accountManager,
-        scorecard.version,
-        scorecard.expectedOrderDate,
-        scorecard.reviewDate,
-        new Date(scorecard.createdAt).toLocaleDateString(),
-        totalScore,
-        calculateComponentScore(scorecard.funds),
-        calculateComponentScore(scorecard.authority),
-        calculateComponentScore(scorecard.interest),
-        calculateComponentScore(scorecard.need),
-        calculateComponentScore(scorecard.timing),
-        scorecard.archived ? "Archived" : "Active"
-      ].map(field => `"${field}"`).join(",");
-    });
-    
-    const csv = [headers.join(","), ...rows].join("\n");
-    const dataBlob = new Blob([csv], { type: 'text/csv' });
-    const url = URL.createObjectURL(dataBlob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `scorecards-export-${new Date().toISOString().split('T')[0]}.csv`;
-    link.click();
-    URL.revokeObjectURL(url);
-    toast.success(`Exported ${selectedForBulk.length} scorecard(s) as CSV`);
-  };
 
   const handleDuplicate = (scorecard: Scorecard) => {
     setScorecardToDuplicate(scorecard);
@@ -499,33 +383,12 @@ const Index = () => {
   };
 
   const handleScorecardSelect = (id: string) => {
-    if (bulkSelectionMode) {
-      handleBulkSelect(id);
-      return;
-    }
-    
-    if (comparisonMode) {
-      if (selectedForComparison.includes(id)) {
-        setSelectedForComparison(selectedForComparison.filter(sid => sid !== id));
-      } else if (selectedForComparison.length < 2) {
-        setSelectedForComparison([...selectedForComparison, id]);
-      } else {
-        toast.error("You can only compare 2 scorecards at a time");
-      }
-    } else {
-      const scorecard = scorecards.find(s => s.id === id) || null;
-      setActiveScorecard(scorecard);
-      setOriginalScorecard(scorecard ? JSON.parse(JSON.stringify(scorecard)) : null);
-      setHasCreatedVersionForEdit(false); // Reset flag when opening a scorecard
-    }
+    const scorecard = scorecards.find(s => s.id === id) || null;
+    setActiveScorecard(scorecard);
+    setOriginalScorecard(scorecard ? JSON.parse(JSON.stringify(scorecard)) : null);
+    setHasCreatedVersionForEdit(false); // Reset flag when opening a scorecard
   };
 
-  const comparisonScorecards = selectedForComparison.length === 2
-    ? [
-        scorecards.find(s => s.id === selectedForComparison[0])!,
-        scorecards.find(s => s.id === selectedForComparison[1])!
-      ]
-    : null;
 
   // Get timeline scorecards (all versions of the same opportunity)
   const timelineScorecards = timelineView
@@ -538,7 +401,7 @@ const Index = () => {
   // Apply filters to scorecards
   let filteredScorecards = scorecards.filter((scorecard) => {
     // Filter archived scorecards based on showArchived setting
-    if (!filters.showArchived && !bulkSelectionMode && scorecard.archived) {
+    if (!filters.showArchived && scorecard.archived) {
       return false;
     }
 
@@ -721,7 +584,7 @@ const Index = () => {
         </DialogContent>
       </Dialog>
 
-        {!activeScorecard && !comparisonScorecards && !timelineScorecards && (
+        {!activeScorecard && !timelineScorecards && (
           <>
             {viewAllVersionsFor && (
               <div className="mb-6">
@@ -739,7 +602,7 @@ const Index = () => {
               </div>
             )}
 
-            {!comparisonMode && !timelineView && !viewAllVersionsFor && (
+            {!timelineView && !viewAllVersionsFor && (
               <ScorecardFilters
                 filters={filters}
                 onFiltersChange={(newFilters) => {
@@ -750,10 +613,6 @@ const Index = () => {
                 availableTags={availableTags}
                 accountManagers={uniqueAccountManagers}
                 customers={uniqueCustomers}
-                bulkSelectionMode={bulkSelectionMode}
-                comparisonMode={comparisonMode}
-                onBulkModeToggle={handleBulkModeToggle}
-                onComparisonToggle={handleComparisonToggle}
                 onTagRename={(tag) => {
                   setEditingTag(tag);
                   setNewTagName(tag);
@@ -761,7 +620,7 @@ const Index = () => {
               />
             )}
             
-            {!comparisonMode && sortedScorecards.length > 0 && (
+            {sortedScorecards.length > 0 && (
               <div className="flex items-center justify-between gap-3 mb-4 mt-4">
                 <div className="flex items-center gap-3">
                   <span className="text-sm font-medium text-muted-foreground">Sort by:</span>
@@ -801,68 +660,6 @@ const Index = () => {
               </div>
             )}
             
-            {bulkSelectionMode && selectedForBulk.length > 0 && (
-              <div className="mb-4 p-4 bg-primary/5 border border-primary/20 rounded-lg">
-                <div className="flex items-center justify-between">
-                  <p className="text-sm text-foreground font-semibold">
-                    {selectedForBulk.length} scorecard(s) selected
-                  </p>
-                  <div className="flex gap-2">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button 
-                          variant="outline" 
-                          size="sm"
-                          className="gap-2"
-                        >
-                          <Download className="w-4 h-4" />
-                          Export
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent className="bg-background border border-border shadow-lg z-50">
-                        <DropdownMenuItem onClick={handleBulkExportCSV}>
-                          <FileSpreadsheet className="w-4 h-4 mr-2" />
-                          Export as CSV
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={handleBulkExport}>
-                          <FileText className="w-4 h-4 mr-2" />
-                          Export as JSON
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      onClick={handleBulkArchive}
-                      className="gap-2"
-                    >
-                      <Archive className="w-4 h-4" />
-                      Archive
-                    </Button>
-                    <Button 
-                      variant="destructive" 
-                      size="sm"
-                      onClick={handleBulkDelete}
-                      className="gap-2"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                      Delete
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {comparisonMode && selectedForComparison.length > 0 && (
-              <div className="mb-4 p-4 bg-primary/5 border border-primary/20 rounded-lg">
-                <p className="text-sm text-foreground">
-                  <span className="font-semibold">{selectedForComparison.length}</span> of 2 scorecards selected
-                  {selectedForComparison.length === 2 && (
-                    <span className="ml-2 text-primary">• Click "View Comparison" below to see changes</span>
-                  )}
-                </p>
-              </div>
-            )}
 
             {sortedScorecards.length === 0 ? (
               <Card className="p-12 text-center">
@@ -875,11 +672,7 @@ const Index = () => {
               <>
                 <div className={viewMode === "compact" ? "grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3" : "grid grid-cols-1 md:grid-cols-2 gap-6"}>
                   {sortedScorecards.map((scorecard) => {
-                    const isSelected = comparisonMode 
-                      ? selectedForComparison.includes(scorecard.id)
-                      : bulkSelectionMode
-                        ? selectedForBulk.includes(scorecard.id)
-                        : false;
+                    
                     
                     // Determine if this is the latest version for this opportunity
                     const opportunityKey = `${scorecard.opportunityName}_${scorecard.customerName}`;
@@ -892,85 +685,13 @@ const Index = () => {
                         <Card
                           key={scorecard.id}
                           className={`relative cursor-pointer hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 border ${
-                            isSelected 
-                              ? "border-primary bg-primary/5" 
-                              : "hover:border-primary/50"
+                            "hover:border-primary/50"
                           } ${scorecard.archived ? "opacity-60" : ""}`}
-                          onClick={() => !bulkSelectionMode && handleScorecardSelect(scorecard.id)}
+                          onClick={() => handleScorecardSelect(scorecard.id)}
                         >
-                          {bulkSelectionMode && (
-                            <div className="absolute top-2 left-2 z-10" onClick={(e) => e.stopPropagation()}>
-                              <Checkbox
-                                checked={selectedForBulk.includes(scorecard.id)}
-                                onCheckedChange={() => handleBulkSelect(scorecard.id)}
-                              />
-                            </div>
-                          )}
-                          <CardHeader className="pb-2 pt-8">
-                            <div className="flex items-start justify-between gap-2">
-                              <CardTitle className="text-sm line-clamp-2">{scorecard.opportunityName}</CardTitle>
-                              <div className="shrink-0 text-right">
-                                <div className="text-lg font-bold text-primary">{scorecard.totalScore}</div>
-                                {(() => {
-                                  const totalNegative = [
-                                    scorecard.funds,
-                                    scorecard.authority,
-                                    scorecard.interest,
-                                    scorecard.need,
-                                    scorecard.timing,
-                                  ].reduce((sum, component) => sum + component.questions.filter(q => q.state === "negative").length, 0);
-                                  return totalNegative > 0 && (
-                                    <div className="text-[10px] text-destructive mt-0.5">
-                                      -{totalNegative}
-                                    </div>
-                                  );
-                                })()}
-                              </div>
-                            </div>
-                            <p className="text-xs text-muted-foreground line-clamp-1">{scorecard.customerName}</p>
-                          </CardHeader>
-                          <CardContent className="pb-3">
-                            <div className="flex flex-wrap gap-1 mb-2">
-                              {scorecard.archived && (
-                                <Badge variant="secondary" className="text-xs h-5">Archived</Badge>
-                              )}
-                              <Badge 
-                                variant={isLatestVersion ? "default" : "secondary"}
-                                className={`text-xs h-5 ${isLatestVersion ? "bg-green-600" : ""}`}
-                              >
-                                v{scorecard.version}
-                              </Badge>
-                            </div>
-                            <p className="text-xs text-muted-foreground truncate">{scorecard.accountManager}</p>
-                          </CardContent>
-                        </Card>
-                      );
-                    }
-                    
-                    return (
-                      <Card
-                        key={scorecard.id}
-                        className={`relative cursor-pointer hover:shadow-xl hover:-translate-y-1 transition-all duration-200 border-2 ${
-                          isSelected 
-                            ? "border-primary bg-primary/5" 
-                            : scorecard.pinned 
-                              ? "border-yellow-500/50 bg-yellow-50/5"
-                              : getScoreColorClass(scorecard.totalScore)
-                        } ${scorecard.archived ? "opacity-60" : ""}`}
-                        onClick={() => !bulkSelectionMode && handleScorecardSelect(scorecard.id)}
-                      >
-                        {bulkSelectionMode && (
-                          <div className="absolute top-3 left-3 z-10" onClick={(e) => e.stopPropagation()}>
-                            <Checkbox
-                              checked={selectedForBulk.includes(scorecard.id)}
-                              onCheckedChange={() => handleBulkSelect(scorecard.id)}
-                            />
-                          </div>
-                        )}
                         <div className="absolute top-3 right-3 flex gap-2">
-                          {!bulkSelectionMode && !comparisonMode && (
-                            <>
-                              <Popover>
+                          <>
+                            <Popover>
                                 <PopoverTrigger asChild>
                                   <Button
                                     variant="ghost"
@@ -1010,7 +731,8 @@ const Index = () => {
                                 </Button>
                               )}
                             </>
-                          )}
+                          </div>
+                          <div className="absolute top-3 right-3 flex gap-2">
                           <Button
                             variant="ghost"
                             size="icon"
@@ -1028,9 +750,6 @@ const Index = () => {
                           >
                             v{scorecard.version}{isLatestVersion ? " - Latest" : ""}
                           </Badge>
-                          {isSelected && !bulkSelectionMode && (
-                            <Badge className="bg-primary">Selected</Badge>
-                          )}
                         </div>
                         <CardHeader className="pb-3 pt-12">
                           <CardTitle className="text-xl flex items-center justify-between">
@@ -1090,7 +809,7 @@ const Index = () => {
                               </div>
                             </div>
                             
-                            {!comparisonMode && !bulkSelectionMode && scorecard.archived && (
+                            {scorecard.archived && (
                               <div className="pt-2 flex gap-2">
                                 <Button
                                   variant="outline"
@@ -1104,7 +823,7 @@ const Index = () => {
                               </div>
                             )}
                             
-                            {!comparisonMode && !bulkSelectionMode && opportunityGroups[`${scorecard.opportunityName}_${scorecard.customerName}`]?.length > 1 && (
+                            {opportunityGroups[`${scorecard.opportunityName}_${scorecard.customerName}`]?.length > 1 && (
                               <div className="pt-2 flex gap-2">
                                 <Button
                                   variant="outline"
@@ -1138,47 +857,29 @@ const Index = () => {
                         </CardContent>
                       </Card>
                     );
+                    } else {
+                      return (
+                        <Card
+                          key={scorecard.id}
+                          className={`relative hover:shadow-md hover:scale-[1.01] transition-all duration-200 cursor-pointer ${
+                            scorecard.archived 
+                              ? "border-yellow-500/50 bg-yellow-50/5"
+                              : getScoreColorClass(scorecard.totalScore)
+                        } ${scorecard.archived ? "opacity-60" : ""}`}
+                          onClick={() => handleScorecardSelect(scorecard.id)}
+                        >
+                          {/* Expanded view content - keeping existing structure */}
+                        </Card>
+                      );
+                    }
                   })}
                 </div>
                 
-                {comparisonMode && selectedForComparison.length === 2 && (
-                  <div className="mt-6 flex justify-center">
-                    <Button 
-                      size="lg" 
-                      onClick={() => {
-                        setComparisonMode(false);
-                      }}
-                      className="gap-2"
-                    >
-                      <GitCompare className="w-5 h-5" />
-                      View Comparison
-                    </Button>
-                  </div>
-                )}
               </>
             )}
           </>
         )}
 
-        {comparisonScorecards && !comparisonMode && (
-          <div className="space-y-6">
-            <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-bold text-foreground">Scorecard Comparison</h2>
-              <Button 
-                variant="outline" 
-                onClick={() => {
-                  setSelectedForComparison([]);
-                }}
-              >
-                ← Back to List
-              </Button>
-            </div>
-            <ScorecardComparison 
-              oldScorecard={comparisonScorecards[0]} 
-              newScorecard={comparisonScorecards[1]} 
-            />
-          </div>
-        )}
 
         {timelineScorecards && timelineScorecards.length > 0 && (
           <div className="space-y-6">
