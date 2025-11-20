@@ -30,6 +30,8 @@ export interface FilterState {
   tags: string[];
   dateFrom: Date | undefined;
   dateTo: Date | undefined;
+  accountManager: string | null;
+  customer: string | null;
 }
 
 interface ScorecardFiltersProps {
@@ -37,6 +39,8 @@ interface ScorecardFiltersProps {
   onFiltersChange: (filters: FilterState) => void;
   versions: number[];
   availableTags: string[];
+  accountManagers: string[];
+  customers: string[];
   bulkSelectionMode?: boolean;
   comparisonMode?: boolean;
   onBulkModeToggle?: () => void;
@@ -49,6 +53,8 @@ export const ScorecardFilters = ({
   onFiltersChange,
   versions,
   availableTags,
+  accountManagers,
+  customers,
   bulkSelectionMode = false,
   comparisonMode = false,
   onBulkModeToggle,
@@ -82,6 +88,8 @@ export const ScorecardFilters = ({
       tags: [],
       dateFrom: undefined,
       dateTo: undefined,
+      accountManager: null,
+      customer: null,
     });
   };
 
@@ -92,7 +100,9 @@ export const ScorecardFilters = ({
     filters.version !== "latest" ||
     filters.tags.length > 0 ||
     filters.dateFrom !== undefined ||
-    filters.dateTo !== undefined;
+    filters.dateTo !== undefined ||
+    filters.accountManager !== null ||
+    filters.customer !== null;
 
   const handleTagToggle = (tag: string) => {
     const newTags = filters.tags.includes(tag)
@@ -354,6 +364,46 @@ export const ScorecardFilters = ({
           </Command>
         </PopoverContent>
       </Popover>
+
+      {/* Account Manager Filter */}
+      <Select
+        value={filters.accountManager || "all"}
+        onValueChange={(value) =>
+          onFiltersChange({ ...filters, accountManager: value === "all" ? null : value })
+        }
+      >
+        <SelectTrigger className="w-[180px] h-9 text-sm">
+          <SelectValue placeholder="All Account Managers" />
+        </SelectTrigger>
+        <SelectContent className="bg-background border border-border shadow-lg z-50">
+          <SelectItem value="all">All Account Managers</SelectItem>
+          {accountManagers.map((manager) => (
+            <SelectItem key={manager} value={manager}>
+              {manager}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+
+      {/* Customer Filter */}
+      <Select
+        value={filters.customer || "all"}
+        onValueChange={(value) =>
+          onFiltersChange({ ...filters, customer: value === "all" ? null : value })
+        }
+      >
+        <SelectTrigger className="w-[180px] h-9 text-sm">
+          <SelectValue placeholder="All Customers" />
+        </SelectTrigger>
+        <SelectContent className="bg-background border border-border shadow-lg z-50">
+          <SelectItem value="all">All Customers</SelectItem>
+          {customers.map((customer) => (
+            <SelectItem key={customer} value={customer}>
+              {customer}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
 
       {/* Version Filter */}
       <Select
