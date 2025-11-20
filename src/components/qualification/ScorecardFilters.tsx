@@ -594,7 +594,7 @@ export const ScorecardFilters = ({
           }
         />
         <Label htmlFor="show-archived" className="text-sm font-medium cursor-pointer whitespace-nowrap">
-          Show archived
+          Archived
         </Label>
       </div>
 
@@ -608,7 +608,7 @@ export const ScorecardFilters = ({
           }
         />
         <Label htmlFor="show-only-pinned" className="text-sm font-medium cursor-pointer whitespace-nowrap">
-          Show only pinned
+          Pinned
         </Label>
       </div>
 
@@ -622,7 +622,7 @@ export const ScorecardFilters = ({
           }
         />
         <Label htmlFor="show-only-overdue" className="text-sm font-medium cursor-pointer whitespace-nowrap">
-          Show only overdue
+          Overdue
         </Label>
       </div>
 
