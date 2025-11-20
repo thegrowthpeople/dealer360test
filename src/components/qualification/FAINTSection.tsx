@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 
 interface FAINTSectionProps {
   title: string;
-  color: string;
+  color: string; // kept for future styling compatibility
   component: FAINTComponent;
   questions: string[];
   onUpdate: (index: number, state: QuestionState, note: string) => void;
@@ -31,15 +31,25 @@ export const FAINTSection = ({ title, color, component, questions, onUpdate }: F
   };
 
   const handleToggle = () => {
-    setIsOpen(!isOpen);
+    // Debug to ensure clicks are firing in the live environment
+    console.log("FAINTSection toggle", { title, isOpen: !isOpen });
+    setIsOpen((prev) => !prev);
   };
 
   return (
     <div className="bg-card rounded-xl border border-border shadow-sm transition-shadow duration-300 hover:shadow-lg">
-      <button
-        type="button"
+      {/* Header acting as a button */}
+      <div
+        role="button"
+        tabIndex={0}
         onClick={handleToggle}
-        className="flex items-center justify-between px-6 py-4 hover:bg-muted/40 transition-all duration-300 rounded-t-xl w-full text-left cursor-pointer"
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            handleToggle();
+          }
+        }}
+        className="flex items-center justify-between px-6 py-4 hover:bg-muted/40 transition-all duration-300 rounded-t-xl w-full cursor-pointer select-none"
         aria-expanded={isOpen}
       >
         <div className="flex items-center gap-3">
@@ -84,7 +94,7 @@ export const FAINTSection = ({ title, color, component, questions, onUpdate }: F
             )}
           />
         </div>
-      </button>
+      </div>
 
       {isOpen && (
         <div className="px-6 pb-6 pt-2 grid grid-cols-1 md:grid-cols-2 gap-3 border-t border-border animate-accordion-down">
