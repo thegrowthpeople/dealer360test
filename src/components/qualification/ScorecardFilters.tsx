@@ -3,7 +3,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { Switch } from "@/components/ui/switch";
-import { CalendarIcon, CheckSquare, GitCompare, Edit2, RotateCcw, Check, ChevronsUpDown } from "lucide-react";
+import { CalendarIcon, CheckSquare, GitCompare, Edit2, RotateCcw, Check, ChevronsUpDown, Archive } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import * as React from "react";
@@ -192,7 +192,9 @@ export const ScorecardFilters = ({
   }, [dealerships, selectedBDMId, selectedGroup, bdms]);
 
   return (
-    <div className="flex items-center gap-3 flex-wrap">
+    <div className="space-y-4">
+      {/* Primary Filters Row */}
+      <div className="flex items-center gap-2 flex-wrap">
       {/* BDM Filter */}
       <Popover open={bdmSearchOpen} onOpenChange={setBdmSearchOpen}>
         <PopoverTrigger asChild>
@@ -200,7 +202,7 @@ export const ScorecardFilters = ({
             variant="outline"
             role="combobox"
             aria-expanded={bdmSearchOpen}
-            className="w-[200px] justify-between h-9 text-sm"
+            className="w-[160px] justify-between h-9 text-sm"
           >
             {selectedBDMId !== null
               ? bdms.find((b) => b["BDM ID"] === selectedBDMId)?.["Full Name"]
@@ -208,7 +210,7 @@ export const ScorecardFilters = ({
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[200px] p-0 bg-background border border-border shadow-lg z-50">
+        <PopoverContent className="w-[160px] p-0 bg-background border border-border shadow-lg z-50">
           <Command>
             <CommandInput placeholder="Search BDM..." />
             <CommandList>
@@ -262,13 +264,13 @@ export const ScorecardFilters = ({
             variant="outline"
             role="combobox"
             aria-expanded={groupSearchOpen}
-            className="w-[200px] justify-between h-9 text-sm"
+            className="w-[160px] justify-between h-9 text-sm"
           >
             {selectedGroup || "All Dealer Groups"}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[200px] p-0 bg-background border border-border shadow-lg z-50">
+        <PopoverContent className="w-[160px] p-0 bg-background border border-border shadow-lg z-50">
           <Command>
             <CommandInput placeholder="Search group..." />
             <CommandList>
@@ -331,7 +333,7 @@ export const ScorecardFilters = ({
             variant="outline"
             role="combobox"
             aria-expanded={dealershipSearchOpen}
-            className="w-[200px] justify-between h-9 text-sm"
+            className="w-[160px] justify-between h-9 text-sm"
           >
             {selectedDealerId !== null
               ? dealerships.find((d) => d["Dealer ID"] === selectedDealerId)?.Dealership
@@ -339,7 +341,7 @@ export const ScorecardFilters = ({
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[200px] p-0 bg-background border border-border shadow-lg z-50">
+        <PopoverContent className="w-[160px] p-0 bg-background border border-border shadow-lg z-50">
           <Command>
             <CommandInput placeholder="Search dealership..." />
             <CommandList>
@@ -402,7 +404,7 @@ export const ScorecardFilters = ({
           onFiltersChange({ ...filters, accountManager: value === "all" ? null : value })
         }
       >
-        <SelectTrigger className="w-[180px] h-9 text-sm">
+        <SelectTrigger className="w-[160px] h-9 text-sm">
           <SelectValue placeholder="All Account Managers" />
         </SelectTrigger>
         <SelectContent className="bg-background border border-border shadow-lg z-50">
@@ -422,7 +424,7 @@ export const ScorecardFilters = ({
           onFiltersChange({ ...filters, customer: value === "all" ? null : value })
         }
       >
-        <SelectTrigger className="w-[180px] h-9 text-sm">
+        <SelectTrigger className="w-[160px] h-9 text-sm">
           <SelectValue placeholder="All Customers" />
         </SelectTrigger>
         <SelectContent className="bg-background border border-border shadow-lg z-50">
@@ -434,7 +436,10 @@ export const ScorecardFilters = ({
           ))}
         </SelectContent>
       </Select>
+      </div>
 
+      {/* Secondary Filters and Actions Row */}
+      <div className="flex items-center gap-2 flex-wrap">
       {/* Version Filter */}
       <Select
         value={filters.version}
@@ -442,7 +447,7 @@ export const ScorecardFilters = ({
           onFiltersChange({ ...filters, version: value })
         }
       >
-        <SelectTrigger className="w-[150px] h-9 text-sm">
+        <SelectTrigger className="w-[120px] h-9 text-sm">
           <SelectValue placeholder="Latest" />
         </SelectTrigger>
         <SelectContent className="bg-background border border-border shadow-lg z-50">
@@ -459,7 +464,7 @@ export const ScorecardFilters = ({
       {/* Tags Filter */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" className="w-[150px] justify-between h-9 text-sm">
+          <Button variant="outline" className="w-[120px] justify-between h-9 text-sm">
             <span className="text-sm">
               {filters.tags.length > 0 ? `${filters.tags.length} tags` : "All tags"}
             </span>
@@ -498,18 +503,18 @@ export const ScorecardFilters = ({
       </DropdownMenu>
 
       {/* Date Range Filter */}
-      <div className="flex gap-1">
+      <div className="flex gap-1 items-center">
         <Popover>
           <PopoverTrigger asChild>
             <Button
               variant="outline"
               size="sm"
               className={cn(
-                "w-[100px] justify-start text-left font-normal h-9 text-xs",
+                "w-[110px] justify-start text-left font-normal h-9 text-sm",
                 !filters.dateFrom && "text-muted-foreground"
               )}
             >
-              <CalendarIcon className="mr-1 h-3 w-3" />
+              <CalendarIcon className="mr-1.5 h-3.5 w-3.5" />
               {filters.dateFrom ? (
                 format(filters.dateFrom, "MMM d")
               ) : (
@@ -536,11 +541,11 @@ export const ScorecardFilters = ({
               variant="outline"
               size="sm"
               className={cn(
-                "w-[100px] justify-start text-left font-normal h-9 text-xs",
+                "w-[110px] justify-start text-left font-normal h-9 text-sm",
                 !filters.dateTo && "text-muted-foreground"
               )}
             >
-              <CalendarIcon className="mr-1 h-3 w-3" />
+              <CalendarIcon className="mr-1.5 h-3.5 w-3.5" />
               {filters.dateTo ? (
                 format(filters.dateTo, "MMM d")
               ) : (
@@ -565,42 +570,39 @@ export const ScorecardFilters = ({
         </Popover>
       </div>
 
-      {/* Show Archived Switch */}
-      <div className="flex items-center space-x-2">
-        <Switch
-          id="show-archived"
-          checked={filters.showArchived}
-          onCheckedChange={(checked) =>
-            onFiltersChange({ ...filters, showArchived: checked })
-          }
-        />
-        <Label htmlFor="show-archived" className="text-sm font-medium cursor-pointer whitespace-nowrap">
-          Show archived
-        </Label>
-      </div>
+      {/* Show Archived Toggle Button */}
+      <Button
+        variant={filters.showArchived ? "default" : "outline"}
+        size="sm"
+        onClick={() => onFiltersChange({ ...filters, showArchived: !filters.showArchived })}
+        className="h-9 gap-1.5"
+      >
+        <Archive className="w-3.5 h-3.5" />
+        <span className="text-sm">Archived</span>
+      </Button>
 
       {/* Bulk and Comparison Mode Buttons */}
       {onBulkModeToggle && onComparisonToggle && (
-        <div className="flex gap-2">
+        <>
           <Button 
             variant={bulkSelectionMode ? "default" : "outline"}
             onClick={onBulkModeToggle}
             size="sm"
-            className="gap-2"
+            className="h-9 gap-1.5"
           >
-            <CheckSquare className="w-4 h-4" />
-            {bulkSelectionMode ? "Cancel" : "Bulk"}
+            <CheckSquare className="w-3.5 h-3.5" />
+            <span className="text-sm">{bulkSelectionMode ? "Cancel" : "Bulk"}</span>
           </Button>
           <Button 
             variant={comparisonMode ? "default" : "outline"} 
             onClick={onComparisonToggle}
             size="sm"
-            className="gap-2"
+            className="h-9 gap-1.5"
           >
-            <GitCompare className="w-4 h-4" />
-            {comparisonMode ? "Cancel" : "Compare"}
+            <GitCompare className="w-3.5 h-3.5" />
+            <span className="text-sm">{comparisonMode ? "Cancel" : "Compare"}</span>
           </Button>
-        </div>
+        </>
       )}
 
       {/* Clear Filters Button */}
@@ -609,12 +611,13 @@ export const ScorecardFilters = ({
           variant="outline"
           size="sm"
           onClick={handleClearFilters}
-          className="gap-2"
+          className="h-9 gap-1.5"
         >
-          <RotateCcw className="w-4 h-4" />
-          Clear Filters
+          <RotateCcw className="w-3.5 h-3.5" />
+          <span className="text-sm">Clear</span>
         </Button>
       )}
+      </div>
     </div>
   );
 };
