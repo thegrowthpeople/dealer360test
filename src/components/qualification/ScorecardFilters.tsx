@@ -20,10 +20,10 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
+  CommandSeparator,
 } from "@/components/ui/command";
 import { usePerformanceFilters } from "@/contexts/PerformanceFiltersContext";
 import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
 
 export interface FilterState {
   version: string;
@@ -358,7 +358,7 @@ export const ScorecardFilters = ({
                   const isLastInRegion = currentRegion !== nextRegion && (currentRegion === "Metro" || currentRegion === "Regional" || currentRegion === "Independent");
                   
                   return (
-                    <div key={dealership["Dealer ID"]}>
+                    <React.Fragment key={dealership["Dealer ID"]}>
                       <CommandItem
                         value={dealership.Dealership}
                         onSelect={() => {
@@ -375,9 +375,9 @@ export const ScorecardFilters = ({
                         {dealership.Dealership}
                       </CommandItem>
                       {isLastInRegion && (
-                        <Separator className="my-1 w-[240px]" />
+                        <CommandSeparator className="my-1" />
                       )}
-                    </div>
+                    </React.Fragment>
                   );
                 })}
               </CommandGroup>
