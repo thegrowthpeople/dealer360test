@@ -34,6 +34,7 @@ export interface FilterState {
   dateTo: Date | undefined;
   accountManager: string | null;
   customer: string | null;
+  modifiedRange: string | null;
 }
 
 interface ScorecardFiltersProps {
@@ -85,6 +86,7 @@ export const ScorecardFilters = ({
       dateTo: undefined,
       accountManager: null,
       customer: null,
+      modifiedRange: null,
     });
   };
 
@@ -98,7 +100,8 @@ export const ScorecardFilters = ({
     filters.dateFrom !== undefined ||
     filters.dateTo !== undefined ||
     filters.accountManager !== null ||
-    filters.customer !== null;
+    filters.customer !== null ||
+    filters.modifiedRange !== null;
 
   const handleTagToggle = (tag: string) => {
     const newTags = filters.tags.includes(tag)
@@ -427,6 +430,24 @@ export const ScorecardFilters = ({
               {customer}
             </SelectItem>
           ))}
+        </SelectContent>
+      </Select>
+
+      {/* Modified Range Filter */}
+      <Select
+        value={filters.modifiedRange || "all"}
+        onValueChange={(value) =>
+          onFiltersChange({ ...filters, modifiedRange: value === "all" ? null : value })
+        }
+      >
+        <SelectTrigger className="w-[180px] h-9 text-sm">
+          <SelectValue placeholder="Modified" />
+        </SelectTrigger>
+        <SelectContent className="bg-background border border-border shadow-lg z-50">
+          <SelectItem value="all">All Time</SelectItem>
+          <SelectItem value="last7days">Last 7 Days</SelectItem>
+          <SelectItem value="last30days">Last 30 Days</SelectItem>
+          <SelectItem value="last90days">Last 90 Days</SelectItem>
         </SelectContent>
       </Select>
 

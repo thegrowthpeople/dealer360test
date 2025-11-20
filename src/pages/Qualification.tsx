@@ -153,6 +153,7 @@ const Index = () => {
     dateTo: undefined,
     accountManager: null,
     customer: null,
+    modifiedRange: null,
   });
   const [sortBy, setSortBy] = useState<"date" | "score" | "accountManager" | "customer" | "opportunity" | "framework" | "version" | "lastModified">("date");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
@@ -178,6 +179,14 @@ const Index = () => {
 
   const toggleColumnVisibility = (column: keyof typeof visibleColumns) => {
     setVisibleColumns(prev => ({ ...prev, [column]: !prev[column] }));
+  };
+
+  // Helper to check if scorecard was recently modified (within 48 hours)
+  const isRecentlyModified = (updatedAt: string): boolean => {
+    const now = new Date();
+    const modifiedDate = new Date(updatedAt);
+    const hoursDiff = (now.getTime() - modifiedDate.getTime()) / (1000 * 60 * 60);
+    return hoursDiff <= 48;
   };
 
   // Tag color mapping based on keywords
@@ -642,6 +651,29 @@ const Index = () => {
       return false;
     }
 
+    // Modified range filter
+    if (filters.modifiedRange) {
+      const now = new Date();
+      const modifiedDate = new Date(scorecard.updatedAt);
+      let cutoffDate = new Date();
+
+      switch (filters.modifiedRange) {
+        case "last7days":
+          cutoffDate.setDate(now.getDate() - 7);
+          break;
+        case "last30days":
+          cutoffDate.setDate(now.getDate() - 30);
+          break;
+        case "last90days":
+          cutoffDate.setDate(now.getDate() - 90);
+          break;
+      }
+
+      if (modifiedDate < cutoffDate) {
+        return false;
+      }
+    }
+
     // Tags filter
     if (filters.tags.length > 0) {
       const scorecardTags = scorecard.tags || [];
@@ -1077,7 +1109,7 @@ const Index = () => {
             {sortedScorecards.length === 0 ? (
               <Card className="p-12 text-center">
                 <p className="text-lg text-muted-foreground mb-4">No scorecards match your filters</p>
-                <Button variant="outline" onClick={() => setFilters({ version: "latest", showArchived: false, showOnlyPinned: false, tags: [], dateFrom: undefined, dateTo: undefined, accountManager: null, customer: null })}>
+                <Button variant="outline" onClick={() => setFilters({ version: "latest", showArchived: false, showOnlyPinned: false, tags: [], dateFrom: undefined, dateTo: undefined, accountManager: null, customer: null, modifiedRange: null })}>
                   Clear Filters
                 </Button>
               </Card>
@@ -1259,6 +1291,14 @@ const Index = () => {
                           <div className="flex flex-wrap gap-1.5 mt-4 pt-3 border-t border-border/50">
                             {scorecard.archived && (
                               <Badge variant="secondary" className="text-xs">Archived</Badge>
+                            )}
+                            {isRecentlyModified(scorecard.updatedAt) && (
+                              <Badge 
+                                variant="default"
+                                className="text-xs bg-amber-500 hover:bg-amber-600 text-white animate-fade-in"
+                              >
+                                Recently Modified
+                              </Badge>
                             )}
                             <Badge 
                               variant="outline"
@@ -1482,8 +1522,20 @@ const Index = () => {
                                 </td>
                               )}
                               {visibleColumns.lastModified && (
-                                <td className="p-3 text-sm text-muted-foreground">
-                                  {format(new Date(scorecard.updatedAt), "MMM d, yyyy h:mm a")}
+                                <td className="p-3">
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-sm text-muted-foreground">
+                                      {format(new Date(scorecard.updatedAt), "MMM d, yyyy h:mm a")}
+                                    </span>
+                                    {isRecentlyModified(scorecard.updatedAt) && (
+                                      <Badge 
+                                        variant="default"
+                                        className="text-xs bg-amber-500 hover:bg-amber-600 text-white"
+                                      >
+                                        Recent
+                                      </Badge>
+                                    )}
+                                  </div>
                                 </td>
                               )}
                               <td className="p-3">
