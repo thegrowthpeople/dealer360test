@@ -1155,13 +1155,13 @@ const Index = () => {
                           {/* Score Circle - Prominent */}
                           <div className="flex items-start justify-between mb-4">
                             <div className="flex-1 pr-4">
-                              <p className="text-base font-semibold text-primary/80 line-clamp-2 h-[48px] mb-2">
+                              <h3 className="text-xl font-bold text-foreground line-clamp-2 h-[56px] mb-2 group-hover:text-primary transition-colors">
                                 {scorecard.customerName}
-                              </p>
-                              
-                              <h3 className="text-xl font-bold text-foreground line-clamp-2 h-[56px] group-hover:text-primary transition-colors">
-                                {scorecard.opportunityName}
                               </h3>
+                              
+                              <p className="text-sm font-medium text-muted-foreground/90 line-clamp-2 h-[40px]">
+                                {scorecard.opportunityName}
+                              </p>
                             </div>
                             
                             {/* Circular Score Indicator */}
