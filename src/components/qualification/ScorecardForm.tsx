@@ -77,7 +77,7 @@ export const ScorecardForm = ({ onSubmit, initialData, submitLabel = "Create Sco
             <SelectContent className="bg-popover z-50">
               {frameworks.map((framework) => (
                 <SelectItem key={framework.id} value={framework.id}>
-                  {framework.name} - {framework.description}
+                  {framework.name}
                 </SelectItem>
               ))}
             </SelectContent>
