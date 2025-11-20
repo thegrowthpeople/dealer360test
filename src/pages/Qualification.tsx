@@ -1113,7 +1113,12 @@ const Index = () => {
             <div className="bg-card rounded-xl border border-border p-6 shadow-sm">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                  <h2 className="text-2xl font-bold text-foreground">{activeScorecard.opportunityName}</h2>
+                  <h2 className="text-2xl font-bold text-foreground flex items-center gap-2">
+                    {activeScorecard.opportunityName}
+                    {hasUnsavedChanges() && (
+                      <span className="w-2 h-2 rounded-full bg-warning animate-pulse" title="Unsaved changes" />
+                    )}
+                  </h2>
                   <p className="text-muted-foreground mt-1">
                     {activeScorecard.customerName} • {activeScorecard.salesperson}
                   </p>
@@ -1146,7 +1151,7 @@ const Index = () => {
                     New Version
                   </Button>
                   <Button variant="outline" onClick={handleBackClick} size="sm">
-                    ← Back
+                    Close
                   </Button>
                 </div>
               </div>
