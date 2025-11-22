@@ -14,11 +14,11 @@ export const ForecastTotalCard = ({ title, mbTotal, ftlTotal, leftBgColor = "bg-
   const titleParts = title.includes('\n') ? title.split('\n') : title.split(' ');
   
   return (
-    <Card className="p-0 overflow-hidden border-primary/20 shadow-md hover:shadow-lg hover:scale-[1.02] transition-all duration-300">
+    <Card className="p-0 overflow-hidden border-primary/20 shadow-sm hover:shadow-md hover:scale-[1.01] transition-all duration-300">
       <div className="flex flex-col md:flex-row">
         {/* Left side - Total with colored background */}
-        <div className={`p-4 w-[120px] ${leftBgColor}`}>
-          <p className={`text-xl font-bold mb-2 ${leftTextColor}`}>
+        <div className={`p-3 w-[100px] ${leftBgColor}`}>
+          <p className={`text-sm font-bold mb-1 ${leftTextColor} leading-tight`}>
             {titleParts.map((part, index) => (
               <span key={index}>
                 {part}
@@ -26,22 +26,22 @@ export const ForecastTotalCard = ({ title, mbTotal, ftlTotal, leftBgColor = "bg-
               </span>
             ))}
           </p>
-          <p className={`text-3xl font-bold ${leftTextColor}`}>{mbTotal + ftlTotal}</p>
+          <p className={`text-2xl font-bold ${leftTextColor}`}>{mbTotal + ftlTotal}</p>
         </div>
         
         {/* Vertical separator */}
         <div className="hidden md:block w-px bg-border"></div>
         
         {/* Right side - Breakdown with white background */}
-        <div className={`px-4 py-6 flex items-center justify-center flex-1 ${rightBgColor}`}>
-          <div className="flex gap-6">
-            <div className="space-y-1 text-center">
-              <span className="text-xs text-muted-foreground block uppercase tracking-wider">Mercedes-Benz</span>
-              <span className="text-2xl text-foreground block">{mbTotal}</span>
+        <div className={`px-3 py-4 flex items-center justify-center flex-1 ${rightBgColor}`}>
+          <div className="flex gap-4">
+            <div className="space-y-0.5 text-center">
+              <span className="text-xs text-muted-foreground block uppercase tracking-wider">MB</span>
+              <span className="text-xl text-foreground block font-semibold">{mbTotal}</span>
             </div>
-            <div className="space-y-1 text-center">
-              <span className="text-xs text-muted-foreground block uppercase tracking-wider">Freightliner</span>
-              <span className="text-2xl text-foreground block">{ftlTotal}</span>
+            <div className="space-y-0.5 text-center">
+              <span className="text-xs text-muted-foreground block uppercase tracking-wider">FTL</span>
+              <span className="text-xl text-foreground block font-semibold">{ftlTotal}</span>
             </div>
           </div>
         </div>
