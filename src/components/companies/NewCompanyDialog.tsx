@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,6 +8,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Company } from "@/types/company";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 interface NewCompanyDialogProps {
   open: boolean;
@@ -17,11 +19,26 @@ interface NewCompanyDialogProps {
 
 export const NewCompanyDialog = ({ open, onOpenChange, onSave }: NewCompanyDialogProps) => {
   const { bdmId } = useAuth();
+  
+  // Fetch dealerships from Supabase
+  const { data: dealerships = [] } = useQuery({
+    queryKey: ['dealerships'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('Dealerships')
+        .select('*')
+        .order('Dealership', { ascending: true });
+      
+      if (error) throw error;
+      return data || [];
+    },
+  });
+
   const [formData, setFormData] = useState({
     accountName: '',
+    dealerGroup: '',
     dealershipId: null as number | null,
     dealershipName: '',
-    dealerGroup: '',
     accountManagerId: null as number | null,
     accountManagerName: '',
     bdmId: bdmId || 1,
@@ -30,12 +47,36 @@ export const NewCompanyDialog = ({ open, onOpenChange, onSave }: NewCompanyDialo
     type: 'Prospect' as const,
     segment: 'Small Business' as const,
     existingFleet: [],
-      website: '',
-      linkedinUrl: '',
-      stakeholders: [],
-      status: 'Active' as const,
-      tags: [] as string[]
-    });
+    website: '',
+    linkedinUrl: '',
+    stakeholders: [],
+    status: 'Active' as const,
+    tags: [] as string[]
+  });
+
+  // Get unique dealer groups
+  const dealerGroups = useMemo(() => {
+    const groups = dealerships.map((d: any) => d["Dealer Group"]).filter(Boolean);
+    return [...new Set(groups)].sort();
+  }, [dealerships]);
+
+  // Filter dealerships based on selected group
+  const filteredDealerships = useMemo(() => {
+    if (!formData.dealerGroup) {
+      return dealerships;
+    }
+    return dealerships.filter((d: any) => d["Dealer Group"] === formData.dealerGroup);
+  }, [dealerships, formData.dealerGroup]);
+
+  // Reset dealership when group changes
+  useEffect(() => {
+    if (formData.dealerGroup && formData.dealershipId) {
+      const dealership = dealerships.find((d: any) => d["Dealer ID"] === formData.dealershipId);
+      if (!dealership || dealership["Dealer Group"] !== formData.dealerGroup) {
+        setFormData(prev => ({ ...prev, dealershipId: null, dealershipName: '' }));
+      }
+    }
+  }, [formData.dealerGroup, formData.dealershipId, dealerships]);
 
   const handleSubmit = () => {
     if (!formData.accountName) {
@@ -50,9 +91,9 @@ export const NewCompanyDialog = ({ open, onOpenChange, onSave }: NewCompanyDialo
     // Reset form
     setFormData({
       accountName: '',
+      dealerGroup: '',
       dealershipId: null,
       dealershipName: '',
-      dealerGroup: '',
       accountManagerId: null,
       accountManagerName: '',
       bdmId: bdmId || 1,
@@ -119,35 +160,60 @@ export const NewCompanyDialog = ({ open, onOpenChange, onSave }: NewCompanyDialo
                   <SelectItem value="Government Fleet">Government Fleet</SelectItem>
                 </SelectContent>
               </Select>
-            </div>
           </div>
+        </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="dealership">Dealership</Label>
-            <Select 
-              value={formData.dealershipId?.toString() || ''} 
-              onValueChange={(value) => {
-                const id = parseInt(value);
-                setFormData({ 
-                  ...formData, 
-                  dealershipId: id,
-                  dealershipName: id === 1 ? 'City Trucks' : 'Highway Motors',
-                  dealerGroup: id === 1 ? 'Metro Group' : 'Regional Group'
-                })
-              }}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select dealership" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="1">City Trucks</SelectItem>
-                <SelectItem value="2">Highway Motors</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+        <div className="space-y-2">
+          <Label htmlFor="dealerGroup">Dealership Group</Label>
+          <Select 
+            value={formData.dealerGroup} 
+            onValueChange={(value) => setFormData({ ...formData, dealerGroup: value })}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select dealership group" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="">No Group</SelectItem>
+              {dealerGroups.map((group) => (
+                <SelectItem key={group} value={group}>
+                  {group}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="accountManager">Account Manager</Label>
+        <div className="space-y-2">
+          <Label htmlFor="dealership">Dealership</Label>
+          <Select 
+            value={formData.dealershipId?.toString() || ''} 
+            onValueChange={(value) => {
+              const id = value ? parseInt(value) : null;
+              const dealership = dealerships.find((d: any) => d["Dealer ID"] === id);
+              setFormData({ 
+                ...formData, 
+                dealershipId: id,
+                dealershipName: dealership ? dealership.Dealership : '',
+                dealerGroup: dealership ? dealership["Dealer Group"] : formData.dealerGroup
+              });
+            }}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select dealership" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="">No Dealership</SelectItem>
+              {filteredDealerships.map((dealer: any) => (
+                <SelectItem key={dealer["Dealer ID"]} value={dealer["Dealer ID"].toString()}>
+                  {dealer.Dealership}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="accountManager">Account Manager</Label>
             <Input
               id="accountManager"
               value={formData.accountManagerName}
