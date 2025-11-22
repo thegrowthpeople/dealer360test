@@ -74,12 +74,12 @@ const forecastSchema = z.object({
 type ForecastFormValues = z.infer<typeof forecastSchema>;
 
 const STEPS = [
-  { id: 1, label: "BDM Visitations", shortLabel: "BDM Visits", tabValue: "bdmVisitations" },
+  { id: 1, label: "Forecast", shortLabel: "Forecast", tabValue: "forecast" },
   { id: 2, label: "Activity", shortLabel: "Activity", tabValue: "activity" },
   { id: 3, label: "Pipeline", shortLabel: "Pipeline", tabValue: "pipeline" },
   { id: 4, label: "Lost Opportunities", shortLabel: "Lost", tabValue: "lost" },
   { id: 5, label: "Orders Received", shortLabel: "Orders", tabValue: "orders" },
-  { id: 6, label: "Forecast", shortLabel: "Forecast", tabValue: "forecast" },
+  { id: 6, label: "BDM Visitations", shortLabel: "BDM Visits", tabValue: "bdmVisitations" },
 ];
 
 interface NewForecastDialogProps {
@@ -188,7 +188,14 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
     
     switch (step) {
       case 1:
-        return true;
+        return values.forecastRows.length > 0 && values.forecastRows.every(row => 
+          row.qty && row.qty > 0 &&
+          row.customerName?.trim() &&
+          row.brand &&
+          row.model?.trim() &&
+          row.type &&
+          row.estimatedDelivery?.trim()
+        );
       case 2:
         return values.conquestMeetings !== null && values.customerMeetings !== null;
       case 3:
@@ -202,16 +209,8 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
         );
       case 4:
       case 5:
-        return true;
       case 6:
-        return values.forecastRows.length > 0 && values.forecastRows.every(row => 
-          row.qty && row.qty > 0 &&
-          row.customerName?.trim() &&
-          row.brand &&
-          row.model?.trim() &&
-          row.type &&
-          row.estimatedDelivery?.trim()
-        );
+        return true;
       default:
         return false;
     }
@@ -435,14 +434,113 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
               </TabsList>
 
               <div className="flex-1 overflow-y-auto pr-2">
-                <TabsContent value="bdmVisitations" className="mt-0">
+                <TabsContent value="forecast" className="mt-0">
                   <Card>
                     <CardHeader>
-                      <CardTitle>BDM Visitations</CardTitle>
-                      <CardDescription>Optional visitation tracking</CardDescription>
+                      <div className="flex justify-between items-center">
+                        <CardTitle>Forecast Orders</CardTitle>
+                        <Button type="button" onClick={handleAddRow} className="gap-2">
+                          <Plus className="w-4 h-4" />
+                          Add Order
+                        </Button>
+                      </div>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-muted-foreground">Skip this step or add visitation details.</p>
+                      {fields.length === 0 ? (
+                        <p className="text-center py-8 text-muted-foreground">No orders added yet. Click "Add Order" to start.</p>
+                      ) : (
+                        <div className="space-y-3">
+                          {fields.map((field, index) => (
+                            <Card key={field.id} className="p-4">
+                              <div className="grid grid-cols-5 gap-3">
+                                <FormField
+                                  control={form.control}
+                                  name={`forecastRows.${index}.qty`}
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel className="text-xs">QTY *</FormLabel>
+                                      <FormControl>
+                                        <Input type="number" {...field} value={field.value ?? ''} />
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
+                                <FormField
+                                  control={form.control}
+                                  name={`forecastRows.${index}.customerName`}
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel className="text-xs">Customer *</FormLabel>
+                                      <FormControl>
+                                        <Input {...field} />
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
+                                <FormField
+                                  control={form.control}
+                                  name={`forecastRows.${index}.brand`}
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel className="text-xs">Brand *</FormLabel>
+                                      <Select onValueChange={field.onChange} value={field.value || ""}>
+                                        <FormControl>
+                                          <SelectTrigger>
+                                            <SelectValue />
+                                          </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                          <SelectItem value="Mercedes-Benz">MB</SelectItem>
+                                          <SelectItem value="Freightliner">FTL</SelectItem>
+                                        </SelectContent>
+                                      </Select>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
+                                <FormField
+                                  control={form.control}
+                                  name={`forecastRows.${index}.model`}
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel className="text-xs">Model *</FormLabel>
+                                      <FormControl>
+                                        <Input {...field} />
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
+                                <FormField
+                                  control={form.control}
+                                  name={`forecastRows.${index}.estimatedDelivery`}
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel className="text-xs">Est. Delivery *</FormLabel>
+                                      <FormControl>
+                                        <Input {...field} />
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
+                              </div>
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => remove(index)}
+                                className="mt-2 gap-2 text-destructive"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                                Remove
+                              </Button>
+                            </Card>
+                          ))}
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
                 </TabsContent>
@@ -595,113 +693,14 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
                   </Card>
                 </TabsContent>
 
-                <TabsContent value="forecast" className="mt-0">
+                <TabsContent value="bdmVisitations" className="mt-0">
                   <Card>
                     <CardHeader>
-                      <div className="flex justify-between items-center">
-                        <CardTitle>Forecast Orders</CardTitle>
-                        <Button type="button" onClick={handleAddRow} className="gap-2">
-                          <Plus className="w-4 h-4" />
-                          Add Order
-                        </Button>
-                      </div>
+                      <CardTitle>BDM Visitations</CardTitle>
+                      <CardDescription>Optional visitation tracking</CardDescription>
                     </CardHeader>
                     <CardContent>
-                      {fields.length === 0 ? (
-                        <p className="text-center py-8 text-muted-foreground">No orders added yet. Click "Add Order" to start.</p>
-                      ) : (
-                        <div className="space-y-3">
-                          {fields.map((field, index) => (
-                            <Card key={field.id} className="p-4">
-                              <div className="grid grid-cols-5 gap-3">
-                                <FormField
-                                  control={form.control}
-                                  name={`forecastRows.${index}.qty`}
-                                  render={({ field }) => (
-                                    <FormItem>
-                                      <FormLabel className="text-xs">QTY *</FormLabel>
-                                      <FormControl>
-                                        <Input type="number" {...field} value={field.value ?? ''} />
-                                      </FormControl>
-                                      <FormMessage />
-                                    </FormItem>
-                                  )}
-                                />
-                                <FormField
-                                  control={form.control}
-                                  name={`forecastRows.${index}.customerName`}
-                                  render={({ field }) => (
-                                    <FormItem>
-                                      <FormLabel className="text-xs">Customer *</FormLabel>
-                                      <FormControl>
-                                        <Input {...field} />
-                                      </FormControl>
-                                      <FormMessage />
-                                    </FormItem>
-                                  )}
-                                />
-                                <FormField
-                                  control={form.control}
-                                  name={`forecastRows.${index}.brand`}
-                                  render={({ field }) => (
-                                    <FormItem>
-                                      <FormLabel className="text-xs">Brand *</FormLabel>
-                                      <Select onValueChange={field.onChange} value={field.value || ""}>
-                                        <FormControl>
-                                          <SelectTrigger>
-                                            <SelectValue />
-                                          </SelectTrigger>
-                                        </FormControl>
-                                        <SelectContent>
-                                          <SelectItem value="Mercedes-Benz">MB</SelectItem>
-                                          <SelectItem value="Freightliner">FTL</SelectItem>
-                                        </SelectContent>
-                                      </Select>
-                                      <FormMessage />
-                                    </FormItem>
-                                  )}
-                                />
-                                <FormField
-                                  control={form.control}
-                                  name={`forecastRows.${index}.model`}
-                                  render={({ field }) => (
-                                    <FormItem>
-                                      <FormLabel className="text-xs">Model *</FormLabel>
-                                      <FormControl>
-                                        <Input {...field} />
-                                      </FormControl>
-                                      <FormMessage />
-                                    </FormItem>
-                                  )}
-                                />
-                                <FormField
-                                  control={form.control}
-                                  name={`forecastRows.${index}.estimatedDelivery`}
-                                  render={({ field }) => (
-                                    <FormItem>
-                                      <FormLabel className="text-xs">Est. Delivery *</FormLabel>
-                                      <FormControl>
-                                        <Input {...field} />
-                                      </FormControl>
-                                      <FormMessage />
-                                    </FormItem>
-                                  )}
-                                />
-                              </div>
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => remove(index)}
-                                className="mt-2 gap-2 text-destructive"
-                              >
-                                <Trash2 className="w-4 h-4" />
-                                Remove
-                              </Button>
-                            </Card>
-                          ))}
-                        </div>
-                      )}
+                      <p className="text-muted-foreground">Skip this step or add visitation details.</p>
                     </CardContent>
                   </Card>
                 </TabsContent>

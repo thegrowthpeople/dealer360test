@@ -43,19 +43,17 @@ export const ForecastStepIndicator = ({
         {steps.map((step) => {
           const isCompleted = completedSteps.has(step.id);
           const isCurrent = currentStep === step.id;
-          const isClickable = isCompleted || isCurrent;
 
           return (
             <button
               key={step.id}
-              onClick={() => isClickable && onStepClick(step.id)}
-              disabled={!isClickable}
+              onClick={() => onStepClick(step.id)}
               className={cn(
                 "group relative flex flex-col items-center gap-2 p-3 rounded-lg transition-all",
-                "border-2 text-center",
-                isCompleted && "border-green-500 bg-green-500/10 cursor-pointer hover:bg-green-500/20",
-                isCurrent && "border-primary bg-primary/10 cursor-pointer hover:bg-primary/20",
-                !isCompleted && !isCurrent && "border-border bg-muted/50 cursor-not-allowed opacity-60"
+                "border-2 text-center cursor-pointer",
+                isCompleted && "border-green-500 bg-green-500/10 hover:bg-green-500/20",
+                isCurrent && "border-primary bg-primary/10 hover:bg-primary/20",
+                !isCompleted && !isCurrent && "border-red-500 bg-red-500/10 hover:bg-red-500/20"
               )}
             >
               {/* Step Circle */}
@@ -64,7 +62,7 @@ export const ForecastStepIndicator = ({
                   "flex items-center justify-center w-8 h-8 rounded-full text-sm font-semibold transition-all",
                   isCompleted && "bg-green-500 text-white",
                   isCurrent && "bg-primary text-primary-foreground",
-                  !isCompleted && !isCurrent && "bg-muted text-muted-foreground"
+                  !isCompleted && !isCurrent && "bg-red-500 text-white"
                 )}
               >
                 {isCompleted ? <Check className="w-4 h-4" /> : step.id}
@@ -76,7 +74,7 @@ export const ForecastStepIndicator = ({
                   "text-xs font-medium leading-tight",
                   isCompleted && "text-green-700 dark:text-green-400",
                   isCurrent && "text-primary",
-                  !isCompleted && !isCurrent && "text-muted-foreground"
+                  !isCompleted && !isCurrent && "text-red-700 dark:text-red-400"
                 )}
               >
                 {step.shortLabel}
