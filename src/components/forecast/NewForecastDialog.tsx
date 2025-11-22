@@ -516,9 +516,9 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
                   <TabsTrigger key={step.id} value={step.tabValue}>{step.label}</TabsTrigger>
                 ))}
               </TabsList>
-              <div className="flex-1 pr-2 flex flex-col overflow-hidden">
+              <div className="flex-1 pr-2 overflow-y-auto">
                 {/* Forecast Tab */}
-                <TabsContent value="forecast" className="mt-0 flex-1 flex flex-col">
+                <TabsContent value="forecast" className="mt-0 h-full flex flex-col">
                   <div className="grid grid-cols-4 gap-3 mb-4">
                     <ForecastTotalCard
                       title="Forecast Orders"
@@ -679,7 +679,7 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
                 </TabsContent>
 
                 {/* Orders Tab */}
-                <TabsContent value="orders" className="mt-0">
+                <TabsContent value="orders" className="mt-0 h-full">
                   <Card>
                     <CardHeader>
                       <CardTitle>Orders Received</CardTitle>
@@ -709,7 +709,7 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
                 </TabsContent>
 
                 {/* Activity Tab */}
-                <TabsContent value="activity" className="mt-0">
+                <TabsContent value="activity" className="mt-0 h-full">
                   <Card>
                     <CardHeader>
                       <CardTitle>Meeting Activity</CardTitle>
@@ -739,7 +739,7 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
                 </TabsContent>
 
                 {/* Pipeline Tab */}
-                <TabsContent value="pipeline" className="mt-0">
+                <TabsContent value="pipeline" className="mt-0 h-full">
                   <Card>
                     <CardHeader>
                       <CardTitle>Pipeline Snapshot</CardTitle>
