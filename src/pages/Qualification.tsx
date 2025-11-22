@@ -1551,46 +1551,60 @@ const Index = () => {
             <ScoreHeader scorecard={activeScorecard} />
 
             <div className="space-y-6">
-              <FAINTSection
-                title={activeFramework.structure.categories.find(c => c.name === 'funds')?.displayName || "Funds"}
-                color="bg-primary"
-                component={activeScorecard.funds}
-                questions={frameworkQuestions.funds}
-                onUpdate={(index, state, note) => handleUpdateComponent("funds", index, state, note)}
-                forceExpanded={sectionsExpandAll === "all"}
-              />
+              <div className="animate-fade-in" style={{ animationDelay: '0ms' }}>
+                <FAINTSection
+                  title={activeFramework.structure.categories.find(c => c.name === 'funds')?.displayName || "Funds"}
+                  color="bg-primary"
+                  component={activeScorecard.funds}
+                  questions={frameworkQuestions.funds}
+                  onUpdate={(index, state, note) => handleUpdateComponent("funds", index, state, note)}
+                  forceExpanded={sectionsExpandAll === "all"}
+                />
+              </div>
 
-              <FAINTSection
-                title={activeFramework.structure.categories.find(c => c.name === 'authority')?.displayName || "Authority"}
-                color="bg-accent"
-                component={activeScorecard.authority}
-                questions={frameworkQuestions.authority}
-                onUpdate={(index, state, note) => handleUpdateComponent("authority", index, state, note)}
-              />
+              <div className="animate-fade-in" style={{ animationDelay: '100ms' }}>
+                <FAINTSection
+                  title={activeFramework.structure.categories.find(c => c.name === 'authority')?.displayName || "Authority"}
+                  color="bg-accent"
+                  component={activeScorecard.authority}
+                  questions={frameworkQuestions.authority}
+                  onUpdate={(index, state, note) => handleUpdateComponent("authority", index, state, note)}
+                  forceExpanded={sectionsExpandAll === "all"}
+                />
+              </div>
               
-              <FAINTSection
-                title={activeFramework.structure.categories.find(c => c.name === 'interest')?.displayName || "Interest"}
-                color="bg-success"
-                component={activeScorecard.interest}
-                questions={frameworkQuestions.interest}
-                onUpdate={(index, state, note) => handleUpdateComponent("interest", index, state, note)}
-              />
+              <div className="animate-fade-in" style={{ animationDelay: '200ms' }}>
+                <FAINTSection
+                  title={activeFramework.structure.categories.find(c => c.name === 'interest')?.displayName || "Interest"}
+                  color="bg-success"
+                  component={activeScorecard.interest}
+                  questions={frameworkQuestions.interest}
+                  onUpdate={(index, state, note) => handleUpdateComponent("interest", index, state, note)}
+                  forceExpanded={sectionsExpandAll === "all"}
+                />
+              </div>
               
-              <FAINTSection
-                title={activeFramework.structure.categories.find(c => c.name === 'need')?.displayName || "Need"}
-                color="bg-warning"
-                component={activeScorecard.need}
-                questions={frameworkQuestions.need}
-                onUpdate={(index, state, note) => handleUpdateComponent("need", index, state, note)}
-              />
+              <div className="animate-fade-in" style={{ animationDelay: '300ms' }}>
+                <FAINTSection
+                  title={activeFramework.structure.categories.find(c => c.name === 'need')?.displayName || "Need"}
+                  color="bg-warning"
+                  component={activeScorecard.need}
+                  questions={frameworkQuestions.need}
+                  onUpdate={(index, state, note) => handleUpdateComponent("need", index, state, note)}
+                  forceExpanded={sectionsExpandAll === "all"}
+                />
+              </div>
               
-              <FAINTSection
-                title={activeFramework.structure.categories.find(c => c.name === 'timing')?.displayName || "Timing"}
-                color="bg-destructive"
-                component={activeScorecard.timing}
-                questions={frameworkQuestions.timing}
-                onUpdate={(index, state, note) => handleUpdateComponent("timing", index, state, note)}
-              />
+              <div className="animate-fade-in" style={{ animationDelay: '400ms' }}>
+                <FAINTSection
+                  title={activeFramework.structure.categories.find(c => c.name === 'timing')?.displayName || "Timing"}
+                  color="bg-destructive"
+                  component={activeScorecard.timing}
+                  questions={frameworkQuestions.timing}
+                  onUpdate={(index, state, note) => handleUpdateComponent("timing", index, state, note)}
+                  forceExpanded={sectionsExpandAll === "all"}
+                />
+              </div>
             </div>
           </div>
         )}
