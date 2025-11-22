@@ -53,7 +53,6 @@ export interface Company {
   tags: string[];
   lastContactDate?: string;
   nextFollowUpDate?: string;
-  estimatedValue?: number;
   createdAt: string;
   updatedAt: string;
   createdBy: string;

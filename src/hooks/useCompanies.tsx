@@ -43,7 +43,6 @@ const generateMockCompanies = (): Company[] => {
       tags: ['High Value', 'Repeat Customer'],
       lastContactDate: '2025-01-15',
       nextFollowUpDate: '2025-02-01',
-      estimatedValue: 2500000,
       createdAt: '2024-01-10T10:00:00Z',
       updatedAt: '2025-01-15T14:30:00Z',
       createdBy: 'user1'
@@ -85,7 +84,6 @@ const generateMockCompanies = (): Company[] => {
       tags: ['Prospect', 'Growing'],
       lastContactDate: '2025-01-10',
       nextFollowUpDate: '2025-01-25',
-      estimatedValue: 850000,
       createdAt: '2024-11-20T09:00:00Z',
       updatedAt: '2025-01-10T11:00:00Z',
       createdBy: 'user1'
@@ -122,7 +120,6 @@ const generateMockCompanies = (): Company[] => {
       status: 'Active',
       tags: ['Sustainable', 'Local'],
       lastContactDate: '2025-01-12',
-      estimatedValue: 1200000,
       createdAt: '2023-08-15T08:00:00Z',
       updatedAt: '2025-01-12T16:00:00Z',
       createdBy: 'user1'
@@ -179,7 +176,6 @@ export const useCompanies = () => {
     dealershipId?: number | null;
     type?: string;
     segment?: string;
-    status?: string;
     tags?: string[];
     search?: string;
   }) => {
@@ -189,15 +185,21 @@ export const useCompanies = () => {
       if (filters.dealershipId !== undefined && filters.dealershipId !== null && company.dealershipId !== filters.dealershipId) return false;
       if (filters.type && company.type !== filters.type) return false;
       if (filters.segment && company.segment !== filters.segment) return false;
-      if (filters.status && company.status !== filters.status) return false;
       if (filters.tags && filters.tags.length > 0 && !filters.tags.some(tag => company.tags.includes(tag))) return false;
       if (filters.search) {
         const searchLower = filters.search.toLowerCase();
-        return (
+        const matchesCompanyOrManager = 
           company.accountName.toLowerCase().includes(searchLower) ||
           company.accountManagerName?.toLowerCase().includes(searchLower) ||
-          company.dealershipName?.toLowerCase().includes(searchLower)
+          company.dealershipName?.toLowerCase().includes(searchLower);
+        
+        // Also search in stakeholders
+        const matchesStakeholder = company.stakeholders.some(stakeholder => 
+          `${stakeholder.firstName} ${stakeholder.lastName}`.toLowerCase().includes(searchLower) ||
+          stakeholder.email?.toLowerCase().includes(searchLower)
         );
+        
+        return matchesCompanyOrManager || matchesStakeholder;
       }
       return true;
     });
