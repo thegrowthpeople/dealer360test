@@ -682,6 +682,8 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
 
                 {/* Orders Tab */}
                 <TabsContent value="orders" className="mt-0 flex-1 flex flex-col">
+                  {/* Spacer to match Forecast tab's summary cards height */}
+                  <div className="h-[140px] mb-4" />
                   <Card>
                     <CardHeader>
                       <CardTitle>Orders Received</CardTitle>
@@ -712,6 +714,8 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
 
                 {/* Activity Tab */}
                 <TabsContent value="activity" className="mt-0 flex-1 flex flex-col">
+                  {/* Spacer to match Forecast tab's summary cards height */}
+                  <div className="h-[140px] mb-4" />
                   <Card>
                     <CardHeader>
                       <CardTitle>Meeting Activity</CardTitle>
@@ -742,6 +746,8 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
 
                 {/* Pipeline Tab */}
                 <TabsContent value="pipeline" className="mt-0 flex-1 flex flex-col">
+                  {/* Spacer to match Forecast tab's summary cards height */}
+                  <div className="h-[140px] mb-4" />
                   <Card>
                     <CardHeader>
                       <CardTitle>Pipeline Snapshot</CardTitle>
@@ -819,6 +825,8 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
 
                 {/* Lost Opportunities Tab */}
                 <TabsContent value="lost" className="mt-0 flex-1 flex flex-col">
+                  {/* Spacer to match Forecast tab's summary cards height */}
+                  <div className="h-[140px] mb-4" />
                   <Card>
                     <CardHeader>
                       <CardTitle>Lost Opportunities</CardTitle>
@@ -832,6 +840,8 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
 
                 {/* BDM Visitations Tab */}
                 <TabsContent value="bdmVisitations" className="mt-0 flex-1 flex flex-col">
+                  {/* Spacer to match Forecast tab's summary cards height */}
+                  <div className="h-[140px] mb-4" />
                   <Card>
                     <CardHeader>
                       <CardTitle>BDM Visitations</CardTitle>
