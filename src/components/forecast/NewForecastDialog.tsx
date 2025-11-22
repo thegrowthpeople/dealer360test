@@ -496,411 +496,577 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
               </div>
             </DialogHeader>
 
+            {/* Row 2: Steps with underline */}
+            <div className="px-6 pt-4 pb-3 border-b">
+              <ForecastStepIndicator
+                currentStep={currentStep}
+                completedSteps={completedSteps}
+                onStepClick={handleStepChange}
+                steps={STEPS}
+              />
+            </div>
+
+            {/* Rows 3 & 4: Content + Footer buttons wrapped in the form */}
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="flex-1 flex flex-col overflow-hidden px-6">
-                {/* Step Indicator */}
-                <div className="pt-4 pb-6">
-                  <ForecastStepIndicator
-                    currentStep={currentStep}
-                    completedSteps={completedSteps}
-                    onStepClick={handleStepChange}
-                    steps={STEPS}
-                  />
+              <form onSubmit={form.handleSubmit(onSubmit)} className="flex-1 flex flex-col overflow-hidden">
+                {/* Row 3: Step content */}
+                <div className="px-6 pt-4 pb-5 flex-1 flex flex-col overflow-hidden">
+                  <Tabs
+                    value={currentTabValue}
+                    onValueChange={(value) => {
+                      const step = STEPS.find((s) => s.tabValue === value);
+                      if (step) handleStepChange(step.id);
+                    }}
+                    className="flex-1 flex flex-col overflow-hidden"
+                  >
+                    <TabsList className="hidden">
+                      {STEPS.map((step) => (
+                        <TabsTrigger key={step.id} value={step.tabValue}>
+                          {step.label}
+                        </TabsTrigger>
+                      ))}
+                    </TabsList>
+                    <div className="flex-1 flex flex-col overflow-hidden">
+                      {/* Forecast Tab */}
+                      <TabsContent value="forecast" className="mt-0 flex-1 flex flex-col">
+                        <div className="grid grid-cols-4 gap-3 mb-4">
+                          <ForecastTotalCard
+                            title="Forecast Orders"
+                            mbTotal={
+                              form
+                                .watch("forecastRows")
+                                ?.filter((r) => r.brand === "Mercedes-Benz")
+                                .reduce((sum, r) => sum + (r.qty || 0), 0) || 0
+                            }
+                            ftlTotal={
+                              form
+                                .watch("forecastRows")
+                                ?.filter((r) => r.brand === "Freightliner")
+                                .reduce((sum, r) => sum + (r.qty || 0), 0) || 0
+                            }
+                            leftBgColor="bg-primary"
+                            rightBgColor="bg-primary/10"
+                            leftTextColor="text-white"
+                          />
+                          <ForecastTotalCard
+                            title="Own Retail"
+                            mbTotal={
+                              form
+                                .watch("forecastRows")
+                                ?.filter(
+                                  (r) => r.brand === "Mercedes-Benz" && r.type === "Retail",
+                                )
+                                .reduce((sum, r) => sum + (r.qty || 0), 0) || 0
+                            }
+                            ftlTotal={
+                              form
+                                .watch("forecastRows")
+                                ?.filter((r) => r.brand === "Freightliner" && r.type === "Retail")
+                                .reduce((sum, r) => sum + (r.qty || 0), 0) || 0
+                            }
+                          />
+                          <ForecastTotalCard
+                            title="Indirect Fleet"
+                            mbTotal={
+                              form
+                                .watch("forecastRows")
+                                ?.filter(
+                                  (r) => r.brand === "Mercedes-Benz" && r.type === "Indirect Fleet",
+                                )
+                                .reduce((sum, r) => sum + (r.qty || 0), 0) || 0
+                            }
+                            ftlTotal={
+                              form
+                                .watch("forecastRows")
+                                ?.filter(
+                                  (r) => r.brand === "Freightliner" && r.type === "Indirect Fleet",
+                                )
+                                .reduce((sum, r) => sum + (r.qty || 0), 0) || 0
+                            }
+                          />
+                          <ForecastTotalCard
+                            title="Direct Fleet"
+                            mbTotal={
+                              form
+                                .watch("forecastRows")
+                                ?.filter(
+                                  (r) => r.brand === "Mercedes-Benz" && r.type === "Direct Fleet",
+                                )
+                                .reduce((sum, r) => sum + (r.qty || 0), 0) || 0
+                            }
+                            ftlTotal={
+                              form
+                                .watch("forecastRows")
+                                ?.filter((r) => r.brand === "Freightliner" && r.type === "Direct Fleet")
+                                .reduce((sum, r) => sum + (r.qty || 0), 0) || 0
+                            }
+                          />
+                        </div>
+
+                        <Card className="flex-1 flex flex-col">
+                          <CardHeader className="pb-3">
+                            <div className="flex justify-between items-center">
+                              <CardTitle>Forecast Orders</CardTitle>
+                              <Button
+                                type="button"
+                                onClick={handleAddRow}
+                                variant="outline"
+                                size="sm"
+                                className="gap-2"
+                              >
+                                <Plus className="w-4 h-4" />
+                                Add Order
+                              </Button>
+                            </div>
+                          </CardHeader>
+                          <CardContent className="pt-0 flex-1 flex flex-col">
+                            {fields.length === 0 ? (
+                              <div className="flex-1 flex items-center justify-center">
+                                <p className="text-center text-muted-foreground">
+                                  No orders added. Click "Add Order" to start.
+                                </p>
+                              </div>
+                            ) : (
+                              <div className="space-y-2 flex-1 overflow-y-auto">
+                                <div className="grid grid-cols-[40px_70px_250px_100px_140px_200px_140px_140px_160px_80px] gap-2 font-semibold text-xs mb-2">
+                                  <div></div>
+                                  <div>QTY</div>
+                                  <div>Customer</div>
+                                  <div>Type</div>
+                                  <div>Brand</div>
+                                  <div>Model</div>
+                                  <div>Source</div>
+                                  <div>BDM</div>
+                                  <div>Est. Delivery</div>
+                                  <div>Upside</div>
+                                </div>
+                                {fields.map((field, index) => (
+                                  <div
+                                    key={field.id}
+                                    className="grid grid-cols-[40px_70px_250px_100px_140px_200px_140px_140px_160px_80px] gap-2 focus-within:bg-primary/5"
+                                  >
+                                    <Button
+                                      type="button"
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => remove(index)}
+                                      className="h-7 w-7 p-0"
+                                    >
+                                      <X className="h-4 w-4 text-destructive" />
+                                    </Button>
+                                    <FormField
+                                      control={form.control}
+                                      name={`forecastRows.${index}.qty`}
+                                      render={({ field }) => (
+                                        <FormItem>
+                                          <FormControl>
+                                            <Input
+                                              type="number"
+                                              {...field}
+                                              value={field.value ?? ""}
+                                              className="h-9 text-sm"
+                                            />
+                                          </FormControl>
+                                        </FormItem>
+                                      )}
+                                    />
+                                    <FormField
+                                      control={form.control}
+                                      name={`forecastRows.${index}.customerName`}
+                                      render={({ field }) => (
+                                        <FormItem>
+                                          <FormControl>
+                                            <Input {...field} className="h-9 text-sm" />
+                                          </FormControl>
+                                        </FormItem>
+                                      )}
+                                    />
+                                    <FormField
+                                      control={form.control}
+                                      name={`forecastRows.${index}.customerType`}
+                                      render={({ field }) => (
+                                        <FormItem>
+                                          <FormControl>
+                                            <Select value={field.value} onValueChange={field.onChange}>
+                                              <SelectTrigger className="h-9 text-sm">
+                                                <SelectValue />
+                                              </SelectTrigger>
+                                              <SelectContent>
+                                                <SelectItem value="Existing">Existing</SelectItem>
+                                                <SelectItem value="New">New</SelectItem>
+                                              </SelectContent>
+                                            </Select>
+                                          </FormControl>
+                                        </FormItem>
+                                      )}
+                                    />
+                                    <FormField
+                                      control={form.control}
+                                      name={`forecastRows.${index}.brand`}
+                                      render={({ field }) => (
+                                        <FormItem>
+                                          <FormControl>
+                                            <Select value={field.value || ""} onValueChange={field.onChange}>
+                                              <SelectTrigger className="h-9 text-sm">
+                                                <SelectValue />
+                                              </SelectTrigger>
+                                              <SelectContent>
+                                                <SelectItem value="Mercedes-Benz">Mercedes-Benz</SelectItem>
+                                                <SelectItem value="Freightliner">Freightliner</SelectItem>
+                                              </SelectContent>
+                                            </Select>
+                                          </FormControl>
+                                        </FormItem>
+                                      )}
+                                    />
+                                    <FormField
+                                      control={form.control}
+                                      name={`forecastRows.${index}.model`}
+                                      render={({ field }) => (
+                                        <FormItem>
+                                          <FormControl>
+                                            <Input {...field} className="h-9 text-sm" />
+                                          </FormControl>
+                                        </FormItem>
+                                      )}
+                                    />
+                                    <FormField
+                                      control={form.control}
+                                      name={`forecastRows.${index}.type`}
+                                      render={({ field }) => (
+                                        <FormItem>
+                                          <FormControl>
+                                            <Select value={field.value || ""} onValueChange={field.onChange}>
+                                              <SelectTrigger className="h-9 text-sm">
+                                                <SelectValue />
+                                              </SelectTrigger>
+                                              <SelectContent>
+                                                <SelectItem value="Retail">Retail</SelectItem>
+                                                <SelectItem value="Indirect Fleet">Indirect Fleet</SelectItem>
+                                                <SelectItem value="Direct Fleet">Direct Fleet</SelectItem>
+                                              </SelectContent>
+                                            </Select>
+                                          </FormControl>
+                                        </FormItem>
+                                      )}
+                                    />
+                                    <FormField
+                                      control={form.control}
+                                      name={`forecastRows.${index}.bdm`}
+                                      render={({ field }) => (
+                                        <FormItem>
+                                          <FormControl>
+                                            <Select value={field.value} onValueChange={field.onChange}>
+                                              <SelectTrigger className="h-9 text-sm">
+                                                <SelectValue />
+                                              </SelectTrigger>
+                                              <SelectContent>
+                                                <SelectItem value="Met in Person">Met in Person</SelectItem>
+                                                <SelectItem value="Relationship">Relationship</SelectItem>
+                                                <SelectItem value="Supported">Supported</SelectItem>
+                                              </SelectContent>
+                                            </Select>
+                                          </FormControl>
+                                        </FormItem>
+                                      )}
+                                    />
+                                    <FormField
+                                      control={form.control}
+                                      name={`forecastRows.${index}.estimatedDelivery`}
+                                      render={({ field }) => (
+                                        <FormItem>
+                                          <FormControl>
+                                            <Input {...field} placeholder="Q1 2025" className="h-9 text-sm" />
+                                          </FormControl>
+                                        </FormItem>
+                                      )}
+                                    />
+                                    <FormField
+                                      control={form.control}
+                                      name={`forecastRows.${index}.upside`}
+                                      render={({ field }) => (
+                                        <FormItem>
+                                          <FormControl>
+                                            <div className="flex items-center justify-center h-9">
+                                              <Checkbox
+                                                checked={field.value}
+                                                onCheckedChange={field.onChange}
+                                              />
+                                            </div>
+                                          </FormControl>
+                                        </FormItem>
+                                      )}
+                                    />
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </CardContent>
+                        </Card>
+                      </TabsContent>
+
+                      {/* Orders Tab */}
+                      <TabsContent value="orders" className="mt-0 flex-1 flex flex-col">
+                        <Card>
+                          <CardHeader>
+                            <CardTitle>Orders Received</CardTitle>
+                            <CardDescription>Track orders received this week</CardDescription>
+                          </CardHeader>
+                          <CardContent className="grid grid-cols-2 gap-4">
+                            <FormField
+                              control={form.control}
+                              name="mbtOrdersReceived"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>Mercedes-Benz Orders</FormLabel>
+                                  <FormControl>
+                                    <Input
+                                      type="number"
+                                      placeholder="0"
+                                      {...field}
+                                      value={field.value ?? ""}
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            <FormField
+                              control={form.control}
+                              name="ftlOrdersReceived"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>Freightliner Orders</FormLabel>
+                                  <FormControl>
+                                    <Input
+                                      type="number"
+                                      placeholder="0"
+                                      {...field}
+                                      value={field.value ?? ""}
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                          </CardContent>
+                        </Card>
+                      </TabsContent>
+
+                      {/* Activity Tab */}
+                      <TabsContent value="activity" className="mt-0 flex-1 flex flex-col">
+                        <Card>
+                          <CardHeader>
+                            <CardTitle>Meeting Activity</CardTitle>
+                            <CardDescription>Number of meetings held last week</CardDescription>
+                          </CardHeader>
+                          <CardContent className="grid grid-cols-2 gap-4">
+                            <FormField
+                              control={form.control}
+                              name="conquestMeetings"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>Conquest Meetings *</FormLabel>
+                                  <FormControl>
+                                    <Input
+                                      type="number"
+                                      placeholder="0"
+                                      {...field}
+                                      value={field.value ?? ""}
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            <FormField
+                              control={form.control}
+                              name="customerMeetings"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>Customer Meetings *</FormLabel>
+                                  <FormControl>
+                                    <Input
+                                      type="number"
+                                      placeholder="0"
+                                      {...field}
+                                      value={field.value ?? ""}
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                          </CardContent>
+                        </Card>
+                      </TabsContent>
+
+                      {/* Pipeline Tab */}
+                      <TabsContent value="pipeline" className="mt-0 flex-1 flex flex-col">
+                        <Card>
+                          <CardHeader>
+                            <CardTitle>Pipeline Snapshot</CardTitle>
+                            <CardDescription>Track pipeline growth and quarterly forecasts</CardDescription>
+                          </CardHeader>
+                          <CardContent className="grid grid-cols-3 gap-6">
+                            <div className="space-y-4 p-4 border rounded-lg bg-muted/50">
+                              <h3 className="font-semibold text-base">Pipeline Growth</h3>
+                              <FormField
+                                control={form.control}
+                                name="mbtPipelineGrowth"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel>Mercedes-Benz *</FormLabel>
+                                    <FormControl>
+                                      <Input
+                                        type="number"
+                                        placeholder="0"
+                                        {...field}
+                                        value={field.value ?? ""}
+                                      />
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                              <FormField
+                                control={form.control}
+                                name="ftlPipelineGrowth"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel>Freightliner *</FormLabel>
+                                    <FormControl>
+                                      <Input
+                                        type="number"
+                                        placeholder="0"
+                                        {...field}
+                                        value={field.value ?? ""}
+                                      />
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                            </div>
+
+                            <div className="space-y-4 p-4 border rounded-lg bg-muted/50">
+                              <h3 className="font-semibold text-base">This Quarter</h3>
+                              <FormField
+                                control={form.control}
+                                name="mbtPipelineThisQtr"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel>Mercedes-Benz *</FormLabel>
+                                    <FormControl>
+                                      <Input
+                                        type="number"
+                                        placeholder="0"
+                                        {...field}
+                                        value={field.value ?? ""}
+                                      />
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                              <FormField
+                                control={form.control}
+                                name="ftlPipelineThisQtr"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel>Freightliner *</FormLabel>
+                                    <FormControl>
+                                      <Input
+                                        type="number"
+                                        placeholder="0"
+                                        {...field}
+                                        value={field.value ?? ""}
+                                      />
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                            </div>
+
+                            <div className="space-y-4 p-4 border rounded-lg bg-muted/50">
+                              <h3 className="font-semibold text-base">Next Quarter</h3>
+                              <FormField
+                                control={form.control}
+                                name="mbtPipelineNextQtr"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel>Mercedes-Benz *</FormLabel>
+                                    <FormControl>
+                                      <Input
+                                        type="number"
+                                        placeholder="0"
+                                        {...field}
+                                        value={field.value ?? ""}
+                                      />
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                              <FormField
+                                control={form.control}
+                                name="ftlPipelineNextQtr"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel>Freightliner *</FormLabel>
+                                    <FormControl>
+                                      <Input
+                                        type="number"
+                                        placeholder="0"
+                                        {...field}
+                                        value={field.value ?? ""}
+                                      />
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </TabsContent>
+
+                      {/* Lost Opportunities Tab */}
+                      <TabsContent value="lost" className="mt-0 flex-1 flex flex-col">
+                        <Card>
+                          <CardHeader>
+                            <CardTitle>Lost Opportunities</CardTitle>
+                            <CardDescription>Track orders lost this week (optional)</CardDescription>
+                          </CardHeader>
+                          <CardContent>
+                            <p className="text-muted-foreground">
+                              Optional - add lost order details here.
+                            </p>
+                          </CardContent>
+                        </Card>
+                      </TabsContent>
+
+                      {/* BDM Visitations Tab */}
+                      <TabsContent value="bdmVisitations" className="mt-0 flex-1 flex flex-col">
+                        <Card>
+                          <CardHeader>
+                            <CardTitle>BDM Visitations</CardTitle>
+                            <CardDescription>Optional visitation tracking</CardDescription>
+                          </CardHeader>
+                          <CardContent>
+                            <p className="text-muted-foreground">
+                              Skip this step or add visitation details.
+                            </p>
+                          </CardContent>
+                        </Card>
+                      </TabsContent>
+                    </div>
+                  </Tabs>
                 </div>
 
-                {/* Tabs */}
-                <Tabs
-                  value={currentTabValue}
-                  onValueChange={(value) => {
-                    const step = STEPS.find((s) => s.tabValue === value);
-                    if (step) handleStepChange(step.id);
-                  }}
-                  className="flex-1 flex flex-col overflow-hidden"
-                >
-                  <TabsList className="hidden">
-                    {STEPS.map((step) => (
-                      <TabsTrigger key={step.id} value={step.tabValue}>
-                        {step.label}
-                      </TabsTrigger>
-                    ))}
-                  </TabsList>
-                  <div className="flex-1 flex flex-col overflow-hidden pb-6">
-                    {/* Forecast Tab */}
-                    <TabsContent value="forecast" className="mt-0 flex-1 flex flex-col">
-                      <div className="grid grid-cols-4 gap-3 mb-4">
-                        <ForecastTotalCard
-                          title="Forecast Orders"
-                          mbTotal={
-                            form
-                              .watch("forecastRows")
-                              ?.filter((r) => r.brand === "Mercedes-Benz")
-                              .reduce((sum, r) => sum + (r.qty || 0), 0) || 0
-                          }
-                          ftlTotal={
-                            form
-                              .watch("forecastRows")
-                              ?.filter((r) => r.brand === "Freightliner")
-                              .reduce((sum, r) => sum + (r.qty || 0), 0) || 0
-                          }
-                          leftBgColor="bg-primary"
-                          rightBgColor="bg-primary/10"
-                          leftTextColor="text-white"
-                        />
-                        <ForecastTotalCard
-                          title="Own Retail"
-                          mbTotal={
-                            form
-                              .watch("forecastRows")
-                              ?.filter(
-                                (r) => r.brand === "Mercedes-Benz" && r.type === "Retail",
-                              )
-                              .reduce((sum, r) => sum + (r.qty || 0), 0) || 0
-                          }
-                          ftlTotal={
-                            form
-                              .watch("forecastRows")
-                              ?.filter((r) => r.brand === "Freightliner" && r.type === "Retail")
-                              .reduce((sum, r) => sum + (r.qty || 0), 0) || 0
-                          }
-                        />
-                        <ForecastTotalCard
-                          title="Indirect Fleet"
-                          mbTotal={
-                            form
-                              .watch("forecastRows")
-                              ?.filter(
-                                (r) => r.brand === "Mercedes-Benz" && r.type === "Indirect Fleet",
-                              )
-                              .reduce((sum, r) => sum + (r.qty || 0), 0) || 0
-                          }
-                          ftlTotal={
-                            form
-                              .watch("forecastRows")
-                              ?.filter(
-                                (r) => r.brand === "Freightliner" && r.type === "Indirect Fleet",
-                              )
-                              .reduce((sum, r) => sum + (r.qty || 0), 0) || 0
-                          }
-                        />
-                        <ForecastTotalCard
-                          title="Direct Fleet"
-                          mbTotal={
-                            form
-                              .watch("forecastRows")
-                              ?.filter(
-                                (r) => r.brand === "Mercedes-Benz" && r.type === "Direct Fleet",
-                              )
-                              .reduce((sum, r) => sum + (r.qty || 0), 0) || 0
-                          }
-                          ftlTotal={
-                            form
-                              .watch("forecastRows")
-                              ?.filter((r) => r.brand === "Freightliner" && r.type === "Direct Fleet")
-                              .reduce((sum, r) => sum + (r.qty || 0), 0) || 0
-                          }
-                        />
-                      </div>
-
-                      <Card className="flex-1 flex flex-col">
-                    <CardHeader className="pb-3">
-                      <div className="flex justify-between items-center">
-                        <CardTitle>Forecast Orders</CardTitle>
-                        <Button type="button" onClick={handleAddRow} variant="outline" size="sm" className="gap-2">
-                          <Plus className="w-4 h-4" />
-                          Add Order
-                        </Button>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="pt-0 flex-1 flex flex-col">
-                      {fields.length === 0 ? (
-                        <div className="flex-1 flex items-center justify-center">
-                          <p className="text-center text-muted-foreground">No orders added. Click "Add Order" to start.</p>
-                        </div>
-                      ) : (
-                        <div className="space-y-2 flex-1 overflow-y-auto">
-                          <div className="grid grid-cols-[40px_70px_250px_100px_140px_200px_140px_140px_160px_80px] gap-2 font-semibold text-xs mb-2">
-                            <div></div>
-                            <div>QTY</div>
-                            <div>Customer</div>
-                            <div>Type</div>
-                            <div>Brand</div>
-                            <div>Model</div>
-                            <div>Source</div>
-                            <div>BDM</div>
-                            <div>Est. Delivery</div>
-                            <div>Upside</div>
-                          </div>
-                          {fields.map((field, index) => (
-                            <div key={field.id} className="grid grid-cols-[40px_70px_250px_100px_140px_200px_140px_140px_160px_80px] gap-2 focus-within:bg-primary/5">
-                              <Button type="button" variant="ghost" size="sm" onClick={() => remove(index)} className="h-7 w-7 p-0">
-                                <X className="h-4 w-4 text-destructive" />
-                              </Button>
-                              <FormField control={form.control} name={`forecastRows.${index}.qty`} render={({ field }) => (
-                                <FormItem>
-                                  <FormControl>
-                                    <Input type="number" {...field} value={field.value ?? ''} className="h-9 text-sm" />
-                                  </FormControl>
-                                </FormItem>
-                              )} />
-                              <FormField control={form.control} name={`forecastRows.${index}.customerName`} render={({ field }) => (
-                                <FormItem>
-                                  <FormControl>
-                                    <Input {...field} className="h-9 text-sm" />
-                                  </FormControl>
-                                </FormItem>
-                              )} />
-                              <FormField control={form.control} name={`forecastRows.${index}.customerType`} render={({ field }) => (
-                                <FormItem>
-                                  <FormControl>
-                                    <Select value={field.value} onValueChange={field.onChange}>
-                                      <SelectTrigger className="h-9 text-sm"><SelectValue /></SelectTrigger>
-                                      <SelectContent>
-                                        <SelectItem value="Existing">Existing</SelectItem>
-                                        <SelectItem value="New">New</SelectItem>
-                                      </SelectContent>
-                                    </Select>
-                                  </FormControl>
-                                </FormItem>
-                              )} />
-                              <FormField control={form.control} name={`forecastRows.${index}.brand`} render={({ field }) => (
-                                <FormItem>
-                                  <FormControl>
-                                    <Select value={field.value || ""} onValueChange={field.onChange}>
-                                      <SelectTrigger className="h-9 text-sm"><SelectValue /></SelectTrigger>
-                                      <SelectContent>
-                                        <SelectItem value="Mercedes-Benz">Mercedes-Benz</SelectItem>
-                                        <SelectItem value="Freightliner">Freightliner</SelectItem>
-                                      </SelectContent>
-                                    </Select>
-                                  </FormControl>
-                                </FormItem>
-                              )} />
-                              <FormField control={form.control} name={`forecastRows.${index}.model`} render={({ field }) => (
-                                <FormItem>
-                                  <FormControl>
-                                    <Input {...field} className="h-9 text-sm" />
-                                  </FormControl>
-                                </FormItem>
-                              )} />
-                              <FormField control={form.control} name={`forecastRows.${index}.type`} render={({ field }) => (
-                                <FormItem>
-                                  <FormControl>
-                                    <Select value={field.value || ""} onValueChange={field.onChange}>
-                                      <SelectTrigger className="h-9 text-sm"><SelectValue /></SelectTrigger>
-                                      <SelectContent>
-                                        <SelectItem value="Retail">Retail</SelectItem>
-                                        <SelectItem value="Indirect Fleet">Indirect Fleet</SelectItem>
-                                        <SelectItem value="Direct Fleet">Direct Fleet</SelectItem>
-                                      </SelectContent>
-                                    </Select>
-                                  </FormControl>
-                                </FormItem>
-                              )} />
-                              <FormField control={form.control} name={`forecastRows.${index}.bdm`} render={({ field }) => (
-                                <FormItem>
-                                  <FormControl>
-                                    <Select value={field.value} onValueChange={field.onChange}>
-                                      <SelectTrigger className="h-9 text-sm"><SelectValue /></SelectTrigger>
-                                      <SelectContent>
-                                        <SelectItem value="Met in Person">Met in Person</SelectItem>
-                                        <SelectItem value="Relationship">Relationship</SelectItem>
-                                        <SelectItem value="Supported">Supported</SelectItem>
-                                      </SelectContent>
-                                    </Select>
-                                  </FormControl>
-                                </FormItem>
-                              )} />
-                              <FormField control={form.control} name={`forecastRows.${index}.estimatedDelivery`} render={({ field }) => (
-                                <FormItem>
-                                  <FormControl>
-                                    <Input {...field} placeholder="Q1 2025" className="h-9 text-sm" />
-                                  </FormControl>
-                                </FormItem>
-                              )} />
-                              <FormField control={form.control} name={`forecastRows.${index}.upside`} render={({ field }) => (
-                                <FormItem>
-                                  <FormControl>
-                                    <div className="flex items-center justify-center h-9">
-                                      <Checkbox checked={field.value} onCheckedChange={field.onChange} />
-                                    </div>
-                                  </FormControl>
-                                </FormItem>
-                              )} />
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
-                </TabsContent>
-
-                {/* Orders Tab */}
-                <TabsContent value="orders" className="mt-0 flex-1 flex flex-col">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Orders Received</CardTitle>
-                      <CardDescription>Track orders received this week</CardDescription>
-                    </CardHeader>
-                    <CardContent className="grid grid-cols-2 gap-4">
-                      <FormField control={form.control} name="mbtOrdersReceived" render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Mercedes-Benz Orders</FormLabel>
-                          <FormControl>
-                            <Input type="number" placeholder="0" {...field} value={field.value ?? ''} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )} />
-                      <FormField control={form.control} name="ftlOrdersReceived" render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Freightliner Orders</FormLabel>
-                          <FormControl>
-                            <Input type="number" placeholder="0" {...field} value={field.value ?? ''} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )} />
-                    </CardContent>
-                  </Card>
-                </TabsContent>
-
-                {/* Activity Tab */}
-                <TabsContent value="activity" className="mt-0 flex-1 flex flex-col">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Meeting Activity</CardTitle>
-                      <CardDescription>Number of meetings held last week</CardDescription>
-                    </CardHeader>
-                    <CardContent className="grid grid-cols-2 gap-4">
-                      <FormField control={form.control} name="conquestMeetings" render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Conquest Meetings *</FormLabel>
-                          <FormControl>
-                            <Input type="number" placeholder="0" {...field} value={field.value ?? ''} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )} />
-                      <FormField control={form.control} name="customerMeetings" render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Customer Meetings *</FormLabel>
-                          <FormControl>
-                            <Input type="number" placeholder="0" {...field} value={field.value ?? ''} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )} />
-                    </CardContent>
-                  </Card>
-                </TabsContent>
-
-                {/* Pipeline Tab */}
-                <TabsContent value="pipeline" className="mt-0 flex-1 flex flex-col">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Pipeline Snapshot</CardTitle>
-                      <CardDescription>Track pipeline growth and quarterly forecasts</CardDescription>
-                    </CardHeader>
-                    <CardContent className="grid grid-cols-3 gap-6">
-                      <div className="space-y-4 p-4 border rounded-lg bg-muted/50">
-                        <h3 className="font-semibold text-base">Pipeline Growth</h3>
-                        <FormField control={form.control} name="mbtPipelineGrowth" render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Mercedes-Benz *</FormLabel>
-                            <FormControl>
-                              <Input type="number" placeholder="0" {...field} value={field.value ?? ''} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )} />
-                        <FormField control={form.control} name="ftlPipelineGrowth" render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Freightliner *</FormLabel>
-                            <FormControl>
-                              <Input type="number" placeholder="0" {...field} value={field.value ?? ''} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )} />
-                      </div>
-
-                      <div className="space-y-4 p-4 border rounded-lg bg-muted/50">
-                        <h3 className="font-semibold text-base">This Quarter</h3>
-                        <FormField control={form.control} name="mbtPipelineThisQtr" render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Mercedes-Benz *</FormLabel>
-                            <FormControl>
-                              <Input type="number" placeholder="0" {...field} value={field.value ?? ''} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )} />
-                        <FormField control={form.control} name="ftlPipelineThisQtr" render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Freightliner *</FormLabel>
-                            <FormControl>
-                              <Input type="number" placeholder="0" {...field} value={field.value ?? ''} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )} />
-                      </div>
-
-                      <div className="space-y-4 p-4 border rounded-lg bg-muted/50">
-                        <h3 className="font-semibold text-base">Next Quarter</h3>
-                        <FormField control={form.control} name="mbtPipelineNextQtr" render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Mercedes-Benz *</FormLabel>
-                            <FormControl>
-                              <Input type="number" placeholder="0" {...field} value={field.value ?? ''} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )} />
-                        <FormField control={form.control} name="ftlPipelineNextQtr" render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Freightliner *</FormLabel>
-                            <FormControl>
-                              <Input type="number" placeholder="0" {...field} value={field.value ?? ''} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )} />
-                      </div>
-                    </CardContent>
-                  </Card>
-                </TabsContent>
-
-                {/* Lost Opportunities Tab */}
-                <TabsContent value="lost" className="mt-0 flex-1 flex flex-col">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Lost Opportunities</CardTitle>
-                      <CardDescription>Track orders lost this week (optional)</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-muted-foreground">Optional - add lost order details here.</p>
-                    </CardContent>
-                  </Card>
-                </TabsContent>
-
-                {/* BDM Visitations Tab */}
-                <TabsContent value="bdmVisitations" className="mt-0 flex-1 flex flex-col">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>BDM Visitations</CardTitle>
-                      <CardDescription>Optional visitation tracking</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-muted-foreground">Skip this step or add visitation details.</p>
-                    </CardContent>
-                  </Card>
-                </TabsContent>
-              </div>
-            </Tabs>
-
-                {/* Navigation */}
-                <div className="px-6 pb-5">
+                {/* Row 4: Footer buttons */}
+                <div className="px-6 pt-3 pb-5 border-t">
                   <ForecastStepNavigation
                     currentStep={currentStep}
                     totalSteps={STEPS.length}
