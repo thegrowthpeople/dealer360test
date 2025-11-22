@@ -107,7 +107,7 @@ export const ScorecardForm = ({ onSubmit, initialData, submitLabel = "Create Sco
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-full p-0" align="start">
+            <PopoverContent className="w-full max-h-[320px] overflow-y-auto p-0" align="start">
               <Command>
                 <CommandInput placeholder="Search group..." />
                 <CommandList className="max-h-[300px] overflow-y-auto">
@@ -178,7 +178,7 @@ export const ScorecardForm = ({ onSubmit, initialData, submitLabel = "Create Sco
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-full p-0" align="start">
+            <PopoverContent className="w-full max-h-[320px] overflow-y-auto p-0" align="start">
               <Command>
                 <CommandInput placeholder="Search dealership..." />
                 <CommandList className="max-h-[300px] overflow-y-auto">
