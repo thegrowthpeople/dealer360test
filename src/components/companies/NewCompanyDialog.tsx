@@ -211,7 +211,11 @@ export const NewCompanyDialog = ({ open, onOpenChange, onSave }: NewCompanyDialo
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-full max-h-[320px] overflow-y-auto p-0" align="start">
+              <PopoverContent
+                className="w-full max-h-[320px] overflow-y-auto p-0"
+                align="start"
+                onWheel={(e) => e.stopPropagation()}
+              >
                 <Command>
                   <CommandInput placeholder="Search group..." />
                   <CommandList>
@@ -282,7 +286,11 @@ export const NewCompanyDialog = ({ open, onOpenChange, onSave }: NewCompanyDialo
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-full max-h-[320px] overflow-y-auto p-0" align="start">
+              <PopoverContent
+                className="w-full max-h-[320px] overflow-y-auto p-0"
+                align="start"
+                onWheel={(e) => e.stopPropagation()}
+              >
                 <Command>
                   <CommandInput placeholder="Search dealership..." />
                   <CommandList>
