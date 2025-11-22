@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Plus, FileText, Calendar, GitCompare, Clock, ArrowUp, ArrowDown, Copy, Trash2, Download, Archive, CheckSquare, FileSpreadsheet, LayoutGrid, List, Star, X, Edit2, Settings } from "lucide-react";
+import { Plus, FileText, Calendar, GitCompare, Clock, ArrowUp, ArrowDown, Copy, Trash2, Download, Archive, CheckSquare, FileSpreadsheet, LayoutGrid, List, Star, X, Edit2, Settings, ChevronsDownUp, ChevronsUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
@@ -559,6 +559,11 @@ const Index = () => {
     setActiveScorecard(scorecard);
     setOriginalScorecard(scorecard ? JSON.parse(JSON.stringify(scorecard)) : null);
     setHasCreatedVersionForEdit(false); // Reset flag when opening a scorecard
+    
+    // Scroll to top when opening a scorecard
+    if (scorecard) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   const handleRippleEffect = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -1548,10 +1553,33 @@ const Index = () => {
               </div>
             </div>
 
-            <ScoreHeader scorecard={activeScorecard} />
+            <div className="animate-fade-in" style={{ animationDelay: '0ms' }}>
+              <ScoreHeader scorecard={activeScorecard} />
+            </div>
+
+            <div className="flex justify-end mb-4 animate-fade-in" style={{ animationDelay: '100ms' }}>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setSectionsExpandAll(sectionsExpandAll === "all" ? "none" : "all")}
+                className="gap-2"
+              >
+                {sectionsExpandAll === "all" ? (
+                  <>
+                    <ChevronsUpDown className="w-4 h-4" />
+                    Collapse All
+                  </>
+                ) : (
+                  <>
+                    <ChevronsDownUp className="w-4 h-4" />
+                    Expand All
+                  </>
+                )}
+              </Button>
+            </div>
 
             <div className="space-y-6">
-              <div className="animate-fade-in" style={{ animationDelay: '0ms' }}>
+              <div className="animate-fade-in" style={{ animationDelay: '200ms' }}>
                 <FAINTSection
                   title={activeFramework.structure.categories.find(c => c.name === 'funds')?.displayName || "Funds"}
                   color="bg-primary"
@@ -1562,7 +1590,7 @@ const Index = () => {
                 />
               </div>
 
-              <div className="animate-fade-in" style={{ animationDelay: '100ms' }}>
+              <div className="animate-fade-in" style={{ animationDelay: '300ms' }}>
                 <FAINTSection
                   title={activeFramework.structure.categories.find(c => c.name === 'authority')?.displayName || "Authority"}
                   color="bg-accent"
@@ -1573,7 +1601,7 @@ const Index = () => {
                 />
               </div>
               
-              <div className="animate-fade-in" style={{ animationDelay: '200ms' }}>
+              <div className="animate-fade-in" style={{ animationDelay: '400ms' }}>
                 <FAINTSection
                   title={activeFramework.structure.categories.find(c => c.name === 'interest')?.displayName || "Interest"}
                   color="bg-success"
@@ -1584,7 +1612,7 @@ const Index = () => {
                 />
               </div>
               
-              <div className="animate-fade-in" style={{ animationDelay: '300ms' }}>
+              <div className="animate-fade-in" style={{ animationDelay: '500ms' }}>
                 <FAINTSection
                   title={activeFramework.structure.categories.find(c => c.name === 'need')?.displayName || "Need"}
                   color="bg-warning"
@@ -1595,7 +1623,7 @@ const Index = () => {
                 />
               </div>
               
-              <div className="animate-fade-in" style={{ animationDelay: '400ms' }}>
+              <div className="animate-fade-in" style={{ animationDelay: '600ms' }}>
                 <FAINTSection
                   title={activeFramework.structure.categories.find(c => c.name === 'timing')?.displayName || "Timing"}
                   color="bg-destructive"
