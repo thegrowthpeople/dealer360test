@@ -12,6 +12,8 @@ export interface FAINTComponent {
 export interface Scorecard {
   id: string;
   version: number;
+  dealershipGroup?: string;
+  dealershipId?: number | null;
   accountManager: string;
   customerName: string;
   opportunityName: string;

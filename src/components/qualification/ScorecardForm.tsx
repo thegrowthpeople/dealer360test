@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Scorecard } from "@/types/scorecard";
 import { useFrameworks } from "@/hooks/useFrameworks";
+import { usePerformanceFilters } from "@/contexts/PerformanceFiltersContext";
 
 interface ScorecardFormProps {
   onSubmit: (data: Partial<Scorecard> & { frameworkId?: string }) => void;
@@ -14,7 +15,11 @@ interface ScorecardFormProps {
 
 export const ScorecardForm = ({ onSubmit, initialData, submitLabel = "Create Scorecard" }: ScorecardFormProps) => {
   const { frameworks, defaultFramework, isLoading } = useFrameworks();
+  const { dealerships } = usePerformanceFilters();
+  
   const [formData, setFormData] = useState({
+    dealershipGroup: initialData?.dealershipGroup || "",
+    dealershipId: initialData?.dealershipId || null,
     accountManager: initialData?.accountManager || "",
     customerName: initialData?.customerName || "",
     opportunityName: initialData?.opportunityName || "",
@@ -22,6 +27,30 @@ export const ScorecardForm = ({ onSubmit, initialData, submitLabel = "Create Sco
     reviewDate: initialData?.reviewDate || new Date().toISOString().split('T')[0],
     frameworkId: defaultFramework?.id || "",
   });
+
+  // Get unique dealer groups
+  const dealerGroups = useMemo(() => {
+    const groups = dealerships.map(d => d["Dealer Group"]).filter(Boolean);
+    return [...new Set(groups)].sort();
+  }, [dealerships]);
+
+  // Filter dealerships based on selected group
+  const filteredDealerships = useMemo(() => {
+    if (!formData.dealershipGroup) {
+      return dealerships;
+    }
+    return dealerships.filter(d => d["Dealer Group"] === formData.dealershipGroup);
+  }, [dealerships, formData.dealershipGroup]);
+
+  // Reset dealership when group changes
+  useEffect(() => {
+    if (formData.dealershipGroup && formData.dealershipId) {
+      const dealership = dealerships.find(d => d["Dealer ID"] === formData.dealershipId);
+      if (!dealership || dealership["Dealer Group"] !== formData.dealershipGroup) {
+        setFormData(prev => ({ ...prev, dealershipId: null }));
+      }
+    }
+  }, [formData.dealershipGroup, formData.dealershipId, dealerships]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,6 +60,46 @@ export const ScorecardForm = ({ onSubmit, initialData, submitLabel = "Create Sco
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <Label htmlFor="dealershipGroup">Dealership Group</Label>
+          <Select
+            value={formData.dealershipGroup}
+            onValueChange={(value) => setFormData({ ...formData, dealershipGroup: value })}
+          >
+            <SelectTrigger className="mt-1 bg-background">
+              <SelectValue placeholder="Select group..." />
+            </SelectTrigger>
+            <SelectContent className="bg-popover z-50">
+              <SelectItem value="">All Groups</SelectItem>
+              {dealerGroups.map((group) => (
+                <SelectItem key={group} value={group}>
+                  {group}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div>
+          <Label htmlFor="dealership">Dealership</Label>
+          <Select
+            value={formData.dealershipId?.toString() || ""}
+            onValueChange={(value) => setFormData({ ...formData, dealershipId: value ? parseInt(value) : null })}
+          >
+            <SelectTrigger className="mt-1 bg-background">
+              <SelectValue placeholder="Select dealership..." />
+            </SelectTrigger>
+            <SelectContent className="bg-popover z-50">
+              <SelectItem value="">All Dealerships</SelectItem>
+              {filteredDealerships.map((dealer) => (
+                <SelectItem key={dealer["Dealer ID"]} value={dealer["Dealer ID"].toString()}>
+                  {dealer.Dealership}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
         <div>
           <Label htmlFor="accountManager">Account Manager *</Label>
           <Input
