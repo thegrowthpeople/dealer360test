@@ -54,7 +54,6 @@ import { Calendar } from "@/components/ui/calendar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Separator } from "@/components/ui/separator";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { usePerformanceFilters } from "@/contexts/PerformanceFiltersContext";
@@ -519,8 +518,8 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
               </TabsList>
               <div className="flex-1 pr-2 flex flex-col overflow-hidden">
                 {/* Forecast Tab */}
-                <TabsContent value="forecast" className="mt-0 flex-1 flex flex-col animate-fade-in">
-                  <div className="grid grid-cols-4 gap-2 mb-3">
+                <TabsContent value="forecast" className="mt-0 flex-1 flex flex-col">
+                  <div className="grid grid-cols-4 gap-3 mb-4">
                     <ForecastTotalCard
                       title="Forecast Orders"
                       mbTotal={form.watch("forecastRows")?.filter(r => r.brand === "Mercedes-Benz").reduce((sum, r) => sum + (r.qty || 0), 0) || 0}
@@ -546,19 +545,17 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
                     />
                   </div>
 
-                  <Separator className="mb-3" />
-
                   <Card className="flex-1 flex flex-col">
-                    <CardHeader className="pb-2 pt-4">
+                    <CardHeader className="pb-3">
                       <div className="flex justify-between items-center">
-                        <CardTitle className="text-lg">Forecast Orders</CardTitle>
+                        <CardTitle>Forecast Orders</CardTitle>
                         <Button type="button" onClick={handleAddRow} variant="outline" size="sm" className="gap-2">
                           <Plus className="w-4 h-4" />
                           Add Order
                         </Button>
                       </div>
                     </CardHeader>
-                    <CardContent className="pt-2 flex-1 flex flex-col">
+                    <CardContent className="pt-0 flex-1 flex flex-col">
                       {fields.length === 0 ? (
                         <div className="flex-1 flex items-center justify-center">
                           <p className="text-center text-muted-foreground">No orders added. Click "Add Order" to start.</p>
@@ -682,14 +679,13 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
                 </TabsContent>
 
                 {/* Orders Tab */}
-                <TabsContent value="orders" className="mt-0 flex-1 flex flex-col animate-fade-in">
+                <TabsContent value="orders" className="mt-0">
                   <Card>
-                    <CardHeader className="pb-3 pt-4">
-                      <CardTitle className="text-lg">Orders Received</CardTitle>
-                      <CardDescription className="text-sm">Track orders received this week</CardDescription>
+                    <CardHeader>
+                      <CardTitle>Orders Received</CardTitle>
+                      <CardDescription>Track orders received this week</CardDescription>
                     </CardHeader>
-                    <Separator />
-                    <CardContent className="grid grid-cols-2 gap-4 pt-4">
+                    <CardContent className="grid grid-cols-2 gap-4">
                       <FormField control={form.control} name="mbtOrdersReceived" render={({ field }) => (
                         <FormItem>
                           <FormLabel>Mercedes-Benz Orders</FormLabel>
@@ -713,14 +709,13 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
                 </TabsContent>
 
                 {/* Activity Tab */}
-                <TabsContent value="activity" className="mt-0 flex-1 flex flex-col animate-fade-in">
+                <TabsContent value="activity" className="mt-0">
                   <Card>
-                    <CardHeader className="pb-3 pt-4">
-                      <CardTitle className="text-lg">Meeting Activity</CardTitle>
-                      <CardDescription className="text-sm">Number of meetings held last week</CardDescription>
+                    <CardHeader>
+                      <CardTitle>Meeting Activity</CardTitle>
+                      <CardDescription>Number of meetings held last week</CardDescription>
                     </CardHeader>
-                    <Separator />
-                    <CardContent className="grid grid-cols-2 gap-4 pt-4">
+                    <CardContent className="grid grid-cols-2 gap-4">
                       <FormField control={form.control} name="conquestMeetings" render={({ field }) => (
                         <FormItem>
                           <FormLabel>Conquest Meetings *</FormLabel>
@@ -744,16 +739,15 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
                 </TabsContent>
 
                 {/* Pipeline Tab */}
-                <TabsContent value="pipeline" className="mt-0 flex-1 flex flex-col animate-fade-in">
+                <TabsContent value="pipeline" className="mt-0">
                   <Card>
-                    <CardHeader className="pb-3 pt-4">
-                      <CardTitle className="text-lg">Pipeline Snapshot</CardTitle>
-                      <CardDescription className="text-sm">Track pipeline growth and quarterly forecasts</CardDescription>
+                    <CardHeader>
+                      <CardTitle>Pipeline Snapshot</CardTitle>
+                      <CardDescription>Track pipeline growth and quarterly forecasts</CardDescription>
                     </CardHeader>
-                    <Separator />
-                    <CardContent className="grid grid-cols-3 gap-4 pt-4">
-                      <div className="space-y-3 p-3 border rounded-lg bg-muted/30">
-                        <h3 className="font-semibold text-sm border-b pb-2">Pipeline Growth</h3>
+                    <CardContent className="grid grid-cols-3 gap-6">
+                      <div className="space-y-4 p-4 border rounded-lg bg-muted/50">
+                        <h3 className="font-semibold text-base">Pipeline Growth</h3>
                         <FormField control={form.control} name="mbtPipelineGrowth" render={({ field }) => (
                           <FormItem>
                             <FormLabel>Mercedes-Benz *</FormLabel>
@@ -774,8 +768,8 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
                         )} />
                       </div>
 
-                      <div className="space-y-3 p-3 border rounded-lg bg-muted/30">
-                        <h3 className="font-semibold text-sm border-b pb-2">This Quarter</h3>
+                      <div className="space-y-4 p-4 border rounded-lg bg-muted/50">
+                        <h3 className="font-semibold text-base">This Quarter</h3>
                         <FormField control={form.control} name="mbtPipelineThisQtr" render={({ field }) => (
                           <FormItem>
                             <FormLabel>Mercedes-Benz *</FormLabel>
@@ -796,8 +790,8 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
                         )} />
                       </div>
 
-                      <div className="space-y-3 p-3 border rounded-lg bg-muted/30">
-                        <h3 className="font-semibold text-sm border-b pb-2">Next Quarter</h3>
+                      <div className="space-y-4 p-4 border rounded-lg bg-muted/50">
+                        <h3 className="font-semibold text-base">Next Quarter</h3>
                         <FormField control={form.control} name="mbtPipelineNextQtr" render={({ field }) => (
                           <FormItem>
                             <FormLabel>Mercedes-Benz *</FormLabel>
@@ -822,29 +816,27 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
                 </TabsContent>
 
                 {/* Lost Tab */}
-                <TabsContent value="lost" className="mt-0 flex-1 flex flex-col animate-fade-in">
+                <TabsContent value="lost" className="mt-0">
                   <Card>
-                    <CardHeader className="pb-3 pt-4">
-                      <CardTitle className="text-lg">Lost Opportunities</CardTitle>
-                      <CardDescription className="text-sm">Track orders lost this week (optional)</CardDescription>
+                    <CardHeader>
+                      <CardTitle>Lost Opportunities</CardTitle>
+                      <CardDescription>Track orders lost this week (optional)</CardDescription>
                     </CardHeader>
-                    <Separator />
-                    <CardContent className="pt-4">
-                      <p className="text-muted-foreground text-sm">Optional - add lost order details here.</p>
+                    <CardContent>
+                      <p className="text-muted-foreground">Optional - add lost order details here.</p>
                     </CardContent>
                   </Card>
                 </TabsContent>
 
                 {/* BDM Visitations Tab */}
-                <TabsContent value="bdmVisitations" className="mt-0 flex-1 flex flex-col animate-fade-in">
+                <TabsContent value="bdmVisitations" className="mt-0">
                   <Card>
-                    <CardHeader className="pb-3 pt-4">
-                      <CardTitle className="text-lg">BDM Visitations</CardTitle>
-                      <CardDescription className="text-sm">Optional visitation tracking</CardDescription>
+                    <CardHeader>
+                      <CardTitle>BDM Visitations</CardTitle>
+                      <CardDescription>Optional visitation tracking</CardDescription>
                     </CardHeader>
-                    <Separator />
-                    <CardContent className="pt-4">
-                      <p className="text-muted-foreground text-sm">Skip this step or add visitation details.</p>
+                    <CardContent>
+                      <p className="text-muted-foreground">Skip this step or add visitation details.</p>
                     </CardContent>
                   </Card>
                 </TabsContent>
