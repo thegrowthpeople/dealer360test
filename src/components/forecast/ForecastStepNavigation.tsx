@@ -27,7 +27,7 @@ export const ForecastStepNavigation = ({
   const isLastStep = currentStep === totalSteps;
 
   return (
-    <div className="flex items-center justify-between pt-6 border-t">
+    <div className="flex items-center justify-between pt-6">
       <Button
         type="button"
         variant="outline"
