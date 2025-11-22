@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isMonday } from "date-fns";
 import { Check, ChevronsUpDown, Building2, MapPin, Plus, Trash2, X, Copy, CalendarIcon } from "lucide-react";
+import * as React from "react";
 import {
   Dialog,
   DialogContent,
@@ -41,6 +42,7 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
+  CommandSeparator,
 } from "@/components/ui/command";
 import {
   Tooltip,
@@ -55,7 +57,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { usePerformanceFilters } from "@/contexts/PerformanceFiltersContext";
-import { ForecastStepIndicator } from "./ForecastStepIndicator";
 import { ForecastStepNavigation } from "./ForecastStepNavigation";
 import { ForecastTotalCard } from "./ForecastTotalCard";
 import { cn } from "@/lib/utils";
@@ -127,36 +128,40 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
   const [groupSearchOpen, setGroupSearchOpen] = useState(false);
   const [dealershipSearchOpen, setDealershipSearchOpen] = useState(false);
 
+  // Get all unique dealer groups sorted by region (matching Performance page)
   const dealerGroups = useMemo(() => {
-    const groups = [...new Set(dealerships.map(d => d["Dealer Group"]))];
+    const groups = [...new Set(dealerships.map((d) => d["Dealer Group"]).filter(Boolean))];
     
-    const metro: string[] = [];
-    const regional: string[] = [];
-    const independent: string[] = [];
-    const nz: string[] = [];
-    const internal: string[] = [];
+    const REGION_ORDER = ["Metro", "Regional", "Independent", "NZ", "Internal"];
     
-    groups.forEach(group => {
-      const groupLower = group.toLowerCase();
-      if (groupLower.includes('metro')) metro.push(group);
-      else if (groupLower.includes('regional')) regional.push(group);
-      else if (groupLower.includes('independent')) independent.push(group);
-      else if (groupLower.includes('nz')) nz.push(group);
-      else internal.push(group);
+    return groups.sort((a, b) => {
+      const regionA = dealerships.find(d => d["Dealer Group"] === a)?.Region || "";
+      const regionB = dealerships.find(d => d["Dealer Group"] === b)?.Region || "";
+      const indexA = REGION_ORDER.indexOf(regionA);
+      const indexB = REGION_ORDER.indexOf(regionB);
+      return (indexA === -1 ? 999 : indexA) - (indexB === -1 ? 999 : indexB);
     });
-    
-    return [
-      { label: 'Metro', items: metro.sort() },
-      { label: 'Regional', items: regional.sort() },
-      { label: 'Independent', items: independent.sort() },
-      { label: 'NZ', items: nz.sort() },
-      { label: 'Internal', items: internal.sort() },
-    ].filter(section => section.items.length > 0);
   }, [dealerships]);
 
   const filteredDealerships = useMemo(() => {
     if (!localDealershipGroup) return dealerships;
-    return dealerships.filter(d => d["Dealer Group"] === localDealershipGroup);
+    
+    const filtered = dealerships.filter(d => d["Dealer Group"] === localDealershipGroup);
+    
+    // Sort by region first, then by dealership name
+    const REGION_ORDER = ["Metro", "Regional", "Independent", "NZ", "Internal"];
+    return filtered.sort((a, b) => {
+      const regionA = a.Region || "";
+      const regionB = b.Region || "";
+      const indexA = REGION_ORDER.indexOf(regionA);
+      const indexB = REGION_ORDER.indexOf(regionB);
+      const regionCompare = (indexA === -1 ? 999 : indexA) - (indexB === -1 ? 999 : indexB);
+      
+      if (regionCompare !== 0) return regionCompare;
+      
+      // Within same region, sort alphabetically by dealership name
+      return (a.Dealership || "").localeCompare(b.Dealership || "");
+    });
   }, [dealerships, localDealershipGroup]);
 
   const availableWeeks = useMemo(() => {
@@ -322,10 +327,6 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
     setShowForm(true);
   };
 
-  const handleBackToSelection = () => {
-    setShowForm(false);
-  };
-
   const currentTabValue = STEPS[currentStep - 1]?.tabValue || "forecast";
   
   const selectedDealershipName = localDealerId 
@@ -346,7 +347,11 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
           New Forecast
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-[95vw] h-[90vh] flex flex-col p-8">
+      <DialogContent 
+        className="max-w-[95vw] h-[90vh] flex flex-col p-8"
+        onInteractOutside={(e) => e.preventDefault()}
+        onEscapeKeyDown={(e) => e.preventDefault()}
+      >
         {!showForm ? (
           // Stage 1: Dealership & Period Selection
           <>
@@ -376,24 +381,33 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
                         <CommandInput placeholder="Search groups..." />
                         <CommandList>
                           <CommandEmpty>No group found.</CommandEmpty>
-                          {dealerGroups.map((section) => (
-                            <CommandGroup key={section.label} heading={section.label}>
-                              {section.items.map((group) => (
-                                <CommandItem
-                                  key={group}
-                                  value={group}
-                                  onSelect={() => {
-                                    setLocalDealershipGroup(group);
-                                    setLocalDealerId(null);
-                                    setGroupSearchOpen(false);
-                                  }}
-                                >
-                                  <Check className={cn("mr-2 h-4 w-4", localDealershipGroup === group ? "opacity-100" : "opacity-0")} />
-                                  {group}
-                                </CommandItem>
-                              ))}
-                            </CommandGroup>
-                          ))}
+                          <CommandGroup>
+                            {dealerGroups.map((group, index) => {
+                              const currentRegion = dealerships.find(d => d["Dealer Group"] === group)?.Region;
+                              const nextGroup = dealerGroups[index + 1];
+                              const nextRegion = nextGroup ? dealerships.find(d => d["Dealer Group"] === nextGroup)?.Region : undefined;
+                              const isLastInRegion = currentRegion && currentRegion !== nextRegion && (currentRegion === "Metro" || currentRegion === "Regional" || currentRegion === "Independent");
+
+                              return (
+                                <React.Fragment key={group}>
+                                  <CommandItem
+                                    value={group}
+                                    onSelect={() => {
+                                      setLocalDealershipGroup(group);
+                                      setLocalDealerId(null);
+                                      setGroupSearchOpen(false);
+                                    }}
+                                  >
+                                    <Check className={cn("mr-2 h-4 w-4", localDealershipGroup === group ? "opacity-100" : "opacity-0")} />
+                                    {group}
+                                  </CommandItem>
+                                  {isLastInRegion && (
+                                    <CommandSeparator className="my-1" />
+                                  )}
+                                </React.Fragment>
+                              );
+                            })}
+                          </CommandGroup>
                         </CommandList>
                       </Command>
                     </PopoverContent>
@@ -456,13 +470,28 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
                   )}
                 </div>
 
-                <Button 
-                  onClick={handleContinueToForm} 
-                  className="w-full h-12 mt-8"
-                  size="lg"
-                >
-                  Continue to Forecast Form
-                </Button>
+                <div className="flex gap-3 mt-8">
+                  <Button 
+                    variant="outline"
+                    onClick={() => {
+                      setOpen(false);
+                      setLocalDealershipGroup("");
+                      setLocalDealerId(null);
+                      setLocalWeekStarting(null);
+                    }}
+                    className="flex-1 h-12"
+                    size="lg"
+                  >
+                    Cancel
+                  </Button>
+                  <Button 
+                    onClick={handleContinueToForm} 
+                    className="flex-1 h-12"
+                    size="lg"
+                  >
+                    Continue to Forecast Form
+                  </Button>
+                </div>
               </div>
             </div>
           </>
@@ -490,27 +519,12 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
                     <CalendarIcon className="w-3 h-3 text-muted-foreground" />
                     <span className="font-medium">{selectedWeekDisplay}</span>
                   </div>
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    onClick={handleBackToSelection}
-                    className="mt-2 h-7 text-xs"
-                  >
-                    Change Selection
-                  </Button>
                 </div>
               </div>
             </DialogHeader>
 
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="flex-1 flex flex-col overflow-hidden">
-                {/* Step Indicator */}
-                <ForecastStepIndicator
-                  currentStep={currentStep}
-                  completedSteps={completedSteps}
-                  onStepClick={handleStepChange}
-                  steps={STEPS}
-                />
 
                 {/* Tabs */}
                 <Tabs value={currentTabValue} onValueChange={(value) => {
