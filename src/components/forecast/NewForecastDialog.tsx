@@ -369,7 +369,7 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
           // Stage 1: Dealership & Period Selection
           <>
             <DialogHeader className="p-6 pb-4">
-              <DialogTitle className="text-xl font-bold">Create New Forecast</DialogTitle>
+              <DialogTitle className="text-xl font-bold">Create New Weekly Report</DialogTitle>
               <DialogDescription>
                 Select dealership and period
               </DialogDescription>
@@ -488,23 +488,18 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
             <DialogHeader className="p-6 pb-4 border-b">
               <div className="flex items-start justify-between">
                 <div>
-                  <DialogTitle className="text-2xl font-bold">New Forecast & Activity Snapshot</DialogTitle>
+                  <DialogTitle className="text-2xl font-bold">New Weekly Report</DialogTitle>
                   <DialogDescription>
-                    Complete each step to create a comprehensive forecast
+                    Weekly forecast, orders, activity, pipeline, and visits.
                   </DialogDescription>
                 </div>
-                <div className="text-right text-sm space-y-1">
-                  <div className="flex items-center gap-2 justify-end">
-                    <MapPin className="w-3 h-3 text-muted-foreground" />
-                    <span className="font-medium">{localDealershipGroup}</span>
-                  </div>
-                  <div className="flex items-center gap-2 justify-end">
-                    <Building2 className="w-3 h-3 text-muted-foreground" />
-                    <span className="font-medium">{selectedDealershipName}</span>
-                  </div>
-                  <div className="flex items-center gap-2 justify-end">
-                    <CalendarIcon className="w-3 h-3 text-muted-foreground" />
-                    <span className="font-medium">{selectedWeekDisplay}</span>
+                <div className="text-right text-sm">
+                  <div className="flex items-center gap-2 justify-end text-base font-medium">
+                    <span>{localDealershipGroup}</span>
+                    <span className="text-muted-foreground">•</span>
+                    <span>{selectedDealershipName}</span>
+                    <span className="text-muted-foreground">•</span>
+                    <span>w/c {selectedWeekDisplay}</span>
                   </div>
                 </div>
               </div>
@@ -534,7 +529,7 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
               <div className="flex-1 overflow-y-auto pr-2">
                 {/* Forecast Tab */}
                 <TabsContent value="forecast" className="mt-0">
-                  <div className="grid grid-cols-4 gap-6 mb-6">
+                  <div className="grid grid-cols-4 gap-3 mb-6">
                     <ForecastTotalCard
                       title="Forecast Orders"
                       mbTotal={form.watch("forecastRows")?.filter(r => r.brand === "Mercedes-Benz").reduce((sum, r) => sum + (r.qty || 0), 0) || 0}

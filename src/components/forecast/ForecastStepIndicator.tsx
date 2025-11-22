@@ -21,15 +21,8 @@ export const ForecastStepIndicator = ({
   onStepClick,
   steps,
 }: ForecastStepIndicatorProps) => {
-  const progress = (completedSteps.size / steps.length) * 100;
-
   return (
-    <div className="space-y-4 mb-6 animate-fade-in">
-      {/* Progress Bar */}
-      <div className="space-y-2">
-        <Progress value={progress} className="h-2" />
-      </div>
-
+    <div className="mb-6 animate-fade-in">
       {/* Step Indicators */}
       <div className="grid grid-cols-6 gap-2">
         {steps.map((step) => {
