@@ -508,6 +508,37 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
                   />
                 </div>
 
+                {/* Summary Band - Always present for consistent vertical alignment */}
+                <div className="mb-4 min-h-[120px]">
+                  {currentStep === 1 && (
+                    <div className="grid grid-cols-4 gap-3">
+                      <ForecastTotalCard
+                        title="Forecast Orders"
+                        mbTotal={form.watch("forecastRows")?.filter(r => r.brand === "Mercedes-Benz").reduce((sum, r) => sum + (r.qty || 0), 0) || 0}
+                        ftlTotal={form.watch("forecastRows")?.filter(r => r.brand === "Freightliner").reduce((sum, r) => sum + (r.qty || 0), 0) || 0}
+                        leftBgColor="bg-primary"
+                        rightBgColor="bg-primary/10"
+                        leftTextColor="text-white"
+                      />
+                      <ForecastTotalCard
+                        title="Own Retail"
+                        mbTotal={form.watch("forecastRows")?.filter(r => r.brand === "Mercedes-Benz" && r.type === "Retail").reduce((sum, r) => sum + (r.qty || 0), 0) || 0}
+                        ftlTotal={form.watch("forecastRows")?.filter(r => r.brand === "Freightliner" && r.type === "Retail").reduce((sum, r) => sum + (r.qty || 0), 0) || 0}
+                      />
+                      <ForecastTotalCard
+                        title="Indirect Fleet"
+                        mbTotal={form.watch("forecastRows")?.filter(r => r.brand === "Mercedes-Benz" && r.type === "Indirect Fleet").reduce((sum, r) => sum + (r.qty || 0), 0) || 0}
+                        ftlTotal={form.watch("forecastRows")?.filter(r => r.brand === "Freightliner" && r.type === "Indirect Fleet").reduce((sum, r) => sum + (r.qty || 0), 0) || 0}
+                      />
+                      <ForecastTotalCard
+                        title="Direct Fleet"
+                        mbTotal={form.watch("forecastRows")?.filter(r => r.brand === "Mercedes-Benz" && r.type === "Direct Fleet").reduce((sum, r) => sum + (r.qty || 0), 0) || 0}
+                        ftlTotal={form.watch("forecastRows")?.filter(r => r.brand === "Freightliner" && r.type === "Direct Fleet").reduce((sum, r) => sum + (r.qty || 0), 0) || 0}
+                      />
+                    </div>
+                  )}
+                </div>
+
                 {/* Tabs */}
                 <Tabs value={currentTabValue} onValueChange={(value) => {
                   const step = STEPS.find(s => s.tabValue === value);
@@ -521,32 +552,6 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
               <div className="flex-1 flex flex-col overflow-hidden pb-6">
                 {/* Forecast Tab */}
                 <TabsContent value="forecast" className="mt-0 flex-1 flex flex-col">
-                  <div className="grid grid-cols-4 gap-3 mb-4">
-                    <ForecastTotalCard
-                      title="Forecast Orders"
-                      mbTotal={form.watch("forecastRows")?.filter(r => r.brand === "Mercedes-Benz").reduce((sum, r) => sum + (r.qty || 0), 0) || 0}
-                      ftlTotal={form.watch("forecastRows")?.filter(r => r.brand === "Freightliner").reduce((sum, r) => sum + (r.qty || 0), 0) || 0}
-                      leftBgColor="bg-primary"
-                      rightBgColor="bg-primary/10"
-                      leftTextColor="text-white"
-                    />
-                    <ForecastTotalCard
-                      title="Own Retail"
-                      mbTotal={form.watch("forecastRows")?.filter(r => r.brand === "Mercedes-Benz" && r.type === "Retail").reduce((sum, r) => sum + (r.qty || 0), 0) || 0}
-                      ftlTotal={form.watch("forecastRows")?.filter(r => r.brand === "Freightliner" && r.type === "Retail").reduce((sum, r) => sum + (r.qty || 0), 0) || 0}
-                    />
-                    <ForecastTotalCard
-                      title="Indirect Fleet"
-                      mbTotal={form.watch("forecastRows")?.filter(r => r.brand === "Mercedes-Benz" && r.type === "Indirect Fleet").reduce((sum, r) => sum + (r.qty || 0), 0) || 0}
-                      ftlTotal={form.watch("forecastRows")?.filter(r => r.brand === "Freightliner" && r.type === "Indirect Fleet").reduce((sum, r) => sum + (r.qty || 0), 0) || 0}
-                    />
-                    <ForecastTotalCard
-                      title="Direct Fleet"
-                      mbTotal={form.watch("forecastRows")?.filter(r => r.brand === "Mercedes-Benz" && r.type === "Direct Fleet").reduce((sum, r) => sum + (r.qty || 0), 0) || 0}
-                      ftlTotal={form.watch("forecastRows")?.filter(r => r.brand === "Freightliner" && r.type === "Direct Fleet").reduce((sum, r) => sum + (r.qty || 0), 0) || 0}
-                    />
-                  </div>
-
                   <Card className="flex-1 flex flex-col">
                     <CardHeader className="pb-3">
                       <div className="flex justify-between items-center">
@@ -682,8 +687,6 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
 
                 {/* Orders Tab */}
                 <TabsContent value="orders" className="mt-0 flex-1 flex flex-col">
-                  {/* Spacer to match Forecast tab's summary cards height */}
-                  <div className="h-[140px] mb-4" />
                   <Card>
                     <CardHeader>
                       <CardTitle>Orders Received</CardTitle>
@@ -714,8 +717,6 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
 
                 {/* Activity Tab */}
                 <TabsContent value="activity" className="mt-0 flex-1 flex flex-col">
-                  {/* Spacer to match Forecast tab's summary cards height */}
-                  <div className="h-[140px] mb-4" />
                   <Card>
                     <CardHeader>
                       <CardTitle>Meeting Activity</CardTitle>
@@ -746,8 +747,6 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
 
                 {/* Pipeline Tab */}
                 <TabsContent value="pipeline" className="mt-0 flex-1 flex flex-col">
-                  {/* Spacer to match Forecast tab's summary cards height */}
-                  <div className="h-[140px] mb-4" />
                   <Card>
                     <CardHeader>
                       <CardTitle>Pipeline Snapshot</CardTitle>
@@ -825,8 +824,6 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
 
                 {/* Lost Opportunities Tab */}
                 <TabsContent value="lost" className="mt-0 flex-1 flex flex-col">
-                  {/* Spacer to match Forecast tab's summary cards height */}
-                  <div className="h-[140px] mb-4" />
                   <Card>
                     <CardHeader>
                       <CardTitle>Lost Opportunities</CardTitle>
@@ -840,8 +837,6 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
 
                 {/* BDM Visitations Tab */}
                 <TabsContent value="bdmVisitations" className="mt-0 flex-1 flex flex-col">
-                  {/* Spacer to match Forecast tab's summary cards height */}
-                  <div className="h-[140px] mb-4" />
                   <Card>
                     <CardHeader>
                       <CardTitle>BDM Visitations</CardTitle>
