@@ -53,7 +53,7 @@ export const FAINTSection = ({
         <CollapsibleTrigger asChild>
           <button
             type="button"
-            className="w-full flex items-center justify-between px-6 py-4 hover:bg-muted/40 transition-colors rounded-t-xl"
+            className="w-full flex items-center justify-between px-6 py-4 hover:bg-muted/40 transition-all duration-200 rounded-t-xl"
           >
             <div className="flex items-center gap-3">
               <div
@@ -93,7 +93,7 @@ export const FAINTSection = ({
               </div>
               <ChevronDown
                 className={cn(
-                  "w-5 h-5 text-muted-foreground transition-transform duration-200",
+                  "w-5 h-5 text-muted-foreground self-center transition-transform duration-[350ms] ease-[cubic-bezier(0.4,0,0.2,1)]",
                   isExpanded && "rotate-180"
                 )}
               />
