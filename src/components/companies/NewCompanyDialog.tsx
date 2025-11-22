@@ -166,14 +166,14 @@ export const NewCompanyDialog = ({ open, onOpenChange, onSave }: NewCompanyDialo
         <div className="space-y-2">
           <Label htmlFor="dealerGroup">Dealership Group</Label>
           <Select 
-            value={formData.dealerGroup} 
-            onValueChange={(value) => setFormData({ ...formData, dealerGroup: value })}
+            value={formData.dealerGroup || "none"} 
+            onValueChange={(value) => setFormData({ ...formData, dealerGroup: value === "none" ? "" : value })}
           >
             <SelectTrigger>
               <SelectValue placeholder="Select dealership group" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">No Group</SelectItem>
+              <SelectItem value="none">No Group</SelectItem>
               {dealerGroups.map((group) => (
                 <SelectItem key={group} value={group}>
                   {group}
@@ -186,23 +186,27 @@ export const NewCompanyDialog = ({ open, onOpenChange, onSave }: NewCompanyDialo
         <div className="space-y-2">
           <Label htmlFor="dealership">Dealership</Label>
           <Select 
-            value={formData.dealershipId?.toString() || ''} 
+            value={formData.dealershipId?.toString() || "none"} 
             onValueChange={(value) => {
-              const id = value ? parseInt(value) : null;
-              const dealership = dealerships.find((d: any) => d["Dealer ID"] === id);
-              setFormData({ 
-                ...formData, 
-                dealershipId: id,
-                dealershipName: dealership ? dealership.Dealership : '',
-                dealerGroup: dealership ? dealership["Dealer Group"] : formData.dealerGroup
-              });
+              if (value === "none") {
+                setFormData({ ...formData, dealershipId: null, dealershipName: '' });
+              } else {
+                const id = parseInt(value);
+                const dealership = dealerships.find((d: any) => d["Dealer ID"] === id);
+                setFormData({ 
+                  ...formData, 
+                  dealershipId: id,
+                  dealershipName: dealership ? dealership.Dealership : '',
+                  dealerGroup: dealership ? dealership["Dealer Group"] : formData.dealerGroup
+                });
+              }
             }}
           >
             <SelectTrigger>
               <SelectValue placeholder="Select dealership" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">No Dealership</SelectItem>
+              <SelectItem value="none">No Dealership</SelectItem>
               {filteredDealerships.map((dealer: any) => (
                 <SelectItem key={dealer["Dealer ID"]} value={dealer["Dealer ID"].toString()}>
                   {dealer.Dealership}
