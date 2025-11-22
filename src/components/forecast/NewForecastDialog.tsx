@@ -486,18 +486,13 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
           // Stage 2: Forecast Form
           <>
             <DialogHeader className="p-6 pb-4 border-b">
-              <div className="flex items-center justify-between">
-                <div>
-                  <DialogTitle className="text-2xl font-bold">
-                    Weekly Report - {localDealershipGroup} - {selectedDealershipName}
-                  </DialogTitle>
-                  <DialogDescription>
-                    Weekly forecast, orders, activity, pipeline, and visits.
-                  </DialogDescription>
-                </div>
-                <div className="text-2xl font-bold">
+              <div>
+                <DialogTitle className="text-2xl font-bold">
+                  {localDealershipGroup} - {selectedDealershipName}
+                </DialogTitle>
+                <DialogDescription className="text-base font-medium">
                   w/c {selectedWeekDisplay}
-                </div>
+                </DialogDescription>
               </div>
             </DialogHeader>
 
