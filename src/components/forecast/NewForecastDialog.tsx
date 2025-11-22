@@ -306,6 +306,10 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
       title: "Test Mode",
       description: "Forecast submission - closing modal",
     });
+    handleCloseDialog();
+  };
+
+  const handleCloseDialog = () => {
     setOpen(false);
     setShowForm(false);
     form.reset();
@@ -341,7 +345,12 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
     : "";
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={(isOpen) => {
+      if (!isOpen) {
+        handleCloseDialog();
+      }
+      setOpen(isOpen);
+    }}>
       <DialogTrigger asChild>
         <Button className="gap-2">
           <Plus className="h-4 w-4" />
@@ -349,24 +358,26 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
         </Button>
       </DialogTrigger>
       <DialogContent 
-        className="max-w-[95vw] h-[90vh] flex flex-col p-8"
+        className={cn(
+          "flex flex-col p-0 gap-0",
+          showForm ? "max-w-[95vw] h-[90vh]" : "max-w-2xl"
+        )}
         onInteractOutside={(e) => e.preventDefault()}
         onEscapeKeyDown={(e) => e.preventDefault()}
       >
         {!showForm ? (
           // Stage 1: Dealership & Period Selection
           <>
-            <DialogHeader className="animate-fade-in">
-              <DialogTitle className="text-2xl font-bold">New Forecast & Activity Snapshot</DialogTitle>
+            <DialogHeader className="p-6 pb-4">
+              <DialogTitle className="text-xl font-bold">Create New Forecast</DialogTitle>
               <DialogDescription>
-                Select dealership and period to begin
+                Select dealership and period
               </DialogDescription>
             </DialogHeader>
 
-            <div className="flex-1 flex items-center justify-center">
-              <div className="w-full max-w-4xl space-y-8 animate-fade-in">
-                <div className="flex items-center gap-3">
-                  <Popover open={groupSearchOpen} onOpenChange={setGroupSearchOpen}>
+            <div className="px-6 pb-6">
+              <div className="flex items-center gap-3 mb-6">
+                <Popover open={groupSearchOpen} onOpenChange={setGroupSearchOpen}>
                     <PopoverTrigger asChild>
                       <Button variant="outline" role="combobox" className="w-[260px] justify-between">
                         {localDealershipGroup || "All Dealer Groups"}
@@ -454,35 +465,27 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
                   )}
                 </div>
 
-                <div className="flex gap-3 mt-8">
+                <div className="flex gap-3 pt-4 border-t">
                   <Button 
                     variant="outline"
-                    onClick={() => {
-                      setOpen(false);
-                      setLocalDealershipGroup("");
-                      setLocalDealerId(null);
-                      setLocalWeekStarting(null);
-                    }}
-                    className="flex-1 h-12"
-                    size="lg"
+                    onClick={handleCloseDialog}
+                    className="flex-1"
                   >
                     Cancel
                   </Button>
                   <Button 
                     onClick={handleContinueToForm} 
-                    className="flex-1 h-12"
-                    size="lg"
+                    className="flex-1"
                   >
-                    Continue to Forecast Form
+                    Create Forecast
                   </Button>
                 </div>
               </div>
-            </div>
           </>
         ) : (
           // Stage 2: Forecast Form
           <>
-            <DialogHeader className="animate-fade-in pb-6 border-b">
+            <DialogHeader className="p-6 pb-4 border-b">
               <div className="flex items-start justify-between">
                 <div>
                   <DialogTitle className="text-2xl font-bold">New Forecast & Activity Snapshot</DialogTitle>
@@ -508,7 +511,7 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
             </DialogHeader>
 
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="flex-1 flex flex-col overflow-hidden">
+              <form onSubmit={form.handleSubmit(onSubmit)} className="flex-1 flex flex-col overflow-hidden p-6 pt-4">
                 {/* Step Indicator */}
                 <ForecastStepIndicator
                   currentStep={currentStep}
