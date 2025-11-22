@@ -529,7 +529,7 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
               <div className="flex-1 overflow-y-auto pr-2">
                 {/* Forecast Tab */}
                 <TabsContent value="forecast" className="mt-0">
-                  <div className="grid grid-cols-4 gap-3 mb-6">
+                  <div className="grid grid-cols-4 gap-3 mb-4">
                     <ForecastTotalCard
                       title="Forecast Orders"
                       mbTotal={form.watch("forecastRows")?.filter(r => r.brand === "Mercedes-Benz").reduce((sum, r) => sum + (r.qty || 0), 0) || 0}
@@ -556,7 +556,7 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
                   </div>
 
                   <Card>
-                    <CardHeader>
+                    <CardHeader className="pb-3">
                       <div className="flex justify-between items-center">
                         <CardTitle>Forecast Orders</CardTitle>
                         <Button type="button" onClick={handleAddRow} variant="outline" size="sm" className="gap-2">
@@ -565,11 +565,11 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
                         </Button>
                       </div>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="pt-0">
                       {fields.length === 0 ? (
-                        <p className="text-center py-8 text-muted-foreground">No orders added. Click "Add Order" to start.</p>
+                        <p className="text-center py-4 text-muted-foreground">No orders added. Click "Add Order" to start.</p>
                       ) : (
-                        <div className="space-y-2 max-h-[350px] overflow-y-auto">
+                        <div className="space-y-2 max-h-[450px] overflow-y-auto">
                           <div className="grid grid-cols-[40px_70px_250px_100px_140px_200px_140px_140px_160px_80px] gap-2 font-semibold text-xs mb-2">
                             <div></div>
                             <div>QTY</div>
