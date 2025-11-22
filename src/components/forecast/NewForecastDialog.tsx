@@ -109,6 +109,7 @@ interface NewForecastDialogProps {
 
 export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
   const [open, setOpen] = useState(false);
+  const [showForm, setShowForm] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   const [completedSteps, setCompletedSteps] = useState<Set<number>>(new Set());
   const { toast } = useToast();
@@ -300,12 +301,42 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
       description: "Forecast submission - closing modal",
     });
     setOpen(false);
+    setShowForm(false);
     form.reset();
     setCurrentStep(1);
     setCompletedSteps(new Set());
+    setLocalDealershipGroup("");
+    setLocalDealerId(null);
+    setLocalWeekStarting(null);
+  };
+
+  const handleContinueToForm = () => {
+    if (!localDealershipGroup || !localDealerId || (!selectedWeekStarting && !localWeekStarting)) {
+      toast({
+        title: "Selection Required",
+        description: "Please select Dealership Group, Dealership, and Week Starting",
+        variant: "destructive",
+      });
+      return;
+    }
+    setShowForm(true);
+  };
+
+  const handleBackToSelection = () => {
+    setShowForm(false);
   };
 
   const currentTabValue = STEPS[currentStep - 1]?.tabValue || "forecast";
+  
+  const selectedDealershipName = localDealerId 
+    ? filteredDealerships.find(d => d["Dealer ID"] === localDealerId)?.Dealership 
+    : "";
+  
+  const selectedWeekDisplay = selectedWeekStarting 
+    ? format(new Date(selectedWeekStarting), "MMM d, yyyy")
+    : localWeekStarting 
+    ? format(new Date(localWeekStarting), "MMM d, yyyy")
+    : "";
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -316,135 +347,176 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-[95vw] h-[90vh] flex flex-col p-8">
-        <DialogHeader className="animate-fade-in">
-          <DialogTitle className="text-2xl font-bold">New Forecast & Activity Snapshot</DialogTitle>
-          <DialogDescription>
-            Complete each step to create a comprehensive forecast
-          </DialogDescription>
-        </DialogHeader>
+        {!showForm ? (
+          // Stage 1: Dealership & Period Selection
+          <>
+            <DialogHeader className="animate-fade-in">
+              <DialogTitle className="text-2xl font-bold">New Forecast & Activity Snapshot</DialogTitle>
+              <DialogDescription>
+                Select dealership and period to begin
+              </DialogDescription>
+            </DialogHeader>
 
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="flex-1 flex flex-col overflow-hidden">
-            {/* Dealership Selection */}
-            <Card className="mb-6 animate-fade-in border-primary/20">
-              <CardHeader>
-                <CardTitle className="text-lg flex items-center gap-2">
-                  <Building2 className="w-5 h-5" />
-                  Dealership & Period Selection
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-3 gap-4">
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium flex items-center gap-2">
-                      <MapPin className="w-4 h-4" />
-                      Dealership Group
-                    </label>
-                    <Popover open={groupSearchOpen} onOpenChange={setGroupSearchOpen}>
-                      <PopoverTrigger asChild>
-                        <Button variant="outline" role="combobox" className="w-full justify-between">
-                          {localDealershipGroup || "Select group..."}
-                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-full p-0 max-h-[320px] overflow-y-auto" align="start" onWheel={(e) => e.stopPropagation()}>
-                        <Command>
-                          <CommandInput placeholder="Search groups..." />
-                          <CommandList>
-                            <CommandEmpty>No group found.</CommandEmpty>
-                            {dealerGroups.map((section) => (
-                              <CommandGroup key={section.label} heading={section.label}>
-                                {section.items.map((group) => (
-                                  <CommandItem
-                                    key={group}
-                                    value={group}
-                                    onSelect={() => {
-                                      setLocalDealershipGroup(group);
-                                      setLocalDealerId(null);
-                                      setGroupSearchOpen(false);
-                                    }}
-                                  >
-                                    <Check className={cn("mr-2 h-4 w-4", localDealershipGroup === group ? "opacity-100" : "opacity-0")} />
-                                    {group}
-                                  </CommandItem>
-                                ))}
-                              </CommandGroup>
-                            ))}
-                          </CommandList>
-                        </Command>
-                      </PopoverContent>
-                    </Popover>
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium flex items-center gap-2">
-                      <Building2 className="w-4 h-4" />
-                      Dealership
-                    </label>
-                    <Popover open={dealershipSearchOpen} onOpenChange={setDealershipSearchOpen}>
-                      <PopoverTrigger asChild>
-                        <Button variant="outline" role="combobox" className="w-full justify-between" disabled={!localDealershipGroup}>
-                          {localDealerId ? filteredDealerships.find(d => d["Dealer ID"] === localDealerId)?.Dealership : "Select dealership..."}
-                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-full p-0 max-h-[320px] overflow-y-auto" align="start" onWheel={(e) => e.stopPropagation()}>
-                        <Command>
-                          <CommandInput placeholder="Search dealerships..." />
-                          <CommandList>
-                            <CommandEmpty>No dealership found.</CommandEmpty>
-                            <CommandGroup>
-                              {filteredDealerships.map((dealer) => (
-                                <CommandItem key={dealer["Dealer ID"]} value={dealer.Dealership} onSelect={() => {
-                                  setLocalDealerId(dealer["Dealer ID"]);
-                                  setDealershipSearchOpen(false);
-                                }}>
-                                  <Check className={cn("mr-2 h-4 w-4", localDealerId === dealer["Dealer ID"] ? "opacity-100" : "opacity-0")} />
-                                  {dealer.Dealership}
+            <div className="flex-1 flex items-center justify-center">
+              <div className="w-full max-w-2xl space-y-6 animate-fade-in">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium flex items-center gap-2">
+                    <MapPin className="w-4 h-4" />
+                    Dealership Group
+                  </label>
+                  <Popover open={groupSearchOpen} onOpenChange={setGroupSearchOpen}>
+                    <PopoverTrigger asChild>
+                      <Button variant="outline" role="combobox" className="w-full justify-between h-12">
+                        {localDealershipGroup || "Select group..."}
+                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-full p-0 max-h-[320px] overflow-y-auto" align="start" onWheel={(e) => e.stopPropagation()}>
+                      <Command>
+                        <CommandInput placeholder="Search groups..." />
+                        <CommandList>
+                          <CommandEmpty>No group found.</CommandEmpty>
+                          {dealerGroups.map((section) => (
+                            <CommandGroup key={section.label} heading={section.label}>
+                              {section.items.map((group) => (
+                                <CommandItem
+                                  key={group}
+                                  value={group}
+                                  onSelect={() => {
+                                    setLocalDealershipGroup(group);
+                                    setLocalDealerId(null);
+                                    setGroupSearchOpen(false);
+                                  }}
+                                >
+                                  <Check className={cn("mr-2 h-4 w-4", localDealershipGroup === group ? "opacity-100" : "opacity-0")} />
+                                  {group}
                                 </CommandItem>
                               ))}
                             </CommandGroup>
-                          </CommandList>
-                        </Command>
-                      </PopoverContent>
-                    </Popover>
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Week Starting</label>
-                    {selectedWeekStarting ? (
-                      <div className="p-3 bg-primary/10 rounded-md border border-primary/20">
-                        <p className="text-sm font-medium">{format(new Date(selectedWeekStarting), "MMMM d, yyyy")}</p>
-                        <p className="text-xs text-muted-foreground">From filters</p>
-                      </div>
-                    ) : (
-                      <Select value={localWeekStarting || ""} onValueChange={setLocalWeekStarting}>
-                        <SelectTrigger><SelectValue placeholder="Select week" /></SelectTrigger>
-                        <SelectContent>
-                          {availableWeeks.map((week) => (
-                            <SelectItem key={week.date} value={week.date}>{week.display}</SelectItem>
                           ))}
-                        </SelectContent>
-                      </Select>
-                    )}
-                  </div>
+                        </CommandList>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
                 </div>
-              </CardContent>
-            </Card>
 
-            {/* Step Indicator */}
-            <ForecastStepIndicator
-              currentStep={currentStep}
-              completedSteps={completedSteps}
-              onStepClick={handleStepChange}
-              steps={STEPS}
-            />
+                <div className="space-y-2">
+                  <label className="text-sm font-medium flex items-center gap-2">
+                    <Building2 className="w-4 h-4" />
+                    Dealership
+                  </label>
+                  <Popover open={dealershipSearchOpen} onOpenChange={setDealershipSearchOpen}>
+                    <PopoverTrigger asChild>
+                      <Button variant="outline" role="combobox" className="w-full justify-between h-12" disabled={!localDealershipGroup}>
+                        {localDealerId ? filteredDealerships.find(d => d["Dealer ID"] === localDealerId)?.Dealership : "Select dealership..."}
+                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-full p-0 max-h-[320px] overflow-y-auto" align="start" onWheel={(e) => e.stopPropagation()}>
+                      <Command>
+                        <CommandInput placeholder="Search dealerships..." />
+                        <CommandList>
+                          <CommandEmpty>No dealership found.</CommandEmpty>
+                          <CommandGroup>
+                            {filteredDealerships.map((dealer) => (
+                              <CommandItem key={dealer["Dealer ID"]} value={dealer.Dealership} onSelect={() => {
+                                setLocalDealerId(dealer["Dealer ID"]);
+                                setDealershipSearchOpen(false);
+                              }}>
+                                <Check className={cn("mr-2 h-4 w-4", localDealerId === dealer["Dealer ID"] ? "opacity-100" : "opacity-0")} />
+                                {dealer.Dealership}
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
+                </div>
 
-            {/* Tabs */}
-            <Tabs value={currentTabValue} onValueChange={(value) => {
-              const step = STEPS.find(s => s.tabValue === value);
-              if (step) handleStepChange(step.id);
-            }} className="flex-1 flex flex-col overflow-hidden">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium flex items-center gap-2">
+                    <CalendarIcon className="w-4 h-4" />
+                    Week Starting
+                  </label>
+                  {selectedWeekStarting ? (
+                    <div className="p-4 bg-primary/10 rounded-md border border-primary/20">
+                      <p className="text-sm font-medium">{format(new Date(selectedWeekStarting), "MMMM d, yyyy")}</p>
+                      <p className="text-xs text-muted-foreground">From filters</p>
+                    </div>
+                  ) : (
+                    <Select value={localWeekStarting || ""} onValueChange={setLocalWeekStarting}>
+                      <SelectTrigger className="h-12"><SelectValue placeholder="Select week" /></SelectTrigger>
+                      <SelectContent>
+                        {availableWeeks.map((week) => (
+                          <SelectItem key={week.date} value={week.date}>{week.display}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                </div>
+
+                <Button 
+                  onClick={handleContinueToForm} 
+                  className="w-full h-12 mt-8"
+                  size="lg"
+                >
+                  Continue to Forecast Form
+                </Button>
+              </div>
+            </div>
+          </>
+        ) : (
+          // Stage 2: Forecast Form
+          <>
+            <DialogHeader className="animate-fade-in">
+              <div className="flex items-start justify-between">
+                <div>
+                  <DialogTitle className="text-2xl font-bold">New Forecast & Activity Snapshot</DialogTitle>
+                  <DialogDescription>
+                    Complete each step to create a comprehensive forecast
+                  </DialogDescription>
+                </div>
+                <div className="text-right text-sm space-y-1">
+                  <div className="flex items-center gap-2 justify-end">
+                    <MapPin className="w-3 h-3 text-muted-foreground" />
+                    <span className="font-medium">{localDealershipGroup}</span>
+                  </div>
+                  <div className="flex items-center gap-2 justify-end">
+                    <Building2 className="w-3 h-3 text-muted-foreground" />
+                    <span className="font-medium">{selectedDealershipName}</span>
+                  </div>
+                  <div className="flex items-center gap-2 justify-end">
+                    <CalendarIcon className="w-3 h-3 text-muted-foreground" />
+                    <span className="font-medium">{selectedWeekDisplay}</span>
+                  </div>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={handleBackToSelection}
+                    className="mt-2 h-7 text-xs"
+                  >
+                    Change Selection
+                  </Button>
+                </div>
+              </div>
+            </DialogHeader>
+
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="flex-1 flex flex-col overflow-hidden">
+                {/* Step Indicator */}
+                <ForecastStepIndicator
+                  currentStep={currentStep}
+                  completedSteps={completedSteps}
+                  onStepClick={handleStepChange}
+                  steps={STEPS}
+                />
+
+                {/* Tabs */}
+                <Tabs value={currentTabValue} onValueChange={(value) => {
+                  const step = STEPS.find(s => s.tabValue === value);
+                  if (step) handleStepChange(step.id);
+                }} className="flex-1 flex flex-col overflow-hidden">
               <TabsList className="hidden">
                 {STEPS.map(step => (
                   <TabsTrigger key={step.id} value={step.tabValue}>{step.label}</TabsTrigger>
@@ -776,17 +848,19 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
               </div>
             </Tabs>
 
-            {/* Navigation */}
-            <ForecastStepNavigation
-              currentStep={currentStep}
-              totalSteps={STEPS.length}
-              onPrevious={handlePrevious}
-              onNext={handleNext}
-              onSave={form.handleSubmit(onSubmit)}
-              isNextDisabled={!validateStep(currentStep)}
-            />
-          </form>
-        </Form>
+                {/* Navigation */}
+                <ForecastStepNavigation
+                  currentStep={currentStep}
+                  totalSteps={STEPS.length}
+                  onPrevious={handlePrevious}
+                  onNext={handleNext}
+                  onSave={form.handleSubmit(onSubmit)}
+                  isNextDisabled={!validateStep(currentStep)}
+                />
+              </form>
+            </Form>
+          </>
+        )}
       </DialogContent>
     </Dialog>
   );
