@@ -526,10 +526,9 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
                   <TabsTrigger key={step.id} value={step.tabValue}>{step.label}</TabsTrigger>
                 ))}
               </TabsList>
-
-              <div className="flex-1 overflow-y-auto pr-2">
+              <div className="flex-1 pr-2 flex flex-col overflow-hidden">
                 {/* Forecast Tab */}
-                <TabsContent value="forecast" className="mt-0">
+                <TabsContent value="forecast" className="mt-0 flex-1 flex flex-col">
                   <div className="grid grid-cols-4 gap-3 mb-4">
                     <ForecastTotalCard
                       title="Forecast Orders"
@@ -556,7 +555,7 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
                     />
                   </div>
 
-                  <Card>
+                  <Card className="flex-1 flex flex-col">
                     <CardHeader className="pb-3">
                       <div className="flex justify-between items-center">
                         <CardTitle>Forecast Orders</CardTitle>
@@ -566,11 +565,13 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
                         </Button>
                       </div>
                     </CardHeader>
-                    <CardContent className="pt-0">
+                    <CardContent className="pt-0 flex-1 flex flex-col">
                       {fields.length === 0 ? (
-                        <p className="text-center py-4 text-muted-foreground">No orders added. Click "Add Order" to start.</p>
+                        <div className="flex-1 flex items-center justify-center">
+                          <p className="text-center text-muted-foreground">No orders added. Click "Add Order" to start.</p>
+                        </div>
                       ) : (
-                        <div className="space-y-2" style={{ maxHeight: 'calc(100vh - 520px)', overflowY: 'auto' }}>
+                        <div className="space-y-2 flex-1 overflow-y-auto">
                           <div className="grid grid-cols-[40px_70px_250px_100px_140px_200px_140px_140px_160px_80px] gap-2 font-semibold text-xs mb-2">
                             <div></div>
                             <div>QTY</div>
