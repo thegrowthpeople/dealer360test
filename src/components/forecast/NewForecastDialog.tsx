@@ -508,51 +508,100 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
                   />
                 </div>
 
-                {/* Summary Band - Always present for consistent vertical alignment */}
-                <div className="mb-4 min-h-[120px]">
-                  {currentStep === 1 && (
-                    <div className="grid grid-cols-4 gap-3">
-                      <ForecastTotalCard
-                        title="Forecast Orders"
-                        mbTotal={form.watch("forecastRows")?.filter(r => r.brand === "Mercedes-Benz").reduce((sum, r) => sum + (r.qty || 0), 0) || 0}
-                        ftlTotal={form.watch("forecastRows")?.filter(r => r.brand === "Freightliner").reduce((sum, r) => sum + (r.qty || 0), 0) || 0}
-                        leftBgColor="bg-primary"
-                        rightBgColor="bg-primary/10"
-                        leftTextColor="text-white"
-                      />
-                      <ForecastTotalCard
-                        title="Own Retail"
-                        mbTotal={form.watch("forecastRows")?.filter(r => r.brand === "Mercedes-Benz" && r.type === "Retail").reduce((sum, r) => sum + (r.qty || 0), 0) || 0}
-                        ftlTotal={form.watch("forecastRows")?.filter(r => r.brand === "Freightliner" && r.type === "Retail").reduce((sum, r) => sum + (r.qty || 0), 0) || 0}
-                      />
-                      <ForecastTotalCard
-                        title="Indirect Fleet"
-                        mbTotal={form.watch("forecastRows")?.filter(r => r.brand === "Mercedes-Benz" && r.type === "Indirect Fleet").reduce((sum, r) => sum + (r.qty || 0), 0) || 0}
-                        ftlTotal={form.watch("forecastRows")?.filter(r => r.brand === "Freightliner" && r.type === "Indirect Fleet").reduce((sum, r) => sum + (r.qty || 0), 0) || 0}
-                      />
-                      <ForecastTotalCard
-                        title="Direct Fleet"
-                        mbTotal={form.watch("forecastRows")?.filter(r => r.brand === "Mercedes-Benz" && r.type === "Direct Fleet").reduce((sum, r) => sum + (r.qty || 0), 0) || 0}
-                        ftlTotal={form.watch("forecastRows")?.filter(r => r.brand === "Freightliner" && r.type === "Direct Fleet").reduce((sum, r) => sum + (r.qty || 0), 0) || 0}
-                      />
-                    </div>
-                  )}
-                </div>
-
                 {/* Tabs */}
-                <Tabs value={currentTabValue} onValueChange={(value) => {
-                  const step = STEPS.find(s => s.tabValue === value);
-                  if (step) handleStepChange(step.id);
-                }} className="flex-1 flex flex-col overflow-hidden">
-              <TabsList className="hidden">
-                {STEPS.map(step => (
-                  <TabsTrigger key={step.id} value={step.tabValue}>{step.label}</TabsTrigger>
-                ))}
-              </TabsList>
-              <div className="flex-1 flex flex-col overflow-hidden pb-6">
-                {/* Forecast Tab */}
-                <TabsContent value="forecast" className="mt-0 flex-1 flex flex-col">
-                  <Card className="flex-1 flex flex-col">
+                <Tabs
+                  value={currentTabValue}
+                  onValueChange={(value) => {
+                    const step = STEPS.find((s) => s.tabValue === value);
+                    if (step) handleStepChange(step.id);
+                  }}
+                  className="flex-1 flex flex-col overflow-hidden"
+                >
+                  <TabsList className="hidden">
+                    {STEPS.map((step) => (
+                      <TabsTrigger key={step.id} value={step.tabValue}>
+                        {step.label}
+                      </TabsTrigger>
+                    ))}
+                  </TabsList>
+                  <div className="flex-1 flex flex-col overflow-hidden pb-6">
+                    {/* Forecast Tab */}
+                    <TabsContent value="forecast" className="mt-0 flex-1 flex flex-col">
+                      <div className="grid grid-cols-4 gap-3 mb-4">
+                        <ForecastTotalCard
+                          title="Forecast Orders"
+                          mbTotal={
+                            form
+                              .watch("forecastRows")
+                              ?.filter((r) => r.brand === "Mercedes-Benz")
+                              .reduce((sum, r) => sum + (r.qty || 0), 0) || 0
+                          }
+                          ftlTotal={
+                            form
+                              .watch("forecastRows")
+                              ?.filter((r) => r.brand === "Freightliner")
+                              .reduce((sum, r) => sum + (r.qty || 0), 0) || 0
+                          }
+                          leftBgColor="bg-primary"
+                          rightBgColor="bg-primary/10"
+                          leftTextColor="text-white"
+                        />
+                        <ForecastTotalCard
+                          title="Own Retail"
+                          mbTotal={
+                            form
+                              .watch("forecastRows")
+                              ?.filter(
+                                (r) => r.brand === "Mercedes-Benz" && r.type === "Retail",
+                              )
+                              .reduce((sum, r) => sum + (r.qty || 0), 0) || 0
+                          }
+                          ftlTotal={
+                            form
+                              .watch("forecastRows")
+                              ?.filter((r) => r.brand === "Freightliner" && r.type === "Retail")
+                              .reduce((sum, r) => sum + (r.qty || 0), 0) || 0
+                          }
+                        />
+                        <ForecastTotalCard
+                          title="Indirect Fleet"
+                          mbTotal={
+                            form
+                              .watch("forecastRows")
+                              ?.filter(
+                                (r) => r.brand === "Mercedes-Benz" && r.type === "Indirect Fleet",
+                              )
+                              .reduce((sum, r) => sum + (r.qty || 0), 0) || 0
+                          }
+                          ftlTotal={
+                            form
+                              .watch("forecastRows")
+                              ?.filter(
+                                (r) => r.brand === "Freightliner" && r.type === "Indirect Fleet",
+                              )
+                              .reduce((sum, r) => sum + (r.qty || 0), 0) || 0
+                          }
+                        />
+                        <ForecastTotalCard
+                          title="Direct Fleet"
+                          mbTotal={
+                            form
+                              .watch("forecastRows")
+                              ?.filter(
+                                (r) => r.brand === "Mercedes-Benz" && r.type === "Direct Fleet",
+                              )
+                              .reduce((sum, r) => sum + (r.qty || 0), 0) || 0
+                          }
+                          ftlTotal={
+                            form
+                              .watch("forecastRows")
+                              ?.filter((r) => r.brand === "Freightliner" && r.type === "Direct Fleet")
+                              .reduce((sum, r) => sum + (r.qty || 0), 0) || 0
+                          }
+                        />
+                      </div>
+
+                      <Card className="flex-1 flex flex-col">
                     <CardHeader className="pb-3">
                       <div className="flex justify-between items-center">
                         <CardTitle>Forecast Orders</CardTitle>
