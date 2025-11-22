@@ -11,6 +11,7 @@ import { SimpleLayout } from "./components/SimpleLayout";
 import Index from "./pages/Index";
 import Performance from "./pages/Performance";
 import Forecast from "./pages/Forecast";
+import ForecastOld from "./pages/ForecastOld";
 import BusinessPlan from "./pages/BusinessPlan";
 import NewReport from "./pages/NewReport";
 import Reports from "./pages/Reports";
@@ -39,6 +40,7 @@ const App = () => (
                 <Route path="/" element={<ProtectedRoute><SimpleLayout><Index /></SimpleLayout></ProtectedRoute>} />
                 <Route path="/performance" element={<ProtectedRoute><SimpleLayout><Performance /></SimpleLayout></ProtectedRoute>} />
                 <Route path="/forecast" element={<ProtectedRoute><SimpleLayout><Forecast /></SimpleLayout></ProtectedRoute>} />
+                <Route path="/forecast-old" element={<ProtectedRoute><SimpleLayout><ForecastOld /></SimpleLayout></ProtectedRoute>} />
                 <Route path="/business-plan" element={<ProtectedRoute><SimpleLayout><BusinessPlan /></SimpleLayout></ProtectedRoute>} />
                 <Route path="/qualification" element={<ProtectedRoute><SimpleLayout><Qualification /></SimpleLayout></ProtectedRoute>} />
                 <Route path="/companies" element={<ProtectedRoute><SimpleLayout><Companies /></SimpleLayout></ProtectedRoute>} />

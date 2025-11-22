@@ -19,6 +19,7 @@ const menuItems = [
   { path: "/", label: "Home", icon: Home },
   { path: "/performance", label: "Performance", icon: TrendingUp },
   { path: "/forecast", label: "Forecast", icon: Search },
+  { path: "/forecast-old", label: "Forecast Old", icon: Search },
   { path: "/business-plan", label: "Business Plan", icon: BarChart },
   { path: "/qualification", label: "Qualification", icon: ClipboardCheck },
 ];
