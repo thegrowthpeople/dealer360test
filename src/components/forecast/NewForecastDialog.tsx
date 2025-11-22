@@ -364,16 +364,12 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
             </DialogHeader>
 
             <div className="flex-1 flex items-center justify-center">
-              <div className="w-full max-w-2xl space-y-6 animate-fade-in">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium flex items-center gap-2">
-                    <MapPin className="w-4 h-4" />
-                    Dealership Group
-                  </label>
+              <div className="w-full max-w-4xl space-y-8 animate-fade-in">
+                <div className="flex items-center gap-3">
                   <Popover open={groupSearchOpen} onOpenChange={setGroupSearchOpen}>
                     <PopoverTrigger asChild>
-                      <Button variant="outline" role="combobox" className="w-full justify-between h-12">
-                        {localDealershipGroup || "Select group..."}
+                      <Button variant="outline" role="combobox" className="w-[260px] justify-between">
+                        {localDealershipGroup || "All Dealer Groups"}
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                       </Button>
                     </PopoverTrigger>
@@ -413,17 +409,11 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
                       </Command>
                     </PopoverContent>
                   </Popover>
-                </div>
 
-                <div className="space-y-2">
-                  <label className="text-sm font-medium flex items-center gap-2">
-                    <Building2 className="w-4 h-4" />
-                    Dealership
-                  </label>
                   <Popover open={dealershipSearchOpen} onOpenChange={setDealershipSearchOpen}>
                     <PopoverTrigger asChild>
-                      <Button variant="outline" role="combobox" className="w-full justify-between h-12" disabled={!localDealershipGroup}>
-                        {localDealerId ? filteredDealerships.find(d => d["Dealer ID"] === localDealerId)?.Dealership : "Select dealership..."}
+                      <Button variant="outline" role="combobox" className="w-[180px] justify-between" disabled={!localDealershipGroup}>
+                        {localDealerId ? filteredDealerships.find(d => d["Dealer ID"] === localDealerId)?.Dealership : "All Dealerships"}
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                       </Button>
                     </PopoverTrigger>
@@ -447,21 +437,14 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
                       </Command>
                     </PopoverContent>
                   </Popover>
-                </div>
 
-                <div className="space-y-2">
-                  <label className="text-sm font-medium flex items-center gap-2">
-                    <CalendarIcon className="w-4 h-4" />
-                    Week Starting
-                  </label>
                   {selectedWeekStarting ? (
-                    <div className="p-4 bg-primary/10 rounded-md border border-primary/20">
-                      <p className="text-sm font-medium">{format(new Date(selectedWeekStarting), "MMMM d, yyyy")}</p>
-                      <p className="text-xs text-muted-foreground">From filters</p>
+                    <div className="p-2 px-3 bg-primary/10 rounded-md border border-primary/20 w-[160px]">
+                      <p className="text-sm font-medium">{format(new Date(selectedWeekStarting), "MMM d, yyyy")}</p>
                     </div>
                   ) : (
                     <Select value={localWeekStarting || ""} onValueChange={setLocalWeekStarting}>
-                      <SelectTrigger className="h-12"><SelectValue placeholder="Select week" /></SelectTrigger>
+                      <SelectTrigger className="w-[160px]"><SelectValue placeholder="Week Starting" /></SelectTrigger>
                       <SelectContent>
                         {availableWeeks.map((week) => (
                           <SelectItem key={week.date} value={week.date}>{week.display}</SelectItem>
@@ -499,7 +482,7 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
         ) : (
           // Stage 2: Forecast Form
           <>
-            <DialogHeader className="animate-fade-in">
+            <DialogHeader className="animate-fade-in pb-6 border-b">
               <div className="flex items-start justify-between">
                 <div>
                   <DialogTitle className="text-2xl font-bold">New Forecast & Activity Snapshot</DialogTitle>
