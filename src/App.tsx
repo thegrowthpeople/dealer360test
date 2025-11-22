@@ -21,6 +21,7 @@ import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 import Qualification from "./pages/Qualification";
 import FrameworkManagement from "./pages/FrameworkManagement";
+import Companies from "./pages/Companies";
 
 const queryClient = new QueryClient();
 
@@ -40,6 +41,7 @@ const App = () => (
                 <Route path="/forecast" element={<ProtectedRoute><SimpleLayout><Forecast /></SimpleLayout></ProtectedRoute>} />
                 <Route path="/business-plan" element={<ProtectedRoute><SimpleLayout><BusinessPlan /></SimpleLayout></ProtectedRoute>} />
                 <Route path="/qualification" element={<ProtectedRoute><SimpleLayout><Qualification /></SimpleLayout></ProtectedRoute>} />
+                <Route path="/companies" element={<ProtectedRoute><SimpleLayout><Companies /></SimpleLayout></ProtectedRoute>} />
                 <Route path="/dealerships" element={<ProtectedRoute><SimpleLayout><Dealerships /></SimpleLayout></ProtectedRoute>} />
                 <Route path="/new-report" element={<ProtectedRoute><SimpleLayout><NewReport /></SimpleLayout></ProtectedRoute>} />
                 <Route path="/reports" element={<ProtectedRoute><SimpleLayout><Reports /></SimpleLayout></ProtectedRoute>} />

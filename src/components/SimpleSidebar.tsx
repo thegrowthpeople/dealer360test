@@ -1,4 +1,4 @@
-import { Home, TrendingUp, Search, Target, ChevronLeft, ChevronRight, Truck, Settings, ClipboardCheck, Layers } from "lucide-react";
+import { Home, TrendingUp, Search, Target, ChevronLeft, ChevronRight, Truck, Settings, ClipboardCheck, Layers, Building2 } from "lucide-react";
 import { useLocation, Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -13,6 +13,7 @@ const menuItems = [
   { path: "/forecast", label: "Forecast", icon: Search },
   { path: "/business-plan", label: "Business Plan", icon: Target },
   { path: "/qualification", label: "Qualification", icon: ClipboardCheck },
+  { path: "/companies", label: "Companies", icon: Building2 },
 ];
 
 interface SimpleSidebarProps {
