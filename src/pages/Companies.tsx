@@ -16,7 +16,7 @@ import { NewCompanyDialog } from "@/components/companies/NewCompanyDialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 import { format } from "date-fns";
-import { User, Building, Calendar, DollarSign } from "lucide-react";
+import { User, Building, Calendar } from "lucide-react";
 
 export default function Companies() {
   const location = useLocation();
@@ -33,7 +33,7 @@ export default function Companies() {
   const [selectedDealershipId, setSelectedDealershipId] = useState<number | null>(null);
   const [selectedType, setSelectedType] = useState<string>('');
   const [selectedSegment, setSelectedSegment] = useState<string>('');
-  const [selectedStatus, setSelectedStatus] = useState<string>('');
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   const filteredCompanies = filterCompanies({
     bdmId: selectedBdmId,
@@ -41,12 +41,12 @@ export default function Companies() {
     dealershipId: selectedDealershipId,
     type: selectedType,
     segment: selectedSegment,
-    status: selectedStatus
+    search: searchQuery
   });
 
   const hasActiveFilters = Boolean(
     selectedBdmId || selectedDealerGroup || selectedDealershipId || 
-    selectedType || selectedSegment || selectedStatus
+    selectedType || selectedSegment || searchQuery
   );
 
   const handleClearFilters = () => {
@@ -55,7 +55,7 @@ export default function Companies() {
     setSelectedDealershipId(null);
     setSelectedType('');
     setSelectedSegment('');
-    setSelectedStatus('');
+    setSearchQuery('');
   };
 
   const handleCompanyClick = (company: Company) => {
@@ -136,16 +136,8 @@ export default function Companies() {
 
             <Card>
               <CardContent className="p-4 space-y-3">
-                <h3 className="text-sm font-medium text-muted-foreground">Company Value</h3>
+                <h3 className="text-sm font-medium text-muted-foreground">Additional Information</h3>
                 <div className="space-y-2">
-                  {selectedCompany.estimatedValue && (
-                    <div className="flex items-center gap-2">
-                      <DollarSign className="w-4 h-4 text-muted-foreground" />
-                      <span className="text-sm font-medium">
-                        ${selectedCompany.estimatedValue.toLocaleString()}
-                      </span>
-                    </div>
-                  )}
                   <div className="flex items-center gap-2">
                     <span className="text-sm">Status: {selectedCompany.status}</span>
                   </div>
@@ -215,13 +207,13 @@ export default function Companies() {
           selectedDealershipId={selectedDealershipId}
           selectedType={selectedType}
           selectedSegment={selectedSegment}
-          selectedStatus={selectedStatus}
+          searchQuery={searchQuery}
           onBdmChange={setSelectedBdmId}
           onDealerGroupChange={setSelectedDealerGroup}
           onDealershipChange={setSelectedDealershipId}
           onTypeChange={setSelectedType}
           onSegmentChange={setSelectedSegment}
-          onStatusChange={setSelectedStatus}
+          onSearchChange={setSearchQuery}
           onClearFilters={handleClearFilters}
           hasActiveFilters={hasActiveFilters}
         />

@@ -1,6 +1,7 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { X, Search } from "lucide-react";
 
 interface CompanyFiltersProps {
   selectedBdmId: number | null;
@@ -8,13 +9,13 @@ interface CompanyFiltersProps {
   selectedDealershipId: number | null;
   selectedType: string;
   selectedSegment: string;
-  selectedStatus: string;
+  searchQuery: string;
   onBdmChange: (value: number | null) => void;
   onDealerGroupChange: (value: string) => void;
   onDealershipChange: (value: number | null) => void;
   onTypeChange: (value: string) => void;
   onSegmentChange: (value: string) => void;
-  onStatusChange: (value: string) => void;
+  onSearchChange: (value: string) => void;
   onClearFilters: () => void;
   hasActiveFilters: boolean;
 }
@@ -25,18 +26,28 @@ export const CompanyFilters = ({
   selectedDealershipId,
   selectedType,
   selectedSegment,
-  selectedStatus,
+  searchQuery,
   onBdmChange,
   onDealerGroupChange,
   onDealershipChange,
   onTypeChange,
   onSegmentChange,
-  onStatusChange,
+  onSearchChange,
   onClearFilters,
   hasActiveFilters
 }: CompanyFiltersProps) => {
   return (
     <div className="flex flex-wrap items-center gap-3 animate-fade-in">
+      <div className="relative w-[250px]">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+        <Input
+          placeholder="Search companies..."
+          value={searchQuery}
+          onChange={(e) => onSearchChange(e.target.value)}
+          className="pl-9"
+        />
+      </div>
+
       <Select value={selectedBdmId?.toString() || "all"} onValueChange={(v) => onBdmChange(v === "all" ? null : parseInt(v))}>
         <SelectTrigger className="w-[180px]">
           <SelectValue placeholder="All BDMs" />
@@ -92,18 +103,6 @@ export const CompanyFilters = ({
           <SelectItem value="Small Fleet">Small Fleet</SelectItem>
           <SelectItem value="Corporate Fleet">Corporate Fleet</SelectItem>
           <SelectItem value="Government Fleet">Government Fleet</SelectItem>
-        </SelectContent>
-      </Select>
-
-      <Select value={selectedStatus || "all"} onValueChange={(v) => onStatusChange(v === "all" ? "" : v)}>
-        <SelectTrigger className="w-[150px]">
-          <SelectValue placeholder="All Status" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="all">All Status</SelectItem>
-          <SelectItem value="Active">Active</SelectItem>
-          <SelectItem value="Inactive">Inactive</SelectItem>
-          <SelectItem value="On Hold">On Hold</SelectItem>
         </SelectContent>
       </Select>
 

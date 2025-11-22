@@ -30,13 +30,12 @@ export const NewCompanyDialog = ({ open, onOpenChange, onSave }: NewCompanyDialo
     type: 'Prospect' as const,
     segment: 'Small Business' as const,
     existingFleet: [],
-    website: '',
-    linkedinUrl: '',
-    stakeholders: [],
-    status: 'Active' as const,
-    tags: [] as string[],
-    estimatedValue: 0
-  });
+      website: '',
+      linkedinUrl: '',
+      stakeholders: [],
+      status: 'Active' as const,
+      tags: [] as string[]
+    });
 
   const handleSubmit = () => {
     if (!formData.accountName) {
@@ -66,8 +65,7 @@ export const NewCompanyDialog = ({ open, onOpenChange, onSave }: NewCompanyDialo
       linkedinUrl: '',
       stakeholders: [],
       status: 'Active',
-      tags: [],
-      estimatedValue: 0
+      tags: []
     });
   };
 
@@ -211,17 +209,6 @@ export const NewCompanyDialog = ({ open, onOpenChange, onSave }: NewCompanyDialo
                 placeholder="https://linkedin.com/company/..."
               />
             </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="estimatedValue">Estimated Value</Label>
-            <Input
-              id="estimatedValue"
-              type="number"
-              value={formData.estimatedValue}
-              onChange={(e) => setFormData({ ...formData, estimatedValue: parseFloat(e.target.value) || 0 })}
-              placeholder="0"
-            />
           </div>
         </div>
 
