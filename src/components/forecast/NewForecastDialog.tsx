@@ -816,7 +816,7 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
                 </TabsContent>
 
                 {/* Lost Tab */}
-                <TabsContent value="lost" className="mt-0">
+                <TabsContent value="lost" className="mt-0 h-full">
                   <Card>
                     <CardHeader>
                       <CardTitle>Lost Opportunities</CardTitle>
@@ -829,7 +829,7 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
                 </TabsContent>
 
                 {/* BDM Visitations Tab */}
-                <TabsContent value="bdmVisitations" className="mt-0">
+                <TabsContent value="bdmVisitations" className="mt-0 h-full">
                   <Card>
                     <CardHeader>
                       <CardTitle>BDM Visitations</CardTitle>
