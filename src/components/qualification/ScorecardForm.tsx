@@ -110,7 +110,7 @@ export const ScorecardForm = ({ onSubmit, initialData, submitLabel = "Create Sco
             <PopoverContent className="w-full p-0" align="start">
               <Command>
                 <CommandInput placeholder="Search group..." />
-                <CommandList>
+                <CommandList className="max-h-[300px] overflow-y-auto">
                   <CommandEmpty>No group found.</CommandEmpty>
                   <CommandGroup>
                     <CommandItem
@@ -181,7 +181,7 @@ export const ScorecardForm = ({ onSubmit, initialData, submitLabel = "Create Sco
             <PopoverContent className="w-full p-0" align="start">
               <Command>
                 <CommandInput placeholder="Search dealership..." />
-                <CommandList>
+                <CommandList className="max-h-[300px] overflow-y-auto">
                   <CommandEmpty>No dealership found.</CommandEmpty>
                   <CommandGroup>
                     <CommandItem
