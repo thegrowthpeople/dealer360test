@@ -3,7 +3,7 @@ import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isMonday } from "date-fns";
-import { Check, ChevronsUpDown, Building2, MapPin, Plus, Trash2 } from "lucide-react";
+import { Check, ChevronsUpDown, Building2, MapPin, Plus, Trash2, X, Copy, CalendarIcon } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -20,7 +20,6 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
@@ -43,20 +42,37 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Calendar } from "@/components/ui/calendar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { usePerformanceFilters } from "@/contexts/PerformanceFiltersContext";
 import { ForecastStepIndicator } from "./ForecastStepIndicator";
 import { ForecastStepNavigation } from "./ForecastStepNavigation";
+import { ForecastTotalCard } from "./ForecastTotalCard";
 import { cn } from "@/lib/utils";
 
 const forecastSchema = z.object({
   conquestMeetings: z.coerce.number().min(0, "Must be 0 or greater").nullable(),
   customerMeetings: z.coerce.number().min(0, "Must be 0 or greater").nullable(),
+  mbtQuotesIssued: z.coerce.number().min(0, "Must be 0 or greater").nullable(),
+  ftlQuotesIssued: z.coerce.number().min(0, "Must be 0 or greater").nullable(),
+  mbtOrdersReceived: z.coerce.number().min(0, "Must be 0 or greater").nullable(),
+  ftlOrdersReceived: z.coerce.number().min(0, "Must be 0 or greater").nullable(),
+  mbtOrdersExpected: z.coerce.number().min(0, "Must be 0 or greater").nullable(),
+  ftlOrdersExpected: z.coerce.number().min(0, "Must be 0 or greater").nullable(),
   mbtPipelineGrowth: z.coerce.number().min(0, "Must be 0 or greater").nullable(),
   ftlPipelineGrowth: z.coerce.number().min(0, "Must be 0 or greater").nullable(),
+  mbtPipelineLost: z.coerce.number().min(0, "Must be 0 or greater").nullable(),
+  ftlPipelineLost: z.coerce.number().min(0, "Must be 0 or greater").nullable(),
   mbtPipelineThisQtr: z.coerce.number().min(0, "Must be 0 or greater").nullable(),
   mbtPipelineNextQtr: z.coerce.number().min(0, "Must be 0 or greater").nullable(),
   ftlPipelineThisQtr: z.coerce.number().min(0, "Must be 0 or greater").nullable(),
@@ -64,9 +80,14 @@ const forecastSchema = z.object({
   forecastRows: z.array(z.object({
     qty: z.coerce.number().min(1, "QTY is required").nullable(),
     customerName: z.string().min(1, "Customer Name is required"),
+    customerType: z.enum(["Existing", "New", ""]),
+    salesSupport: z.coerce.number().min(0, "Must be 0 or greater").nullable(),
+    demoTruck: z.coerce.number().min(0, "Must be 0 or greater").nullable(),
     brand: z.enum(["Mercedes-Benz", "Freightliner"]).nullable(),
     model: z.string().min(1, "Model is required"),
     type: z.enum(["Retail", "Indirect Fleet", "Direct Fleet"]).nullable(),
+    bdm: z.enum(["Met in Person", "Relationship", "Supported", ""]),
+    upside: z.boolean(),
     estimatedDelivery: z.string().min(1, "Est. Delivery is required"),
   })),
 });
@@ -75,10 +96,10 @@ type ForecastFormValues = z.infer<typeof forecastSchema>;
 
 const STEPS = [
   { id: 1, label: "Forecast", shortLabel: "Forecast", tabValue: "forecast" },
-  { id: 2, label: "Activity", shortLabel: "Activity", tabValue: "activity" },
-  { id: 3, label: "Pipeline", shortLabel: "Pipeline", tabValue: "pipeline" },
-  { id: 4, label: "Lost Opportunities", shortLabel: "Lost", tabValue: "lost" },
-  { id: 5, label: "Orders Received", shortLabel: "Orders", tabValue: "orders" },
+  { id: 2, label: "Orders Received", shortLabel: "Orders", tabValue: "orders" },
+  { id: 3, label: "Activity", shortLabel: "Activity", tabValue: "activity" },
+  { id: 4, label: "Pipeline", shortLabel: "Pipeline", tabValue: "pipeline" },
+  { id: 5, label: "Lost Opportunities", shortLabel: "Lost", tabValue: "lost" },
   { id: 6, label: "BDM Visitations", shortLabel: "BDM Visits", tabValue: "bdmVisitations" },
 ];
 
@@ -104,10 +125,7 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
   
   const [groupSearchOpen, setGroupSearchOpen] = useState(false);
   const [dealershipSearchOpen, setDealershipSearchOpen] = useState(false);
-  const [groupSearchQuery, setGroupSearchQuery] = useState("");
-  const [dealershipSearchQuery, setDealershipSearchQuery] = useState("");
 
-  // Get unique dealer groups with formatting and sorting
   const dealerGroups = useMemo(() => {
     const groups = [...new Set(dealerships.map(d => d["Dealer Group"]))];
     
@@ -119,17 +137,11 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
     
     groups.forEach(group => {
       const groupLower = group.toLowerCase();
-      if (groupLower.includes('metro')) {
-        metro.push(group);
-      } else if (groupLower.includes('regional')) {
-        regional.push(group);
-      } else if (groupLower.includes('independent')) {
-        independent.push(group);
-      } else if (groupLower.includes('nz')) {
-        nz.push(group);
-      } else {
-        internal.push(group);
-      }
+      if (groupLower.includes('metro')) metro.push(group);
+      else if (groupLower.includes('regional')) regional.push(group);
+      else if (groupLower.includes('independent')) independent.push(group);
+      else if (groupLower.includes('nz')) nz.push(group);
+      else internal.push(group);
     });
     
     return [
@@ -141,13 +153,11 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
     ].filter(section => section.items.length > 0);
   }, [dealerships]);
 
-  // Filter dealerships based on selected group
   const filteredDealerships = useMemo(() => {
     if (!localDealershipGroup) return dealerships;
     return dealerships.filter(d => d["Dealer Group"] === localDealershipGroup);
   }, [dealerships, localDealershipGroup]);
 
-  // Calculate available weeks
   const availableWeeks = useMemo(() => {
     if (!selectedYear || !selectedMonth) return [];
     
@@ -168,8 +178,16 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
     defaultValues: {
       conquestMeetings: null,
       customerMeetings: null,
+      mbtQuotesIssued: null,
+      ftlQuotesIssued: null,
+      mbtOrdersReceived: null,
+      ftlOrdersReceived: null,
+      mbtOrdersExpected: null,
+      ftlOrdersExpected: null,
       mbtPipelineGrowth: null,
       ftlPipelineGrowth: null,
+      mbtPipelineLost: null,
+      ftlPipelineLost: null,
       mbtPipelineThisQtr: null,
       mbtPipelineNextQtr: null,
       ftlPipelineThisQtr: null,
@@ -188,17 +206,11 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
     
     switch (step) {
       case 1:
-        return values.forecastRows.length > 0 && values.forecastRows.every(row => 
-          row.qty && row.qty > 0 &&
-          row.customerName?.trim() &&
-          row.brand &&
-          row.model?.trim() &&
-          row.type &&
-          row.estimatedDelivery?.trim()
-        );
+        return values.forecastRows.length > 0;
       case 2:
-        return values.conquestMeetings !== null && values.customerMeetings !== null;
       case 3:
+        return values.conquestMeetings !== null && values.customerMeetings !== null;
+      case 4:
         return (
           values.mbtPipelineGrowth !== null &&
           values.ftlPipelineGrowth !== null &&
@@ -207,7 +219,6 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
           values.mbtPipelineNextQtr !== null &&
           values.ftlPipelineNextQtr !== null
         );
-      case 4:
       case 5:
       case 6:
         return true;
@@ -244,13 +255,41 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
     }
   };
 
+  const validateCurrentRows = () => {
+    const rows = form.getValues("forecastRows");
+    if (rows.length === 0) return true;
+    return rows.every(row => 
+      row.qty && row.qty > 0 && 
+      row.customerName?.trim() &&
+      row.customerType &&
+      row.brand && 
+      row.model?.trim() &&
+      row.type &&
+      row.estimatedDelivery?.trim()
+    );
+  };
+
   const handleAddRow = () => {
+    if (!validateCurrentRows()) {
+      toast({
+        title: "Validation Error",
+        description: "Please fill in all required fields before adding a new row",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     append({
       qty: null,
       customerName: "",
+      customerType: "",
+      salesSupport: null,
+      demoTruck: null,
       brand: null,
       model: "",
       type: null,
+      bdm: "",
+      upside: false,
       estimatedDelivery: "",
     });
   };
@@ -266,7 +305,7 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
     setCompletedSteps(new Set());
   };
 
-  const currentTabValue = STEPS[currentStep - 1]?.tabValue || "activity";
+  const currentTabValue = STEPS[currentStep - 1]?.tabValue || "forecast";
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -280,7 +319,7 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
         <DialogHeader className="animate-fade-in">
           <DialogTitle className="text-2xl font-bold">New Forecast & Activity Snapshot</DialogTitle>
           <DialogDescription>
-            Complete each step to create a comprehensive forecast for your dealership
+            Complete each step to create a comprehensive forecast
           </DialogDescription>
         </DialogHeader>
 
@@ -296,7 +335,6 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-3 gap-4">
-                  {/* Dealership Group */}
                   <div className="space-y-2">
                     <label className="text-sm font-medium flex items-center gap-2">
                       <MapPin className="w-4 h-4" />
@@ -304,11 +342,7 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
                     </label>
                     <Popover open={groupSearchOpen} onOpenChange={setGroupSearchOpen}>
                       <PopoverTrigger asChild>
-                        <Button
-                          variant="outline"
-                          role="combobox"
-                          className="w-full justify-between"
-                        >
+                        <Button variant="outline" role="combobox" className="w-full justify-between">
                           {localDealershipGroup || "Select group..."}
                           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                         </Button>
@@ -342,7 +376,6 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
                     </Popover>
                   </div>
 
-                  {/* Dealership */}
                   <div className="space-y-2">
                     <label className="text-sm font-medium flex items-center gap-2">
                       <Building2 className="w-4 h-4" />
@@ -350,15 +383,8 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
                     </label>
                     <Popover open={dealershipSearchOpen} onOpenChange={setDealershipSearchOpen}>
                       <PopoverTrigger asChild>
-                        <Button
-                          variant="outline"
-                          role="combobox"
-                          className="w-full justify-between"
-                          disabled={!localDealershipGroup}
-                        >
-                          {localDealerId 
-                            ? filteredDealerships.find(d => d["Dealer ID"] === localDealerId)?.Dealership 
-                            : "Select dealership..."}
+                        <Button variant="outline" role="combobox" className="w-full justify-between" disabled={!localDealershipGroup}>
+                          {localDealerId ? filteredDealerships.find(d => d["Dealer ID"] === localDealerId)?.Dealership : "Select dealership..."}
                           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                         </Button>
                       </PopoverTrigger>
@@ -369,14 +395,10 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
                             <CommandEmpty>No dealership found.</CommandEmpty>
                             <CommandGroup>
                               {filteredDealerships.map((dealer) => (
-                                <CommandItem
-                                  key={dealer["Dealer ID"]}
-                                  value={dealer.Dealership}
-                                  onSelect={() => {
-                                    setLocalDealerId(dealer["Dealer ID"]);
-                                    setDealershipSearchOpen(false);
-                                  }}
-                                >
+                                <CommandItem key={dealer["Dealer ID"]} value={dealer.Dealership} onSelect={() => {
+                                  setLocalDealerId(dealer["Dealer ID"]);
+                                  setDealershipSearchOpen(false);
+                                }}>
                                   <Check className={cn("mr-2 h-4 w-4", localDealerId === dealer["Dealer ID"] ? "opacity-100" : "opacity-0")} />
                                   {dealer.Dealership}
                                 </CommandItem>
@@ -388,26 +410,19 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
                     </Popover>
                   </div>
 
-                  {/* Week Selection */}
                   <div className="space-y-2">
                     <label className="text-sm font-medium">Week Starting</label>
                     {selectedWeekStarting ? (
                       <div className="p-3 bg-primary/10 rounded-md border border-primary/20">
-                        <p className="text-sm font-medium">
-                          {format(new Date(selectedWeekStarting), "MMMM d, yyyy")}
-                        </p>
+                        <p className="text-sm font-medium">{format(new Date(selectedWeekStarting), "MMMM d, yyyy")}</p>
                         <p className="text-xs text-muted-foreground">From filters</p>
                       </div>
                     ) : (
                       <Select value={localWeekStarting || ""} onValueChange={setLocalWeekStarting}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select week" />
-                        </SelectTrigger>
+                        <SelectTrigger><SelectValue placeholder="Select week" /></SelectTrigger>
                         <SelectContent>
                           {availableWeeks.map((week) => (
-                            <SelectItem key={week.date} value={week.date}>
-                              {week.display}
-                            </SelectItem>
+                            <SelectItem key={week.date} value={week.date}>{week.display}</SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
@@ -426,7 +441,10 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
             />
 
             {/* Tabs */}
-            <Tabs value={currentTabValue} className="flex-1 flex flex-col overflow-hidden">
+            <Tabs value={currentTabValue} onValueChange={(value) => {
+              const step = STEPS.find(s => s.tabValue === value);
+              if (step) handleStepChange(step.id);
+            }} className="flex-1 flex flex-col overflow-hidden">
               <TabsList className="hidden">
                 {STEPS.map(step => (
                   <TabsTrigger key={step.id} value={step.tabValue}>{step.label}</TabsTrigger>
@@ -434,12 +452,39 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
               </TabsList>
 
               <div className="flex-1 overflow-y-auto pr-2">
+                {/* Forecast Tab */}
                 <TabsContent value="forecast" className="mt-0">
+                  <div className="grid grid-cols-4 gap-6 mb-6">
+                    <ForecastTotalCard
+                      title="Forecast Orders"
+                      mbTotal={form.watch("forecastRows")?.filter(r => r.brand === "Mercedes-Benz").reduce((sum, r) => sum + (r.qty || 0), 0) || 0}
+                      ftlTotal={form.watch("forecastRows")?.filter(r => r.brand === "Freightliner").reduce((sum, r) => sum + (r.qty || 0), 0) || 0}
+                      leftBgColor="bg-primary"
+                      rightBgColor="bg-primary/10"
+                      leftTextColor="text-white"
+                    />
+                    <ForecastTotalCard
+                      title="Own Retail"
+                      mbTotal={form.watch("forecastRows")?.filter(r => r.brand === "Mercedes-Benz" && r.type === "Retail").reduce((sum, r) => sum + (r.qty || 0), 0) || 0}
+                      ftlTotal={form.watch("forecastRows")?.filter(r => r.brand === "Freightliner" && r.type === "Retail").reduce((sum, r) => sum + (r.qty || 0), 0) || 0}
+                    />
+                    <ForecastTotalCard
+                      title="Indirect Fleet"
+                      mbTotal={form.watch("forecastRows")?.filter(r => r.brand === "Mercedes-Benz" && r.type === "Indirect Fleet").reduce((sum, r) => sum + (r.qty || 0), 0) || 0}
+                      ftlTotal={form.watch("forecastRows")?.filter(r => r.brand === "Freightliner" && r.type === "Indirect Fleet").reduce((sum, r) => sum + (r.qty || 0), 0) || 0}
+                    />
+                    <ForecastTotalCard
+                      title="Direct Fleet"
+                      mbTotal={form.watch("forecastRows")?.filter(r => r.brand === "Mercedes-Benz" && r.type === "Direct Fleet").reduce((sum, r) => sum + (r.qty || 0), 0) || 0}
+                      ftlTotal={form.watch("forecastRows")?.filter(r => r.brand === "Freightliner" && r.type === "Direct Fleet").reduce((sum, r) => sum + (r.qty || 0), 0) || 0}
+                    />
+                  </div>
+
                   <Card>
                     <CardHeader>
                       <div className="flex justify-between items-center">
                         <CardTitle>Forecast Orders</CardTitle>
-                        <Button type="button" onClick={handleAddRow} className="gap-2">
+                        <Button type="button" onClick={handleAddRow} variant="outline" size="sm" className="gap-2">
                           <Plus className="w-4 h-4" />
                           Add Order
                         </Button>
@@ -447,97 +492,118 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
                     </CardHeader>
                     <CardContent>
                       {fields.length === 0 ? (
-                        <p className="text-center py-8 text-muted-foreground">No orders added yet. Click "Add Order" to start.</p>
+                        <p className="text-center py-8 text-muted-foreground">No orders added. Click "Add Order" to start.</p>
                       ) : (
-                        <div className="space-y-3">
+                        <div className="space-y-2 max-h-[350px] overflow-y-auto">
+                          <div className="grid grid-cols-[40px_70px_250px_100px_140px_200px_140px_140px_160px_80px] gap-2 font-semibold text-xs mb-2">
+                            <div></div>
+                            <div>QTY</div>
+                            <div>Customer</div>
+                            <div>Type</div>
+                            <div>Brand</div>
+                            <div>Model</div>
+                            <div>Source</div>
+                            <div>BDM</div>
+                            <div>Est. Delivery</div>
+                            <div>Upside</div>
+                          </div>
                           {fields.map((field, index) => (
-                            <Card key={field.id} className="p-4">
-                              <div className="grid grid-cols-5 gap-3">
-                                <FormField
-                                  control={form.control}
-                                  name={`forecastRows.${index}.qty`}
-                                  render={({ field }) => (
-                                    <FormItem>
-                                      <FormLabel className="text-xs">QTY *</FormLabel>
-                                      <FormControl>
-                                        <Input type="number" {...field} value={field.value ?? ''} />
-                                      </FormControl>
-                                      <FormMessage />
-                                    </FormItem>
-                                  )}
-                                />
-                                <FormField
-                                  control={form.control}
-                                  name={`forecastRows.${index}.customerName`}
-                                  render={({ field }) => (
-                                    <FormItem>
-                                      <FormLabel className="text-xs">Customer *</FormLabel>
-                                      <FormControl>
-                                        <Input {...field} />
-                                      </FormControl>
-                                      <FormMessage />
-                                    </FormItem>
-                                  )}
-                                />
-                                <FormField
-                                  control={form.control}
-                                  name={`forecastRows.${index}.brand`}
-                                  render={({ field }) => (
-                                    <FormItem>
-                                      <FormLabel className="text-xs">Brand *</FormLabel>
-                                      <Select onValueChange={field.onChange} value={field.value || ""}>
-                                        <FormControl>
-                                          <SelectTrigger>
-                                            <SelectValue />
-                                          </SelectTrigger>
-                                        </FormControl>
-                                        <SelectContent>
-                                          <SelectItem value="Mercedes-Benz">MB</SelectItem>
-                                          <SelectItem value="Freightliner">FTL</SelectItem>
-                                        </SelectContent>
-                                      </Select>
-                                      <FormMessage />
-                                    </FormItem>
-                                  )}
-                                />
-                                <FormField
-                                  control={form.control}
-                                  name={`forecastRows.${index}.model`}
-                                  render={({ field }) => (
-                                    <FormItem>
-                                      <FormLabel className="text-xs">Model *</FormLabel>
-                                      <FormControl>
-                                        <Input {...field} />
-                                      </FormControl>
-                                      <FormMessage />
-                                    </FormItem>
-                                  )}
-                                />
-                                <FormField
-                                  control={form.control}
-                                  name={`forecastRows.${index}.estimatedDelivery`}
-                                  render={({ field }) => (
-                                    <FormItem>
-                                      <FormLabel className="text-xs">Est. Delivery *</FormLabel>
-                                      <FormControl>
-                                        <Input {...field} />
-                                      </FormControl>
-                                      <FormMessage />
-                                    </FormItem>
-                                  )}
-                                />
-                              </div>
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => remove(index)}
-                                className="mt-2 gap-2 text-destructive"
-                              >
-                                <Trash2 className="w-4 h-4" />
-                                Remove
+                            <div key={field.id} className="grid grid-cols-[40px_70px_250px_100px_140px_200px_140px_140px_160px_80px] gap-2 focus-within:bg-primary/5">
+                              <Button type="button" variant="ghost" size="sm" onClick={() => remove(index)} className="h-7 w-7 p-0">
+                                <X className="h-4 w-4 text-destructive" />
                               </Button>
-                            </Card>
+                              <FormField control={form.control} name={`forecastRows.${index}.qty`} render={({ field }) => (
+                                <FormItem>
+                                  <FormControl>
+                                    <Input type="number" {...field} value={field.value ?? ''} className="h-9 text-sm" />
+                                  </FormControl>
+                                </FormItem>
+                              )} />
+                              <FormField control={form.control} name={`forecastRows.${index}.customerName`} render={({ field }) => (
+                                <FormItem>
+                                  <FormControl>
+                                    <Input {...field} className="h-9 text-sm" />
+                                  </FormControl>
+                                </FormItem>
+                              )} />
+                              <FormField control={form.control} name={`forecastRows.${index}.customerType`} render={({ field }) => (
+                                <FormItem>
+                                  <FormControl>
+                                    <Select value={field.value} onValueChange={field.onChange}>
+                                      <SelectTrigger className="h-9 text-sm"><SelectValue /></SelectTrigger>
+                                      <SelectContent>
+                                        <SelectItem value="Existing">Existing</SelectItem>
+                                        <SelectItem value="New">New</SelectItem>
+                                      </SelectContent>
+                                    </Select>
+                                  </FormControl>
+                                </FormItem>
+                              )} />
+                              <FormField control={form.control} name={`forecastRows.${index}.brand`} render={({ field }) => (
+                                <FormItem>
+                                  <FormControl>
+                                    <Select value={field.value || ""} onValueChange={field.onChange}>
+                                      <SelectTrigger className="h-9 text-sm"><SelectValue /></SelectTrigger>
+                                      <SelectContent>
+                                        <SelectItem value="Mercedes-Benz">Mercedes-Benz</SelectItem>
+                                        <SelectItem value="Freightliner">Freightliner</SelectItem>
+                                      </SelectContent>
+                                    </Select>
+                                  </FormControl>
+                                </FormItem>
+                              )} />
+                              <FormField control={form.control} name={`forecastRows.${index}.model`} render={({ field }) => (
+                                <FormItem>
+                                  <FormControl>
+                                    <Input {...field} className="h-9 text-sm" />
+                                  </FormControl>
+                                </FormItem>
+                              )} />
+                              <FormField control={form.control} name={`forecastRows.${index}.type`} render={({ field }) => (
+                                <FormItem>
+                                  <FormControl>
+                                    <Select value={field.value || ""} onValueChange={field.onChange}>
+                                      <SelectTrigger className="h-9 text-sm"><SelectValue /></SelectTrigger>
+                                      <SelectContent>
+                                        <SelectItem value="Retail">Retail</SelectItem>
+                                        <SelectItem value="Indirect Fleet">Indirect Fleet</SelectItem>
+                                        <SelectItem value="Direct Fleet">Direct Fleet</SelectItem>
+                                      </SelectContent>
+                                    </Select>
+                                  </FormControl>
+                                </FormItem>
+                              )} />
+                              <FormField control={form.control} name={`forecastRows.${index}.bdm`} render={({ field }) => (
+                                <FormItem>
+                                  <FormControl>
+                                    <Select value={field.value} onValueChange={field.onChange}>
+                                      <SelectTrigger className="h-9 text-sm"><SelectValue /></SelectTrigger>
+                                      <SelectContent>
+                                        <SelectItem value="Met in Person">Met in Person</SelectItem>
+                                        <SelectItem value="Relationship">Relationship</SelectItem>
+                                        <SelectItem value="Supported">Supported</SelectItem>
+                                      </SelectContent>
+                                    </Select>
+                                  </FormControl>
+                                </FormItem>
+                              )} />
+                              <FormField control={form.control} name={`forecastRows.${index}.estimatedDelivery`} render={({ field }) => (
+                                <FormItem>
+                                  <FormControl>
+                                    <Input {...field} placeholder="Q1 2025" className="h-9 text-sm" />
+                                  </FormControl>
+                                </FormItem>
+                              )} />
+                              <FormField control={form.control} name={`forecastRows.${index}.upside`} render={({ field }) => (
+                                <FormItem>
+                                  <FormControl>
+                                    <div className="flex items-center justify-center h-9">
+                                      <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                                    </div>
+                                  </FormControl>
+                                </FormItem>
+                              )} />
+                            </div>
                           ))}
                         </div>
                       )}
@@ -545,154 +611,157 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
                   </Card>
                 </TabsContent>
 
-                <TabsContent value="activity" className="mt-0">
+                {/* Orders Tab */}
+                <TabsContent value="orders" className="mt-0">
                   <Card>
                     <CardHeader>
-                      <CardTitle>Meeting Activity</CardTitle>
+                      <CardTitle>Orders Received</CardTitle>
+                      <CardDescription>Track orders received this week</CardDescription>
                     </CardHeader>
                     <CardContent className="grid grid-cols-2 gap-4">
-                      <FormField
-                        control={form.control}
-                        name="conquestMeetings"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Conquest Meetings *</FormLabel>
-                            <FormControl>
-                              <Input type="number" placeholder="0" {...field} value={field.value ?? ''} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="customerMeetings"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Customer Meetings *</FormLabel>
-                            <FormControl>
-                              <Input type="number" placeholder="0" {...field} value={field.value ?? ''} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
+                      <FormField control={form.control} name="mbtOrdersReceived" render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Mercedes-Benz Orders</FormLabel>
+                          <FormControl>
+                            <Input type="number" placeholder="0" {...field} value={field.value ?? ''} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )} />
+                      <FormField control={form.control} name="ftlOrdersReceived" render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Freightliner Orders</FormLabel>
+                          <FormControl>
+                            <Input type="number" placeholder="0" {...field} value={field.value ?? ''} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )} />
                     </CardContent>
                   </Card>
                 </TabsContent>
 
+                {/* Activity Tab */}
+                <TabsContent value="activity" className="mt-0">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Meeting Activity</CardTitle>
+                      <CardDescription>Number of meetings held last week</CardDescription>
+                    </CardHeader>
+                    <CardContent className="grid grid-cols-2 gap-4">
+                      <FormField control={form.control} name="conquestMeetings" render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Conquest Meetings *</FormLabel>
+                          <FormControl>
+                            <Input type="number" placeholder="0" {...field} value={field.value ?? ''} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )} />
+                      <FormField control={form.control} name="customerMeetings" render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Customer Meetings *</FormLabel>
+                          <FormControl>
+                            <Input type="number" placeholder="0" {...field} value={field.value ?? ''} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )} />
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+
+                {/* Pipeline Tab */}
                 <TabsContent value="pipeline" className="mt-0">
                   <Card>
                     <CardHeader>
                       <CardTitle>Pipeline Snapshot</CardTitle>
+                      <CardDescription>Track pipeline growth and quarterly forecasts</CardDescription>
                     </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="grid grid-cols-2 gap-4">
-                        <FormField
-                          control={form.control}
-                          name="mbtPipelineGrowth"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>MB Growth *</FormLabel>
-                              <FormControl>
-                                <Input type="number" placeholder="0" {...field} value={field.value ?? ''} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={form.control}
-                          name="ftlPipelineGrowth"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>FTL Growth *</FormLabel>
-                              <FormControl>
-                                <Input type="number" placeholder="0" {...field} value={field.value ?? ''} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={form.control}
-                          name="mbtPipelineThisQtr"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>MB This Quarter *</FormLabel>
-                              <FormControl>
-                                <Input type="number" placeholder="0" {...field} value={field.value ?? ''} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={form.control}
-                          name="ftlPipelineThisQtr"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>FTL This Quarter *</FormLabel>
-                              <FormControl>
-                                <Input type="number" placeholder="0" {...field} value={field.value ?? ''} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={form.control}
-                          name="mbtPipelineNextQtr"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>MB Next Quarter *</FormLabel>
-                              <FormControl>
-                                <Input type="number" placeholder="0" {...field} value={field.value ?? ''} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={form.control}
-                          name="ftlPipelineNextQtr"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>FTL Next Quarter *</FormLabel>
-                              <FormControl>
-                                <Input type="number" placeholder="0" {...field} value={field.value ?? ''} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
+                    <CardContent className="grid grid-cols-3 gap-6">
+                      <div className="space-y-4 p-4 border rounded-lg bg-muted/50">
+                        <h3 className="font-semibold text-base">Pipeline Growth</h3>
+                        <FormField control={form.control} name="mbtPipelineGrowth" render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Mercedes-Benz *</FormLabel>
+                            <FormControl>
+                              <Input type="number" placeholder="0" {...field} value={field.value ?? ''} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )} />
+                        <FormField control={form.control} name="ftlPipelineGrowth" render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Freightliner *</FormLabel>
+                            <FormControl>
+                              <Input type="number" placeholder="0" {...field} value={field.value ?? ''} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )} />
+                      </div>
+
+                      <div className="space-y-4 p-4 border rounded-lg bg-muted/50">
+                        <h3 className="font-semibold text-base">This Quarter</h3>
+                        <FormField control={form.control} name="mbtPipelineThisQtr" render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Mercedes-Benz *</FormLabel>
+                            <FormControl>
+                              <Input type="number" placeholder="0" {...field} value={field.value ?? ''} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )} />
+                        <FormField control={form.control} name="ftlPipelineThisQtr" render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Freightliner *</FormLabel>
+                            <FormControl>
+                              <Input type="number" placeholder="0" {...field} value={field.value ?? ''} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )} />
+                      </div>
+
+                      <div className="space-y-4 p-4 border rounded-lg bg-muted/50">
+                        <h3 className="font-semibold text-base">Next Quarter</h3>
+                        <FormField control={form.control} name="mbtPipelineNextQtr" render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Mercedes-Benz *</FormLabel>
+                            <FormControl>
+                              <Input type="number" placeholder="0" {...field} value={field.value ?? ''} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )} />
+                        <FormField control={form.control} name="ftlPipelineNextQtr" render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Freightliner *</FormLabel>
+                            <FormControl>
+                              <Input type="number" placeholder="0" {...field} value={field.value ?? ''} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )} />
                       </div>
                     </CardContent>
                   </Card>
                 </TabsContent>
 
+                {/* Lost Tab */}
                 <TabsContent value="lost" className="mt-0">
                   <Card>
                     <CardHeader>
                       <CardTitle>Lost Opportunities</CardTitle>
+                      <CardDescription>Track orders lost this week (optional)</CardDescription>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-muted-foreground">Optional - track lost orders here.</p>
+                      <p className="text-muted-foreground">Optional - add lost order details here.</p>
                     </CardContent>
                   </Card>
                 </TabsContent>
 
-                <TabsContent value="orders" className="mt-0">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Orders Received</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-muted-foreground">Optional - record orders received.</p>
-                    </CardContent>
-                  </Card>
-                </TabsContent>
-
+                {/* BDM Visitations Tab */}
                 <TabsContent value="bdmVisitations" className="mt-0">
                   <Card>
                     <CardHeader>

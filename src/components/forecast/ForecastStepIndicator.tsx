@@ -47,7 +47,12 @@ export const ForecastStepIndicator = ({
           return (
             <button
               key={step.id}
-              onClick={() => onStepClick(step.id)}
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onStepClick(step.id);
+              }}
               className={cn(
                 "group relative flex flex-col items-center gap-2 p-3 rounded-lg transition-all",
                 "border-2 text-center cursor-pointer",
