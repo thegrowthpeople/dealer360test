@@ -679,7 +679,7 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
                 </TabsContent>
 
                 {/* Orders Tab */}
-                <TabsContent value="orders" className="mt-0">
+                <TabsContent value="orders" className="mt-0 flex-1 flex flex-col">
                   <Card>
                     <CardHeader>
                       <CardTitle>Orders Received</CardTitle>
@@ -709,7 +709,7 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
                 </TabsContent>
 
                 {/* Activity Tab */}
-                <TabsContent value="activity" className="mt-0">
+                <TabsContent value="activity" className="mt-0 flex-1 flex flex-col">
                   <Card>
                     <CardHeader>
                       <CardTitle>Meeting Activity</CardTitle>
@@ -739,7 +739,7 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
                 </TabsContent>
 
                 {/* Pipeline Tab */}
-                <TabsContent value="pipeline" className="mt-0">
+                <TabsContent value="pipeline" className="mt-0 flex-1 flex flex-col">
                   <Card>
                     <CardHeader>
                       <CardTitle>Pipeline Snapshot</CardTitle>
@@ -816,7 +816,7 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
                 </TabsContent>
 
                 {/* Lost Tab */}
-                <TabsContent value="lost" className="mt-0">
+                <TabsContent value="lost" className="mt-0 flex-1 flex flex-col">
                   <Card>
                     <CardHeader>
                       <CardTitle>Lost Opportunities</CardTitle>
@@ -829,7 +829,7 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
                 </TabsContent>
 
                 {/* BDM Visitations Tab */}
-                <TabsContent value="bdmVisitations" className="mt-0">
+                <TabsContent value="bdmVisitations" className="mt-0 flex-1 flex flex-col">
                   <Card>
                     <CardHeader>
                       <CardTitle>BDM Visitations</CardTitle>
