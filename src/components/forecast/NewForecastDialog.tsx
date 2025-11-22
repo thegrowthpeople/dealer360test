@@ -57,6 +57,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { usePerformanceFilters } from "@/contexts/PerformanceFiltersContext";
+import { ForecastStepIndicator } from "./ForecastStepIndicator";
 import { ForecastStepNavigation } from "./ForecastStepNavigation";
 import { ForecastTotalCard } from "./ForecastTotalCard";
 import { cn } from "@/lib/utils";
@@ -525,6 +526,13 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
 
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="flex-1 flex flex-col overflow-hidden">
+                {/* Step Indicator */}
+                <ForecastStepIndicator
+                  currentStep={currentStep}
+                  completedSteps={completedSteps}
+                  onStepClick={handleStepChange}
+                  steps={STEPS}
+                />
 
                 {/* Tabs */}
                 <Tabs value={currentTabValue} onValueChange={(value) => {

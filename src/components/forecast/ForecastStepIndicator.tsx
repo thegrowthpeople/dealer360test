@@ -27,14 +27,6 @@ export const ForecastStepIndicator = ({
     <div className="space-y-4 mb-6 animate-fade-in">
       {/* Progress Bar */}
       <div className="space-y-2">
-        <div className="flex justify-between text-sm">
-          <span className="text-muted-foreground">
-            Step {currentStep} of {steps.length}
-          </span>
-          <span className="text-muted-foreground">
-            {completedSteps.size} of {steps.length} complete
-          </span>
-        </div>
         <Progress value={progress} className="h-2" />
       </div>
 
