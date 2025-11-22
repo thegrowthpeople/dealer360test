@@ -494,12 +494,13 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
                   </DialogDescription>
                 </div>
                 <div className="text-right text-sm">
-                  <div className="flex items-center gap-2 justify-end text-base font-medium">
+                  <div className="flex items-center gap-2 justify-end text-base font-medium mb-1">
                     <span>{localDealershipGroup}</span>
                     <span className="text-muted-foreground">•</span>
                     <span>{selectedDealershipName}</span>
-                    <span className="text-muted-foreground">•</span>
-                    <span>w/c {selectedWeekDisplay}</span>
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    w/c {selectedWeekDisplay}
                   </div>
                 </div>
               </div>
@@ -569,7 +570,7 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
                       {fields.length === 0 ? (
                         <p className="text-center py-4 text-muted-foreground">No orders added. Click "Add Order" to start.</p>
                       ) : (
-                        <div className="space-y-2 max-h-[450px] overflow-y-auto">
+                        <div className="space-y-2" style={{ maxHeight: 'calc(100vh - 520px)', overflowY: 'auto' }}>
                           <div className="grid grid-cols-[40px_70px_250px_100px_140px_200px_140px_140px_160px_80px] gap-2 font-semibold text-xs mb-2">
                             <div></div>
                             <div>QTY</div>
