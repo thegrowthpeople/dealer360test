@@ -497,26 +497,31 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
             </DialogHeader>
 
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="flex-1 flex flex-col overflow-hidden p-6 pt-4">
-                {/* Step Indicator */}
-                <ForecastStepIndicator
-                  currentStep={currentStep}
-                  completedSteps={completedSteps}
-                  onStepClick={handleStepChange}
-                  steps={STEPS}
-                />
+              <form onSubmit={form.handleSubmit(onSubmit)} className="flex-1 flex flex-col overflow-hidden">
+                <div className="px-6 pt-4 pb-6">
+                  {/* Step Indicator */}
+                  <ForecastStepIndicator
+                    currentStep={currentStep}
+                    completedSteps={completedSteps}
+                    onStepClick={handleStepChange}
+                    steps={STEPS}
+                  />
+                </div>
+
+                {/* Separator Line */}
+                <div className="border-t" />
 
                 {/* Tabs */}
                 <Tabs value={currentTabValue} onValueChange={(value) => {
                   const step = STEPS.find(s => s.tabValue === value);
                   if (step) handleStepChange(step.id);
-                }} className="flex-1 flex flex-col overflow-hidden">
+                }} className="flex-1 flex flex-col overflow-hidden px-6 pt-6">
               <TabsList className="hidden">
                 {STEPS.map(step => (
                   <TabsTrigger key={step.id} value={step.tabValue}>{step.label}</TabsTrigger>
                 ))}
               </TabsList>
-              <div className="flex-1 pr-2 flex flex-col overflow-hidden">
+              <div className="flex-1 flex flex-col overflow-hidden">
                 {/* Forecast Tab */}
                 <TabsContent value="forecast" className="mt-0 flex-1 flex flex-col">
                   <div className="grid grid-cols-4 gap-3 mb-4">
@@ -844,14 +849,16 @@ export const NewForecastDialog = ({ onSuccess }: NewForecastDialogProps) => {
             </Tabs>
 
                 {/* Navigation */}
-                <ForecastStepNavigation
-                  currentStep={currentStep}
-                  totalSteps={STEPS.length}
-                  onPrevious={handlePrevious}
-                  onNext={handleNext}
-                  onSave={form.handleSubmit(onSubmit)}
-                  isNextDisabled={!validateStep(currentStep)}
-                />
+                <div className="px-6">
+                  <ForecastStepNavigation
+                    currentStep={currentStep}
+                    totalSteps={STEPS.length}
+                    onPrevious={handlePrevious}
+                    onNext={handleNext}
+                    onSave={form.handleSubmit(onSubmit)}
+                    isNextDisabled={!validateStep(currentStep)}
+                  />
+                </div>
               </form>
             </Form>
           </>
