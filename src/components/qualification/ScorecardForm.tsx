@@ -63,14 +63,14 @@ export const ScorecardForm = ({ onSubmit, initialData, submitLabel = "Create Sco
         <div>
           <Label htmlFor="dealershipGroup">Dealership Group</Label>
           <Select
-            value={formData.dealershipGroup}
-            onValueChange={(value) => setFormData({ ...formData, dealershipGroup: value })}
+            value={formData.dealershipGroup || "none"}
+            onValueChange={(value) => setFormData({ ...formData, dealershipGroup: value === "none" ? "" : value })}
           >
             <SelectTrigger className="mt-1 bg-background">
               <SelectValue placeholder="Select group..." />
             </SelectTrigger>
             <SelectContent className="bg-popover z-50">
-              <SelectItem value="">All Groups</SelectItem>
+              <SelectItem value="none">All Groups</SelectItem>
               {dealerGroups.map((group) => (
                 <SelectItem key={group} value={group}>
                   {group}
@@ -83,14 +83,14 @@ export const ScorecardForm = ({ onSubmit, initialData, submitLabel = "Create Sco
         <div>
           <Label htmlFor="dealership">Dealership</Label>
           <Select
-            value={formData.dealershipId?.toString() || ""}
-            onValueChange={(value) => setFormData({ ...formData, dealershipId: value ? parseInt(value) : null })}
+            value={formData.dealershipId?.toString() || "none"}
+            onValueChange={(value) => setFormData({ ...formData, dealershipId: value === "none" ? null : parseInt(value) })}
           >
             <SelectTrigger className="mt-1 bg-background">
               <SelectValue placeholder="Select dealership..." />
             </SelectTrigger>
             <SelectContent className="bg-popover z-50">
-              <SelectItem value="">All Dealerships</SelectItem>
+              <SelectItem value="none">All Dealerships</SelectItem>
               {filteredDealerships.map((dealer) => (
                 <SelectItem key={dealer["Dealer ID"]} value={dealer["Dealer ID"].toString()}>
                   {dealer.Dealership}
