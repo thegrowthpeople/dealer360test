@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Company } from "@/types/company";
 import { toast } from "sonner";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface NewCompanyDialogProps {
   open: boolean;
@@ -15,6 +16,7 @@ interface NewCompanyDialogProps {
 }
 
 export const NewCompanyDialog = ({ open, onOpenChange, onSave }: NewCompanyDialogProps) => {
+  const { bdmId } = useAuth();
   const [formData, setFormData] = useState({
     accountName: '',
     dealershipId: null as number | null,
@@ -22,7 +24,7 @@ export const NewCompanyDialog = ({ open, onOpenChange, onSave }: NewCompanyDialo
     dealerGroup: '',
     accountManagerId: null as number | null,
     accountManagerName: '',
-    bdmId: 1 as number | null,
+    bdmId: bdmId || 1,
     about: '',
     industryApplication: 'Construction' as const,
     type: 'Prospect' as const,
@@ -54,7 +56,7 @@ export const NewCompanyDialog = ({ open, onOpenChange, onSave }: NewCompanyDialo
       dealerGroup: '',
       accountManagerId: null,
       accountManagerName: '',
-      bdmId: 1,
+      bdmId: bdmId || 1,
       about: '',
       industryApplication: 'Construction',
       type: 'Prospect',
