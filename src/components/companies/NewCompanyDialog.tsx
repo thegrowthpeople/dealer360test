@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
+import * as React from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,6 +11,10 @@ import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { Check, ChevronsUpDown } from "lucide-react";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator } from "@/components/ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
 
 interface NewCompanyDialogProps {
   open: boolean;
@@ -19,6 +24,9 @@ interface NewCompanyDialogProps {
 
 export const NewCompanyDialog = ({ open, onOpenChange, onSave }: NewCompanyDialogProps) => {
   const { bdmId } = useAuth();
+  
+  const [groupSearchOpen, setGroupSearchOpen] = useState(false);
+  const [dealershipSearchOpen, setDealershipSearchOpen] = useState(false);
   
   // Fetch dealerships from Supabase
   const { data: dealerships = [] } = useQuery({
@@ -54,18 +62,43 @@ export const NewCompanyDialog = ({ open, onOpenChange, onSave }: NewCompanyDialo
     tags: [] as string[]
   });
 
-  // Get unique dealer groups
+  // Get unique dealer groups sorted by region
   const dealerGroups = useMemo(() => {
-    const groups = dealerships.map((d: any) => d["Dealer Group"]).filter(Boolean);
-    return [...new Set(groups)].sort();
+    const groups = dealerships;
+    const uniqueGroups = [...new Set(groups.map((d: any) => d["Dealer Group"]).filter(Boolean))];
+    
+    const REGION_ORDER = ["Metro", "Regional", "Independent", "NZ", "Internal"];
+    
+    return uniqueGroups.sort((a, b) => {
+      const regionA = dealerships.find((d: any) => d["Dealer Group"] === a)?.Region || "";
+      const regionB = dealerships.find((d: any) => d["Dealer Group"] === b)?.Region || "";
+      const indexA = REGION_ORDER.indexOf(regionA);
+      const indexB = REGION_ORDER.indexOf(regionB);
+      return (indexA === -1 ? 999 : indexA) - (indexB === -1 ? 999 : indexB);
+    });
   }, [dealerships]);
 
   // Filter dealerships based on selected group
   const filteredDealerships = useMemo(() => {
-    if (!formData.dealerGroup) {
-      return dealerships;
+    let filtered = dealerships;
+    
+    if (formData.dealerGroup) {
+      filtered = filtered.filter((d: any) => d["Dealer Group"] === formData.dealerGroup);
     }
-    return dealerships.filter((d: any) => d["Dealer Group"] === formData.dealerGroup);
+
+    // Sort by region first, then by dealership name
+    const REGION_ORDER = ["Metro", "Regional", "Independent", "NZ", "Internal"];
+    return filtered.sort((a: any, b: any) => {
+      const regionA = a.Region || "";
+      const regionB = b.Region || "";
+      const indexA = REGION_ORDER.indexOf(regionA);
+      const indexB = REGION_ORDER.indexOf(regionB);
+      const regionCompare = (indexA === -1 ? 999 : indexA) - (indexB === -1 ? 999 : indexB);
+      
+      if (regionCompare !== 0) return regionCompare;
+      
+      return (a.Dealership || "").localeCompare(b.Dealership || "");
+    });
   }, [dealerships, formData.dealerGroup]);
 
   // Reset dealership when group changes
@@ -163,57 +196,151 @@ export const NewCompanyDialog = ({ open, onOpenChange, onSave }: NewCompanyDialo
           </div>
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="dealerGroup">Dealership Group</Label>
-          <Select 
-            value={formData.dealerGroup || "none"} 
-            onValueChange={(value) => setFormData({ ...formData, dealerGroup: value === "none" ? "" : value })}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select dealership group" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="none">No Group</SelectItem>
-              {dealerGroups.map((group) => (
-                <SelectItem key={group} value={group}>
-                  {group}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="dealerGroup">Dealership Group</Label>
+            <Popover open={groupSearchOpen} onOpenChange={setGroupSearchOpen}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  role="combobox"
+                  aria-expanded={groupSearchOpen}
+                  className="w-full justify-between"
+                >
+                  {formData.dealerGroup || "All Dealer Groups"}
+                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-full p-0" align="start">
+                <Command>
+                  <CommandInput placeholder="Search group..." />
+                  <CommandList>
+                    <CommandEmpty>No group found.</CommandEmpty>
+                    <CommandGroup>
+                      <CommandItem
+                        value="all"
+                        onSelect={() => {
+                          setFormData({ ...formData, dealerGroup: "", dealershipId: null, dealershipName: '' });
+                          setGroupSearchOpen(false);
+                        }}
+                      >
+                        <Check
+                          className={cn(
+                            "mr-2 h-4 w-4",
+                            !formData.dealerGroup ? "opacity-100" : "opacity-0"
+                          )}
+                        />
+                        All Dealer Groups
+                      </CommandItem>
+                      {dealerGroups.map((group, index) => {
+                        const currentRegion = dealerships.find((d: any) => d["Dealer Group"] === group)?.Region;
+                        const nextGroup = dealerGroups[index + 1];
+                        const nextRegion = nextGroup ? dealerships.find((d: any) => d["Dealer Group"] === nextGroup)?.Region : undefined;
+                        const isLastInRegion = currentRegion && currentRegion !== nextRegion && (currentRegion === "Metro" || currentRegion === "Regional" || currentRegion === "Independent");
 
-        <div className="space-y-2">
-          <Label htmlFor="dealership">Dealership</Label>
-          <Select 
-            value={formData.dealershipId?.toString() || "none"} 
-            onValueChange={(value) => {
-              if (value === "none") {
-                setFormData({ ...formData, dealershipId: null, dealershipName: '' });
-              } else {
-                const id = parseInt(value);
-                const dealership = dealerships.find((d: any) => d["Dealer ID"] === id);
-                setFormData({ 
-                  ...formData, 
-                  dealershipId: id,
-                  dealershipName: dealership ? dealership.Dealership : '',
-                  dealerGroup: dealership ? dealership["Dealer Group"] : formData.dealerGroup
-                });
-              }
-            }}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select dealership" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="none">No Dealership</SelectItem>
-              {filteredDealerships.map((dealer: any) => (
-                <SelectItem key={dealer["Dealer ID"]} value={dealer["Dealer ID"].toString()}>
-                  {dealer.Dealership}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+                        return (
+                          <React.Fragment key={group}>
+                            <CommandItem
+                              value={group}
+                              onSelect={() => {
+                                setFormData({ ...formData, dealerGroup: group, dealershipId: null, dealershipName: '' });
+                                setGroupSearchOpen(false);
+                              }}
+                            >
+                              <Check
+                                className={cn(
+                                  "mr-2 h-4 w-4",
+                                  formData.dealerGroup === group ? "opacity-100" : "opacity-0"
+                                )}
+                              />
+                              {group}
+                            </CommandItem>
+                            {isLastInRegion && <CommandSeparator className="my-1" />}
+                          </React.Fragment>
+                        );
+                      })}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="dealership">Dealership</Label>
+            <Popover open={dealershipSearchOpen} onOpenChange={setDealershipSearchOpen}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  role="combobox"
+                  aria-expanded={dealershipSearchOpen}
+                  className="w-full justify-between"
+                >
+                  {formData.dealershipId
+                    ? filteredDealerships.find((d: any) => d["Dealer ID"] === formData.dealershipId)?.Dealership
+                    : "All Dealerships"}
+                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-full p-0" align="start">
+                <Command>
+                  <CommandInput placeholder="Search dealership..." />
+                  <CommandList>
+                    <CommandEmpty>No dealership found.</CommandEmpty>
+                    <CommandGroup>
+                      <CommandItem
+                        value="all"
+                        onSelect={() => {
+                          setFormData({ ...formData, dealershipId: null, dealershipName: '' });
+                          setDealershipSearchOpen(false);
+                        }}
+                      >
+                        <Check
+                          className={cn(
+                            "mr-2 h-4 w-4",
+                            formData.dealershipId === null ? "opacity-100" : "opacity-0"
+                          )}
+                        />
+                        All Dealerships
+                      </CommandItem>
+                      {filteredDealerships.map((dealer: any, index) => {
+                        const currentRegion = dealer.Region;
+                        const nextDealer = filteredDealerships[index + 1];
+                        const nextRegion = nextDealer?.Region;
+                        const isLastInRegion = currentRegion !== nextRegion && (currentRegion === "Metro" || currentRegion === "Regional" || currentRegion === "Independent");
+                        
+                        return (
+                          <React.Fragment key={dealer["Dealer ID"]}>
+                            <CommandItem
+                              value={dealer.Dealership || ""}
+                              onSelect={() => {
+                                setFormData({ 
+                                  ...formData, 
+                                  dealershipId: dealer["Dealer ID"],
+                                  dealershipName: dealer.Dealership,
+                                  dealerGroup: dealer["Dealer Group"] || formData.dealerGroup
+                                });
+                                setDealershipSearchOpen(false);
+                              }}
+                            >
+                              <Check
+                                className={cn(
+                                  "mr-2 h-4 w-4",
+                                  formData.dealershipId === dealer["Dealer ID"] ? "opacity-100" : "opacity-0"
+                                )}
+                              />
+                              {dealer.Dealership}
+                            </CommandItem>
+                            {isLastInRegion && <CommandSeparator className="my-1" />}
+                          </React.Fragment>
+                        );
+                      })}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
+          </div>
         </div>
 
         <div className="space-y-2">
